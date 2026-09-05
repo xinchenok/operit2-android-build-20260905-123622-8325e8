@@ -1,8 +1,13 @@
 # Personal test build. Not an official Operit2 release.
-# Prepared from upstream source on 2026-09-05; NOT run-tested in this chat.
+# Fixed Windows build-root length after run 33945019027. APK success still requires a completed build.
 name: Operit2 Android ARM64 Personal Test
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/operit2-android-test.yml'
+      - 'builder/**'
 permissions:
   contents: read
 
@@ -52,11 +57,13 @@ jobs:
     defaults:
       run:
         shell: pwsh
+        working-directory: 'D:\o'
     env:
       RUSTFLAGS: -Awarnings
       CARGO_BUILD_JOBS: '3'
       RUST_TOOLCHAIN_VERSION: 1.95.0
       FVM_VERSION: 4.1.2
+      FVM_CACHE_PATH: 'D:\fvm'
       TYPESCRIPT_VERSION: 5.9.3
       WASM_BINDGEN_VERSION: 0.2.122
       WASI_SDK_VERSION: '20.0'
@@ -64,6 +71,7 @@ jobs:
       QUICKJS_WASM_SYS_WASI_SDK_MINOR_VERSION: '0'
     steps:
       - name: Enable symlink checkout required by upstream web assets
+        working-directory: ${{ github.workspace }}
         run: git config --global core.symlinks true
       - name: Checkout pinned upstream source
         uses: actions/checkout@v4
@@ -76,11 +84,26 @@ jobs:
         with:
           path: .operit2-builder
           persist-credentials: false
+      # Checkout must remain under github.workspace; compilation uses a short clone.
+      # Flutter uses the project .fvm link in its cache path, even when FVM itself is elsewhere.
+      - name: Stage source at short Windows build root
+        working-directory: ${{ github.workspace }}
+        run: |
+          $root = 'D:\o'
+          if (Test-Path -LiteralPath $root) { throw "Build root already exists: $root" }
+          git clone --local --no-hardlinks -- "$env:GITHUB_WORKSPACE" $root
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to create short-path source clone' }
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE '.operit2-builder') -Destination (Join-Path $root '.operit2-builder') -Recurse
+          $head = (git -C $root rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '303192ccf12a8873d9d391228be026096de95db5') {
+            throw 'Short-path source clone does not match the pinned upstream commit'
+          }
+          Write-Host "Compilation root: $root; source: $head"
       - name: Download runtime
         uses: actions/download-artifact@v4
         with:
           name: operit2-runtime-arm64
-          path: apps/flutter/app/android/app/src/main
+          path: D:/o/apps/flutter/app/android/app/src/main
       - name: Install bootstrap Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -110,8 +133,13 @@ jobs:
           if (-not $pubCache) { $pubCache = Join-Path $env:LOCALAPPDATA 'Pub/Cache' }
           (Join-Path $pubCache 'bin') | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
       - name: Install project Flutter SDK
-        working-directory: apps/flutter/app
+        working-directory: 'D:\o\apps\flutter\app'
         run: fvm install --skip-pub-get
+      - name: Precache Android engine before expensive compilation
+        working-directory: 'D:\o\apps\flutter\app'
+        run: |
+          & .\.fvm\flutter_sdk\bin\flutter.bat precache --android --web
+          if ($LASTEXITCODE -ne 0) { throw 'Android/Web engine precache failed at the short build path' }
       - name: Install Rust targets
         uses: dtolnay/rust-toolchain@master
         with:
@@ -190,20 +218,20 @@ jobs:
         with:
           name: operit2-android-apk
           path: |
-            tools/release/dist/operit2-android-arm64-personal-test.apk
-            tools/release/dist/BUILD-INFO.json
-            tools/release/dist/SHA256SUMS
-            tools/release/dist/signature.txt
-            tools/release/dist/build-workflow.yml
-            tools/release/dist/build_arm64.py
-            tools/release/dist/verify_apk.py
-            tools/release/dist/UPSTREAM-LICENSE
+            D:/o/tools/release/dist/operit2-android-arm64-personal-test.apk
+            D:/o/tools/release/dist/BUILD-INFO.json
+            D:/o/tools/release/dist/SHA256SUMS
+            D:/o/tools/release/dist/signature.txt
+            D:/o/tools/release/dist/build-workflow.yml
+            D:/o/tools/release/dist/build_arm64.py
+            D:/o/tools/release/dist/verify_apk.py
+            D:/o/tools/release/dist/UPSTREAM-LICENSE
           if-no-files-found: error
           retention-days: 14
       - name: Upload corresponding upstream source
         uses: actions/upload-artifact@v4
         with:
           name: operit2-source
-          path: tools/release/dist/Operit2-source-303192c.zip
+          path: D:/o/tools/release/dist/Operit2-source-303192c.zip
           if-no-files-found: error
           retention-days: 14
