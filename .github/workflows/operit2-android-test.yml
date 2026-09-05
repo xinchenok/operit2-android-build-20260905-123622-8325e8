@@ -1,6 +1,6 @@
 # Personal test build. Not an official Operit2 release.
 # Reuse matching runtime and retry source downloads after run 33946817266.
-# Retains short Windows paths; APK success still requires a completed build.
+# Backports upstream dynamic_color AGP 8 compatibility; checks Gradle before Web compilation.
 name: Operit2 Android ARM64 Personal Test
 on:
   workflow_dispatch:
@@ -260,6 +260,8 @@ jobs:
           $props | Set-Content (Join-Path $dir 'android-signing.properties') -Encoding utf8
       - name: Check upstream build environment
         run: python tools/build_scripts/check_environment.py --products app --github-runner
+      - name: Patch dynamic_color and check Android Gradle configuration
+        run: python .operit2-builder/builder/prepare_android.py
       - name: Build required Web Access assets
         run: python tools/build_scripts/build_flutter_web_access.py --base-href /
       - name: Build ARM64 APK
@@ -292,6 +294,7 @@ jobs:
             D:/o/tools/release/dist/build_arm64.py
             D:/o/tools/release/dist/verify_apk.py
             D:/o/tools/release/dist/UPSTREAM-LICENSE
+            D:/o/tools/release/dist/compatibility/
           if-no-files-found: error
           retention-days: 14
       - name: Upload corresponding upstream source
