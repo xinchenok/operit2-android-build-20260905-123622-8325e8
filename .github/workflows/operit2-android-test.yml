@@ -1,0 +1,209 @@
+# Personal test build. Not an official Operit2 release.
+# Prepared from upstream source on 2026-09-05; NOT run-tested in this chat.
+name: Operit2 Android ARM64 Personal Test
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout pinned upstream source
+        uses: actions/checkout@v4
+        with:
+          repository: AAswordman/Operit2
+          ref: 303192ccf12a8873d9d391228be026096de95db5
+          persist-credentials: false
+      - name: Install runtime build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bison build-essential bzip2 ca-certificates curl diffutils flex gawk gzip patch pkg-config tar unzip xz-utils
+      - name: Fetch runtime sources
+        shell: pwsh
+        run: pwsh -NoProfile -File tools/android-runtime/fetch_sources.ps1
+      - name: Fetch Android NDK
+        run: bash tools/android-runtime/fetch_ndk_wsl.sh
+      - name: Build upstream terminal runtime
+        run: |
+          export ANDROID_NDK_HOME="$HOME/.cache/operit-android-runtime/android-ndk-r29-beta4"
+          bash tools/android-runtime/build_android_tools_wsl.sh
+          bash tools/android-runtime/build_alpine_rootfs_wsl.sh
+      - name: Transfer ARM64 runtime to Windows job
+        uses: actions/upload-artifact@v4
+        with:
+          name: operit2-runtime-arm64
+          path: |
+            apps/flutter/app/android/app/src/main/jniLibs/arm64-v8a/libbash.so
+            apps/flutter/app/android/app/src/main/jniLibs/arm64-v8a/liboperit_busybox.so
+            apps/flutter/app/android/app/src/main/jniLibs/arm64-v8a/liboperit_loader.so
+            apps/flutter/app/android/app/src/main/jniLibs/arm64-v8a/liboperit_proot.so
+            apps/flutter/app/android/app/src/main/assets/android-runtime/arm64-v8a/rootfs.tar.gz.bin
+            apps/flutter/app/android/app/src/main/assets/android-runtime/arm64-v8a/rootfs.tar.gz.bin.sha256
+          if-no-files-found: error
+          retention-days: 1
+
+  apk:
+    needs: runtime
+    runs-on: windows-2025
+    timeout-minutes: 180
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      RUSTFLAGS: -Awarnings
+      CARGO_BUILD_JOBS: '3'
+      RUST_TOOLCHAIN_VERSION: 1.95.0
+      FVM_VERSION: 4.1.2
+      TYPESCRIPT_VERSION: 5.9.3
+      WASM_BINDGEN_VERSION: 0.2.122
+      WASI_SDK_VERSION: '20.0'
+      QUICKJS_WASM_SYS_WASI_SDK_MAJOR_VERSION: '20'
+      QUICKJS_WASM_SYS_WASI_SDK_MINOR_VERSION: '0'
+    steps:
+      - name: Enable symlink checkout required by upstream web assets
+        run: git config --global core.symlinks true
+      - name: Checkout pinned upstream source
+        uses: actions/checkout@v4
+        with:
+          repository: AAswordman/Operit2
+          ref: 303192ccf12a8873d9d391228be026096de95db5
+          persist-credentials: false
+      - name: Checkout build wrapper
+        uses: actions/checkout@v4
+        with:
+          path: .operit2-builder
+          persist-credentials: false
+      - name: Download runtime
+        uses: actions/download-artifact@v4
+        with:
+          name: operit2-runtime-arm64
+          path: apps/flutter/app/android/app/src/main
+      - name: Install bootstrap Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.9
+          channel: stable
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare Python and FVM
+        run: |
+          python -m venv .venv
+          if ($LASTEXITCODE -ne 0) { throw 'Python venv creation failed' }
+          dart pub global activate fvm $env:FVM_VERSION
+          if ($LASTEXITCODE -ne 0) { throw 'FVM installation failed' }
+          $pubCache = $env:PUB_CACHE
+          if (-not $pubCache) { $pubCache = Join-Path $env:LOCALAPPDATA 'Pub/Cache' }
+          (Join-Path $pubCache 'bin') | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+      - name: Install project Flutter SDK
+        working-directory: apps/flutter/app
+        run: fvm install --skip-pub-get
+      - name: Install Rust targets
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          targets: aarch64-linux-android,wasm32-unknown-unknown
+      - name: Install upstream-required libclang
+        run: |
+          $version = '21.1.8'
+          $name = "libclang.runtime.win-x64.$version"
+          $dir = Join-Path 'target/operit-build-tools' $name
+          New-Item -ItemType Directory -Force -Path $dir | Out-Null
+          $archive = Join-Path 'target/operit-build-tools' "$name.zip"
+          Invoke-WebRequest -Uri "https://www.nuget.org/api/v2/package/libclang.runtime.win-x64/$version" -OutFile $archive
+          Expand-Archive -LiteralPath $archive -DestinationPath $dir -Force
+          if (-not (Test-Path (Join-Path $dir 'runtimes/win-x64/native/libclang.dll'))) {
+            throw 'libclang.dll was not extracted'
+          }
+      - name: Prepare personal signing (no author key required)
+        env:
+          ANDROID_RELEASE_KEYSTORE_BASE64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}
+          ANDROID_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}
+          ANDROID_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+          ANDROID_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
+        run: |
+          $dir = 'tools/release/secrets'
+          New-Item -ItemType Directory -Force -Path $dir | Out-Null
+          $keystore = Join-Path $dir 'operit2-release.keystore'
+          if ($env:ANDROID_RELEASE_KEYSTORE_BASE64) {
+            foreach ($key in @('ANDROID_RELEASE_STORE_PASSWORD','ANDROID_RELEASE_KEY_ALIAS','ANDROID_RELEASE_KEY_PASSWORD')) {
+              if (-not [Environment]::GetEnvironmentVariable($key)) { throw "Missing $key for supplied keystore" }
+            }
+            [IO.File]::WriteAllBytes($keystore, [Convert]::FromBase64String($env:ANDROID_RELEASE_KEYSTORE_BASE64))
+            $storePass = $env:ANDROID_RELEASE_STORE_PASSWORD
+            $keyPass = $env:ANDROID_RELEASE_KEY_PASSWORD
+            $alias = $env:ANDROID_RELEASE_KEY_ALIAS
+          } else {
+            $storePass = [Guid]::NewGuid().ToString('N')
+            $keyPass = $storePass
+            $alias = 'operit2-personal-test'
+            Write-Output "::add-mask::$storePass"
+            $env:OPERIT_TEST_PASS = $storePass
+            & (Join-Path $env:JAVA_HOME 'bin/keytool.exe') -genkeypair -noprompt -keystore $keystore -storetype JKS -storepass:env OPERIT_TEST_PASS -keypass:env OPERIT_TEST_PASS -alias $alias -keyalg RSA -keysize 3072 -sigalg SHA256withRSA -validity 3650 -dname 'CN=Operit2 Personal Test, O=Unofficial Personal Build, C=CN'
+            if ($LASTEXITCODE -ne 0) { throw 'Test keystore generation failed' }
+            'NOTICE: New test key generated. This APK cannot update builds signed with a different key.' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          }
+          $props = @(
+            'RELEASE_STORE_FILE=operit2-release.keystore',
+            "RELEASE_STORE_PASSWORD=$storePass",
+            "RELEASE_KEY_ALIAS=$alias",
+            "RELEASE_KEY_PASSWORD=$keyPass"
+          )
+          $props | Set-Content (Join-Path $dir 'android-signing.properties') -Encoding utf8
+      - name: Check upstream build environment
+        run: python tools/build_scripts/check_environment.py --products app --github-runner
+      - name: Build required Web Access assets
+        run: python tools/build_scripts/build_flutter_web_access.py --base-href /
+      - name: Build ARM64 APK
+        run: python .operit2-builder/builder/build_arm64.py
+      - name: Verify APK payload and SHA-256
+        run: python .operit2-builder/builder/verify_apk.py tools/release/dist/operit2-android-arm64-personal-test.apk
+      - name: Verify Android signature
+        run: |
+          $sdk = $env:ANDROID_HOME
+          if (-not $sdk) { $sdk = $env:ANDROID_SDK_ROOT }
+          if (-not $sdk) { throw 'Android SDK directory is not available' }
+          $signer = Get-ChildItem (Join-Path $sdk 'build-tools') -Recurse -Filter apksigner.bat | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $signer) { throw 'Android apksigner is not available' }
+          & $signer.FullName verify --verbose --print-certs tools/release/dist/operit2-android-arm64-personal-test.apk 2>&1 | Tee-Object -FilePath tools/release/dist/signature.txt
+          if ($LASTEXITCODE -ne 0) { throw 'APK signature verification failed' }
+      - name: Archive matching upstream source
+        run: |
+          git archive --format=zip --output=tools/release/dist/Operit2-source-303192c.zip HEAD
+          if ($LASTEXITCODE -ne 0) { throw 'Source archive creation failed' }
+      - name: Upload installable APK and build information
+        uses: actions/upload-artifact@v4
+        with:
+          name: operit2-android-apk
+          path: |
+            tools/release/dist/operit2-android-arm64-personal-test.apk
+            tools/release/dist/BUILD-INFO.json
+            tools/release/dist/SHA256SUMS
+            tools/release/dist/signature.txt
+            tools/release/dist/build-workflow.yml
+            tools/release/dist/build_arm64.py
+            tools/release/dist/verify_apk.py
+            tools/release/dist/UPSTREAM-LICENSE
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload corresponding upstream source
+        uses: actions/upload-artifact@v4
+        with:
+          name: operit2-source
+          path: tools/release/dist/Operit2-source-303192c.zip
+          if-no-files-found: error
+          retention-days: 14
