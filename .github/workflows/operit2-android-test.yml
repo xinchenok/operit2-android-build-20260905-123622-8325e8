@@ -1,5 +1,6 @@
 # Personal test build. Not an official Operit2 release.
-# Fixed Windows build-root length after run 33945019027. APK success still requires a completed build.
+# Reuse matching runtime and retry source downloads after run 33946817266.
+# Retains short Windows paths; APK success still requires a completed build.
 name: Operit2 Android ARM64 Personal Test
 on:
   workflow_dispatch:
@@ -13,6 +14,9 @@ permissions:
 
 jobs:
   runtime:
+    permissions:
+      contents: read
+      actions: read
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
@@ -22,20 +26,82 @@ jobs:
           repository: AAswordman/Operit2
           ref: 303192ccf12a8873d9d391228be026096de95db5
           persist-credentials: false
+      - name: Restore pinned ARM64 runtime cache
+        id: runtime_cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            apps/flutter/app/android/app/src/main/jniLibs/arm64-v8a
+            apps/flutter/app/android/app/src/main/assets/android-runtime/arm64-v8a
+          key: operit2-runtime-arm64-303192ccf12a8873d9d391228be026096de95db5-v1
+      - name: Reuse previously built runtime from the same pinned source
+        id: reuse_runtime
+        if: steps.runtime_cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: operit2-runtime-arm64
+          path: apps/flutter/app/android/app/src/main
+          run-id: '33945019027'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install runtime build dependencies
+        if: steps.runtime_cache.outputs.cache-hit != 'true' && steps.reuse_runtime.outcome != 'success'
         run: |
           sudo apt-get update
           sudo apt-get install -y bison build-essential bzip2 ca-certificates curl diffutils flex gawk gzip patch pkg-config tar unzip xz-utils
       - name: Fetch runtime sources
+        if: steps.runtime_cache.outputs.cache-hit != 'true' && steps.reuse_runtime.outcome != 'success'
         shell: pwsh
-        run: pwsh -NoProfile -File tools/android-runtime/fetch_sources.ps1
+        run: |
+          # Override only transport. The pinned upstream script still checks every SHA-256.
+          function Invoke-WebRequest {
+            param([string]$Uri, [string]$OutFile)
+            $PSNativeCommandUseErrorActionPreference = $false
+            $urls = @($Uri)
+            if ($Uri -eq 'https://ftp.gnu.org/gnu/bash/bash-5.2.37.tar.gz') {
+              $urls += 'https://ftp.wayne.edu/gnu/bash/bash-5.2.37.tar.gz'
+              $urls += 'https://ftpmirror.gnu.org/bash/bash-5.2.37.tar.gz'
+            }
+            foreach ($url in $urls) {
+              Write-Host "Fetching with IPv4 and bounded retries: $url"
+              & curl --ipv4 --fail --location --show-error --retry 3 --retry-all-errors --retry-delay 3 --connect-timeout 15 --max-time 120 --output "$OutFile.partial" $url
+              if ($LASTEXITCODE -eq 0) {
+                Move-Item -LiteralPath "$OutFile.partial" -Destination $OutFile -Force
+                return
+              }
+              Remove-Item -LiteralPath "$OutFile.partial" -Force -ErrorAction SilentlyContinue
+            }
+            throw "All source download attempts failed: $Uri"
+          }
+          . ./tools/android-runtime/fetch_sources.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Runtime source extraction failed' }
       - name: Fetch Android NDK
+        if: steps.runtime_cache.outputs.cache-hit != 'true' && steps.reuse_runtime.outcome != 'success'
         run: bash tools/android-runtime/fetch_ndk_wsl.sh
       - name: Build upstream terminal runtime
+        if: steps.runtime_cache.outputs.cache-hit != 'true' && steps.reuse_runtime.outcome != 'success'
         run: |
           export ANDROID_NDK_HOME="$HOME/.cache/operit-android-runtime/android-ndk-r29-beta4"
           bash tools/android-runtime/build_android_tools_wsl.sh
           bash tools/android-runtime/build_alpine_rootfs_wsl.sh
+      - name: Check runtime payload before reuse and caching
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=apps/flutter/app/android/app/src/main
+          for lib in libbash.so liboperit_busybox.so liboperit_loader.so liboperit_proot.so; do
+            test -s "$root/jniLibs/arm64-v8a/$lib"
+          done
+          test -s "$root/assets/android-runtime/arm64-v8a/rootfs.tar.gz.bin"
+          test -s "$root/assets/android-runtime/arm64-v8a/rootfs.tar.gz.bin.sha256"
+      - name: Save runtime independently of APK build success
+        if: steps.runtime_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            apps/flutter/app/android/app/src/main/jniLibs/arm64-v8a
+            apps/flutter/app/android/app/src/main/assets/android-runtime/arm64-v8a
+          key: operit2-runtime-arm64-303192ccf12a8873d9d391228be026096de95db5-v1
       - name: Transfer ARM64 runtime to Windows job
         uses: actions/upload-artifact@v4
         with:
@@ -48,7 +114,7 @@ jobs:
             apps/flutter/app/android/app/src/main/assets/android-runtime/arm64-v8a/rootfs.tar.gz.bin
             apps/flutter/app/android/app/src/main/assets/android-runtime/arm64-v8a/rootfs.tar.gz.bin.sha256
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 14
 
   apk:
     needs: runtime
