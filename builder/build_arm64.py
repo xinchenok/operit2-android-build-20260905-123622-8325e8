@@ -12,8 +12,9 @@ import sys
 from pathlib import Path
 
 
-# The actual entry point intentionally imports only public helpers present in the
-# inspected upstream source. It does not modify the application's source code.
+# Application sources stay unchanged; the dependency build-script backport is documented.
+from prepare_android import patch_dynamic_color
+
 def build() -> None:
     root = Path.cwd()
     sys.path.insert(0, str(root / "tools" / "build_scripts"))
@@ -39,6 +40,7 @@ def build() -> None:
     with staged_non_ohos_flutter_dependencies():
         flutter_pub_get()
         flutter_pub_get(enforce_lockfile=True)
+        compatibility = patch_dynamic_color(FLUTTER_APP_DIR, DIST_DIR)
         run(
             [flutter, "build", "apk", "--release", "--no-pub",
              "--target-platform", "android-arm64", "--split-per-abi"],
@@ -56,6 +58,7 @@ def build() -> None:
         "source_url": f"https://github.com/AAswordman/Operit2/tree/{sha}",
         "abi": "arm64-v8a",
         "package_id": "app.operit",
+        "android_dependency_compatibility": compatibility,
         "official_build": False,
         "device_tested": False,
         "signing": "Personal test key, NOT the upstream author's signing key.",
