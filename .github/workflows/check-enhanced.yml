@@ -20,6 +20,13 @@ jobs:
         with:
           path: wrapper
           persist-credentials: false
+      - name: Archive exact builder snapshot
+        run: git -C wrapper archive --format=zip --output="$RUNNER_TEMP/wrapper-source.zip" HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enhanced-wrapper-source
+          path: ${{ runner.temp }}/wrapper-source.zip
+          retention-days: 7
       - uses: actions/checkout@v4
         with:
           repository: AAswordman/Operit2
@@ -80,12 +87,40 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: '1.95.0'
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
             core/target
-          key: enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-v1
+          key: enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-v2-${{ github.run_id }}
+          restore-keys: |
+            enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-
       - name: Type-check patched sources and run Flutter regression tests
-        run: python3 .operit2-builder/ci/check_flutter_enhanced.py
+        run: |
+          set -o pipefail
+          python3 -u .operit2-builder/ci/check_flutter_enhanced.py 2>&1 | tee "$RUNNER_TEMP/flutter-regressions.log"
+      - name: Preserve patched inputs and regression diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-regression-diagnostics
+          path: |
+            ${{ runner.temp }}/flutter-regressions.log
+            ${{ github.workspace }}/apps/flutter/app/test/enhanced*.dart
+            ${{ github.workspace }}/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+            ${{ github.workspace }}/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
+            ${{ github.workspace }}/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
+            ${{ github.workspace }}/tools/release/dist/compatibility
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Keep code generation after test failures
+        if: always()
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            core/target
+          key: enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-v2-${{ github.run_id }}
