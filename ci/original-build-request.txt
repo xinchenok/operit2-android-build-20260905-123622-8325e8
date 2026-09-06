@@ -1,2 +1,2 @@
-Validate the Original channel after build prerequisite repairs in 17b3ad887d49e7a220a82f3b6d8c79a9c19c2e75.
+Validate the Original channel after all 25 Flutter regressions passed for dcd24bcd02041a7332dc57ca5cb34d7521de6eb5.
 Use the existing fixed signing key and the latest upstream default branch, without application patches or legacy packages.
