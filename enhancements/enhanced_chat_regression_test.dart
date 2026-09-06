@@ -23,6 +23,30 @@ void main() {
     await vm.ensureInitialChat();
     expect(bridge.creations, 2);
   });
+  testWidgets('multiple Markdown paragraphs retain distinct gaps as content grows', (tester) async {
+    final breaks = find.byWidgetPredicate((widget) {
+      final key = widget.key;
+      return key is ValueKey<String> &&
+          key.value.startsWith('markdown-paragraph-break-');
+    });
+    for (final count in [3, 4]) {
+      await tester.pumpWidget(MaterialApp(home: Scaffold(
+        body: StreamMarkdownRenderer(
+          content: List.generate(count, (index) => 'Paragraph $index').join('\n\n'),
+          isStreaming: false,
+          textColor: Colors.black,
+          backgroundColor: Colors.white,
+          splitMarkdownContent: _splitMarkdownContent,
+        ),
+      )));
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(tester.takeException(), isNull);
+      expect(breaks, findsNWidgets(count - 1));
+      final keys = tester.widgetList<Widget>(breaks).map((widget) => widget.key).toSet();
+      expect(keys, hasLength(count - 1));
+    }
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
   testWidgets('nested horizontal scroll does not disable transcript follow', (tester) async {
     final controller = ScrollController();
     final horizontal = ScrollController();

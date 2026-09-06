@@ -253,7 +253,9 @@ jobs:
           D:/o/apps/flutter/app/lib/core/proxy/generated/CoreProxyClients.g.dart
           D:/o/apps/flutter/app/lib/core/proxy/generated/CoreProxyModels.g.dart
         key: operit2-channel-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-v1-${{ github.run_id }}-${{ github.run_attempt }}
-        restore-keys: operit2-channel-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-v1-
+        restore-keys: |
+          operit2-channel-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-v1-
+          operit2-channel-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-
     - name: Install bootstrap Flutter
       uses: subosito/flutter-action@v2
       with:

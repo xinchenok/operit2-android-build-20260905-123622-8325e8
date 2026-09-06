@@ -136,5 +136,17 @@
     "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
     "old": "    _mutateChatContentData(() {\n      _isSpeechRecording = true;\n    });",
     "new": "    _mutateChatContentData(() {\n      _speechRecordingChatId = recordingChatId;\n      _speechRecordingDraft = recordingDraft;\n      _isSpeechRecording = true;\n    });"
+  },
+  {
+    "name": "unique-markdown-paragraph-break-keys",
+    "path": "apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart",
+    "old": "        const SizedBox(\n          key: ValueKey<String>('markdown-paragraph-break'),\n          height: _markdownParagraphBreakHeight,\n        ),",
+    "new": "        SizedBox(\n          key: ValueKey<String>('markdown-paragraph-break-${widget.nodeKey}-$index'),\n          height: _markdownParagraphBreakHeight,\n        ),"
+  },
+  {
+    "name": "retain-trailing-markdown-gap-regression",
+    "path": "apps/flutter/app/test/chat_area_streaming_cursor_test.dart",
+    "old": "      find.byKey(const ValueKey<String>('markdown-paragraph-break')),",
+    "new": "      find.byWidgetPredicate((widget) {\n        final key = widget.key;\n        return key is ValueKey<String> &&\n            key.value.startsWith('markdown-paragraph-break-');\n      }),"
   }
 ]
