@@ -1,0 +1,30 @@
+name: Check one-click updater (no Android build)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/check-updater.yml'
+      - 'ci/**'
+      - 'client/**'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Python unit tests
+        run: |
+          python -m compileall -q builder
+          python -m unittest discover -s builder -p 'test_*.py' -v
+      - name: Actual Windows signing and launcher syntax test
+        shell: pwsh
+        run: ./ci/Test-Updater.ps1
