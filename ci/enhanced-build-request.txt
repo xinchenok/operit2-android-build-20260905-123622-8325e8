@@ -1,0 +1,1 @@
+Build the consolidated enhanced fixes after diagnosing run 34039855859: preserve the requested ARM64 versionCode, retain the configured signing key, and include the reviewed chat content protection fixes. Reuse matching compiler caches; no extra regression workflow.

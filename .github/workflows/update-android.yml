@@ -383,7 +383,7 @@ jobs:
       id: build_apk
     - name: Verify APK payload and SHA-256
       run: python .operit2-builder/builder/verify_apk.py tools/release/dist/operit2-android-arm64-personal-test.apk
-    - name: Verify Android signature
+    - name: Verify Android signature and package version
       run: |
         $sdk = $env:ANDROID_HOME
         if (-not $sdk) { $sdk = $env:ANDROID_SDK_ROOT }
@@ -395,10 +395,11 @@ jobs:
         $aapt = Join-Path $signer.DirectoryName 'aapt2.exe'
         $badging = & $aapt dump badging tools/release/dist/operit2-android-arm64-personal-test.apk 2>&1
         if ($LASTEXITCODE -ne 0) { throw 'Unable to inspect APK version and package ID' }
+        $badging | Set-Content -Encoding utf8 tools/release/dist/apk-badging.txt
         $text = $badging -join "`n"
         $packageMatch = [regex]::Match($text, "package: name='app.operit' versionCode='([0-9]+)'")
         if (-not $packageMatch.Success) { throw 'Unexpected Android package identity' }
-        if ($packageMatch.Groups[1].Value -ne $env:OPERIT2_BUILD_NUMBER) { throw 'APK versionCode did not increase as requested' }
+        if ($packageMatch.Groups[1].Value -ne $env:OPERIT2_BUILD_NUMBER) { throw "APK versionCode mismatch: expected $env:OPERIT2_BUILD_NUMBER, got $($packageMatch.Groups[1].Value)" }
     - name: Archive matching upstream source
       run: |
         git archive --format=zip --output=tools/release/dist/Operit2-source.zip HEAD
@@ -452,6 +453,8 @@ jobs:
         include-hidden-files: true
         path: |
           D:/o/.ci-logs/
+          D:/o/tools/release/dist/signature.txt
+          D:/o/tools/release/dist/apk-badging.txt
           D:/o/tools/release/dist/compatibility/
         if-no-files-found: warn
         retention-days: 14

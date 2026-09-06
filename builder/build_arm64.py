@@ -29,15 +29,17 @@ def build() -> None:
         DIST_DIR.mkdir(parents=True, exist_ok=True)
         shutil.copy2(FLUTTER_APP_DIR / "pubspec.lock", DIST_DIR / "resolved-pubspec.lock")
         shutil.copy2(FLUTTER_APP_DIR / "pubspec.yaml", DIST_DIR / "resolved-pubspec.yaml")
+        # A single target already produces an ARM64-only APK. ABI splitting
+        # adds Flutter's ABI offset to versionCode, breaking the update manifest.
         command = [flutter, "build", "apk", "--release", "--no-pub",
-                   "--target-platform", "android-arm64", "--split-per-abi"]
+                   "--target-platform", "android-arm64"]
         build_number = os.environ.get("OPERIT2_BUILD_NUMBER")
         if build_number:
             if not build_number.isdecimal() or not 0 < int(build_number) <= 2100000000:
                 raise RuntimeError("Invalid Android build number")
             command.extend(["--build-number", build_number])
         run(command, cwd=FLUTTER_APP_DIR)
-    apk = FLUTTER_APP_DIR / "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
+    apk = FLUTTER_APP_DIR / "build/app/outputs/flutter-apk/app-release.apk"
     copy_required_file(apk, DIST_DIR / "operit2-android-arm64-personal-test.apk")
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, encoding="utf-8").strip()
     info = {
