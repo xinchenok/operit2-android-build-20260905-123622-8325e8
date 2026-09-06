@@ -1,4 +1,4 @@
-name: Check one-click updater (no Android build)
+name: Check cloud build and fixed signing (no Android build)
 on:
   workflow_dispatch:
   push:
@@ -24,7 +24,37 @@ jobs:
       - name: Python unit tests
         run: |
           python -m compileall -q builder
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s builder -p 'test_*.py' -v
-      - name: Actual Windows signing and launcher syntax test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Windows signing interoperability tests
         shell: pwsh
         run: ./ci/Test-Updater.ps1
+      - name: Check whether fixed signing is configured
+        env:
+          SIGNING_CONFIGURED: ${{ secrets.OPERIT2_UPDATE_SIGNING != '' }}
+        shell: pwsh
+        run: |
+          Write-Host "FIXED_SIGNING_CONFIGURED=$env:SIGNING_CONFIGURED"
+          if ($env:SIGNING_CONFIGURED -eq 'true') {
+            'Fixed signing is configured. Use Actions > Build latest Android > Run workflow.' | Add-Content $env:GITHUB_STEP_SUMMARY
+          } else {
+            'First-time setup: add OPERIT2_UPDATE_SIGNING once in Settings > Secrets and variables > Actions. No local script is required. Subsequent builds use Actions > Build latest Android > Run workflow.' | Add-Content $env:GITHUB_STEP_SUMMARY
+          }
+      - name: Verify the configured signing key without compiling Android
+        env:
+          OPERIT2_UPDATE_SIGNING: ${{ secrets.OPERIT2_UPDATE_SIGNING }}
+        shell: pwsh
+        run: |
+          if (-not $env:OPERIT2_UPDATE_SIGNING) {
+            Write-Host 'No configured key to test; first-time Secret setup is still required.'
+            exit 0
+          }
+          $script = Join-Path $env:GITHUB_WORKSPACE 'builder/restore_update_signing.ps1'
+          $dir = Join-Path $env:RUNNER_TEMP ('verify-fixed-signing-' + [Guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $dir | Out-Null
+          Push-Location $dir
+          try { & $script } finally {
+            Pop-Location
+            Remove-Item -LiteralPath $dir -Recurse -Force
+          }
