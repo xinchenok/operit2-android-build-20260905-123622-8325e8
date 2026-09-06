@@ -212,16 +212,15 @@ jobs:
         if (Test-Path -LiteralPath $root) { throw "Build root already exists: $root" }
         git clone --local --no-hardlinks -- "$env:GITHUB_WORKSPACE" $root
         if ($LASTEXITCODE -ne 0) { throw 'Unable to create short-path source clone' }
-        Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE '.operit2-builder') -Destination (Join-Path $root '.operit2-builder') -Recurse
+        Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE '.operit2-builder') -Destination (Join-Path $root '.operit2-builder') -Recurse -Force
         if ($env:OPERIT2_CHANNEL -eq 'enhanced') {
-          git clone --no-checkout --local --no-hardlinks -- (Join-Path $env:GITHUB_WORKSPACE '.operit2-legacy') (Join-Path $root '.operit2-legacy')
-          if ($LASTEXITCODE -ne 0) { throw 'Legacy short-path checkout failed' }
-          git -C (Join-Path $root '.operit2-legacy') sparse-checkout set examples app/src/main/assets/packages tools/example_packages
-          if ($LASTEXITCODE -ne 0) { throw 'Legacy sparse checkout setup failed' }
-          git -C (Join-Path $root '.operit2-legacy') checkout --detach $env:LEGACY_SHA
-          if ($LASTEXITCODE -ne 0) { throw 'Legacy checkout failed' }
+          # Preserve the existing sparse/partial checkout, including .git and its
+          # promisor-remote configuration. Cloning it would request missing blobs.
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE '.operit2-legacy') -Destination (Join-Path $root '.operit2-legacy') -Recurse -Force
           $legacyHead = (git -C (Join-Path $root '.operit2-legacy') rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $legacyHead -ne $env:LEGACY_SHA) { throw 'Unexpected legacy source commit' }
+          git -C (Join-Path $root '.operit2-legacy') diff --exit-code HEAD -- examples tools/example_packages LICENSE
+          if ($LASTEXITCODE -ne 0) { throw 'Legacy source changed during staging' }
         }
         $head = (git -C $root rev-parse HEAD).Trim()
         if ($LASTEXITCODE -ne 0 -or $head -ne $env:SOURCE_SHA) { throw 'Unexpected source commit' }
