@@ -22,5 +22,47 @@
     "path": "core/crates/runtime/application/src/services/LocalModelService.rs",
     "old": "    fn catalogModel(&self, modelId: &str, version: &str) -> Result<LocalModelManifest, String> {\n        LocalModelCatalog::manifests()\n            .into_iter()\n            .find(|manifest| manifest.id == modelId.trim() && manifest.version == version.trim())\n            .ok_or_else(|| format!(\"local model catalog entry not found: {modelId}@{version}\"))\n    }",
     "new": "    fn catalogModel(&self, modelId: &str, version: &str) -> Result<LocalModelManifest, String> {\n        if let Some(manifest) = LocalModelCatalog::manifests().into_iter()\n            .find(|manifest| manifest.id == modelId.trim() && manifest.version == version.trim()) {\n            return Ok(manifest);\n        }\n        self.registryStore()?.read().map_err(errorString)?\n            .getInstalledModel(modelId, version)\n            .filter(|installed| installed.manifest.tags.iter().any(|tag| tag == \"legacy-import\"))\n            .map(|installed| installed.manifest.clone())\n            .ok_or_else(|| format!(\"local model catalog entry not found: {modelId}@{version}\"))\n    }"
+  },
+  {
+    "name": "vits_canonical_path_host_contract",
+    "path": "core/crates/foundation/host-api/src/lib.rs",
+    "old": "    fn validatePath(&self, path: &str, paramName: &str) -> HostResult<()>;\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>>;",
+    "new": "    fn validatePath(&self, path: &str, paramName: &str) -> HostResult<()>;\n    /// Resolves an existing physical path, including symbolic links, within its owner Host.\n    /// Browser-only/test hosts without a physical filesystem may reject this operation.\n    fn canonicalizePath(&self, path: &str) -> HostResult<String> {\n        let _ = path;\n        Err(HostError::new(\"FileSystemHost does not expose physical canonical paths\"))\n    }\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>>;"
+  },
+  {
+    "name": "vits_canonical_path_posix",
+    "path": "hosts/common/operit-host-native-filesystem/src/lib.rs",
+    "old": "    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {",
+    "new": "    fn canonicalizePath(&self, path: &str) -> HostResult<String> {\n        self.validatePath(path, \"path\")?;\n        Ok(fs::canonicalize(path)?.to_string_lossy().to_string())\n    }\n\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {"
+  },
+  {
+    "name": "vits_canonical_path_windows",
+    "path": "hosts/windows/src/tools/fs/mod.rs",
+    "old": "    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {",
+    "new": "    fn canonicalizePath(&self, path: &str) -> HostResult<String> {\n        self.validatePath(path, \"path\")?;\n        Ok(fs::canonicalize(path)?.to_string_lossy().to_string())\n    }\n\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {"
+  },
+  {
+    "name": "vits_canonical_path_linux",
+    "path": "hosts/linux/src/tools/fs/mod.rs",
+    "old": "    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {",
+    "new": "    fn canonicalizePath(&self, path: &str) -> HostResult<String> {\n        self.validatePath(path, \"path\")?;\n        Ok(fs::canonicalize(path)?.to_string_lossy().to_string())\n    }\n\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {"
+  },
+  {
+    "name": "vits_canonical_path_apple",
+    "path": "hosts/apple/src/tools/fs/mod.rs",
+    "old": "    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {",
+    "new": "    fn canonicalizePath(&self, path: &str) -> HostResult<String> {\n        self.validatePath(path, \"path\")?;\n        Ok(fs::canonicalize(path)?.to_string_lossy().to_string())\n    }\n\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {"
+  },
+  {
+    "name": "vits_canonical_path_android",
+    "path": "hosts/android/src/filesystem.rs",
+    "old": "    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {",
+    "new": "    fn canonicalizePath(&self, path: &str) -> HostResult<String> {\n        self.inner.canonicalizePath(path)\n    }\n\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {"
+  },
+  {
+    "name": "vits_canonical_path_ohos",
+    "path": "hosts/ohos/src/filesystem.rs",
+    "old": "    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {",
+    "new": "    fn canonicalizePath(&self, path: &str) -> HostResult<String> {\n        self.inner.canonicalizePath(path)\n    }\n\n    fn listFiles(&self, path: &str) -> HostResult<Vec<FileEntry>> {"
   }
 ]

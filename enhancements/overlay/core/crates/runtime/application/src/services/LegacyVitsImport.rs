@@ -1,9 +1,10 @@
 //! Imports an existing, Sherpa-compatible Operit 1 VITS package without changing
 //! the active TTS configuration. Run this on the legacy host job worker.
+use operit_host_api::{FileSystemHost, RuntimeStorageHost, RuntimeStorageWriteHost};
 use std::collections::{BTreeMap, BTreeSet};
-use std::fs::{self, File};
 use std::io::{Read, Seek, SeekFrom};
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
+use std::sync::Arc;
 
 use operit_host_api::HostManager::HostManager;
 use operit_host_api::TimeUtils::currentTimeMillis;
@@ -22,12 +23,143 @@ use crate::services::LocalModelService::LocalModelService;
 const MAX_PACKAGE_BYTES: u64 = 4 * 1024 * 1024 * 1024;
 const MAX_TEXT_BYTES: u64 = 32 * 1024 * 1024;
 
-struct Scratch(PathBuf);
+struct Scratch {
+    path: PathBuf,
+    host: Arc<dyn FileSystemHost>,
+}
 impl Drop for Scratch {
     fn drop(&mut self) {
-        let _ = fs::remove_dir_all(&self.0);
+        let _ = self.host.deleteFile(&self.path.to_string_lossy(), true);
     }
 }
+struct HostFiles {
+    fs: Arc<dyn FileSystemHost>,
+    storage: Arc<dyn RuntimeStorageHost>,
+    writers: Arc<dyn RuntimeStorageWriteHost>,
+    root: PathBuf,
+    scratch: PathBuf,
+}
+impl HostFiles {
+    fn info(&self, path: &Path) -> Result<operit_host_api::FileInfo, String> {
+        self.fs.fileInfo(&path.to_string_lossy()).map_err(err)
+    }
+    fn size(&self, path: &Path) -> Result<u64, String> {
+        let info = self.info(path)?;
+        if !info.exists || info.fileType != "file" || info.size < 0 {
+            return Err(format!("VITS 文件不可读：{}", path.display()));
+        }
+        Ok(info.size as u64)
+    }
+    fn mkdir(&self, path: &Path) -> Result<(), String> {
+        self.fs
+            .makeDirectory(&path.to_string_lossy(), true)
+            .map_err(err)
+    }
+    fn storage_path(&self, path: &Path) -> Result<String, String> {
+        let relative = path
+            .strip_prefix(&self.root)
+            .map_err(|_| "VITS 暂存文件超出运行时目录".to_string())?;
+        if relative
+            .components()
+            .any(|c| !matches!(c, Component::Normal(_)))
+        {
+            return Err("VITS 运行时相对路径无效".into());
+        }
+        Ok(format!(
+            "runtime/{}",
+            relative.to_string_lossy().replace('\\', "/")
+        ))
+    }
+    fn reader(&self, source: &Path) -> Result<std::io::BufReader<HostRangeReader>, String> {
+        let size = self.size(source)?;
+        if size > MAX_PACKAGE_BYTES {
+            return Err("VITS 模型或压缩文件超过 4 GiB".into());
+        }
+        // FileSystemHost owns copying external files; range reads use the existing
+        // RuntimeStorageHost contract. Neither operation loads the entire file.
+        let (path, cleanup) = if source.starts_with(&self.root) {
+            (source.to_path_buf(), None)
+        } else {
+            let temporary = self
+                .scratch
+                .join(format!("reader-{}", uuid::Uuid::new_v4()));
+            self.fs
+                .copyFile(
+                    &source.to_string_lossy(),
+                    &temporary.to_string_lossy(),
+                    false,
+                )
+                .map_err(err)?;
+            (
+                temporary.clone(),
+                Some(Scratch {
+                    path: temporary,
+                    host: self.fs.clone(),
+                }),
+            )
+        };
+        let length = self.size(&path)?;
+        if length != size {
+            return Err("VITS 源文件在复制期间发生改变，请停止修改后重试".into());
+        }
+        Ok(std::io::BufReader::with_capacity(
+            64 * 1024,
+            HostRangeReader {
+                storage: self.storage.clone(),
+                path: self.storage_path(&path)?,
+                length,
+                position: 0,
+                _cleanup: cleanup,
+            },
+        ))
+    }
+}
+struct HostRangeReader {
+    storage: Arc<dyn RuntimeStorageHost>,
+    path: String,
+    length: u64,
+    position: u64,
+    _cleanup: Option<Scratch>,
+}
+impl Read for HostRangeReader {
+    fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
+        let count = (self.length - self.position).min(buffer.len().min(64 * 1024) as u64) as usize;
+        if count == 0 {
+            return Ok(0);
+        }
+        let bytes = self
+            .storage
+            .readBytesRange(&self.path, self.position, count)
+            .map_err(|e| std::io::Error::other(e.to_string()))?;
+        if bytes.len() != count {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::UnexpectedEof,
+                "VITS runtime range read was truncated",
+            ));
+        }
+        buffer[..count].copy_from_slice(&bytes);
+        self.position += count as u64;
+        Ok(count)
+    }
+}
+impl Seek for HostRangeReader {
+    fn seek(&mut self, offset: SeekFrom) -> std::io::Result<u64> {
+        let next = match offset {
+            SeekFrom::Start(position) => position as i128,
+            SeekFrom::Current(delta) => self.position as i128 + delta as i128,
+            SeekFrom::End(delta) => self.length as i128 + delta as i128,
+        };
+        if next < 0 || next > self.length as i128 {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "VITS seek is outside the file",
+            ));
+        }
+        self.position = next as u64;
+        Ok(self.position)
+    }
+}
+
 fn err(error: impl std::fmt::Display) -> String {
     error.to_string()
 }
@@ -36,6 +168,10 @@ fn err(error: impl std::fmt::Display) -> String {
 /// native engine are installed. Failure never writes the current TTS preference.
 pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String> {
     let mut config = TtsConfigManager::getInstance().getCurrentTtsConfig()?;
+    let fs_host = host
+        .fileSystemHost
+        .clone()
+        .ok_or("VITS 导入需要原生文件系统 Host")?;
     let package = request["tts_vits_package_path"]
         .as_str()
         .unwrap_or("")
@@ -47,14 +183,26 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
         // `Url::to_file_path` only exists on native file-system targets.
         // Web Access forwards imports to a native Core; its wasm build must
         // still compile without pretending the browser can read local paths.
-        #[cfg(any(unix, windows, target_os = "redox", target_os = "wasi", target_os = "hermit"))]
+        #[cfg(any(
+            unix,
+            windows,
+            target_os = "redox",
+            target_os = "wasi",
+            target_os = "hermit"
+        ))]
         {
             url::Url::parse(package)
                 .map_err(err)?
                 .to_file_path()
                 .map_err(|_| "VITS file URL 无法转换成本地路径".to_string())?
         }
-        #[cfg(not(any(unix, windows, target_os = "redox", target_os = "wasi", target_os = "hermit")))]
+        #[cfg(not(any(
+            unix,
+            windows,
+            target_os = "redox",
+            target_os = "wasi",
+            target_os = "hermit"
+        )))]
         {
             return Err("本地 VITS 模型导入需要连接原生 Core 服务".into());
         }
@@ -79,8 +227,11 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
     } else {
         source
     };
-    let source = fs::canonicalize(&source)
-        .map_err(|e| format!("无法读取 VITS 模型包 {}：{e}", source.display()))?;
+    let source = PathBuf::from(
+        fs_host
+            .canonicalizePath(&source.to_string_lossy())
+            .map_err(|e| format!("无法读取 VITS 模型包 {}：{e}", source.display()))?,
+    );
     let options: Value = match request.get("tts_vits_options") {
         None | Some(Value::Null) => serde_json::json!({}),
         Some(Value::String(value)) if value.trim().is_empty() => serde_json::json!({}),
@@ -123,20 +274,42 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
         .as_ref()
         .and_then(|s| s.runtimeRootDir())
         .ok_or("VITS 导入需要已初始化的运行时存储")?;
-    let scratch = Scratch(
-        root.join("cache")
-            .join(format!("legacy-vits-{}", uuid::Uuid::new_v4())),
+    let root = PathBuf::from(
+        fs_host
+            .canonicalizePath(&root.to_string_lossy())
+            .map_err(err)?,
     );
-    fs::create_dir_all(&scratch.0).map_err(err)?;
-    let package_root = if source.is_dir() {
+    let scratch = Scratch {
+        path: root
+            .join("cache")
+            .join(format!("legacy-vits-{}", uuid::Uuid::new_v4())),
+        host: fs_host.clone(),
+    };
+    fs_host
+        .makeDirectory(&scratch.path.to_string_lossy(), true)
+        .map_err(err)?;
+    let access = HostFiles {
+        fs: fs_host,
+        storage: host
+            .runtimeStorageHost
+            .clone()
+            .ok_or("VITS 导入需要运行时存储 Host")?,
+        writers: host
+            .runtimeStorageWriteHost
+            .clone()
+            .ok_or("VITS 导入需要流式写入 Host")?,
+        root: root.clone(),
+        scratch: scratch.path.clone(),
+    };
+    let package_root = if access.info(&source)?.fileType == "directory" {
         source.clone()
     } else {
-        let extracted = scratch.0.join("unpacked");
-        unpack(&source, &extracted)?;
+        let extracted = scratch.path.join("unpacked");
+        unpack(&access, &source, &extracted)?;
         extracted
     };
     let mut files = Vec::new();
-    list_files(&package_root, &mut files, 0)?;
+    list_files(&access, &package_root, &mut files, 0)?;
     let package_manifest = unique(
         &files,
         |p| p.file_name().is_some_and(|s| s == "operit-vits-tts.json"),
@@ -144,11 +317,12 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
     )?;
     let declaration = package_manifest
         .as_ref()
-        .map(|p| read_json(p))
+        .map(|p| read_json(&access, p))
         .transpose()?
         .unwrap_or(Value::Null);
     reject_custom_frontend(&declaration)?;
     let model = choose_file(
+        &access,
         &package_root,
         &declaration,
         options,
@@ -162,7 +336,7 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
         },
     )?
     .ok_or("VITS 包未找到 ONNX 模型；多个模型时请填写 model_path")?;
-    let metadata = onnx_metadata(&model)?;
+    let metadata = onnx_metadata(&access, &model)?;
     for key in [
         "model_type",
         "sample_rate",
@@ -235,6 +409,7 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
         return Err(format!("VITS speaker_id 必须在 0 到 {} 之间", speakers - 1));
     }
     let lexicon = choose_file(
+        &access,
         &package_root,
         &declaration,
         options,
@@ -249,6 +424,7 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
     )?
     .ok_or("VITS 包缺少 lexicon.txt；依赖 espeak 数据目录的 Piper 包不能用当前词典驱动代替")?;
     let token_file = choose_file(
+        &access,
         &package_root,
         &declaration,
         options,
@@ -262,28 +438,33 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
         },
     )?;
     let legacy_config = resolve_file(
+        &access,
         &package_root,
         &declaration,
         options,
         "config",
         "config_path",
-    )?
-    .or_else(|| {
-        let p = PathBuf::from(format!("{}.json", model.to_string_lossy()));
-        p.is_file().then_some(p)
-    });
+    )?;
+    let legacy_config = match legacy_config {
+        Some(path) => Some(path),
+        None => {
+            let candidate = PathBuf::from(format!("{}.json", model.to_string_lossy()));
+            let info = access.info(&candidate)?;
+            (info.exists && info.fileType == "file").then_some(candidate)
+        }
+    };
     let token_text = if let Some(path) = token_file {
-        read_text(&path)?
+        read_text(&access, &path)?
     } else {
         let path = legacy_config
             .as_ref()
             .ok_or("VITS 包缺少 tokens.txt 或带 token map 的 ONNX 配置")?;
-        tokens_from_config(&read_json(path)?)?
+        tokens_from_config(&read_json(&access, path)?)?
     };
-    let lexicon_text = read_text(&lexicon)?;
+    let lexicon_text = read_text(&access, &lexicon)?;
     validate_lexicon(&token_text, &lexicon_text)?;
     if let Some(path) = legacy_config {
-        let value = read_json(&path)?;
+        let value = read_json(&access, &path)?;
         reject_custom_frontend(&value)?;
         // The current stock driver has fixed inference defaults. Reject overrides
         // instead of claiming they were applied or changing the user's voice silently.
@@ -303,19 +484,38 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
             }
         }
     }
-    let staged = scratch.0.join("model");
-    fs::create_dir_all(&staged).map_err(err)?;
-    fs::copy(&model, staged.join("model.onnx")).map_err(err)?;
-    if onnx_metadata(&staged.join("model.onnx"))? != metadata {
+    let staged = scratch.path.join("model");
+    access.mkdir(&staged)?;
+    access
+        .fs
+        .copyFile(
+            &model.to_string_lossy(),
+            &staged.join("model.onnx").to_string_lossy(),
+            false,
+        )
+        .map_err(err)?;
+    if onnx_metadata(&access, &staged.join("model.onnx"))? != metadata {
         return Err("VITS 模型在导入期间发生改变，请停止修改模型文件后重试".into());
     }
-    fs::write(staged.join("tokens.txt"), token_text).map_err(err)?;
-    fs::write(staged.join("lexicon.txt"), lexicon_text).map_err(err)?;
+    access
+        .fs
+        .writeFileBytes(
+            &staged.join("tokens.txt").to_string_lossy(),
+            token_text.as_bytes(),
+        )
+        .map_err(err)?;
+    access
+        .fs
+        .writeFileBytes(
+            &staged.join("lexicon.txt").to_string_lossy(),
+            lexicon_text.as_bytes(),
+        )
+        .map_err(err)?;
     let mut manifest = LocalModelCatalog::sherpaOnnxVitsTts();
     manifest.files = ["model.onnx", "tokens.txt", "lexicon.txt"]
         .into_iter()
         .map(|name| {
-            let (sha256, byteSize) = digest_file(&staged.join(name))?;
+            let (sha256, byteSize) = digest_file(&access, &staged.join(name))?;
             Ok(LocalModelFile {
                 relativePath: name.into(),
                 sha256,
@@ -365,16 +565,19 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
             .strip_prefix("runtime/")
             .ok_or("VITS 模型存储路径无效")?,
     );
-    fs::create_dir_all(target.parent().ok_or("VITS 模型存储目录无效")?).map_err(err)?;
-    if target.exists() {
+    access.mkdir(target.parent().ok_or("VITS 模型存储目录无效")?)?;
+    if access.info(&target)?.exists {
         for file in &manifest.files {
-            let actual = digest_file(&target.join(&file.relativePath))?;
+            let actual = digest_file(&access, &target.join(&file.relativePath))?;
             if actual != (file.sha256.clone(), file.byteSize) {
                 return Err("已导入的 VITS 文件已改变；请在本地模型设置中删除后重新导入".into());
             }
         }
     } else {
-        fs::rename(&staged, &target).map_err(err)?;
+        access
+            .fs
+            .moveFile(&staged.to_string_lossy(), &target.to_string_lossy())
+            .map_err(err)?;
     }
     let model_key = manifest.registryKey();
     let now = currentTimeMillis();
@@ -439,14 +642,24 @@ fn reject_custom_frontend(config: &Value) -> Result<(), String> {
     Ok(())
 }
 
-fn read_text(path: &Path) -> Result<String, String> {
-    if fs::metadata(path).map_err(err)?.len() > MAX_TEXT_BYTES {
+fn read_text(access: &HostFiles, path: &Path) -> Result<String, String> {
+    let size = access.size(path)?;
+    if size > MAX_TEXT_BYTES {
         return Err(format!("VITS 文本配置文件过大：{}", path.display()));
     }
-    fs::read_to_string(path).map_err(err)
+    let mut bytes = Vec::with_capacity(size as usize);
+    access
+        .reader(path)?
+        .take(MAX_TEXT_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(err)?;
+    if bytes.len() as u64 != size {
+        return Err("VITS 文本文件在读取期间发生改变".into());
+    }
+    String::from_utf8(bytes).map_err(err)
 }
-fn read_json(path: &Path) -> Result<Value, String> {
-    serde_json::from_str(&read_text(path)?).map_err(err)
+fn read_json(access: &HostFiles, path: &Path) -> Result<Value, String> {
+    serde_json::from_str(&read_text(access, path)?).map_err(err)
 }
 fn unique(
     files: &[PathBuf],
@@ -464,6 +677,7 @@ fn unique(
     Ok(first)
 }
 fn choose_file(
+    access: &HostFiles,
     root: &Path,
     declaration: &Value,
     options: &serde_json::Map<String, Value>,
@@ -472,12 +686,13 @@ fn choose_file(
     files: &[PathBuf],
     matches: impl Fn(&Path) -> bool,
 ) -> Result<Option<PathBuf>, String> {
-    match resolve_file(root, declaration, options, field, option)? {
+    match resolve_file(access, root, declaration, options, field, option)? {
         Some(file) => Ok(Some(file)),
         None => unique(files, matches, false),
     }
 }
 fn resolve_file(
+    access: &HostFiles,
     root: &Path,
     declaration: &Value,
     options: &serde_json::Map<String, Value>,
@@ -492,26 +707,60 @@ fn resolve_file(
     let Some(raw) = raw else {
         return Ok(None);
     };
-    let path = fs::canonicalize(root.join(raw)).map_err(err)?;
-    if !path.starts_with(fs::canonicalize(root).map_err(err)?) || !path.is_file() {
+    let path = PathBuf::from(
+        access
+            .fs
+            .canonicalizePath(&root.join(raw).to_string_lossy())
+            .map_err(err)?,
+    );
+    let canonical_root = PathBuf::from(
+        access
+            .fs
+            .canonicalizePath(&root.to_string_lossy())
+            .map_err(err)?,
+    );
+    if !path.starts_with(canonical_root) || access.info(&path)?.fileType != "file" {
         return Err(format!("VITS 包文件必须位于包目录内：{raw}"));
     }
     Ok(Some(path))
 }
-fn list_files(path: &Path, out: &mut Vec<PathBuf>, depth: usize) -> Result<(), String> {
+fn list_files(
+    access: &HostFiles,
+    path: &Path,
+    out: &mut Vec<PathBuf>,
+    depth: usize,
+) -> Result<(), String> {
     if depth > 16 {
         return Err("VITS 包目录层数过多".into());
     }
-    for entry in fs::read_dir(path).map_err(err)? {
-        let entry = entry.map_err(err)?;
-        let kind = entry.file_type().map_err(err)?;
-        if kind.is_symlink() {
+    let canonical_parent = PathBuf::from(
+        access
+            .fs
+            .canonicalizePath(&path.to_string_lossy())
+            .map_err(err)?,
+    );
+    for entry in access.fs.listFiles(&path.to_string_lossy()).map_err(err)? {
+        let name = Path::new(&entry.name);
+        if name.components().count() != 1
+            || !matches!(name.components().next(), Some(Component::Normal(_)))
+        {
+            return Err("VITS 文件系统 Host 返回了无效文件名".into());
+        }
+        let child = canonical_parent.join(name);
+        let canonical_child = PathBuf::from(
+            access
+                .fs
+                .canonicalizePath(&child.to_string_lossy())
+                .map_err(err)?,
+        );
+        if canonical_child != child {
             return Err("VITS 包不支持符号链接，请提供完整模型文件".into());
         }
-        if kind.is_dir() {
-            list_files(&entry.path(), out, depth + 1)?;
-        } else if kind.is_file() {
-            out.push(entry.path());
+        let info = access.info(&child)?;
+        if info.fileType == "directory" {
+            list_files(access, &child, out, depth + 1)?;
+        } else if info.fileType == "file" {
+            out.push(child);
         }
         if out.len() > 10000 {
             return Err("VITS 包文件过多".into());
@@ -519,17 +768,17 @@ fn list_files(path: &Path, out: &mut Vec<PathBuf>, depth: usize) -> Result<(), S
     }
     Ok(())
 }
-fn unpack(source: &Path, target: &Path) -> Result<(), String> {
-    let mut zip = zip::ZipArchive::new(File::open(source).map_err(err)?)
+fn unpack(access: &HostFiles, source: &Path, target: &Path) -> Result<(), String> {
+    let mut zip = zip::ZipArchive::new(access.reader(source)?)
         .map_err(|e| format!("VITS 包不是可读取的目录或 ZIP：{e}"))?;
     if zip.len() > 10000 {
         return Err("VITS ZIP 文件过多".into());
     }
-    fs::create_dir_all(target).map_err(err)?;
+    access.mkdir(target)?;
     let mut total = 0u64;
     let mut names = BTreeSet::new();
     for index in 0..zip.len() {
-        let entry = zip.by_index(index).map_err(err)?;
+        let mut entry = zip.by_index(index).map_err(err)?;
         let relative = entry
             .enclosed_name()
             .ok_or("VITS ZIP 文件路径越界")?
@@ -545,19 +794,34 @@ fn unpack(source: &Path, target: &Path) -> Result<(), String> {
         }
         let path = target.join(relative);
         if entry.is_dir() {
-            fs::create_dir_all(&path).map_err(err)?;
+            access.mkdir(&path)?;
             continue;
         }
-        fs::create_dir_all(path.parent().ok_or("VITS ZIP 路径无效")?).map_err(err)?;
-        let count = std::io::copy(
-            &mut entry.take(MAX_PACKAGE_BYTES - total + 1),
-            &mut File::create(path).map_err(err)?,
-        )
-        .map_err(err)?;
-        total += count;
-        if total > MAX_PACKAGE_BYTES {
-            return Err("VITS ZIP 解压内容超过 4 GiB".into());
+        access.mkdir(path.parent().ok_or("VITS ZIP 路径无效")?)?;
+        let mut writer = access
+            .writers
+            .createWriteSession(&access.storage_path(&path)?)
+            .map_err(err)?;
+        let outcome = (|| -> Result<(), String> {
+            let mut buffer = [0u8; 64 * 1024];
+            loop {
+                let count = entry.read(&mut buffer).map_err(err)?;
+                if count == 0 {
+                    break;
+                }
+                total += count as u64;
+                if total > MAX_PACKAGE_BYTES {
+                    return Err("VITS ZIP 解压内容超过 4 GiB".into());
+                }
+                writer.writeChunk(&buffer[..count]).map_err(err)?;
+            }
+            Ok(())
+        })();
+        if let Err(error) = outcome {
+            let _ = writer.discard();
+            return Err(error);
         }
+        writer.commitFast().map_err(err)?;
     }
     Ok(())
 }
@@ -631,8 +895,8 @@ fn validate_lexicon(tokens: &str, lexicon: &str) -> Result<(), String> {
     }
     Ok(())
 }
-fn digest_file(path: &Path) -> Result<(String, u64), String> {
-    let mut file = File::open(path).map_err(err)?;
+fn digest_file(access: &HostFiles, path: &Path) -> Result<(String, u64), String> {
+    let mut file = access.reader(path)?;
     let mut digest = Sha256::new();
     let mut total = 0;
     let mut buffer = [0u8; 64 * 1024];
@@ -652,9 +916,9 @@ fn digest_file(path: &Path) -> Result<(String, u64), String> {
 
 // ONNX ModelProto field 14 contains StringStringEntryProto metadata. Skip tensor
 // payloads with seeks, so inspecting a large model does not allocate its weights.
-fn onnx_metadata(path: &Path) -> Result<BTreeMap<String, String>, String> {
-    let mut file = File::open(path).map_err(err)?;
-    let end = file.metadata().map_err(err)?.len();
+fn onnx_metadata(access: &HostFiles, path: &Path) -> Result<BTreeMap<String, String>, String> {
+    let mut file = access.reader(path)?;
+    let end = access.size(path)?;
     if end > MAX_PACKAGE_BYTES {
         return Err("VITS 模型文件超过 4 GiB".into());
     }
