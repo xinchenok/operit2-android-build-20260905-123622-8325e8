@@ -37,6 +37,14 @@ fn retain_settings(section:&str,updates:&Value)->Result<(),String>{
     for (key,value) in updates.as_object().ok_or("Retained legacy settings must be an object")? {all[section][key]=value.clone();}
     store.setEnv(RETAINED_KEY,&all.to_string()).map_err(|e|e.to_string())
 }
+fn clear_retained_settings(section:&str,keys:&[String])->Result<(),String>{
+    use operit_runtime::data::preferences::EnvPreferences::EnvPreferences;
+    let store=EnvPreferences::getInstance();
+    let Some(raw)=store.getEnv(RETAINED_KEY).map_err(|e|e.to_string())? else{return Ok(());};
+    let mut all:Value=serde_json::from_str(&raw).map_err(|e|e.to_string())?;
+    if let Some(section)=all.get_mut(section).and_then(Value::as_object_mut){for key in keys{section.remove(key);}}
+    store.setEnv(RETAINED_KEY,&all.to_string()).map_err(|e|e.to_string())
+}
 fn retained_notice(fields:&[String])->Vec<String>{
     if fields.is_empty(){Vec::new()}else{vec![format!("以下旧版设置已原样保留，但 Operit2 当前没有对应执行引擎，未启用或替换现有设置：{}。请在增强版设置页选择可用服务；不要将保留成功视为功能已生效。",fields.join(", "))]}
 }
@@ -144,7 +152,7 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
                 if model_json["builtinToolsOverride"].is_null(){model_json["builtinToolsOverride"]=json!([]);}
                 let tools=model_json["builtinToolsOverride"].as_array_mut().ok_or("Missing model built-in tool defaults")?;
                 if let Some(tool)=tools.iter_mut().find(|tool|tool["requestFormat"]=="GeminiGoogleSearch"){tool["enabled"]=json!(enabled);}
-                else{tools.push(json!({"toolType":"WebSearch","displayName":"Google Search","enabled":enabled,"requestFormat":"GeminiGoogleSearch","exclusivity":"CanMixWithExternalTools","config":{}}));}
+                else{tools.push(json!({"toolType":"WebSearch","displayName":"Google Search","enabled":enabled,"requestFormat":"GeminiGoogleSearch","exclusivity":"ExclusiveWithExternalTools","config":{}}));}
             },
             "enable_claude_1h_prompt_cache"=>{value.as_bool().ok_or("enable_claude_1h_prompt_cache must be boolean")?;},
             "custom_parameters"=>{},
@@ -266,7 +274,8 @@ async fn chat_call(provider_context:ProviderRuntimeContext,request:&Value)->Resu
 async fn wait_cancelled(cancelled:&std::sync::atomic::AtomicBool){
     while !cancelled.load(std::sync::atomic::Ordering::Acquire){tokio::time::sleep(std::time::Duration::from_millis(100)).await;}
 }
-async fn chat_plan_call(handler:AIToolHandler,provider_context:ProviderRuntimeContext,request:&Value)->Result<Value,String>{
+async fn chat_plan_call(handler:AIToolHandler,provider_context:ProviderRuntimeContext,request:&Value,cancelled:std::sync::Arc<std::sync::atomic::AtomicBool>)->Result<Value,String>{
+    if cancelled.load(std::sync::atomic::Ordering::Acquire){return Err("Subtask cancelled before execution".into());}
     use operit_providers::chat::EnhancedAIService::{EnhancedAIService,SendMessageOptions};
     let mut service=EnhancedAIService::new(handler,provider_context);
     let mut options=SendMessageOptions::new();
@@ -282,8 +291,6 @@ async fn chat_plan_call(handler:AIToolHandler,provider_context:ProviderRuntimeCo
     options.enableMemoryAutoUpdate=request["enableMemoryAutoUpdate"].as_bool().unwrap_or(false);
     options.enableThinking=request["enableThinking"].as_bool().unwrap_or(false);
     options.stream=false;options.disableWarning=true;
-    let request_id=string(request,"requestId")?.to_string();
-    let cancelled=operit_plugin_sdk::legacy_planning_cancellation::register(&request_id,request["parentExecutionId"].as_str().unwrap_or(""))?;
     let result=async {
         let response=tokio::select! {
             response=service.sendMessage(options)=>Some(response),
@@ -299,7 +306,6 @@ async fn chat_plan_call(handler:AIToolHandler,provider_context:ProviderRuntimeCo
         if !finished{service.cancelConversation().await;return Err("Subtask cancelled".into());}
         Ok(json!({"text":text,"inputTokens":service.getCurrentInputTokenCount(),"outputTokens":service.getCurrentOutputTokenCount(),"cachedInputTokens":service.getCurrentCachedInputTokenCount()}))
     }.await;
-    operit_plugin_sdk::legacy_planning_cancellation::remove(&request_id);
     result
 }
 
@@ -351,7 +357,7 @@ pub fn run(application:&mut OperitApplication,args:&[String],output:&mut CoreCom
             json!({"chatId":id,"order":order,"limit":end-start+1,"messages":selected})
         },
         "speech-get"=>speech_get()?,
-        "speech-set"=>speech_set(&request)?,
+        "speech-set"=>start_blocking_job(application,"speech-set",request.clone())?,
         "speech-test"=>start_blocking_job(application,"speech-test",request.clone())?,
         "script-run"=>start_blocking_job(application,"script-run",request.clone())?,
         "mcp-restart"=>start_blocking_job(application,"mcp-restart",request.clone())?,
@@ -385,11 +391,24 @@ fn speech_get()->Result<Value,String>{
         "sttServiceType":if stt.providerType=="OPENAI_COMPATIBLE"{"OPENAI_STT"}else{&stt.providerType},
         "sttHttpConfig":{"endpointUrl":stt.endpoint,"apiKeySet":!stt.apiKey.is_empty(),"apiKeyPreview":if stt.apiKey.is_empty(){""}else{"configured"},"modelName":stt.model}}))
 }
-fn speech_set(request:&Value)->Result<Value,String>{
+fn speech_set(host:&operit_host_api::HostManager::HostManager,request:&Value)->Result<Value,String>{
     use operit_runtime::data::preferences::{TtsConfigManager::TtsConfigManager,SttConfigManager::SttConfigManager};
     let tts_manager=TtsConfigManager::getInstance();let stt_manager=SttConfigManager::getInstance();
     let mut tts=encode(tts_manager.getCurrentTtsConfig()?)?;let mut stt=encode(stt_manager.getCurrentSttConfig()?)?;
     let original=request.as_object().ok_or("Speech updates must be object")?;
+    let vits_requested=request["tts_service_type"]=="VITS_TTS"||original.keys().any(|key|key.starts_with("tts_vits_"));
+    let mut vits_settings=json!({});
+    let mut prepared=request.clone();
+    if vits_requested{
+        for source in [retained_settings("speech")?,retained_settings("vits")?,request.clone()]{
+            for (key,value) in source.as_object().ok_or("VITS settings must be an object")?{if key.starts_with("tts_"){vits_settings[key]=value.clone();}}
+        }
+        tts=encode(operit_runtime::services::LegacyVitsImport::prepare(host,&vits_settings)?)?;
+        prepared["tts_service_type"]=json!("LOCAL_MODEL");
+        prepared.as_object_mut().unwrap().retain(|key,_|!key.starts_with("tts_")||matches!(key.as_str(),"tts_service_type"|"tts_speech_rate"|"tts_pitch"|"tts_cleaner_regexs"));
+    }
+    let request=&prepared;
+    let original=request.as_object().unwrap();
     let tts_unsupported=request["tts_service_type"].as_str().map(|kind|!matches!(kind,"SIMPLE_TTS"|"OPENAI_TTS")&&operit_model::TtsCatalog::TtsCatalog::provider(kind).is_err()).unwrap_or(false);
     let stt_unsupported=request["stt_service_type"].as_str().map(|kind|kind!="OPENAI_STT"&&operit_model::SttCatalog::SttCatalog::provider(kind).is_err()).unwrap_or(false);
     let retained:serde_json::Map<String,Value>=original.iter().filter(|(key,_)|key.starts_with("tts_vits_")||(tts_unsupported&&key.starts_with("tts_"))||(stt_unsupported&&key.starts_with("stt_"))).map(|(key,value)|(key.clone(),value.clone())).collect();
@@ -406,6 +425,15 @@ fn speech_set(request:&Value)->Result<Value,String>{
         }
     }
 
+    if let Some(kind)=request["stt_service_type"].as_str(){
+        let kind=if kind=="OPENAI_STT"{"OPENAI_COMPATIBLE"}else{kind};
+        if stt["providerType"]!=kind{
+            let catalog=operit_model::SttCatalog::SttCatalog::provider(kind)?;
+            stt["providerType"]=json!(kind);stt["endpoint"]=json!(catalog.defaultEndpoint);stt["model"]=json!(catalog.defaultModel);
+            stt["fileFieldName"]=json!(catalog.defaultFileFieldName);stt["modelFieldName"]=json!(catalog.defaultModelFieldName);stt["languageFieldName"]=json!(catalog.defaultLanguageFieldName);
+            stt["responseTextJsonPath"]=json!(catalog.defaultResponseTextJsonPath);stt["headers"]=encode(catalog.defaultHeaders)?;
+        }
+    }
     for (key,value) in updates{
         match key.as_str(){
             "tts_service_type"=>tts["providerType"]=json!(match value.as_str().ok_or("tts_service_type must be string")?{"SIMPLE_TTS"=>"SYSTEM_TTS","OPENAI_TTS"=>"OPENAI_COMPATIBLE",other=>other}),
@@ -421,10 +449,16 @@ fn speech_set(request:&Value)->Result<Value,String>{
         }
     }
     let tts:operit_model::TtsConfig::TtsConfig=serde_json::from_value(tts).map_err(|e|e.to_string())?;
-    operit_runtime::services::LegacySpeechSettings::update(request)?;
     let stt:operit_model::SttConfig::SttConfig=serde_json::from_value(stt).map_err(|e|e.to_string())?;
+    operit_runtime::services::LegacySpeechSettings::update(request)?;
     if updates.keys().any(|k|k.starts_with("tts_")){tts_manager.updateTtsConfig(tts.clone())?;}
     if updates.keys().any(|k|k.starts_with("stt_")){stt_manager.updateSttConfig(stt.clone())?;}
+    if vits_requested{
+        retain_settings("vits",&vits_settings)?;
+        let old=retained_settings("speech")?;
+        let migrated=old.as_object().map(|fields|fields.keys().filter(|key|key.starts_with("tts_")).cloned().collect::<Vec<_>>()).unwrap_or_default();
+        clear_retained_settings("speech",&migrated)?;
+    }
     retain_settings("speech",&Value::Object(retained.clone()))?;
     let retained_fields=retained.keys().cloned().collect::<Vec<_>>();
     Ok(json!({"retainedFields":retained_fields,"compatibilityWarnings":retained_notice(&retained_fields),"updated":!updates.is_empty(),"changedFields":updates.keys().collect::<Vec<_>>(),"ttsServiceType":tts.providerType,"sttServiceType":stt.providerType,"ttsApiKeySet":!tts.apiKey.is_empty(),"sttApiKeySet":!stt.apiKey.is_empty()}))
@@ -454,18 +488,18 @@ fn script_run(handler:AIToolHandler,request:&Value)->Result<Value,String>{
     let params:BTreeMap<String,Value>=serde_json::from_value(params).map_err(|e|e.to_string())?;
     let mut env=BTreeMap::new();
     if let Some(path)=request["env_file_path"].as_str().filter(|p|!p.is_empty()){
-        for line in std::fs::read_to_string(path).map_err(|e|e.to_string())?.lines(){let line=line.trim();if line.is_empty()||line.starts_with('#'){continue;}if let Some((key,value))=line.split_once('='){env.insert(key.trim().to_string(),value.trim().trim_matches('"').trim_matches('\'').to_string());}}
+        let content=match request["env_source"].as_str(){Some(content)=>content.to_string(),None=>std::fs::read_to_string(path).map_err(|e|e.to_string())?};
+        for line in content.lines(){let line=line.trim();if line.is_empty()||line.starts_with('#'){continue;}if let Some((key,value))=line.split_once('='){env.insert(key.trim().to_string(),value.trim().trim_matches('"').trim_matches('\'').to_string());}}
     }
     let engine=handler.runtimeDependencies().js_execution_provider().create_execution_engine(std::sync::Arc::new(handler.clone()));
     // The legacy direct runner executes a script body with `params` and awaits complete().
     let source=format!("exports.__legacy_direct = async function(params) {{\n{source}\n}};");
     let started=now();let wait=request["wait_ms"].as_u64().or_else(||request["wait_ms"].as_str().and_then(|s|s.parse().ok())).unwrap_or(60000);
-    let result=engine.execute_script_function_with_timeout_millis(&source,"__legacy_direct",&params,&env,None,false,wait);
+    let result=engine.execute_script_function_with_timeout_millis(&source,"__legacy_direct",&params,&env,None,false,wait.max(1000));
     engine.destroy();
-    match result{
-        Ok(result)=>Ok(json!({"success":true,"result":result,"durationMs":now()-started,"sourcePath":request["source_path"],"scriptLabel":request["script_label"]})),
-        Err(error)=>Err(error.message)
-    }
+    let finished=now();
+    let (success,value,error)=match result{Ok(Some(value)) if value.to_ascii_lowercase().starts_with("error:")=>(false,json!(value),json!(value[6..].trim())),Ok(value)=>(true,value.map(|text|serde_json::from_str(&text).unwrap_or(json!(text))).unwrap_or(Value::Null),Value::Null),Err(error)=>(false,Value::Null,json!(error.message))};
+    Ok(json!({"success":success,"result":value,"error":error,"scriptPath":request["source_path"],"functionName":request["execution_mode"],"params":request["params_json"],"envFilePath":request["env_file_path"],"startedAtMs":started,"finishedAtMs":finished,"durationMs":finished-started,"events":[],"executionMode":request["execution_mode"],"requestedWaitMs":wait.max(1000),"scriptLabel":request["script_label"]}))
 }
 fn mcp_restart(host:operit_host_api::HostManager::HostManager,mut handler:AIToolHandler,request:&Value)->Result<Value,String>{
     use operit_tools::tools::mcp_runtime::{MCPLocalServer::MCPLocalServer,plugins::{MCPBridge::MCPBridge,MCPStarter::MCPStarter}};
@@ -496,7 +530,7 @@ fn start_blocking_job(application:&OperitApplication,action:&str,request:Value)-
     let scheduler=operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost();
     if let Err(error)=scheduler.scheduleHostRuntimeTask("legacy-host-operation",Box::new(move || {
         let result=match action.as_str(){
-            "script-run"=>script_run(handler,&request),"speech-test"=>speech_test(&host,&request),"mcp-restart"=>mcp_restart(host,handler,&request),
+            "speech-set"=>speech_set(&host,&request),"script-run"=>script_run(handler,&request),"speech-test"=>speech_test(&host,&request),"mcp-restart"=>mcp_restart(host,handler,&request),
             "model-test"=>run_async(async {
                 let provider=ModelConfigManager::default().getProviderProfile(string(&request,"configId")?).map_err(|e|e.to_string())?;let index=request["modelIndex"].as_u64().unwrap_or(0) as usize;
                 let model=provider.models.get(index).ok_or("modelIndex out of range")?;
@@ -519,16 +553,19 @@ fn start_model_job(application:&OperitApplication,action:&str,mut request:Value)
     static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
     let id=format!("legacy-model-{}-{}",now(),NEXT.fetch_add(1,std::sync::atomic::Ordering::Relaxed));
     if request["requestId"].as_str().unwrap_or("").is_empty(){request["requestId"]=json!(id);}
+    let request_id=string(&request,"requestId")?.to_string();
+    let cancellation=if action=="chat-plan-call"{Some(operit_plugin_sdk::legacy_planning_cancellation::register(&request_id,request["parentExecutionId"].as_str().unwrap_or(""))?)}else{None};
     let state=json!({"executionId":id,"status":"RUNNING"});
     model_jobs().lock().map_err(|e|e.to_string())?.insert(id.clone(),state.clone());
     let context=application.providerRuntimeContext.clone();let handler=application.toolHandler.clone();let action=action.to_string();
     let job_id=id.clone();
     let scheduler=operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost();
     if let Err(error)=scheduler.scheduleHostRuntimeAsyncTask("legacy-model-request",Box::new(move || Box::pin(async move {
-        let result=if action=="chat-call"{chat_call(context,&request).await}else{chat_plan_call(handler,context,&request).await};
+        let result=if action=="chat-call"{chat_call(context,&request).await}else{chat_plan_call(handler,context,&request,cancellation.expect("planning cancellation was registered")).await};
+        operit_plugin_sdk::legacy_planning_cancellation::remove(request["requestId"].as_str().unwrap_or(""));
         let status=match result{Ok(result)=>json!({"executionId":job_id,"status":"SUCCESS","result":result}),Err(error)=>json!({"executionId":job_id,"status":"FAILED","error":error})};
         if let Ok(mut jobs)=model_jobs().lock(){jobs.insert(job_id,status);}
-    }))){model_jobs().lock().map_err(|e|e.to_string())?.remove(&id);return Err(error.to_string());}
+    }))){operit_plugin_sdk::legacy_planning_cancellation::remove(&request_id);model_jobs().lock().map_err(|e|e.to_string())?.remove(&id);return Err(error.to_string());}
     Ok(state)
 }
 fn poll_model_job(request:&Value)->Result<Value,String>{

@@ -4,5 +4,11 @@
     "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidPlatformChannel.kt",
     "old": "    /** Destroys the native Runtime and terminates the Android process cleanly. */\n    private fun terminateApplication(result: MethodChannel.Result) {\n        runtimeHost.runBackground {\n            try {\n                runtimeHost.destroy()\n                activity.stopService(",
     "new": "    /** Stops the service and exits without freeing a bridge still used by native calls. */\n    private fun terminateApplication(result: MethodChannel.Result) {\n        runtimeHost.runBackground {\n            try {\n                // JNI calls share the process-level bridge. shutdownNow does not\n                // wait for them, so destroying its raw handle here races those\n                // calls. This path always kills the process; let process exit\n                // reclaim the handle after stopping the foreground service.\n                activity.stopService("
+  },
+  {
+    "name": "failed-watch-open-does-not-await-an-unsubscribed-controller",
+    "path": "apps/flutter/app/lib/core/bridge/MethodChannelCoreProxy.dart",
+    "old": "    controller.onCancel = null;\n    controller.addError(error, stackTrace);\n    await controller.close();\n  }\n\n  Future<Object?> _handleMethodCall",
+    "new": "    controller.onCancel = null;\n    controller.addError(error, stackTrace);\n    // Opening may fail before watchStream reaches yield* and attaches a\n    // listener. Waiting for close() then waits for a listener that will never\n    // exist, preventing the original error from reaching its caller.\n    unawaited(controller.close());\n  }\n\n  Future<Object?> _handleMethodCall"
   }
 ]

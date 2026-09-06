@@ -66,9 +66,15 @@
     "new": "        let config = self.configManager.getSttConfig(&configId)?;\n        let result = self.transcribeWithConfig(config, audioBytes, fileName, contentType, language)?;\n        crate::services::LegacyWorkflowService::LegacyWorkflowService::speech(&result.text, true);\n        Ok(result)"
   },
   {
-    "name": "accept-android-workflow-event-ingress-without-closed-enum-rejection",
+    "name": "keep-typed-runtime-events-and-add-separate-legacy-ingress",
     "path": "core/crates/runtime/application/src/core/application/OperitApplication.rs",
-    "old": "    pub fn ingestRuntimeEvent(&self, event: RuntimeEvent) -> serde_json::Value {\n        crate::services::RuntimeEventIngressService::RuntimeEventIngressService::getInstance(",
-    "new": "    pub fn ingestRuntimeEvent(&self, event: serde_json::Value) -> serde_json::Value {\n        if event.get(\"topic\").and_then(serde_json::Value::as_str).is_some_and(|topic| topic.starts_with(\"legacy.workflow.\")) {\n            crate::services::LegacyWorkflowService::LegacyWorkflowService::event(&self.toolPkgBridgeRuntime, &event);\n            return serde_json::json!({\"ok\": true});\n        }\n        let event = match serde_json::from_value::<RuntimeEvent>(event) {\n            Ok(event) => event,\n            Err(error) => return serde_json::json!({\"ok\": false, \"error\": error.to_string()}),\n        };\n        crate::services::RuntimeEventIngressService::RuntimeEventIngressService::getInstance("
+    "old": "    /// Delivers one normalized host event to registered ToolPkg host-event hooks.\n    #[allow(non_snake_case)]\n    pub fn ingestRuntimeEvent(&self, event: RuntimeEvent) -> serde_json::Value {",
+    "new": "    /// Delivers an Operit1 workflow broadcast without changing the typed host event API.\n    #[allow(non_snake_case)]\n    pub fn ingestLegacyWorkflowEvent(&self, event: serde_json::Value) -> serde_json::Value {\n        if !event.get(\"topic\").and_then(serde_json::Value::as_str)\n            .is_some_and(|topic| topic.starts_with(\"legacy.workflow.\")) {\n            return serde_json::json!({\"ok\": false, \"error\": \"Expected a legacy workflow event\"});\n        }\n        crate::services::LegacyWorkflowService::LegacyWorkflowService::event(&self.toolPkgBridgeRuntime, &event);\n        serde_json::json!({\"ok\": true})\n    }\n\n    /// Delivers one normalized host event to registered ToolPkg host-event hooks.\n    #[allow(non_snake_case)]\n    pub fn ingestRuntimeEvent(&self, event: RuntimeEvent) -> serde_json::Value {"
+  },
+  {
+    "name": "route-legacy-android-events-to-separate-ingress",
+    "path": "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
+    "old": "        let response = self.call(CoreCallRequest::new(\n            format!(\"runtime-event-{}\", current_time_millis_u64()),\n            LocalCoreProxy::generatedObjectIdForSchema(\"application\")\n                .expect(\"generated application object id must exist\"),\n            \"ingestRuntimeEvent\",",
+    "new": "        let eventMethod = if eventValue.get(\"topic\").and_then(serde_json::Value::as_str)\n            .is_some_and(|topic| topic.starts_with(\"legacy.workflow.\")) {\n            \"ingestLegacyWorkflowEvent\"\n        } else {\n            \"ingestRuntimeEvent\"\n        };\n        let response = self.call(CoreCallRequest::new(\n            format!(\"runtime-event-{}\", current_time_millis_u64()),\n            LocalCoreProxy::generatedObjectIdForSchema(\"application\")\n                .expect(\"generated application object id must exist\"),\n            eventMethod,"
   }
 ]

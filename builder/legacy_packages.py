@@ -320,6 +320,7 @@ def install(root: Path, legacy: Path, sha: str) -> dict:
     old_report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     for family, filename in [('legacy-tools', 'contracts.json'),
                              ('legacy-tools', 'package-coverage.json'),
+                             ('legacy-tools', 'contract-review.json'),
                              ('legacy-native', 'native-contracts.json')]:
         (report_dir/filename).write_bytes((ENHANCEMENTS/family/filename).read_bytes())
     (report_dir/'UPSTREAM-LICENSE').write_bytes((legacy/'LICENSE').read_bytes())

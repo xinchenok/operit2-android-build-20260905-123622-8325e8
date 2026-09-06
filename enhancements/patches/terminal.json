@@ -82,5 +82,65 @@
     "path": "hosts/android/src/terminal.rs",
     "old": "        waitForInitialAndroidPtyPrompt(commandOutput.clone(), Duration::from_millis(10000))",
     "new": "        waitForInitialAndroidPtyPrompt(commandOutput.clone(), Duration::from_millis(30000))"
+  },
+  {
+    "name": "android-terminal-command-script-path-type",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "use std::path::Path;",
+    "new": "use std::path::{Path, PathBuf};"
+  },
+  {
+    "name": "android-terminal-serialize-named-session-creation",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "pub struct AndroidTerminalHost {\n    state: Arc<Mutex<AndroidTerminalState>>,\n}",
+    "new": "pub struct AndroidTerminalHost {\n    state: Arc<Mutex<AndroidTerminalState>>,\n    sessionCreation: Arc<Mutex<()>>,\n}"
+  },
+  {
+    "name": "android-terminal-lock-visible-session-creation",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    fn createOrGetSession(&self, sessionName: &str) -> HostResult<TerminalSessionInfo> {\n        let normalizedSessionName = nonBlank(sessionName, \"session_name\")?;",
+    "new": "    fn createOrGetSession(&self, sessionName: &str) -> HostResult<TerminalSessionInfo> {\n        let _creation = self.sessionCreation.lock()\n            .map_err(|_| HostError::new(\"android terminal session creation mutex poisoned\"))?;\n        let normalizedSessionName = nonBlank(sessionName, \"session_name\")?;"
+  },
+  {
+    "name": "android-terminal-lock-hidden-session-creation",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    terminalType: &str,\n) -> HostResult<String> {\n    {\n        let mut state = host.lockState()?;",
+    "new": "    terminalType: &str,\n) -> HostResult<String> {\n    let _creation = host.sessionCreation.lock()\n        .map_err(|_| HostError::new(\"android terminal session creation mutex poisoned\"))?;\n    {\n        let mut state = host.lockState()?;"
+  },
+  {
+    "name": "android-terminal-per-session-command-ownership",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    commandOutput: AndroidPtyCommandOutput,\n    screenOutput: Arc<Mutex<VecDeque<u8>>>,\n    commandRunning: bool,",
+    "new": "    commandOutput: AndroidPtyCommandOutput,\n    screenOutput: Arc<Mutex<VecDeque<u8>>>,\n    commandExecution: Arc<Mutex<()>>,\n    commandRunning: bool,"
+  },
+  {
+    "name": "android-terminal-initialize-command-ownership",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        commandOutput,\n        screenOutput,\n        commandRunning: false,",
+    "new": "        commandOutput,\n        screenOutput,\n        commandExecution: Arc::new(Mutex::new(())),\n        commandRunning: false,"
+  },
+  {
+    "name": "android-terminal-run-whole-script-and-cleanup-every-outcome",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    fn executeInSession(\n        &self,\n        sessionId: &str,\n        command: &str,\n        timeoutMs: u64,\n    ) -> HostResult<TerminalCommandOutput> {\n        let normalizedSessionId = nonBlank(sessionId, \"session_id\")?;\n        let normalizedCommand = nonBlank(command, \"command\")?;\n        let (terminalType, commandOutput, writer) = {\n            let mut state = self.lockState()?;\n            let session = state\n                .ptySessions\n                .get_mut(&normalizedSessionId)\n                .ok_or_else(|| {\n                    HostError::new(format!(\"Terminal session does not exist: {sessionId}\"))\n                })?;\n            session.commandRunning = true;\n            clearAndroidPtyCommandOutput(&session.commandOutput)?;\n            (\n                session.terminalType.clone(),\n                session.commandOutput.clone(),\n                session.writer.clone(),\n            )\n        };\n        let commandInput = format!(\"{normalizedCommand}\\r\");\n        writeAndroidPtyBytes(&writer, commandInput.as_bytes())?;\n        let result =\n            executeAndroidPtyCommandInSession(commandOutput, &normalizedCommand, timeoutMs)?;\n        {\n            let mut state = self.lockState()?;\n            if let Some(session) = state.ptySessions.get_mut(&normalizedSessionId) {\n                if result.timedOut {\n                    if let Some(workingDir) = cancelTimedOutAndroidPtyCommand(session)? {\n                        session.workingDir = workingDir;\n                    }\n                } else if let Some(workingDir) = result.workingDir.clone() {\n                    session.workingDir = workingDir;\n                }\n                session.commandRunning = false;\n            }\n        }\n        Ok(TerminalCommandOutput {\n            command: normalizedCommand,\n            output: result.output,\n            exitCode: result.exitCode,\n            sessionId: normalizedSessionId,\n            platform: PLATFORM.to_string(),\n            terminal: androidTerminalName(&terminalType)?.to_string(),\n            terminalType,\n            timedOut: result.timedOut,\n        })\n    }\n",
+    "new": "    fn executeInSession(\n        &self,\n        sessionId: &str,\n        command: &str,\n        timeoutMs: u64,\n    ) -> HostResult<TerminalCommandOutput> {\n        let normalizedSessionId = nonBlank(sessionId, \"session_id\")?;\n        let normalizedCommand = nonBlank(command, \"command\")?;\n        let commandExecution = {\n            let state = self.lockState()?;\n            state.ptySessions.get(&normalizedSessionId)\n                .ok_or_else(|| HostError::new(format!(\"Terminal session does not exist: {sessionId}\")))?\n                .commandExecution.clone()\n        };\n        // Only this session is serialized; other sessions and PTY readers stay live.\n        let _execution = commandExecution.lock()\n            .map_err(|_| HostError::new(\"android terminal command mutex poisoned\"))?;\n        let (terminalType, commandOutput, writer) = {\n            let mut state = self.lockState()?;\n            let session = state.ptySessions.get_mut(&normalizedSessionId)\n                .ok_or_else(|| HostError::new(format!(\"Terminal session does not exist: {sessionId}\")))?;\n            clearAndroidPtyCommandOutput(&session.commandOutput)?;\n            session.commandRunning = true;\n            (session.terminalType.clone(), session.commandOutput.clone(), session.writer.clone())\n        };\n        let mut retireSession = false;\n        let outcome: HostResult<AndroidSessionCommandResult> = (|| {\n            // Source one complete script. Pasting separate lines into an interactive\n            // shell publishes a completion prompt between lines and can return early.\n            let script = AndroidTerminalCommandScript::prepare(&terminalType, &normalizedCommand)?;\n            writeAndroidPtyBytes(&writer, format!(\"{}\\r\", script.shellCommand).as_bytes())?;\n            let mut result = executeAndroidPtyCommandInSession(\n                commandOutput.clone(), &script.shellCommand, timeoutMs,\n            )?;\n            if result.timedOut {\n                match cancelTimedOutAndroidPtyCommand(&writer, &commandOutput) {\n                    Ok(Some(workingDir)) => result.workingDir = Some(workingDir),\n                    // An unresponsive foreground process must not consume the next\n                    // command as input. The next named/hidden use creates a fresh PTY.\n                    Ok(None) | Err(_) => retireSession = true,\n                }\n            }\n            Ok(result)\n        })();\n        {\n            let mut state = self.lockState()?;\n            if let Some(session) = state.ptySessions.get_mut(&normalizedSessionId) {\n                session.commandRunning = false;\n                if let Ok(result) = &outcome {\n                    if let Some(workingDir) = &result.workingDir {\n                        session.workingDir = workingDir.clone();\n                    }\n                }\n            }\n            if retireSession || outcome.is_err() {\n                state.ptySessions.remove(&normalizedSessionId);\n                removeAndroidSessionMappings(&mut state, &normalizedSessionId);\n            }\n        }\n        let result = outcome?;\n        Ok(TerminalCommandOutput {\n            command: normalizedCommand,\n            output: result.output,\n            exitCode: result.exitCode,\n            sessionId: normalizedSessionId,\n            platform: PLATFORM.to_string(),\n            terminal: androidTerminalName(&terminalType)?.to_string(),\n            terminalType,\n            timedOut: result.timedOut,\n        })\n    }\n"
+  },
+  {
+    "name": "android-terminal-temp-script-preserves-shell-environment",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "struct AndroidSessionCommandResult {\n    output: String,",
+    "new": "struct AndroidTerminalCommandScript {\n    path: PathBuf,\n    shellCommand: String,\n}\n\nimpl AndroidTerminalCommandScript {\n    fn prepare(terminalType: &str, command: &str) -> HostResult<Self> {\n        let name = format!(\"operit-command-{}.sh\", Uuid::new_v4());\n        let (directory, shellPath) = if terminalType == \"bash\" {\n            (requiredAndroidRuntimePath(\"OPERIT_ANDROID_ROOTFS_DIR\")?.join(\"tmp\"), format!(\"/tmp/{name}\"))\n        } else {\n            let directory = requiredAndroidRuntimePath(\"OPERIT_ANDROID_RUNTIME_TMP\")?;\n            let shellPath = directory.join(&name).to_string_lossy().into_owned();\n            (directory, shellPath)\n        };\n        std::fs::create_dir_all(&directory)?;\n        let path = directory.join(name);\n        std::fs::write(&path, command.as_bytes())?;\n        Ok(Self {\n            path,\n            shellCommand: format!(\". '{}'\", shellPath.replace('\\'', r#\"'\"'\"'\"#)),\n        })\n    }\n}\n\nimpl Drop for AndroidTerminalCommandScript {\n    fn drop(&mut self) {\n        let _ = std::fs::remove_file(&self.path);\n    }\n}\n\nstruct AndroidSessionCommandResult {\n    output: String,"
+  },
+  {
+    "name": "android-terminal-cancel-without-blocking-all-session-state",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "fn cancelTimedOutAndroidPtyCommand(session: &mut AndroidPtySession) -> HostResult<Option<String>> {\n    writeAndroidPtyBytes(&session.writer, b\"\\x03\")?;\n\n    let deadline = Instant::now() + Duration::from_millis(COMMAND_CANCEL_SETTLE_TIMEOUT_MS);\n    let mut collected = Vec::new();\n    while Instant::now() < deadline {\n        let drained =\n            drainAndroidPtyCommandOutput(&session.commandOutput, &mut collected, deadline)?;",
+    "new": "fn cancelTimedOutAndroidPtyCommand(\n    writer: &Arc<Mutex<RawFd>>,\n    output: &AndroidPtyCommandOutput,\n) -> HostResult<Option<String>> {\n    writeAndroidPtyBytes(writer, b\"\\x03\")?;\n\n    let deadline = Instant::now() + Duration::from_millis(COMMAND_CANCEL_SETTLE_TIMEOUT_MS);\n    let mut collected = Vec::new();\n    while Instant::now() < deadline {\n        let drained = drainAndroidPtyCommandOutput(output, &mut collected, deadline)?;"
+  },
+  {
+    "name": "android-system-shell-preserve-real-command-exit-status",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    let commandText = r#\"cd \"$OPERIT_WORKING_DIR\" && while true; do __operit_status=$?; printf '\\033]133;OperitPrompt=%s:%s\\007' \"$(printf '%s' \"$PWD\" | base64 | tr -d '\\n')\" \"$__operit_status\"; IFS= read -r __operit_command || exit 0; eval \"$__operit_command\"; done\"#;",
+    "new": "    let commandText = r#\"cd \"$OPERIT_WORKING_DIR\" || exit; __operit_status=0; while true; do printf '\\033]133;OperitPrompt=%s:%s\\007' \"$(printf '%s' \"$PWD\" | base64 | tr -d '\\n')\" \"$__operit_status\"; IFS= read -r __operit_command || exit 0; eval \"$__operit_command\"; __operit_status=$?; done\"#;"
   }
 ]

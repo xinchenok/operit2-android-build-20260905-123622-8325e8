@@ -70,5 +70,113 @@
     "path": "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart",
     "old": "    if (attachments.isNotEmpty) {\n      await _chat.clearAttachments();\n    }",
     "new": "    // The runtime call can await a group turn or hook. Keep attachments\n    // added for the next draft while this send was pending.\n    for (final attachment in attachments) {\n      await _chat.removeAttachment(filePath: attachment.filePath);\n    }"
+  },
+  {
+    "name": "share-cancellation-generation-across-chat-runtime-clones",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "old": "    pub chatRuntimes: Arc<Mutex<HashMap<String, ChatRuntime>>>,",
+    "new": "    pub chatRuntimes: Arc<Mutex<HashMap<String, ChatRuntime>>>,\n    cancellationVersionByChatId: Arc<Mutex<HashMap<String, u64>>>,"
+  },
+  {
+    "name": "initialize-chat-cancellation-generations",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "old": "            chatRuntimes: Arc::new(Mutex::new(HashMap::new())),",
+    "new": "            chatRuntimes: Arc::new(Mutex::new(HashMap::new())),\n            cancellationVersionByChatId: Arc::new(Mutex::new(HashMap::new())),"
+  },
+  {
+    "name": "retain-cancellation-generations-in-delegate-clones",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "old": "            chatRuntimes: self.chatRuntimes.clone(),",
+    "new": "            chatRuntimes: self.chatRuntimes.clone(),\n            cancellationVersionByChatId: self.cancellationVersionByChatId.clone(),"
+  },
+  {
+    "name": "expose-cancellation-generation-to-group-orchestration",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "old": "    /// Cancels an active message turn and optionally keeps partial response content.",
+    "new": "    /// Identifies explicit cancellation even while a group is still planning.\n    pub fn cancellationVersionForChat(&self, chatId: &str) -> u64 {\n        self.cancellationVersionByChatId.lock()\n            .expect(\"chat cancellation version mutex poisoned\")\n            .get(chatId).copied().unwrap_or(0)\n    }\n\n    /// Cancels an active message turn and optionally keeps partial response content."
+  },
+  {
+    "name": "cancel-group-planning-before-a-stream-exists",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "old": "    ) -> Option<ChatMessage> {\n        let cancellation = self.withExistingRuntime(Some(chatId.clone()), |runtime| {",
+    "new": "    ) -> Option<ChatMessage> {\n        {\n            let mut versions=self.cancellationVersionByChatId.lock()\n                .expect(\"chat cancellation version mutex poisoned\");\n            let version=versions.entry(chatId.clone()).or_default();\n            *version=version.wrapping_add(1);\n        }\n        let cancellation = self.withExistingRuntime(Some(chatId.clone()), |runtime| {"
+  },
+  {
+    "name": "clear-planning-ui-when-no-member-stream-needs-cancellation",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "old": "        let Some((cancelledTurnId, cancellationTurnId, responseStream)) = cancellation.flatten()\n        else {\n            return None;\n        };",
+    "new": "        let Some((cancelledTurnId, cancellationTurnId, responseStream)) = cancellation.flatten()\n        else {\n            if !self.isChatLoading(chatId.clone()) {\n                self.finishChatExecution(chatId, InputProcessingState::Idle);\n            }\n            return None;\n        };"
+  },
+  {
+    "name": "capture-group-cancellation-generation-before-planning",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        let originalUserText = messageText.trim().to_string();\n        if originalUserText.is_empty() && attachments.is_empty() {\n            return false;\n        }\n        self.messageProcessingDelegate",
+    "new": "        let originalUserText = messageText.trim().to_string();\n        if originalUserText.is_empty() && attachments.is_empty() {\n            return false;\n        }\n        let cancellationVersion=self.messageProcessingDelegate.cancellationVersionForChat(&chatId);\n        self.messageProcessingDelegate"
+  },
+  {
+    "name": "cancelled-planner-does-not-start-role-responses",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        let Some(plannedRounds) = self\n            .planResponseOrder(\n                enhancedAiService,\n                &originalUserText,\n                &orderedMembers,\n                &memberCardsById,\n            )\n            .await\n        else {",
+    "new": "        if self.messageProcessingDelegate.cancellationVersionForChat(&chatId)!=cancellationVersion {\n            return true;\n        }\n        let plannedRounds = self\n            .planResponseOrder(\n                enhancedAiService,\n                &originalUserText,\n                &orderedMembers,\n                &memberCardsById,\n            )\n            .await;\n        if self.messageProcessingDelegate.cancellationVersionForChat(&chatId)!=cancellationVersion {\n            return true;\n        }\n        let Some(plannedRounds)=plannedRounds else {"
+  },
+  {
+    "name": "stopped-group-never-starts-the-next-role",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "            for (memberIndex, plannedMember) in roundMembers.iter().enumerate() {\n                if !plannedMember.speak {",
+    "new": "            for (memberIndex, plannedMember) in roundMembers.iter().enumerate() {\n                if self.messageProcessingDelegate.cancellationVersionForChat(&chatId)!=cancellationVersion {\n                    return true;\n                }\n                if !plannedMember.speak {"
+  },
+  {
+    "name": "group-stop-or-failure-ends-pending-role-sequence",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "                    .awaitTurnComplete(chatId.clone(), targetTurnCounter, 180_000)\n                    .await\n                {\n                    continue;\n                }",
+    "new": "                    .awaitTurnComplete(chatId.clone(), targetTurnCounter, 180_000, cancellationVersion)\n                    .await\n                {\n                    return true;\n                }"
+  },
+  {
+    "name": "group-completion-wait-observes-stop-and-error-immediately",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "    async fn awaitTurnComplete(&self, chatId: String, targetCounter: i64, timeoutMs: u64) -> bool {\n        let startedAtMillis",
+    "new": "    async fn awaitTurnComplete(&self, chatId: String, targetCounter: i64, timeoutMs: u64, cancellationVersion: u64) -> bool {\n        let startedAtMillis"
+  },
+  {
+    "name": "avoid-three-minute-wait-after-group-cancellation",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        {\n            if self\n                .messageProcessingDelegate\n                .getTurnCompleteCounter(chatId.clone())\n                >= targetCounter\n            {\n                return true;\n            }\n            defaultHostRuntimeTaskSchedulerHost()",
+    "new": "        {\n            if self.messageProcessingDelegate.cancellationVersionForChat(&chatId)!=cancellationVersion {\n                return false;\n            }\n            if self\n                .messageProcessingDelegate\n                .getTurnCompleteCounter(chatId.clone())\n                >= targetCounter\n            {\n                return true;\n            }\n            if !self.messageProcessingDelegate.isChatLoading(chatId.clone()) && matches!(\n                self.messageProcessingDelegate.inputProcessingStateByChatIdFlow().value().get(&chatId),\n                Some(InputProcessingState::Error { .. } | InputProcessingState::Idle)\n            ) {\n                return false;\n            }\n            defaultHostRuntimeTaskSchedulerHost()"
+  },
+  {
+    "name": "stopped-group-does-not-launch-a-summary",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        self.maybeSummarizeAfterGroupRound(enhancedAiService, chatId, promptFunctionType)\n            .await;",
+    "new": "        if self.messageProcessingDelegate.cancellationVersionForChat(&chatId)!=cancellationVersion {\n            return true;\n        }\n        self.maybeSummarizeAfterGroupRound(enhancedAiService, chatId, promptFunctionType)\n            .await;"
+  },
+  {
+    "name": "bind-group-planner-to-the-owning-chat-cancellation",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "            .planResponseOrder(\n                enhancedAiService,\n                &originalUserText,",
+    "new": "            .planResponseOrder(\n                enhancedAiService,\n                &chatId,\n                cancellationVersion,\n                &originalUserText,"
+  },
+  {
+    "name": "receive-group-planning-cancellation-owner",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "    async fn planResponseOrder(\n        &self,\n        enhancedAiService: &mut EnhancedAIService,\n        userText: &str,",
+    "new": "    async fn planResponseOrder(\n        &self,\n        enhancedAiService: &mut EnhancedAIService,\n        chatId: &str,\n        cancellationVersion: u64,\n        userText: &str,"
+  },
+  {
+    "name": "cancel-underlying-group-planning-request-and-stream",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        let response = enhancedAiService.sendMessage(options).await.ok()?;\n        let rawContent =\n            removeThinkingContent(&collect_stream_chunks(Box::new(response)).await.join(\"\"))\n                .trim()\n                .to_string();",
+    "new": "        if self.messageProcessingDelegate.cancellationVersionForChat(chatId) != cancellationVersion {\n            return None;\n        }\n        let response = tokio::select! {\n            biased;\n            _ = self.waitForGroupCancellation(chatId, cancellationVersion) => None,\n            response = enhancedAiService.sendMessage(options) => Some(response),\n        };\n        let response = match response {\n            Some(response) => response.ok()?,\n            None => { enhancedAiService.cancelConversation().await; return None; }\n        };\n        let chunks = tokio::select! {\n            biased;\n            _ = self.waitForGroupCancellation(chatId, cancellationVersion) => None,\n            chunks = collect_stream_chunks(Box::new(response)) => Some(chunks),\n        };\n        let chunks = match chunks {\n            Some(chunks) => chunks,\n            None => { enhancedAiService.cancelConversation().await; return None; }\n        };\n        let rawContent = removeThinkingContent(&chunks.join(\"\")).trim().to_string();"
+  },
+  {
+    "name": "observe-group-planner-stop-without-a-global-request-token",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "    /// Parses a model-generated group turn plan into round and member entries.",
+    "new": "    async fn waitForGroupCancellation(&self, chatId: &str, cancellationVersion: u64) {\n        while self.messageProcessingDelegate.cancellationVersionForChat(chatId) == cancellationVersion {\n            defaultHostRuntimeTaskSchedulerHost()\n                .waitForHostRuntimeDelay(50).await\n                .expect(\"group cancellation delay must be provided by the Host\");\n        }\n    }\n\n    #[allow(non_snake_case)]\n    /// Parses a model-generated group turn plan into round and member entries."
+  },
+  {
+    "name": "release-core-command-lock-after-persisting-group-user-message",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        let mut timeline = Vec::<(String, String)>::new();\n        if !originalUserText.trim().is_empty() {",
+    "new": "        // The caller holds the core command mutex. Persist the user turn above,\n        // then release that mutex before waiting for any planner/member response,\n        // so cancellation, tools and unrelated chats remain callable.\n        let mut background = Self {\n            chatHistoryDelegate: self.chatHistoryDelegate.clone_for_core(),\n            messageProcessingDelegate: self.messageProcessingDelegate.clone_for_core(),\n            tokenStatisticsDelegate: self.tokenStatisticsDelegate.clone(),\n            characterCardManager: CharacterCardManager::getInstance(),\n            characterGroupCardManager: CharacterGroupCardManager::getInstance(),\n            activePromptManager: ActivePromptManager::getInstance(),\n            isSummarizing: false,\n            isUpdatingMemory: false,\n            summarizingChatId: None,\n            isSendTriggeredSummarizing: false,\n            sendTriggeredSummarizingChatId: None,\n            summaryJob: None,\n            sendTriggeredSummaryJob: None,\n            currentPromptFunctionType: self.currentPromptFunctionType.clone(),\n            currentChatProviderIdOverride: self.currentChatProviderIdOverride.clone(),\n            currentChatModelIdOverride: self.currentChatModelIdOverride.clone(),\n            // Shared message flows already have the core's non-fatal collector.\n            nonFatalErrorCollectorJob: self.nonFatalErrorCollectorJob.clone(),\n            pendingAutoContinuationByChatId: HashMap::new(),\n        };\n        let mut service = enhancedAiService.clone();\n        let taskChatId = chatId.clone();\n        if let Err(error) = defaultHostRuntimeTaskSchedulerHost().scheduleHostRuntimeAsyncTask(\n            \"group-conversation\", Box::new(move || Box::pin(async move {\n                background.runGroupConversation(\n                    &mut service, taskChatId, promptFunctionType, originalUserText,\n                    orderedMembers, turnOptions, cancellationVersion,\n                ).await;\n            })),\n        ) {\n            self.messageProcessingDelegate.setInputProcessingStateForChat(\n                chatId, InputProcessingState::Error { message: error.to_string() },\n            );\n        }\n        true\n    }\n\n    #[allow(non_snake_case)]\n    async fn runGroupConversation(\n        &mut self,\n        enhancedAiService: &mut EnhancedAIService,\n        chatId: String,\n        promptFunctionType: PromptFunctionType,\n        originalUserText: String,\n        orderedMembers: Vec<GroupMemberConfig>,\n        turnOptions: ChatTurnOptions,\n        cancellationVersion: u64,\n    ) -> bool {\n        let mut timeline = Vec::<(String, String)>::new();\n        if !originalUserText.trim().is_empty() {"
   }
 ]

@@ -1,0 +1,90 @@
+{
+  "scope": "Second bounded review of the 43 legacy packages: common Tools argument positions, return properties, and the enhanced command execution chain",
+  "common_method_declarations_compared": 197,
+  "changed_positional_contracts": [
+    "Files.apply",
+    "Files.copy",
+    "Files.create",
+    "Files.deleteFile",
+    "Files.edit",
+    "Files.exists",
+    "Files.find",
+    "Files.info",
+    "Files.list",
+    "Files.mkdir",
+    "Files.move",
+    "Files.open",
+    "Files.readBinary",
+    "Files.readPart",
+    "Files.share",
+    "Files.unzip",
+    "Files.write",
+    "Files.writeBinary",
+    "Files.zip",
+    "System.terminal.create"
+  ],
+  "confirmed_fixes": [
+    {
+      "issue": "String false enabled packages instead of disabling them",
+      "evidence": "operit_editor.set_sandbox_package_enabled forwards string|number|boolean unchanged; old StandardSoftwareSettingsModifyTools.parseBooleanParameter accepts false/0/off; JS truthy branch previously enabled all nonempty strings",
+      "change": "Strictly parse supported old boolean spellings before choosing package enable/disable"
+    },
+    {
+      "issue": "New/edited intent workflow listeners required app restart",
+      "evidence": "Workflow Android startup restored actions, while prior Workflow CRUD shim did not invoke refresh",
+      "change": "Read real events and refresh Android receivers after get/CRUD mutations"
+    },
+    {
+      "issue": "Workflow errors and complex parameters lost their contract",
+      "evidence": "LegacyWorkflowService execution nodes are an object; actionConfig values are serialized strings; shim used Array.filter and directly passed turns/function_type",
+      "change": "Object node results retain their IDs; explicitly parse structured/numeric/boolean fields and map chat parameters"
+    },
+    {
+      "issue": "Direct scripts bypassed VFS and old Tools compatibility",
+      "evidence": "script_run read source_path/env_file_path with std::fs and created fresh native Tools engine",
+      "change": "Read files through Files.read full-content binding and real path resolver; bind legacy factory inside source; return actual old-shaped success/error result"
+    },
+    {
+      "issue": "Stop could miss a queued planning request",
+      "evidence": "Cancellation registration used to occur only after async task began",
+      "change": "Register before scheduling/returning job ID, check token before sending, remove on completion or enqueue error"
+    },
+    {
+      "issue": "Changing STT provider kept the previous request/auth schema",
+      "evidence": "speech_set replaced providerType only; TTS path already reset catalog defaults",
+      "change": "Install target STT catalog endpoint/model/field names/response path/headers before applying explicit user values"
+    },
+    {
+      "issue": "Google built-in search added to a model could conflict with external tools",
+      "evidence": "Current ModelCatalog uses ExclusiveWithExternalTools; fallback adapter used CanMixWithExternalTools",
+      "change": "Use the same exclusive flag as the current catalog"
+    },
+    {
+      "issue": "Old compatible VITS settings were only retained despite a reusable current Sherpa engine",
+      "evidence": "Current LocalModelDriver supports SherpaOnnxVits; old package and ONNX metadata determine whether the model is actually compatible",
+      "change": "Prepare/register compatible model and engine in a background job, bind real LOCAL_MODEL and speaker on success; reject custom unsupported models without replacing active TTS"
+    }
+  ],
+  "checks": [
+    "One JavaScript syntax check",
+    "One targeted contract smoke for false toggle, workflow receiver update, failure node details, stored chat payload conversion, and script Tools/env context",
+    "Rust 1.95.0 command-core and proxy-local compile passed after the consolidated second review, including LegacyVitsImport"
+  ],
+  "pending": [
+    "Full Android APK/JNI build and actual device behavior are root-coordinated; no device success is claimed"
+  ],
+  "remaining_inactive_capabilities": [
+    "Old OpenAI realtime WebSocket TTS requires a real protocol engine; HTTP is not substituted",
+    "Old Sherpa NCNN models are not runnable by current supportsTarget implementation",
+    "Deepgram STT old raw-audio protocol is not provided by current generic multipart STT adapter",
+    "Claude 1-hour cache TTL toggle has no implemented current provider request hook"
+  ],
+  "device_tested": false,
+  "vits_import": {
+    "host": "operit_runtime::services::LegacyVitsImport::prepare",
+    "execution": "Background host job imports a readable directory, ZIP or file URL through the existing local-model registry and Sherpa ONNX engine; current TTS configuration is written only after preparation succeeds",
+    "supported": "Sherpa-compatible VITS ONNX with required model metadata, lexicon and tokens; actual speaker/sample rate validated",
+    "not_supported": "Arbitrary custom ONNX tensor/tokenization frontends, BOS/EOS/blank options, espeak-dependent Piper packages without current engine support; rejected with explicit reason while active service is retained",
+    "device_tested": false
+  }
+}

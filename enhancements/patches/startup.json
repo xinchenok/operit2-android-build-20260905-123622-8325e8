@@ -106,5 +106,23 @@
     "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
     "old": "        val eventJson = event.toString()\n        synchronized(runtimeLock) {\n            val handle = runtimeHandle",
     "new": "        val eventJson = event.toString()\n        synchronized(runtimeEventLock) {\n            val handle = runtimeHandle"
+  },
+  {
+    "name": "pairing-observes-runtime-bootstrap-readiness",
+    "path": "apps/flutter/app/lib/ui/main/OperitApp.dart",
+    "old": "  bool _shownStartupWebAccessError = false;\n  StreamSubscription<core_proxy.RuntimeHostInteractionRequest>?\n  _webAccessPairingSubscription;",
+    "new": "  final RuntimeBootstrapManager _pairingRuntimeManager =\n      RuntimeBootstrapManager.instance;\n  bool _shownStartupWebAccessError = false;\n  StreamSubscription<core_proxy.RuntimeHostInteractionRequest>?\n  _webAccessPairingSubscription;"
+  },
+  {
+    "name": "fresh-start-pairing-opens-after-storage-is-confirmed",
+    "path": "apps/flutter/app/lib/ui/main/OperitApp.dart",
+    "old": "  /// Subscribes to native Web Access pairing request events.\n  @override\n  void initState() {\n    super.initState();\n    if (kIsWeb) {\n      return;\n    }\n    _webAccessPairingSubscription = _coreClients",
+    "new": "  /// Waits for confirmed storage before opening a native pairing stream.\n  @override\n  void initState() {\n    super.initState();\n    _pairingRuntimeManager.addListener(_syncWebAccessPairingSubscription);\n    _syncWebAccessPairingSubscription();\n  }\n\n  void _syncWebAccessPairingSubscription() {\n    if (kIsWeb) {\n      return;\n    }\n    if (!_pairingRuntimeManager.runtimeConfigured) {\n      final subscription = _webAccessPairingSubscription;\n      _webAccessPairingSubscription = null;\n      unawaited(subscription?.cancel());\n      return;\n    }\n    if (_webAccessPairingSubscription != null) {\n      return;\n    }\n    late final StreamSubscription<core_proxy.RuntimeHostInteractionRequest>\n        subscription;\n    subscription = _coreClients"
+  },
+  {
+    "name": "pairing-readiness-listener-follows-dialog-lifetime",
+    "path": "apps/flutter/app/lib/ui/main/OperitApp.dart",
+    "old": "              'web access pairing event stream failed',\n              tag: _logTag,\n              error: error,\n              stackTrace: stackTrace,\n            );\n          },\n        );\n  }\n\n  /// Cancels native Web Access pairing request event monitoring.\n  @override\n  void dispose() {\n    unawaited(_webAccessPairingSubscription?.cancel());\n    super.dispose();\n  }",
+    "new": "              'web access pairing event stream failed',\n              tag: _logTag,\n              error: error,\n              stackTrace: stackTrace,\n            );\n          },\n          onDone: () {\n            if (identical(_webAccessPairingSubscription, subscription)) {\n              _webAccessPairingSubscription = null;\n            }\n          },\n        );\n    _webAccessPairingSubscription = subscription;\n  }\n\n  /// Cancels native Web Access pairing request event monitoring.\n  @override\n  void dispose() {\n    _pairingRuntimeManager.removeListener(_syncWebAccessPairingSubscription);\n    unawaited(_webAccessPairingSubscription?.cancel());\n    super.dispose();\n  }"
   }
 ]

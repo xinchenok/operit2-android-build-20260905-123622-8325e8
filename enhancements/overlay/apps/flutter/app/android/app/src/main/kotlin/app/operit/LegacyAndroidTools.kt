@@ -88,6 +88,11 @@ object LegacyAndroidTools {
             "/data/user/$user/${context.packageName}" to context.applicationInfo.dataDir,
             "/data/data/${context.packageName}" to context.applicationInfo.dataDir,
             context.filesDir.absolutePath to context.filesDir.absolutePath,
+            "/dev/pts" to "/dev/pts",
+            "/dev/fd" to "/proc/self/fd",
+            "/dev/stdin" to "/proc/self/fd/0",
+            "/dev/stdout" to "/proc/self/fd/1",
+            "/dev/stderr" to "/proc/self/fd/2",
             "/dev" to "/dev", "/proc" to "/proc", "/sys" to "/sys",
             "/data/local/tmp" to "/data/local/tmp",
         )
@@ -95,39 +100,50 @@ object LegacyAndroidTools {
             Os.getenv(key)?.let { binds.add(it to it) }
         }
         binds.sortByDescending { it.first.length }
-        fun normalized(value: String): String {
-            val pieces = mutableListOf<String>()
-            for (part in value.split('/')) when (part) {
-                "", "." -> Unit
-                ".." -> if (pieces.isNotEmpty()) pieces.removeAt(pieces.lastIndex)
-                else -> pieces.add(part)
-            }
-            return "/" + pieces.joinToString("/")
-        }
+        fun normalized(value: String): String =
+            "/" + value.split('/').filter { it.isNotEmpty() && it != "." }.joinToString("/")
         fun publicPath(physical: String): String {
             if (physical == "/sdcard" || physical.startsWith("/sdcard/") ||
                 physical == "/data" || physical.startsWith("/data/")) return physical
             if (physical == storage || physical.startsWith("$storage/")) return "/sdcard" + physical.removePrefix(storage)
             return "/mnt/android/root" + physical
         }
+        fun boundPath(guestPath: String): String {
+            val bind = binds.firstOrNull { guestPath == it.first || guestPath.startsWith(it.first + "/") }
+            return if (bind != null) bind.second + guestPath.removePrefix(bind.first)
+                else rootfs.trimEnd('/') + guestPath
+        }
         var guest = normalized(path)
-        repeat(40) {
-            val bind = binds.firstOrNull { guest == it.first || guest.startsWith(it.first + "/") }
-            if (bind != null) return publicPath(File(bind.second + guest.removePrefix(bind.first)).canonicalPath)
+        var followedLinks = 0
+        resolve@ while (true) {
             val parts = guest.trimStart('/').split('/').filter { it.isNotEmpty() }
             for (index in parts.indices) {
+                if (parts[index] == "..") {
+                    // Resolve a preceding symlink before interpreting its parent.
+                    // Lexically collapsing link/.. first can overwrite another file.
+                    val parent = parts.take(index).dropLast(1)
+                    guest = "/" + (parent + parts.drop(index + 1)).joinToString("/")
+                    continue@resolve
+                }
                 val prefix = "/" + parts.take(index + 1).joinToString("/")
-                val target = try { Os.readlink(rootfs + prefix) } catch (_: ErrnoException) { null }
+                val physicalPrefix = boundPath(prefix)
+                if (Regex("^/proc/(self|thread-self|[0-9]+)/fd(/|$)").containsMatchIn(physicalPrefix)) {
+                    // Proc fd links can refer to pipes or deleted files; opening the
+                    // descriptor is meaningful, reopening its readlink text is not.
+                    return publicPath(boundPath(guest))
+                }
+                val target = try { Os.readlink(physicalPrefix) } catch (_: ErrnoException) { null }
                 if (target != null) {
+                    followedLinks += 1
+                    check(followedLinks <= 40) { "Too many Linux symbolic links while resolving $path" }
                     val parent = "/" + parts.take(index).joinToString("/")
                     val tail = parts.drop(index + 1).joinToString("/")
                     guest = normalized((if (target.startsWith("/")) target else "$parent/$target") + "/" + tail)
-                    return@repeat
+                    continue@resolve
                 }
             }
-            return publicPath(rootfs.trimEnd('/') + guest)
+            return publicPath(boundPath(guest))
         }
-        throw IllegalStateException("Too many Linux symbolic links while resolving $path")
     }
 
     private fun shell(context: Context, request: JSONObject): JSONObject {

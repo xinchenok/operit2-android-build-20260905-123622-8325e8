@@ -233,22 +233,49 @@ fn normalized_connections(value: &Value, nodes: &[Value]) -> Result<Vec<Value>, 
     });
     Ok(connections)
 }
+fn schedule_configs(nodes: &[Value]) -> Value {
+    let mut configs = serde_json::Map::new();
+    for node in nodes
+        .iter()
+        .filter(|node| field(node, "type") == "trigger" && field(node, "triggerType") == "schedule")
+    {
+        let config = &node["triggerConfig"];
+        let kind = field(config, "schedule_type");
+        configs.insert(
+            field(node, "id"),
+            json!({
+                "schedule_type": kind,
+                "interval_ms": number(&config["interval_ms"], 0),
+                "specific_time": field(config, "specific_time"),
+                "cron_expression": field(config, "cron_expression"),
+                "repeat": flag(&config["repeat"], kind != "specific_time"),
+            }),
+        );
+    }
+    Value::Object(configs)
+}
 fn normalize_workflow(workflow: &mut Value, reset_schedule: bool) -> Result<(), String> {
     let nodes = normalized_nodes(&workflow["nodes"])?;
     let edges = normalized_connections(&workflow["connections"], &nodes)?;
+    let configs = schedule_configs(&nodes);
     workflow["nodes"] = json!(nodes);
     workflow["connections"] = json!(edges);
     workflow["updatedAt"] = json!(now());
     if reset_schedule {
         workflow["_nextRuns"] = json!({});
         workflow["_completedTimers"] = json!({});
+        workflow["_scheduleConfigs"] = json!({});
     }
-    if workflow["_nextRuns"].is_null() {
-        workflow["_nextRuns"] = json!({});
+    let old_configs = workflow["_scheduleConfigs"].clone();
+    for key in ["_nextRuns", "_completedTimers"] {
+        if !workflow[key].is_object() {
+            workflow[key] = json!({});
+        }
+        workflow[key].as_object_mut().unwrap().retain(|id, _| {
+            !configs[id].is_null() && (old_configs[id].is_null() || old_configs[id] == configs[id])
+        });
     }
-    if workflow["_completedTimers"].is_null() {
-        workflow["_completedTimers"] = json!({});
-    }
+    workflow["_scheduleConfigs"] = configs;
     if flag(&workflow["enabled"], true) {
         for node in nodes.iter().filter(|n| {
             field(n, "type") == "trigger"
@@ -401,6 +428,12 @@ impl LegacyWorkflowService {
                 return Ok(json!(format!("Workflow deleted: {id}")));
             }
             let workflow = &mut list[index];
+            // Snapshot the original timer settings before editing a node, including
+            // stores created before per-trigger schedule settings were persisted.
+            if !workflow["_scheduleConfigs"].is_object() {
+                workflow["_scheduleConfigs"] =
+                    schedule_configs(&normalized_nodes(&workflow["nodes"])?);
+            }
             match action {
                 "enable" => workflow["enabled"] = json!(true),
                 "disable" => workflow["enabled"] = json!(false),
@@ -422,10 +455,7 @@ impl LegacyWorkflowService {
                 }
                 other => return Err(format!("Unknown legacy-workflow action: {other}")),
             }
-            normalize_workflow(
-                workflow,
-                payload.get("nodes").is_some() || payload.get("node_patches").is_some(),
-            )?;
+            normalize_workflow(workflow, false)?;
             Ok(detail(workflow))
         })?;
         syncHostEventSchedules(runtime);
@@ -514,6 +544,19 @@ impl LegacyWorkflowService {
         {
             if let Some(nexts) = workflow["_nextRuns"].as_object() {
                 for (node_id, next) in nexts {
+                    let enabled = workflow["nodes"]
+                        .as_array()
+                        .into_iter()
+                        .flatten()
+                        .any(|node| {
+                            field(node, "id") == *node_id
+                                && field(node, "type") == "trigger"
+                                && field(node, "triggerType") == "schedule"
+                                && flag(&node["triggerConfig"]["enabled"], true)
+                        });
+                    if !enabled {
+                        continue;
+                    }
                     let Some(next) = next.as_i64() else {
                         continue;
                     };
@@ -566,7 +609,14 @@ impl LegacyWorkflowService {
                 return Ok(false);
             };
             let config = &node["triggerConfig"];
-            if field(config, "schedule_type") == "interval" || flag(&config["repeat"], false) {
+            if field(node, "type") != "trigger"
+                || field(node, "triggerType") != "schedule"
+                || !flag(&config["enabled"], true)
+            {
+                return Ok(false);
+            }
+            let kind = field(config, "schedule_type");
+            if kind == "interval" || flag(&config["repeat"], kind == "cron") {
                 workflow["_nextRuns"][trigger] = json!(next_time(config, now(), false)?);
             } else {
                 workflow["_nextRuns"]

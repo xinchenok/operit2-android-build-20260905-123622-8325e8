@@ -27,6 +27,7 @@ class LegacyJavaHost(private val context: Context) {
         val artifacts = mutableListOf<JSONObject>()
     }
     private val codeScopes = ConcurrentHashMap<String, CodeScope>()
+    private val artifactLock = Any()
     private fun codeScope(): CodeScope = codeScopes.getOrPut(currentScope.get()) { CodeScope() }
 
     fun call(requestJson: String): String = try {
@@ -211,11 +212,33 @@ class LegacyJavaHost(private val context: Context) {
         val prefixes = (0 until prefixArray.length()).map { prefixArray.getString(it) }
         val optimized = File(context.codeCacheDir, "legacy-java").apply { mkdirs() }
         // Keep ToolPkg's resource writable for the next materialization; load a private immutable copy.
-        val digest = java.security.MessageDigest.getInstance("SHA-256").digest(input.readBytes())
-            .joinToString("") { "%02x".format(it.toInt() and 255) }
-        val code = File(optimized, "$digest-${input.name}")
-        if (!code.isFile) input.copyTo(code)
-        require(code.setReadOnly() || !code.canWrite()) { "Cannot mark Java artifact read-only: $code" }
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+        input.inputStream().use { stream ->
+            val buffer = ByteArray(64 * 1024)
+            while (true) {
+                val count = stream.read(buffer)
+                if (count < 0) break
+                digest.update(buffer, 0, count)
+            }
+        }
+        val hash = digest.digest().joinToString("") { "%02x".format(it.toInt() and 255) }
+        val code = File(optimized, "$hash-${input.name}")
+        synchronized(artifactLock) {
+            // Separate JS scopes can load the same large runtime concurrently. Publish only
+            // a complete immutable copy; a second loader must never see a half-written DEX.
+            if (!code.isFile || code.length() != input.length()) {
+                val staged = File.createTempFile("legacy-dex-", ".tmp", optimized)
+                try {
+                    java.io.FileOutputStream(staged).use { output ->
+                        require(staged.setReadOnly()) { "Cannot protect Java artifact: $staged" }
+                        input.inputStream().use { it.copyTo(output) }
+                        output.fd.sync()
+                    }
+                    require(staged.renameTo(code)) { "Cannot publish Java artifact: $code" }
+                } finally { staged.delete() }
+            }
+            require(code.setReadOnly() || !code.canWrite()) { "Cannot mark Java artifact read-only: $code" }
+        }
         val parent = loaders.lastOrNull() ?: context.classLoader
         val nativePath = options.optString("nativeLibraryDir").takeIf { it.isNotBlank() }
         val loader = object : DexClassLoader(code.path, optimized.path, nativePath, parent) {

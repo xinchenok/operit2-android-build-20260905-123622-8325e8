@@ -1,5 +1,5 @@
 {
-  "revision": "legacy-native-host-v1",
+  "revision": "legacy-native-host-v2",
   "supported_legacy_classes": [
     "com.ai.assistance.operit.core.subpack.KeyStoreHelper"
   ],
@@ -49,7 +49,7 @@
   "verified": [
     "Four modified TS packages compiled with TypeScript 5.9.3",
     "No private Operit 1 class emulation or success stubs",
-    "Kotlin 2.2.20 + Android 36 + real Android dependencies: compilation passed (operit1_import agent)"
+    "Before lifecycle review: Kotlin 2.2.20 + Android 36 + real Android dependencies compiled; revised DEX materialization awaits final centralized compile"
   ],
   "device_tested": false,
   "virtual_displays": {
@@ -66,5 +66,12 @@
     "setInterval",
     "clearInterval"
   ],
-  "core_command_executor": "Same shared Flutter LocalCoreProxy application; scheduled short commands, no secondary runtime initialization"
+  "core_command_executor": "Existing Flutter application shared service handles, held by LocalCoreProxy; weak callbacks avoid ownership cycles; plain native tasks avoid nested Tokio runtimes and do not hold application dispatch locks. Startup hooks dispatch after command and Core node binding; lifecycle replay runs outside package-manager locks.",
+  "review_fixes": [
+    "Plugin CLI executes with shared existing service handles outside application dispatch locks",
+    "Blocking core commands run on plain native tasks, avoiding nested Tokio runtime panic",
+    "Flutter startup hooks run after Core node and command host binding",
+    "Package lifecycle replay executes after the package manager mutable lock is released",
+    "Concurrent DEX loads publish a complete read-only code-cache artifact atomically; hashing is streamed"
+  ]
 }

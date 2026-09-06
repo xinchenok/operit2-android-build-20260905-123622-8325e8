@@ -28,7 +28,7 @@ function __operitCreateLegacyTools(base) {
     listModelConfigs:'model-list', createModelConfig:'model-create',
     listFunctionModelConfigs:'function-list', listCharacterCards:'character-list',
     clearActiveCharacterCard:'character-clear', getSpeechServicesConfig:'speech-get',
-    setSpeechServicesConfig:'speech-set', createCharacterCard:'character-create'
+    createCharacterCard:'character-create'
   };
   for (const [method, action] of Object.entries(settingsActions)) {
     api.SoftwareSettings[method] = value => command(action, value).then(textResult);
@@ -47,6 +47,7 @@ function __operitCreateLegacyTools(base) {
     command('function-set', {functionType, configId, modelIndex}).then(textResult);
   api.SoftwareSettings.testModelConfigConnection = (configId, modelIndex) =>
     modelRequest('model-test', {configId, modelIndex});
+  api.SoftwareSettings.setSpeechServicesConfig = value => modelRequest('speech-set',value);
   api.SoftwareSettings.testTtsPlayback = (text, options) =>
     modelRequest('speech-test', {text, options});
   api.SoftwareSettings.listSandboxPackages = async () => {
@@ -64,6 +65,10 @@ function __operitCreateLegacyTools(base) {
       packages:rows,packageLoadErrors:await command('package-errors',{})});
   };
   api.SoftwareSettings.setSandboxPackageEnabled = async (packageName, enabled) => {
+    const flag=String(enabled).trim().toLowerCase();
+    if(['1','true','yes','y','on'].includes(flag)) enabled=true;
+    else if(['0','false','no','n','off'].includes(flag)) enabled=false;
+    else throw new Error('enabled must be true or false');
     const before = (await api.SoftwareSettings.listSandboxPackages()).packages.find(p=>p.packageName===packageName);
     if (!before) throw new Error('Package not loaded: '+packageName);
     await cli(['package',enabled?'enable':'disable',packageName]);
@@ -71,7 +76,14 @@ function __operitCreateLegacyTools(base) {
     return textResult({packageName,requestedEnabled:enabled,previousEnabled:before.enabled,
       currentEnabled:after.enabled,message:'Package setting saved'});
   };
-  api.SoftwareSettings.executeSandboxScriptDirect = options => modelRequest('script-run', options);
+  api.SoftwareSettings.executeSandboxScriptDirect = async options => {
+    const sourcePath=options.source_path || '', supplied=typeof options.source_code==='string'&&options.source_code.trim().length>0;
+    if(Boolean(sourcePath)===supplied) throw new Error('Exactly one of source_path or source_code is required');
+    const source=supplied?options.source_code:(await api.Files.read(sourcePath)).content;
+    const request=Object.assign({},options,{source_code:'const Tools = ('+__operitCreateLegacyTools.toString()+')(globalThis.Tools);\n'+source,execution_mode:supplied?'code':'script'});
+    if(options.env_file_path) request.env_source=(await api.Files.read(options.env_file_path)).content;
+    return modelRequest('script-run',request);
+  };
   api.SoftwareSettings.restartMcpWithLogs = timeoutMs => modelRequest('mcp-restart', {timeoutMs});
   const android = async (action,payload) => {
     const Bridge = Java.type('app.operit.LegacyAndroidTools');
@@ -95,6 +107,14 @@ function __operitCreateLegacyTools(base) {
     delete options.environment; return base.Files.download(options);
   };
   api.Net.uploadFile = async options => base.Net.uploadFile(Object.assign({},options,{files:await Promise.all(options.files.map(async file=>Object.assign({},file,{file_path:await filePath(file.file_path)})))}));
+  api.Files.readPart = async (path,start,end,environment) => base.Files.readPart(await filePath(path,environment),start,end);
+  api.Files.find = async (path,pattern,options,environment) => base.Files.find(await filePath(path,environment),pattern,options);
+  api.Files.create = async (path,content,environment) => base.Files.create(await filePath(path,environment),content);
+  api.Files.edit = async (path,old,content,environment) => base.Files.edit(await filePath(path,environment),old,content);
+  for(const method of ['grep','grepContext']) api.Files[method]=async (path,query,options) => {
+    const mapped=Object.assign({},options);delete mapped.environment;
+    return base.Files[method](await filePath(path,options&&options.environment),query,mapped);
+  };
   api.Files.mkdir = async (path,parents,environment) => base.Files.mkdir(await filePath(path,environment),parents);
   api.Files.deleteFile = async (path,recursive,environment) => base.Files.deleteFile(await filePath(path,environment),recursive);
   api.Files.write = async (path,content,append,environment) => base.Files.write(await filePath(path,environment),content,append);
@@ -154,7 +174,15 @@ function __operitCreateLegacyTools(base) {
   api.FFmpeg.execute = async command => textResult(JSON.parse(await Java.type('app.operit.LegacyFfmpegBridge').execute(command)));
   api.FFmpeg.info = async () => textResult(JSON.parse(await Java.type('app.operit.LegacyFfmpegBridge').info()));
   api.FFmpeg.convert = async (input,output,options) => textResult(JSON.parse(await Java.type('app.operit.LegacyFfmpegBridge').convert(input,output,JSON.stringify(options || {}))));
-  const workflow = (action,payload) => base.SoftwareSettings.exec(['--json','legacy-workflow',action,JSON.stringify(payload)]).then(JSON.parse).then(textResult);
+  const workflow = async (action,payload) => {
+    const result=JSON.parse(await base.SoftwareSettings.exec(['--json','legacy-workflow',action,JSON.stringify(payload)]));
+    if(['getAll','get','create','update','patch','delete','enable','disable','import'].includes(action)) {
+      const events=await base.SoftwareSettings.exec(['--json','legacy-workflow','events','{}']);
+      const refreshed=JSON.parse(await Java.type('app.operit.LegacyWorkflowAndroidBridge').refresh(Java.getApplicationContext(),events));
+      if(!refreshed.success) throw new Error('Workflow was saved but Android event registration failed: '+JSON.stringify(refreshed));
+    }
+    return textResult(result);
+  };
   api.Workflow.getAll = () => workflow('getAll',{});
   for (const action of ['get','delete','enable','disable','trigger']) api.Workflow[action] = id => workflow(action,{workflow_id:id});
   api.Workflow.create = (name,description,nodes,connections,enabled) => workflow('create',{name,description,nodes,connections,enabled});
@@ -166,7 +194,7 @@ function __operitCreateLegacyTools(base) {
     while(Date.now()<deadline) {
       const state=await workflow('execution',{workflow_id:id,execution_id:execution.executionId});
       if(state.status==='SUCCESS') return 'Workflow execution completed: '+execution.executionId;
-      if(state.status==='FAILED') {const failed=(state.nodes||[]).filter(node=>node.status==='FAILED');throw new Error(state.error || (failed.length?JSON.stringify(failed):'Workflow execution failed'));}
+      if(state.status==='FAILED') {const failed=Object.entries(state.nodes||{}).filter(([,node])=>node.status==='FAILED').map(([id,node])=>Object.assign({id},node));throw new Error(state.error || (failed.length?JSON.stringify(failed):'Workflow execution failed'));}
       await base.System.sleep(500);
     }
     throw new Error('Workflow is still running: '+execution.executionId+'; it was not cancelled or restarted.');
@@ -178,7 +206,19 @@ function __operitCreateLegacyTools(base) {
 // Workflow nodes store old built-in tool names, independently of package method names.
 async function __operitLegacyWorkflowAction(params) {
   const api=__operitCreateLegacyTools(globalThis.Tools);
-  const p=params.payload;
+  const p=Object.assign({},params.payload);
+  // Stored workflow parameters are strings, whereas the package Tools API is typed.
+  const structured=['turns','extras','updates','options','custom_headers','custom_parameters','tts_headers','tts_response_pipeline','tts_cleaner_regexs','tts_vits_options'];
+  for(const key of structured) if(typeof p[key]==='string'&&p[key].trim()!=='') p[key]=JSON.parse(p[key]);
+  const booleanKeys=['record_token_usage','enable_thinking','interrupt','enabled','enable_max_context_mode','enable_summary','enable_summary_by_message_count','enable_direct_image_processing','enable_direct_audio_processing','enable_direct_video_processing','enable_google_search','enable_claude_1h_prompt_cache','enable_tool_call'];
+  for(const key of Object.keys(p)) if(booleanKeys.includes(key)||key.endsWith('_enabled')) {
+    const flag=String(p[key]).trim().toLowerCase();
+    if(['1','true','yes','y','on'].includes(flag)) p[key]=true;
+    else if(['0','false','no','n','off'].includes(flag)) p[key]=false;
+    else throw new Error(key+' must be true or false');
+  }
+  const numberKeys=['max_tokens','temperature','top_p','top_k','presence_penalty','frequency_penalty','repetition_penalty','context_length','max_context_length','summary_token_threshold','summary_message_count_threshold','request_limit_per_minute','max_concurrent_requests','mnn_forward_type','mnn_thread_count','llama_thread_count','llama_context_size','llama_gpu_layers','tts_speech_rate','tts_pitch','speech_rate','pitch'];
+  for(const key of numberKeys) if(p[key]!==undefined) {const number=Number(p[key]);if(!Number.isFinite(number))throw new Error(key+' must be numeric');p[key]=number;}
   const actions={
     trigger_workflow:()=>api.Workflow.trigger(p.workflow_id),
     execute_shell:()=>api.System.shell(p.command),execute_intent:()=>api.System.intent(p),send_broadcast:()=>api.System.sendBroadcast(p),
@@ -188,7 +228,7 @@ async function __operitLegacyWorkflowAction(params) {
     swipe:()=>api.UI.swipe(Number(p.start_x),Number(p.start_y),Number(p.end_x),Number(p.end_y),p.duration===undefined?undefined:Number(p.duration)),
     run_ui_subagent:()=>api.UI.runSubAgent(p.intent,p.max_steps===undefined?undefined:Number(p.max_steps),p.agent_id,p.target_app),
     ffmpeg_execute:()=>api.FFmpeg.execute(p.command),ffmpeg_info:()=>api.FFmpeg.info(),ffmpeg_convert:()=>api.FFmpeg.convert(p.input_path,p.output_path,p),
-    call_chat_model:()=>api.Chat.call(p),get_chat_messages_range:()=>api.Chat.getMessagesRange(p.chat_id,{start:Number(p.start),end:Number(p.end),order:p.order}),
+    call_chat_model:()=>api.Chat.call({functionType:p.function_type,turns:p.turns,recordTokenUsage:p.record_token_usage,enableThinking:p.enable_thinking}),get_chat_messages_range:()=>api.Chat.getMessagesRange(p.chat_id,{start:Number(p.start),end:Number(p.end),order:p.order}),
     list_sandbox_packages:()=>api.SoftwareSettings.listSandboxPackages(),set_sandbox_package_enabled:()=>api.SoftwareSettings.setSandboxPackageEnabled(p.package_name,p.enabled===true||p.enabled==='true'),
     execute_sandbox_script_direct:()=>api.SoftwareSettings.executeSandboxScriptDirect(p),restart_mcp_with_logs:()=>api.SoftwareSettings.restartMcpWithLogs(p.timeout_ms),
     get_speech_services_config:()=>api.SoftwareSettings.getSpeechServicesConfig(),set_speech_services_config:()=>api.SoftwareSettings.setSpeechServicesConfig(p),test_tts_playback:()=>api.SoftwareSettings.testTtsPlayback(p.text,p),

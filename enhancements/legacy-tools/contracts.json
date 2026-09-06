@@ -8,9 +8,14 @@
     "FFmpeg.info",
     "Files.apply",
     "Files.copy",
+    "Files.create",
     "Files.deleteFile",
     "Files.download",
+    "Files.edit",
     "Files.exists",
+    "Files.find",
+    "Files.grep",
+    "Files.grepContext",
     "Files.info",
     "Files.list",
     "Files.mkdir",
@@ -18,6 +23,7 @@
     "Files.open",
     "Files.read",
     "Files.readBinary",
+    "Files.readPart",
     "Files.share",
     "Files.unzip",
     "Files.write",
@@ -118,10 +124,16 @@
     "package": "legacy_operit_editor",
     "fields": [
       "enable_claude_1h_prompt_cache",
-      "tts_vits_*",
-      "tts_service_type=VITS_TTS|OPENAI_WS_TTS",
+      "tts_service_type=OPENAI_WS_TTS",
       "stt_service_type=SHERPA_NCNN|DEEPGRAM_STT"
     ],
-    "behavior": "Original values are persisted in private app preferences. Unsupported speech engine updates do not replace the active service. Tool responses and settings reads explicitly list retained fields and say they are not active; this is not a port of those unavailable engines. Existing supported provider settings and Google built-in search are applied to current real profiles."
+    "behavior": "Original unsupported settings are persisted in private app preferences. They do not replace the active service. Tool responses and settings reads explicitly list retained fields and say they are not active. VITS uses a separate actual import path and fails explicitly when the requested model is incompatible."
+  },
+  "vits_import": {
+    "host": "operit_runtime::services::LegacyVitsImport::prepare",
+    "execution": "Background host job imports a readable directory, ZIP or file URL through the existing local-model registry and Sherpa ONNX engine; current TTS configuration is written only after preparation succeeds",
+    "supported": "Sherpa-compatible VITS ONNX with required model metadata, lexicon and tokens; actual speaker/sample rate validated",
+    "not_supported": "Arbitrary custom ONNX tensor/tokenization frontends, BOS/EOS/blank options, espeak-dependent Piper packages without current engine support; rejected with explicit reason while active service is retained",
+    "device_tested": false
   }
 }

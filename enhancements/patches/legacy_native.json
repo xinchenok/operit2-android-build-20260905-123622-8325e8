@@ -93,7 +93,7 @@
     "name": "legacy-bind-existing-application-executor",
     "path": "core/crates/proxy/local/src/lib.rs",
     "old": "    /// Returns the runtime storage capability owned by this local core.\n",
-    "new": "    /// Makes plugin CLI calls operate on this application, not a separately initialized runtime.\n    #[cfg(not(target_arch = \"wasm32\"))]\n    pub fn bindLocalCoreCommandExecutor(&mut self) -> Result<(), String> {\n        let toolHandler = self.localApplicationMut().toolHandler.clone();\n        let weakApplication = Arc::downgrade(&self.application);\n        let executor: operit_host_api::HostManager::CoreCommandExecutor = Arc::new(move |args| {\n            let application = weakApplication.upgrade().ok_or(\"The local application has stopped\")?;\n            let (sender, receiver) = std::sync::mpsc::sync_channel(1);\n            operit_host_api::HostRuntimeTaskSchedulerHost::scheduleHostRuntimeAsyncTask(\n                operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost().as_ref(),\n                \"plugin-core-command\",\n                Box::new(move || Box::pin(async move {\n                    let mut application = application.lock().await;\n                    let result = operit_command_core::run_core_command(&mut application, &args).map(|output| output.stdout);\n                    let _ = sender.send(result);\n                })),\n            ).map_err(|error| error.to_string())?;\n            receiver.recv().map_err(|error| error.to_string())?\n        });\n        toolHandler.bindCoreCommandExecutor(executor.clone());\n        self.hostManager.coreCommandExecutor = Some(executor.clone());\n        self.application.try_lock().map_err(|error| error.to_string())?.hostManager.coreCommandExecutor = Some(executor);\n        Ok(())\n    }\n\n    /// Returns the runtime storage capability owned by this local core.\n"
+    "new": "    /// Runs plugin commands through this application's shared services, outside dispatch locks.\n    #[cfg(not(target_arch = \"wasm32\"))]\n    pub fn bindLocalCoreCommandExecutor(&mut self) -> Result<(), String> {\n        let mut context = self.localApplicationMut().sharedCommandContext();\n        let commandApplication: Arc<OperitApplication> = Arc::new_cyclic(|weak: &std::sync::Weak<OperitApplication>| {\n            let weak = weak.clone();\n            let executor: operit_host_api::HostManager::CoreCommandExecutor = Arc::new(move |args| {\n                let application = weak.upgrade().ok_or(\"The local application has stopped\")?;\n                let (sender, receiver) = std::sync::mpsc::sync_channel(1);\n                // CLI commands can enter their own async runtime. They must run on a plain\n                // native task, and never hold the application's dispatch mutex over JS hooks.\n                operit_host_api::HostRuntimeTaskSchedulerHost::scheduleHostRuntimeTask(\n                    operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost().as_ref(),\n                    \"plugin-core-command\",\n                    Box::new(move || {\n                        let mut command = application.sharedCommandContext();\n                        let result = operit_command_core::run_core_command(&mut command, &args).map(|output| output.stdout);\n                        let _ = sender.send(result);\n                    }),\n                ).map_err(|error| error.to_string())?;\n                receiver.recv().map_err(|error| error.to_string())?\n            });\n            context.hostManager.coreCommandExecutor = Some(executor);\n            context\n        });\n        let executor = commandApplication.hostManager.coreCommandExecutor.clone().expect(\"command executor was just bound\");\n        commandApplication.toolHandler.bindCoreCommandExecutor(executor.clone());\n        self.hostManager.coreCommandExecutor = Some(executor.clone());\n        self.localApplicationMut().hostManager.coreCommandExecutor = Some(executor);\n        self.commandApplication = Some(commandApplication);\n        Ok(())\n    }\n\n    /// Starts application hooks after Flutter has connected every command and Core node host.\n    #[cfg(not(target_arch = \"wasm32\"))]\n    pub fn dispatchLocalApplicationCreated(&self) {\n        self.commandApplication.as_ref().expect(\"command services must be bound before startup hooks\")\n            .dispatchApplicationCreated();\n    }\n\n    /// Returns the runtime storage capability owned by this local core.\n"
   },
   {
     "name": "legacy-enable-flutter-plugin-core-commands",
@@ -112,5 +112,59 @@
     "path": "core/crates/plugin/javascript-bridge/src/javascript/JsLibraries.rs",
     "old": "            callToolAsync: function(callbackId, toolType, toolName, paramsJson) {{",
     "new": "            registerImageFromPath: function(path) {{\n                var result = JSON.parse(__operitNativeCallTool('default', 'read_file', JSON.stringify({{path:path,direct_image:true}})));\n                if (!result.success) throw new Error(result.message);\n                var content = result.data.content;\n                if (typeof content !== 'string' || content.indexOf('<link type=\"image\"') !== 0) throw new Error('Image registration returned no media link');\n                return content;\n            }},\n            callToolAsync: function(callbackId, toolType, toolName, paramsJson) {{"
+  },
+  {
+    "name": "legacy-share-existing-command-services",
+    "path": "core/crates/runtime/application/src/core/application/OperitApplication.rs",
+    "old": "    /// Removes files queued for cleanup through the configured file-system host.\n",
+    "new": "    /// Shares this initialized application's service handles without starting another runtime.\n    /// Commands mutate the shared stores/holders, never a separate application or chat state.\n    pub fn sharedCommandContext(&self) -> Self {\n        Self {\n            appStartupTimeMs: self.appStartupTimeMs,\n            hostManager: self.hostManager.clone(),\n            chatRuntimeHolder: self.chatRuntimeHolder.clone(),\n            toolRuntimeDependencies: self.toolRuntimeDependencies.clone(),\n            toolHandler: self.toolHandler.clone(),\n            toolPkgBridgeRuntime: self.toolPkgBridgeRuntime.clone(),\n            providerRuntimeContext: self.providerRuntimeContext.clone(),\n            initialized: self.initialized,\n            hostRuntimeEventRegistration: self.hostRuntimeEventRegistration.clone(),\n        }\n    }\n\n    /// Removes files queued for cleanup through the configured file-system host.\n"
+  },
+  {
+    "name": "legacy-retain-shared-command-context",
+    "path": "core/crates/proxy/local/src/lib.rs",
+    "old": "    application: Arc<Mutex<OperitApplication>>,\n",
+    "new": "    application: Arc<Mutex<OperitApplication>>,\n    commandApplication: Option<Arc<OperitApplication>>,\n"
+  },
+  {
+    "name": "legacy-initialize-shared-command-context",
+    "path": "core/crates/proxy/local/src/lib.rs",
+    "old": "            application: Arc::new(Mutex::new(application)),\n",
+    "new": "            application: Arc::new(Mutex::new(application)),\n            commandApplication: None,\n"
+  },
+  {
+    "name": "legacy-defer-startup-hook-initialization",
+    "path": "core/crates/runtime/application/src/core/application/OperitApplication.rs",
+    "old": "    pub fn onCreate(&mut self) -> Result<(), String> {\n        self.appStartupTimeMs = currentTimeMillis();",
+    "new": "    pub fn onCreate(&mut self) -> Result<(), String> {\n        self.initializeRuntime(false)\n    }\n\n    /// Lets a host finish binding command callbacks before running installed startup hooks.\n    pub fn onCreateWithDeferredLifecycle(&mut self) -> Result<(), String> {\n        self.initializeRuntime(true)\n    }\n\n    fn initializeRuntime(&mut self, deferLifecycleHooks: bool) -> Result<(), String> {\n        self.appStartupTimeMs = currentTimeMillis();"
+  },
+  {
+    "name": "legacy-dispatch-startup-after-host-binding",
+    "path": "core/crates/runtime/application/src/core/application/OperitApplication.rs",
+    "old": "        ToolPkgAppLifecycleHookBridge::dispatchEvent(\n            &self.toolPkgBridgeRuntime,\n            operit_plugin_sdk::toolpkg::ToolPkgCommonPluginConstants::TOOLPKG_EVENT_APPLICATION_ON_CREATE,\n            serde_json::json!({\n                \"extras\": {\n                    \"startupTimeMs\": self.appStartupTimeMs,\n                    \"elapsedMs\": currentTimeMillis() - self.appStartupTimeMs,\n                }\n            }),\n        );\n",
+    "new": "        if !deferLifecycleHooks {\n            self.dispatchApplicationCreated();\n        }\n"
+  },
+  {
+    "name": "legacy-expose-bound-startup-event",
+    "path": "core/crates/runtime/application/src/core/application/OperitApplication.rs",
+    "old": "    /// Delivers one normalized host event to registered ToolPkg host-event hooks.\n",
+    "new": "    /// Delivers startup exactly once after the host has bound the shared runtime services.\n    pub fn dispatchApplicationCreated(&self) {\n        ToolPkgAppLifecycleHookBridge::dispatchEvent(\n            &self.toolPkgBridgeRuntime,\n            operit_plugin_sdk::toolpkg::ToolPkgCommonPluginConstants::TOOLPKG_EVENT_APPLICATION_ON_CREATE,\n            serde_json::json!({\n                \"extras\": {\n                    \"startupTimeMs\": self.appStartupTimeMs,\n                    \"elapsedMs\": currentTimeMillis() - self.appStartupTimeMs,\n                }\n            }),\n        );\n    }\n\n    /// Delivers one normalized host event to registered ToolPkg host-event hooks.\n"
+  },
+  {
+    "name": "legacy-flutter-initialize-before-startup-hooks",
+    "path": "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
+    "old": "        core.localApplicationMut().onCreate()?;\n",
+    "new": "        #[cfg(not(target_arch = \"wasm32\"))]\n        core.localApplicationMut().onCreateWithDeferredLifecycle()?;\n        #[cfg(target_arch = \"wasm32\")]\n        core.localApplicationMut().onCreate()?;\n"
+  },
+  {
+    "name": "legacy-flutter-startup-after-core-node",
+    "path": "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
+    "old": "            RemoteDeviceInfo::native(),\n        )?;\n        Ok(Self {",
+    "new": "            RemoteDeviceInfo::native(),\n        )?;\n        #[cfg(not(target_arch = \"wasm32\"))]\n        localCore.dispatchLocalApplicationCreated();\n        Ok(Self {"
+  },
+  {
+    "name": "legacy-replay-hooks-after-manager-unlocks",
+    "path": "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgAppLifecycleHookBridge.rs",
+    "old": "        for replayEvent in replayEvents {\n            for hook in hooksToReplay\n                .iter()\n                .filter(|hook| hook.event == replayEvent.eventName)\n            {\n                runAppLifecycleHook(\n                    runtime,\n                    hook,\n                    &replayEvent.eventName,\n                    replayEvent.payload.clone(),\n                );\n            }\n        }\n",
+    "new": "        // Runtime-change listeners may run inside enablePackage's manager lock. Replay\n        // outside that call so hooks can access their package and issue nested commands.\n        if replayEvents.is_empty() {\n            return;\n        }\n        let runtime = runtime.clone();\n        if let Err(error) = operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost()\n            .scheduleHostRuntimeTask(\"toolpkg-lifecycle-replay\", Box::new(move || {\n                for replayEvent in replayEvents {\n                    for hook in hooksToReplay.iter().filter(|hook| hook.event == replayEvent.eventName) {\n                        runAppLifecycleHook(&runtime, hook, &replayEvent.eventName, replayEvent.payload.clone());\n                    }\n                }\n            }))\n        {\n            ChainLogger::error(PLUGIN_CHAIN, \"plugin.toolpkg.app_lifecycle.replay.error\", &[(\"error\", error.to_string())]);\n        }\n"
   }
 ]

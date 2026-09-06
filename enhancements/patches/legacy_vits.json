@@ -1,0 +1,26 @@
+[
+  {
+    "name": "legacy_vits_import_service",
+    "path": "core/crates/runtime/application/src/services/mod.rs",
+    "old": "#[path = \"LocalProviderService.rs\"]\npub mod LocalProviderService;",
+    "new": "#[path = \"LocalProviderService.rs\"]\npub mod LocalProviderService;\n#[path = \"LegacyVitsImport.rs\"]\npub mod LegacyVitsImport;"
+  },
+  {
+    "name": "register_legacy_vits_using_existing_engine",
+    "path": "core/crates/runtime/application/src/services/LocalModelService.rs",
+    "old": "    /// Returns every installation operation retained by this runtime process.\n",
+    "new": "    /// Registers a prepared local VITS import using the same exact engine and\n    /// engine installation lock as catalog downloads. Model bytes were copied\n    /// and checked by LegacyVitsImport before entering this method.\n    pub(crate) fn registerLegacyVitsModel(\n        &self,\n        installed: InstalledLocalModel,\n    ) -> Result<(), String> {\n        if !installed.manifest.tags.iter().any(|tag| tag == \"legacy-import\") {\n            return Err(\"local VITS import tag is missing\".into());\n        }\n        self.requirePlatformCompatibleModel(&installed.manifest)?;\n        let requirement = installed.manifest.engineRequirement.as_ref()\n            .ok_or(\"local VITS engine requirement is missing\")?;\n        let engine_manifest = self.catalogEngine(&requirement.engineId, &requirement.version)?;\n        let target = LocalPlatformTarget::current()?;\n        let artifact = engine_manifest.artifactForTarget(&target)\n            .ok_or(\"local VITS engine is unavailable on this platform\")?.clone();\n        let lock = engineInstallLock(engineInstallLockKey(&self.runtimeRoot, &engine_manifest, &target))?;\n        let _guard = lock.lock().map_err(|error| format!(\"VITS engine installation lock: {error}\"))?;\n        let installer = self.engineInstaller()?;\n        let snapshot = installer.readRegistry().map_err(errorString)?;\n        if snapshot.getInstalledEngine(&requirement.engineId, &requirement.version, &target)\n            .is_some_and(|existing| existing.artifact == artifact) {\n            installer.verifyInstalledEngine(&requirement.engineId, &requirement.version, &target,\n                currentTimeMillis()).map_err(errorString)?;\n        } else {\n            installer.install(\n                LocalEngineInstallRequest { manifest: engine_manifest, target, installedAtMs: currentTimeMillis() },\n                HttpDownloadControl::new(), Arc::new(|_| {}),\n            ).map_err(errorString)?;\n        }\n        let store = self.registryStore()?;\n        let mut registry = store.read().map_err(errorString)?;\n        registry.upsert(installed);\n        store.write(&registry).map_err(errorString)\n    }\n\n    /// Returns every installation operation retained by this runtime process.\n"
+  },
+  {
+    "name": "show_imported_vits_in_local_model_settings",
+    "path": "core/crates/runtime/application/src/services/LocalModelService.rs",
+    "old": "        let mut statuses = Vec::new();\n        for manifest in LocalModelCatalog::manifests() {",
+    "new": "        let mut statuses = Vec::new();\n        let mut manifests = LocalModelCatalog::manifests();\n        for installed in &registry.installedModels {\n            if installed.manifest.tags.iter().any(|tag| tag == \"legacy-import\")\n                && !manifests.iter().any(|m| m.registryKey() == installed.manifest.registryKey()) {\n                manifests.push(installed.manifest.clone());\n            }\n        }\n        for manifest in manifests {"
+  },
+  {
+    "name": "allow_verifying_and_removing_imported_vits",
+    "path": "core/crates/runtime/application/src/services/LocalModelService.rs",
+    "old": "    fn catalogModel(&self, modelId: &str, version: &str) -> Result<LocalModelManifest, String> {\n        LocalModelCatalog::manifests()\n            .into_iter()\n            .find(|manifest| manifest.id == modelId.trim() && manifest.version == version.trim())\n            .ok_or_else(|| format!(\"local model catalog entry not found: {modelId}@{version}\"))\n    }",
+    "new": "    fn catalogModel(&self, modelId: &str, version: &str) -> Result<LocalModelManifest, String> {\n        if let Some(manifest) = LocalModelCatalog::manifests().into_iter()\n            .find(|manifest| manifest.id == modelId.trim() && manifest.version == version.trim()) {\n            return Ok(manifest);\n        }\n        self.registryStore()?.read().map_err(errorString)?\n            .getInstalledModel(modelId, version)\n            .filter(|installed| installed.manifest.tags.iter().any(|tag| tag == \"legacy-import\"))\n            .map(|installed| installed.manifest.clone())\n            .ok_or_else(|| format!(\"local model catalog entry not found: {modelId}@{version}\"))\n    }"
+  }
+]
