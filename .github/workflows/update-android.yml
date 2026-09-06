@@ -1,13 +1,7 @@
-name: Update Android from latest upstream
+name: Build latest Android
 'on':
   workflow_dispatch:
-    inputs:
-      request_id:
-        description: Request identifier (the launcher fills this automatically)
-        type: string
-        required: false
-        default: web
-run-name: Update Android ${{ inputs.request_id }}
+run-name: Build latest Android ${{ github.run_number }}
 permissions:
   contents: read
 concurrency:
@@ -49,13 +43,13 @@ jobs:
       contents: read
       actions: read
     steps:
-    - name: Checkout pinned upstream source
+    - name: Checkout latest upstream commit resolved for this run
       uses: actions/checkout@v4
       with:
         repository: AAswordman/Operit2
         ref: ${{ needs.resolve.outputs.source_sha }}
         persist-credentials: false
-    - name: Restore pinned ARM64 runtime cache
+    - name: Restore exact ARM64 runtime cache
       id: runtime_cache
       uses: actions/cache/restore@v4
       with:
@@ -81,7 +75,7 @@ jobs:
     - name: Fetch runtime sources
       shell: pwsh
       run: |
-        # Transport retries only; the pinned upstream script checks the archive hashes.
+        # Transport retries only; the upstream script checks the archive hashes.
         function Invoke-WebRequest {
           param([string]$Uri, [string]$OutFile)
           $PSNativeCommandUseErrorActionPreference = $false
@@ -174,7 +168,7 @@ jobs:
     - name: Enable symlink checkout required by upstream web assets
       run: git config --global core.symlinks true
       working-directory: ${{ github.workspace }}
-    - name: Checkout pinned upstream source
+    - name: Checkout latest upstream commit resolved for this run
       uses: actions/checkout@v4
       with:
         repository: AAswordman/Operit2
