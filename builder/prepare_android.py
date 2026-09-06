@@ -35,16 +35,31 @@ project.extensions.configure(org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjec
 }"""
 
 
+def _record_no_backport(dist: Path, version: str, reason: str) -> dict[str, str]:
+    report = {"package": "dynamic_color", "version": version, "change": reason}
+    directory = dist / "compatibility"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "dynamic_color-status.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    shutil.copy2(__file__, directory / "prepare_android.py")
+    return report
+
+
 def patch_dynamic_color(app: Path, dist: Path) -> dict[str, str]:
     """Apply the upstream eight-line compatibility change, idempotently."""
     plugins = json.loads((app / ".flutter-plugins-dependencies").read_text(encoding="utf-8-sig"))
     matches = [p for p in plugins["plugins"]["android"] if p["name"] == "dynamic_color"]
+    if not matches:
+        return _record_no_backport(dist, "absent", "Not present in this upstream revision; no backport")
     if len(matches) != 1:
-        raise RuntimeError("Expected one resolved dynamic_color Android plugin")
+        raise RuntimeError("Ambiguous resolved dynamic_color Android plugin")
     package = Path(matches[0]["path"])
     version = re.search(r"(?m)^version:\s*([^\r\n#]+)", (package / "pubspec.yaml").read_text(encoding="utf-8"))
-    if version is None or version.group(1).strip().strip("\"'") != "1.9.0":
-        raise RuntimeError("This backport is only intended for dynamic_color 1.9.0")
+    if version is None:
+        raise RuntimeError("Cannot determine dynamic_color package version")
+    resolved_version = version.group(1).strip().strip("\"'")
+    if resolved_version != "1.9.0":
+        print(f"dynamic_color {resolved_version}: retaining upstream build script; Gradle will validate it", flush=True)
+        return _record_no_backport(dist, resolved_version, "No legacy backport applied")
     gradle = package / "android" / "build.gradle.kts"
     text = gradle.read_text(encoding="utf-8")
     if text.count(NEW_BLOCK) == 1:
@@ -53,7 +68,8 @@ def patch_dynamic_color(app: Path, dist: Path) -> dict[str, str]:
         before, after = text, text.replace(OLD_BLOCK, NEW_BLOCK, 1)
         gradle.write_text(after, encoding="utf-8", newline="\n")
     else:
-        raise RuntimeError("dynamic_color Gradle script no longer matches the upstream compatibility patch")
+        print("dynamic_color has a different upstream build script; retaining it for actual Gradle validation", flush=True)
+        return _record_no_backport(dist, "1.9.0", "Unrecognized upstream script retained; no speculative patch")
 
     report_dir = dist / "compatibility" / "dynamic_color-1.9.0"
     report_dir.mkdir(parents=True, exist_ok=True)
