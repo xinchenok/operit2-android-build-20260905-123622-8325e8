@@ -1,0 +1,158 @@
+{
+  "checks": "three explicit boundaries; ttl=1h on enable; omitted ttl on disable; no per-system-block explosion; thinking block skipped; no automatic top-level collision",
+  "hourly": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": [
+          {
+            "text": "hello",
+            "type": "text"
+          }
+        ],
+        "role": "user"
+      },
+      {
+        "content": [
+          {
+            "cache_control": {
+              "ttl": "1h",
+              "type": "ephemeral"
+            },
+            "text": "answer",
+            "type": "text"
+          },
+          {
+            "signature": "fixture",
+            "thinking": "private",
+            "type": "thinking"
+          }
+        ],
+        "role": "assistant"
+      }
+    ],
+    "model": "claude-model-fixture",
+    "stream": false,
+    "system": [
+      {
+        "text": "s1",
+        "type": "text"
+      },
+      {
+        "text": "s2",
+        "type": "text"
+      },
+      {
+        "text": "s3",
+        "type": "text"
+      },
+      {
+        "text": "s4",
+        "type": "text"
+      },
+      {
+        "cache_control": {
+          "ttl": "1h",
+          "type": "ephemeral"
+        },
+        "text": "s5",
+        "type": "text"
+      }
+    ],
+    "tools": [
+      {
+        "input_schema": {
+          "type": "object"
+        },
+        "name": "first"
+      },
+      {
+        "cache_control": {
+          "ttl": "1h",
+          "type": "ephemeral"
+        },
+        "input_schema": {
+          "type": "object"
+        },
+        "name": "second"
+      }
+    ]
+  },
+  "network_request_sent": false,
+  "source": "Exact enhanced ClaudeProvider.create_request_body and apply_stable_cache_breakpoints; upstream history serializer/tool schema inputs use deterministic fixtures",
+  "standard": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": [
+          {
+            "text": "hello",
+            "type": "text"
+          }
+        ],
+        "role": "user"
+      },
+      {
+        "content": [
+          {
+            "cache_control": {
+              "type": "ephemeral"
+            },
+            "text": "answer",
+            "type": "text"
+          },
+          {
+            "signature": "fixture",
+            "thinking": "private",
+            "type": "thinking"
+          }
+        ],
+        "role": "assistant"
+      }
+    ],
+    "model": "claude-model-fixture",
+    "stream": false,
+    "system": [
+      {
+        "text": "s1",
+        "type": "text"
+      },
+      {
+        "text": "s2",
+        "type": "text"
+      },
+      {
+        "text": "s3",
+        "type": "text"
+      },
+      {
+        "text": "s4",
+        "type": "text"
+      },
+      {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "text": "s5",
+        "type": "text"
+      }
+    ],
+    "tools": [
+      {
+        "input_schema": {
+          "type": "object"
+        },
+        "name": "first"
+      },
+      {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "input_schema": {
+          "type": "object"
+        },
+        "name": "second"
+      }
+    ]
+  }
+}

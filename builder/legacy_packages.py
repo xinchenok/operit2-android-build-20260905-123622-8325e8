@@ -321,7 +321,8 @@ def install(root: Path, legacy: Path, sha: str) -> dict:
     for family, filename in [('legacy-tools', 'contracts.json'),
                              ('legacy-tools', 'package-coverage.json'),
                              ('legacy-tools', 'contract-review.json'),
-                             ('legacy-native', 'native-contracts.json')]:
+                             ('legacy-native', 'native-contracts.json'),
+                             ('legacy-native', 'vits-onnx-contract.json')]:
         (report_dir/filename).write_bytes((ENHANCEMENTS/family/filename).read_bytes())
     (report_dir/'UPSTREAM-LICENSE').write_bytes((legacy/'LICENSE').read_bytes())
     (report_dir/'README.txt').write_text('Legacy packages are compiled from the official whitelist with the enhanced source ports and local Tools adapters, namespaced and disabled by default. The manifest records bundled host adapters; it does not claim every external service or Android device has been exercised. Android permissions, service credentials and remote companion software remain required where the original package requires them. Original sources and license are in Operit-legacy-source.zip; enhanced source changes are recorded alongside the build. Enable only one implementation of equivalent input hooks.\n',encoding='utf-8')

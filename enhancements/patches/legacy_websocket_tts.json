@@ -1,0 +1,104 @@
+[
+  {
+    "name": "register-legacy-realtime-tts-provider-type",
+    "path": "core/crates/foundation/model/src/TtsConfig.rs",
+    "old": "    pub const HTTP_TTS: &'static str = \"HTTP_TTS\";",
+    "new": "    pub const HTTP_TTS: &'static str = \"HTTP_TTS\";\n    pub const OPENAI_WS_TTS: &'static str = \"OPENAI_WS_TTS\";"
+  },
+  {
+    "name": "publish-real-websocket-tts-catalog-entry",
+    "path": "core/crates/foundation/model/src/TtsCatalog.rs",
+    "old": "HTTP_TTS|HTTP TTS||||POST|application/json||[]|[]|",
+    "new": "HTTP_TTS|HTTP TTS||||POST|application/json||[]|[]|\nOPENAI_WS_TTS|OpenAI Realtime WebSocket|wss://api.openai.com/v1/realtime|gpt-realtime|wav|GET|application/json||[{\"name\":\"Authorization\",\"value\":\"Bearer {apiKey}\"}]|[]|"
+  },
+  {
+    "name": "publish-legacy-realtime-tts-voices",
+    "path": "core/crates/foundation/model/collects/TtsCatalog.rs",
+    "old": "SYSTEM_TTS|||系统默认音色|使用系统默认语言与默认声音",
+    "new": "SYSTEM_TTS|||系统默认音色|使用系统默认语言与默认声音\nOPENAI_WS_TTS||alloy|alloy|OpenAI Realtime 音色\nOPENAI_WS_TTS||ash|ash|OpenAI Realtime 音色\nOPENAI_WS_TTS||ballad|ballad|OpenAI Realtime 音色\nOPENAI_WS_TTS||cedar|cedar|OpenAI Realtime 音色\nOPENAI_WS_TTS||coral|coral|OpenAI Realtime 音色\nOPENAI_WS_TTS||echo|echo|OpenAI Realtime 音色\nOPENAI_WS_TTS||marin|marin|OpenAI Realtime 音色\nOPENAI_WS_TTS||sage|sage|OpenAI Realtime 音色\nOPENAI_WS_TTS||shimmer|shimmer|OpenAI Realtime 音色\nOPENAI_WS_TTS||verse|verse|OpenAI Realtime 音色"
+  },
+  {
+    "name": "register-realtime-voice-provider",
+    "path": "core/crates/provider/services/src/tts/mod.rs",
+    "old": "#[path = \"HttpVoiceProvider.rs\"]",
+    "new": "#[path = \"OpenAIRealtimeVoiceProvider.rs\"]\npub mod OpenAIRealtimeVoiceProvider;\n#[path = \"HttpVoiceProvider.rs\"]"
+  },
+  {
+    "name": "create-websocket-provider-with-real-host-transport",
+    "path": "core/crates/provider/services/src/tts/VoiceServiceFactory.rs",
+    "old": "            TtsProviderType::LOCAL_MODEL => Err(",
+    "new": "            TtsProviderType::OPENAI_WS_TTS => {\n                let host = context.and_then(|context| context.webSocketHost.clone())\n                    .ok_or_else(|| \"WebSocketHost is required for OPENAI_WS_TTS\".to_string())?;\n                Ok(Box::new(crate::tts::OpenAIRealtimeVoiceProvider::OpenAIRealtimeVoiceProvider::new(host)))\n            }\n            TtsProviderType::LOCAL_MODEL => Err("
+  },
+  {
+    "name": "extend-host-websocket-contract-with-text-frames",
+    "path": "core/crates/foundation/host-api/src/lib.rs",
+    "old": "    /// Closes one previously opened WebSocket.\n    #[allow(non_snake_case)]\n    fn closeWebSocket",
+    "new": "    /// Sends a text frame for JSON WebSocket protocols such as Realtime TTS.\n    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, _streamId: &str, _message: String) -> HostResult<()> {\n        Err(HostError::new(\"This WebSocket host does not support text frames\"))\n    }\n\n    /// Closes one previously opened WebSocket.\n    #[allow(non_snake_case)]\n    fn closeWebSocket"
+  },
+  {
+    "name": "carry-websocket-text-frames-through-host-command-queue",
+    "path": "hosts/common/operit-host-native-http/src/lib.rs",
+    "old": "enum NativeWebSocketCommand {\n    Send(Vec<u8>),",
+    "new": "enum NativeWebSocketCommand {\n    Send(Vec<u8>),\n    SendText(String),"
+  },
+  {
+    "name": "send-real-text-frames-on-native-websockets",
+    "path": "hosts/common/operit-host-native-http/src/lib.rs",
+    "old": "    /// Closes one native WebSocket.\n    #[allow(non_snake_case)]\n    fn closeWebSocket",
+    "new": "    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, streamId: &str, message: String) -> HostResult<()> {\n        let sender = self.webSockets.lock()\n            .map_err(|error| HostError::new(format!(\"WebSocket lock poisoned: {error}\")))?\n            .get(streamId).cloned()\n            .ok_or_else(|| HostError::new(format!(\"WebSocket is not open: {streamId}\")))?;\n        sender.send(NativeWebSocketCommand::SendText(message))\n            .map_err(|error| HostError::new(error.to_string()))\n    }\n\n    /// Closes one native WebSocket.\n    #[allow(non_snake_case)]\n    fn closeWebSocket"
+  },
+  {
+    "name": "write-text-opcode-instead-of-binary-json",
+    "path": "hosts/common/operit-host-native-http/src/lib.rs",
+    "old": "                NativeWebSocketCommand::Close => {\n                    let _ = socket.close(None);",
+    "new": "                NativeWebSocketCommand::SendText(message) => socket\n                    .send(tungstenite::Message::Text(message))\n                    .map_err(|error| HostError::new(error.to_string()))?,\n                NativeWebSocketCommand::Close => {\n                    let _ = socket.close(None);"
+  },
+  {
+    "name": "forward-text-frames-on-android",
+    "path": "hosts/android/src/http.rs",
+    "old": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }",
+    "new": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }\n\n    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, streamId: &str, message: String) -> HostResult<()> {\n        self.inner.sendWebSocketTextMessage(streamId, message)\n    }"
+  },
+  {
+    "name": "forward-text-frames-on-linux",
+    "path": "hosts/linux/src/tools/http/mod.rs",
+    "old": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }",
+    "new": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }\n\n    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, streamId: &str, message: String) -> HostResult<()> {\n        self.inner.sendWebSocketTextMessage(streamId, message)\n    }"
+  },
+  {
+    "name": "forward-text-frames-on-windows",
+    "path": "hosts/windows/src/tools/http/mod.rs",
+    "old": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }",
+    "new": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }\n\n    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, streamId: &str, message: String) -> HostResult<()> {\n        self.inner.sendWebSocketTextMessage(streamId, message)\n    }"
+  },
+  {
+    "name": "forward-text-frames-on-apple",
+    "path": "hosts/apple/src/tools/http/mod.rs",
+    "old": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }",
+    "new": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }\n\n    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, streamId: &str, message: String) -> HostResult<()> {\n        self.inner.sendWebSocketTextMessage(streamId, message)\n    }"
+  },
+  {
+    "name": "forward-text-frames-on-ohos",
+    "path": "hosts/ohos/src/http.rs",
+    "old": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }",
+    "new": "    fn closeWebSocket(&self, streamId: &str) -> HostResult<()> {\n        self.inner.closeWebSocket(streamId)\n    }\n\n    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, streamId: &str, message: String) -> HostResult<()> {\n        self.inner.sendWebSocketTextMessage(streamId, message)\n    }"
+  },
+  {
+    "name": "send-real-text-frames-on-browser-websockets",
+    "path": "hosts/web/src/tools/websocket.rs",
+    "old": "    /// Closes one browser WebSocket.\n    #[allow(non_snake_case)]\n    fn closeWebSocket",
+    "new": "    #[allow(non_snake_case)]\n    fn sendWebSocketTextMessage(&self, streamId: &str, message: String) -> HostResult<()> {\n        WEB_SOCKETS.with(|sockets| {\n            let sockets = sockets.borrow();\n            let socket = sockets.get(streamId)\n                .ok_or_else(|| HostError::new(format!(\"WebSocket is not open: {streamId}\")))?;\n            socket.socket.send_with_str(&message)\n                .map_err(|error| HostError::new(format!(\"WebSocket send failed: {error:?}\")))\n        })\n    }\n\n    /// Closes one browser WebSocket.\n    #[allow(non_snake_case)]\n    fn closeWebSocket"
+  },
+  {
+    "name": "validate-realtime-tts-protocol-before-saving-config",
+    "path": "core/crates/runtime/application/src/data/preferences/TtsConfigManager.rs",
+    "old": "    let httpMethod = catalogText(&config.httpMethod, &providerCatalog.defaultHttpMethod);\n    let httpMethod = normalizeHttpMethod(&httpMethod)?;",
+    "new": "    if providerType == TtsProviderType::OPENAI_WS_TTS {\n        let url = url::Url::parse(&endpoint).map_err(|error| error.to_string())?;\n        if !matches!(url.scheme(), \"ws\" | \"wss\") {\n            return Err(\"OPENAI_WS_TTS requires a ws:// or wss:// endpoint\".to_string());\n        }\n        if responseFormat != \"wav\" || !config.speed.is_finite() {\n            return Err(\"Realtime TTS requires WAV output and a finite speed\".to_string());\n        }\n    }\n    let httpMethod = catalogText(&config.httpMethod, &providerCatalog.defaultHttpMethod);\n    let httpMethod = normalizeHttpMethod(&httpMethod)?;"
+  },
+  {
+    "name": "migrate-retired-official-realtime-settings-on-save",
+    "path": "core/crates/runtime/application/src/data/preferences/TtsConfigManager.rs",
+    "old": "fn normalizeConfig(config: TtsConfig) -> Result<TtsConfig, String> {\n    let name",
+    "new": "fn normalizeConfig(mut config: TtsConfig) -> Result<TtsConfig, String> {\n    if TtsProviderType::normalize(&config.providerType) == TtsProviderType::OPENAI_WS_TTS {\n        operit_providers::tts::OpenAIRealtimeVoiceProvider::normalizeLegacyConfig(&mut config);\n    }\n    let name"
+  }
+]

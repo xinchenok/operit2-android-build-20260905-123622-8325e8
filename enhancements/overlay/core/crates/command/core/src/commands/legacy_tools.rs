@@ -65,7 +65,25 @@ fn card_result(card: CharacterCard) -> Result<Value,String> {
     value["memoryProfileId"] = value["sharedMemoryId"].clone();
     Ok(value)
 }
+const CLAUDE_CACHE_PARAMETER_ID:&str="legacy_claude_prompt_cache";
+fn set_claude_cache_parameter(model:&mut ModelProfile,one_hour:bool){
+    model.parameters.retain(|parameter|parameter.apiName!="cache_control");
+    let control=if one_hour{json!({"type":"ephemeral","ttl":"1h"})}else{json!({"type":"ephemeral"})};
+    let mut parameter=ModelParameter::new(CLAUDE_CACHE_PARAMETER_ID.into(),"Claude prompt cache duration".into(),"cache_control".into(),json!({"type":"ephemeral"}),control,true,ParameterValueType::OBJECT);
+    parameter.description="Claude cache TTL: omit ttl for 5 minutes; ttl=1h for one hour".into();
+    model.parameters.push(parameter);
+}
 fn provider_result(provider: &ProviderProfile, index: usize) -> Result<Value,String> {
+    // Previously retained settings become real provider parameters once this
+    // capable enhanced version reads the legacy configuration editor.
+    let retained=retained_settings(&format!("model:{}",provider.id))?;
+    let migrated=if let Some(one_hour)=retained["enable_claude_1h_prompt_cache"].as_bool().filter(|_|!provider.models.is_empty()&&matches!(provider.providerType,ApiProviderType::ANTHROPIC|ApiProviderType::ANTHROPIC_GENERIC)) {
+        let mut copy=provider.clone();for model in &mut copy.models{set_claude_cache_parameter(model,one_hour);}
+        let saved=ModelConfigManager::default().updateProviderProfile(copy).map_err(|e|e.to_string())?;
+        clear_retained_settings(&format!("model:{}",provider.id),&["enable_claude_1h_prompt_cache".to_string()])?;
+        Some(saved)
+    }else{None};
+    let provider=migrated.as_ref().unwrap_or(provider);
     let model = provider.models.get(index);
     let mut result = json!({"id":provider.id,"name":provider.name,"apiProviderType":provider.providerTypeId,
         "apiEndpoint":provider.endpoint,"apiKeySet":!provider.apiKey.is_empty(),"apiKeyPreview":if provider.apiKey.is_empty(){""}else{"configured"},
@@ -73,10 +91,11 @@ fn provider_result(provider: &ProviderProfile, index: usize) -> Result<Value,Str
         "customHeaders":provider.customHeaders,"hasCustomHeaders":provider.customHeaders!="{}",
         "useMultipleApiKeys":provider.useMultipleApiKeys,"apiKeyPoolCount":provider.apiKeyPool.len(),
         "requestLimitPerMinute":provider.requestLimitPerMinute,"maxConcurrentRequests":provider.maxConcurrentRequests,
-        "customParameters":"{}","hasCustomParameters":false});
+        "customParameters":"{}","hasCustomParameters":false,"enableClaude1hPromptCache":false});
     if let Some(model)=model {
         let manager=ModelConfigManager::default();
         let resolved=manager.getResolvedModelConfig(&provider.id,&model.id).map_err(|e|e.to_string())?;
+        result["enableClaude1hPromptCache"]=json!(resolved.parameters.iter().any(|parameter|parameter.apiName=="cache_control"&&parameter.isEnabled&&parameter.currentValue["ttl"]=="1h"));
         let data=encode(&resolved)?;
         for (key, val) in encode(&model.localRuntime)?.as_object().expect("object") {result[key]=val.clone();}
         for (key, val) in encode(&model.summary)?.as_object().expect("object") {result[key]=val.clone();}
@@ -116,6 +135,13 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
     let map=updates.as_object().ok_or_else(||"Model updates must be an object".to_string())?;
     let manager=ModelConfigManager::default();
     let created=id.is_none();
+    if let Some(value)=map.get("enable_claude_1h_prompt_cache"){
+        value.as_bool().ok_or("enable_claude_1h_prompt_cache must be boolean")?;
+        let kind=match updates["api_provider_type"].as_str(){Some(kind)=>ApiProviderType::fromProviderTypeId(kind),None=>match id{Some(id)=>Some(manager.getProviderProfile(id).map_err(|e|e.to_string())?.providerType),None=>Some(ApiProviderType::OPENAI_GENERIC)}};
+        if !matches!(kind,Some(ApiProviderType::ANTHROPIC|ApiProviderType::ANTHROPIC_GENERIC)){return Err("Claude cache duration requires an ANTHROPIC or ANTHROPIC_GENERIC provider".into());}
+        let has_model=match updates["model_name"].as_str(){Some(names)=>names.split(',').any(|name|!name.trim().is_empty()),None=>match id{Some(id)=>!manager.getProviderProfile(id).map_err(|e|e.to_string())?.models.is_empty(),None=>false}};
+        if !has_model{return Err("Set model_name before configuring Claude cache duration".into());}
+    }
     let id=match id {Some(id)=>id.to_string(),None=>manager.createProvider(
         updates["name"].as_str().unwrap_or("Legacy model").to_string(),
         updates["api_provider_type"].as_str().unwrap_or("OPENAI_GENERIC").to_string(),
@@ -184,6 +210,9 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
         provider.models=selected;
         if let Some(first)=provider.models.first(){model=first.clone();}
     }else if !model.id.is_empty(){if provider.models.is_empty(){provider.models.push(model.clone());}else{provider.models[0]=model.clone();}}
+    if let Some(one_hour)=map.get("enable_claude_1h_prompt_cache").and_then(Value::as_bool){
+        for model in &mut provider.models{set_claude_cache_parameter(model,one_hour);}
+    }
     if provider.models.is_empty(){
         for name in FUNCTIONS{if FunctionalConfigManager::default().getModelBindingForFunction(function(name)?).map_err(|e|e.to_string())?.providerId==id{return Err("A bound provider must retain at least one model".into());}}
     }
@@ -197,10 +226,10 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
             functions.setModelForFunction(role,id.clone(),replacement.id.clone()).map_err(|e|e.to_string())?;affected.push(name.to_string());
         }
     }
-    let retained:serde_json::Map<String,Value>=map.iter().filter(|(key,_)|key.as_str()=="enable_claude_1h_prompt_cache").map(|(key,value)|(key.clone(),value.clone())).collect();
-    retain_settings(&format!("model:{id}"),&Value::Object(retained.clone()))?;
-    let retained_fields=retained.keys().cloned().collect::<Vec<_>>();
-    Ok(json!({"created":created,"updated":!created&&map.keys().any(|key|!retained.contains_key(key)),"config":provider_result(&saved,0)?,"changedFields":map.keys().filter(|key|!retained.contains_key(*key)).collect::<Vec<_>>(),"retainedFields":retained_fields,"compatibilityWarnings":retained_notice(&retained_fields),"affectedFunctions":affected}))
+    if map.contains_key("enable_claude_1h_prompt_cache"){
+        clear_retained_settings(&format!("model:{id}"),&["enable_claude_1h_prompt_cache".to_string()])?;
+    }
+    Ok(json!({"created":created,"updated":!created&&!map.is_empty(),"config":provider_result(&saved,0)?,"changedFields":map.keys().collect::<Vec<_>>(),"retainedFields":[],"compatibilityWarnings":[],"affectedFunctions":affected}))
 }
 fn write_card(id:Option<&str>, updates:&Value, application:&mut OperitApplication)->Result<Value,String>{
     let manager=CharacterCardManager::getInstance();
@@ -376,11 +405,15 @@ pub fn run(application:&mut OperitApplication,args:&[String],output:&mut CoreCom
     };
     output.setJsonStdout(value);Ok(())
 }
+fn unselected_stt_config()->operit_model::SttConfig::SttConfig{
+    operit_model::SttConfig::SttConfig{id:String::new(),name:"Operit 1 speech recognition".into(),providerType:String::new(),endpoint:String::new(),apiKey:String::new(),model:String::new(),fileFieldName:String::new(),modelFieldName:String::new(),languageFieldName:String::new(),responseTextJsonPath:String::new(),headers:Vec::new(),createdAt:0,updatedAt:0}
+}
 fn speech_get()->Result<Value,String>{
     use operit_runtime::data::preferences::{TtsConfigManager::TtsConfigManager,SttConfigManager::SttConfigManager};
     let tts=TtsConfigManager::getInstance().getCurrentTtsConfig()?;
     let extras=operit_runtime::services::LegacySpeechSettings::read()?;
-    let stt=SttConfigManager::getInstance().getCurrentSttConfig()?;
+    let stt_manager=SttConfigManager::getInstance();let stt_selected=stt_manager.getSelectedSttConfigId()?;
+    let stt=match stt_selected.as_deref(){Some(id)=>stt_manager.getSttConfig(id)?,None=>unselected_stt_config()};
     let retained=retained_settings("speech")?;let retained_fields=retained.as_object().map(|v|v.keys().cloned().collect::<Vec<_>>()).unwrap_or_default();
     Ok(json!({"ttsServiceType":if tts.providerType=="SYSTEM_TTS"{"SIMPLE_TTS"}else{&tts.providerType},
         "ttsHttpConfig":{"urlTemplate":tts.endpoint,"apiKeySet":!tts.apiKey.is_empty(),"apiKeyPreview":if tts.apiKey.is_empty(){""}else{"configured"},
@@ -388,24 +421,44 @@ fn speech_get()->Result<Value,String>{
           "httpMethod":tts.httpMethod,"requestBody":tts.requestBody,"contentType":tts.contentType,
           "localeTag":if tts.providerType=="SYSTEM_TTS"{tts.model.clone()}else{String::new()},"voiceId":tts.voice,"modelName":tts.model,"responsePipeline":tts.responsePipeline},
         "retainedFields":retained_fields,"compatibilityWarnings":retained_notice(&retained_fields),"ttsCleanerRegexs":extras["tts_cleaner_regexs"],"ttsSpeechRate":tts.speed,"ttsPitch":extras["tts_pitch"],
-        "sttServiceType":if stt.providerType=="OPENAI_COMPATIBLE"{"OPENAI_STT"}else{&stt.providerType},
+        "sttConfigured":stt_selected.is_some(),"sttServiceType":if stt.providerType=="OPENAI_COMPATIBLE"{"OPENAI_STT"}else{&stt.providerType},
         "sttHttpConfig":{"endpointUrl":stt.endpoint,"apiKeySet":!stt.apiKey.is_empty(),"apiKeyPreview":if stt.apiKey.is_empty(){""}else{"configured"},"modelName":stt.model}}))
 }
 fn speech_set(host:&operit_host_api::HostManager::HostManager,request:&Value)->Result<Value,String>{
     use operit_runtime::data::preferences::{TtsConfigManager::TtsConfigManager,SttConfigManager::SttConfigManager};
     let tts_manager=TtsConfigManager::getInstance();let stt_manager=SttConfigManager::getInstance();
-    let mut tts=encode(tts_manager.getCurrentTtsConfig()?)?;let mut stt=encode(stt_manager.getCurrentSttConfig()?)?;
+    let stt_selected=stt_manager.getSelectedSttConfigId()?;
+    let mut tts=encode(tts_manager.getCurrentTtsConfig()?)?;
+    let mut stt=encode(match stt_selected.as_deref(){Some(id)=>stt_manager.getSttConfig(id)?,None=>unselected_stt_config()})?;
+    let saved_legacy=retained_settings("speech")?;
+    let mut requested=request.clone();
+    for prefix in ["tts_","stt_"]{
+        let key=format!("{prefix}service_type");
+        if requested.get(&key).is_some() && requested[&key]==saved_legacy[&key]{
+            for (key,value) in saved_legacy.as_object().ok_or("Retained speech settings must be an object")?{
+                if key.starts_with(prefix)&&requested.get(key).is_none(){requested[key]=value.clone();}
+            }
+        }
+    }
+    let request=&requested;
     let original=request.as_object().ok_or("Speech updates must be object")?;
     let vits_requested=request["tts_service_type"]=="VITS_TTS"||original.keys().any(|key|key.starts_with("tts_vits_"));
+    let ncnn_requested=matches!(request["stt_service_type"].as_str(),Some("SHERPA_NCNN"|"SHERPA_MNN"));
     let mut vits_settings=json!({});
     let mut prepared=request.clone();
     if vits_requested{
         for source in [retained_settings("speech")?,retained_settings("vits")?,request.clone()]{
             for (key,value) in source.as_object().ok_or("VITS settings must be an object")?{if key.starts_with("tts_"){vits_settings[key]=value.clone();}}
         }
-        tts=encode(operit_runtime::services::LegacyVitsImport::prepare(host,&vits_settings)?)?;
-        prepared["tts_service_type"]=json!("LOCAL_MODEL");
+        tts=encode(operit_runtime::services::LegacyVitsNative::prepare(host,&vits_settings)?)?;
+        prepared["tts_service_type"]=tts["providerType"].clone();
         prepared.as_object_mut().unwrap().retain(|key,_|!key.starts_with("tts_")||matches!(key.as_str(),"tts_service_type"|"tts_speech_rate"|"tts_pitch"|"tts_cleaner_regexs"));
+    }
+    if ncnn_requested{
+        stt=encode(operit_runtime::services::LegacySherpaNcnn::prepare(host,request)?)?;
+        prepared["stt_service_type"]=stt["providerType"].clone();
+        prepared.as_object_mut().unwrap().retain(|key,_|!key.starts_with("stt_")||key=="stt_service_type");
+        prepared.as_object_mut().unwrap().remove("legacy_ncnn_model_directory");
     }
     let request=&prepared;
     let original=request.as_object().unwrap();
@@ -414,6 +467,7 @@ fn speech_set(host:&operit_host_api::HostManager::HostManager,request:&Value)->R
     let retained:serde_json::Map<String,Value>=original.iter().filter(|(key,_)|key.starts_with("tts_vits_")||(tts_unsupported&&key.starts_with("tts_"))||(stt_unsupported&&key.starts_with("stt_"))).map(|(key,value)|(key.clone(),value.clone())).collect();
     let applied=Value::Object(original.iter().filter(|(key,_)|!retained.contains_key(*key)).map(|(key,value)|(key.clone(),value.clone())).collect());
     let request=&applied;let updates=request.as_object().unwrap();
+    if stt_selected.is_none()&&updates.keys().any(|key|key.starts_with("stt_"))&&request.get("stt_service_type").is_none(){return Err("Choose stt_service_type before changing an unconfigured speech recognizer".into());}
     if let Some(kind)=request["tts_service_type"].as_str(){
         let kind=match kind {"SIMPLE_TTS"=>"SYSTEM_TTS","OPENAI_TTS"=>"OPENAI_COMPATIBLE",other=>other};
         if tts["providerType"]!=kind {
@@ -449,16 +503,24 @@ fn speech_set(host:&operit_host_api::HostManager::HostManager,request:&Value)->R
         }
     }
     let tts:operit_model::TtsConfig::TtsConfig=serde_json::from_value(tts).map_err(|e|e.to_string())?;
-    let stt:operit_model::SttConfig::SttConfig=serde_json::from_value(stt).map_err(|e|e.to_string())?;
+    let mut stt:operit_model::SttConfig::SttConfig=serde_json::from_value(stt).map_err(|e|e.to_string())?;
     operit_runtime::services::LegacySpeechSettings::update(request)?;
     if updates.keys().any(|k|k.starts_with("tts_")){tts_manager.updateTtsConfig(tts.clone())?;}
-    if updates.keys().any(|k|k.starts_with("stt_")){stt_manager.updateSttConfig(stt.clone())?;}
+    if updates.keys().any(|k|k.starts_with("stt_")){
+        stt=if stt_selected.is_some(){stt_manager.updateSttConfig(stt)?}else{
+            let created=stt_manager.createSttConfig(stt)?;stt_manager.setCurrentSttConfigId(&created.id)?;created
+        };
+    }
     if vits_requested{
         retain_settings("vits",&vits_settings)?;
         let old=retained_settings("speech")?;
         let migrated=old.as_object().map(|fields|fields.keys().filter(|key|key.starts_with("tts_")).cloned().collect::<Vec<_>>()).unwrap_or_default();
         clear_retained_settings("speech",&migrated)?;
     }
+    let applied_prefixes=[("tts_",updates.contains_key("tts_service_type")),("stt_",updates.contains_key("stt_service_type"))];
+    let previous=retained_settings("speech")?;
+    let cleared=previous.as_object().map(|fields|fields.keys().filter(|key|applied_prefixes.iter().any(|(prefix,applied)|*applied&&key.starts_with(prefix))).cloned().collect::<Vec<_>>()).unwrap_or_default();
+    clear_retained_settings("speech",&cleared)?;
     retain_settings("speech",&Value::Object(retained.clone()))?;
     let retained_fields=retained.keys().cloned().collect::<Vec<_>>();
     Ok(json!({"retainedFields":retained_fields,"compatibilityWarnings":retained_notice(&retained_fields),"updated":!updates.is_empty(),"changedFields":updates.keys().collect::<Vec<_>>(),"ttsServiceType":tts.providerType,"sttServiceType":stt.providerType,"ttsApiKeySet":!tts.apiKey.is_empty(),"sttApiKeySet":!stt.apiKey.is_empty()}))
@@ -469,6 +531,8 @@ fn speech_test(host:&operit_host_api::HostManager::HostManager,request:&Value)->
     let mut config=TtsConfigManager::getInstance().getCurrentTtsConfig()?;
     if let Some(speed)=request["options"]["speech_rate"].as_f64(){config.speed=speed;}
     let pitch=request["options"]["pitch"].as_f64().unwrap_or(operit_runtime::services::LegacySpeechSettings::pitch()?);
+    if config.providerType!="SYSTEM_TTS"&&request["options"].get("pitch").is_some()&&(pitch-1.0).abs()>f64::EPSILON{return Err("The selected TTS audio playback does not implement per-request pitch; use system TTS or pitch=1".into());}
+    let effective_pitch=if config.providerType=="SYSTEM_TTS"{pitch}else{1.0};
     let text=string(request,"text")?;
     let cleaned=operit_runtime::services::LegacySpeechSettings::clean(text)?;
     let interrupt=request["options"]["interrupt"].as_bool().unwrap_or(true);
@@ -479,7 +543,7 @@ fn speech_test(host:&operit_host_api::HostManager::HostManager,request:&Value)->
         let audio=TtsSynthesisService::getInstance(host).synthesizeWithResolvedConfig(&config.id,&config,&cleaned)?;
         let mut started=false;for path in audio.audioPaths{started|=playback.playAudio(&path)?.started;}started
     };
-    Ok(json!({"ttsServiceType":config.providerType,"providerClass":"Operit2 configured TTS provider","initialized":true,"playbackTriggered":started,"interrupt":interrupt,"textLength":text.chars().count(),"speechRate":config.speed,"pitch":pitch}))
+    Ok(json!({"ttsServiceType":config.providerType,"providerClass":"Operit2 configured TTS provider","initialized":true,"playbackTriggered":started,"interrupt":interrupt,"textLength":text.chars().count(),"speechRate":config.speed,"pitch":effective_pitch,"requestedPitch":pitch,"pitchApplied":(effective_pitch-pitch).abs()<=f64::EPSILON}))
 }
 fn script_run(handler:AIToolHandler,request:&Value)->Result<Value,String>{
     use std::collections::BTreeMap;

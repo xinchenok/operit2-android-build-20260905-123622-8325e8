@@ -63,28 +63,74 @@
       "issue": "Old compatible VITS settings were only retained despite a reusable current Sherpa engine",
       "evidence": "Current LocalModelDriver supports SherpaOnnxVits; old package and ONNX metadata determine whether the model is actually compatible",
       "change": "Prepare/register compatible model and engine in a background job, bind real LOCAL_MODEL and speaker on success; reject custom unsupported models without replacing active TTS"
+    },
+    {
+      "issue": "Speech engine settings could remain inactive or fail before first STT selection",
+      "evidence": "Old engine names had no concrete provider; speech_get/set unconditionally required current STT; current first-run store explicitly permits no selected recognizer",
+      "change": "Real WebSocket, Deepgram, NCNN and native VITS providers connected; exact backend profile committed after preparation, initial STT create/select supported and TTS no longer depends on selected STT"
+    },
+    {
+      "issue": "Old Claude one-hour cache switch was retained without changing real API requests",
+      "evidence": "Original ClaudeProvider.cacheControlObject sets ephemeral ttl=1h; current provider cache-boundary function was empty while system blocks independently received default controls",
+      "change": "Persist actual model cache_control parameter, migrate retained setting, apply it at stable cacheable request boundaries, and filter it from other provider dialects"
     }
   ],
   "checks": [
     "One JavaScript syntax check",
     "One targeted contract smoke for false toggle, workflow receiver update, failure node details, stored chat payload conversion, and script Tools/env context",
-    "Rust 1.95.0 command-core and proxy-local compile passed after the consolidated second review, including LegacyVitsImport"
+    "Earlier 214-patch snapshot: Rust 1.95.0 command-core and proxy-local compile passed, including LegacyVitsImport. This predates the new Claude/Deepgram/WebSocket/NCNN/native-VITS integration; its consolidated compilation is tracked separately by the root agent",
+    "Actual enhanced Claude request construction and cache-boundary functions compiled and executed with deterministic serializer/tool inputs: 1h on enable, default TTL on disable, three boundaries, no thinking marker or automatic-cache collision"
   ],
   "pending": [
     "Full Android APK/JNI build and actual device behavior are root-coordinated; no device success is claimed"
   ],
-  "remaining_inactive_capabilities": [
-    "Old OpenAI realtime WebSocket TTS requires a real protocol engine; HTTP is not substituted",
-    "Old Sherpa NCNN models are not runnable by current supportsTarget implementation",
-    "Deepgram STT old raw-audio protocol is not provided by current generic multipart STT adapter",
-    "Claude 1-hour cache TTL toggle has no implemented current provider request hook"
-  ],
+  "remaining_inactive_capabilities": [],
   "device_tested": false,
   "vits_import": {
-    "host": "operit_runtime::services::LegacyVitsImport::prepare",
-    "execution": "Background host job imports a readable directory, ZIP or file URL through the existing local-model registry and Sherpa ONNX engine; current TTS configuration is written only after preparation succeeds",
-    "supported": "Sherpa-compatible VITS ONNX with required model metadata, lexicon and tokens; actual speaker/sample rate validated",
-    "not_supported": "Arbitrary custom ONNX tensor/tokenization frontends, BOS/EOS/blank options, espeak-dependent Piper packages without current engine support; rejected with explicit reason while active service is retained",
+    "host": "operit_runtime::services::LegacyVitsNative::prepare",
+    "execution": "Background preparation tries the compatible Sherpa import first; custom Operit1 ONNX VITS uses the real Android ONNX Runtime provider. Only validated, ready-to-use configuration is committed.",
+    "supported": "Sherpa-compatible VITS plus old custom ONNX VITS tensor names, token/front-end options and speaker selection supported by the actual native graph; package paths accept readable directories, ZIPs and file URLs.",
+    "failure_behavior": "Malformed models, unsupported required native graph inputs, missing model assets or incompatible speed/scale input fail with a specific reason and preserve the previous TTS configuration.",
+    "device_tested": false
+  },
+  "claude_prompt_cache": {
+    "setting": "enable_claude_1h_prompt_cache",
+    "active_providers": [
+      "ANTHROPIC",
+      "ANTHROPIC_GENERIC"
+    ],
+    "stored_model_parameter": {
+      "id": "legacy_claude_prompt_cache",
+      "apiName": "cache_control",
+      "isEnabled": true,
+      "isCustom": false,
+      "currentValue": {
+        "type": "ephemeral",
+        "ttl": "1h"
+      }
+    },
+    "disabled_value": {
+      "type": "ephemeral"
+    },
+    "request_behavior": "The actual Claude request builder consumes this parameter and applies its TTL at the final tool, final system block and final cacheable message block. It does not send simultaneous automatic caching, and skips thinking blocks. Other provider dialects do not receive this parameter.",
+    "migration": "Previously retained values migrate into real model parameters when the legacy configuration editor reads them; explicit writes apply to all models in the legacy configuration.",
+    "evidence": "claude-cache-request-sample.json, compiled extracted real request builder with fixture history/tool inputs; no API request sent",
+    "protocol_source": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+  },
+  "runtime_requirements": [
+    "Actual device authorization for Android operations",
+    "First-use local model/engine downloads or verified local imported assets",
+    "User credentials and reachable configured speech/model endpoints",
+    "Model graphs and selected options must be supported by their real engine; invalid input is rejected",
+    "Per-request non-neutral pitch is implemented by system TTS, not non-system audio playback"
+  ],
+  "speech_engines": {
+    "OPENAI_WS_TTS": "Real WebSocket audio protocol, configured endpoint/key/model/voice, response audio delta decoding and WAV output; complete credentials checked at synthesis so the profile can be created first.",
+    "DEEPGRAM_STT": "Real raw-audio HTTP request, Token authorization, model/language query parameters and exact transcript response path; no multipart substitution.",
+    "SHERPA_NCNN": "Existing original seven-file bilingual model set verified by SHA-256, exact native NCNN engine on Android, configured through LOCAL_MODEL after preparation; SHERPA_MNN preserves the original NCNN alias.",
+    "VITS_TTS": "LegacyVitsNative selects validated Sherpa LOCAL_MODEL or actual LEGACY_VITS ONNX Runtime synthesis.",
+    "configuration": "TTS can be read/changed before STT is selected; first successful STT setup creates and selects its profile. Missing credentials remain a setup prerequisite, not a claimed successful API call.",
+    "pitch": "System TTS applies requested pitch; non-system synthesized-audio playback does not claim pitch adjustment. A non-neutral explicit per-call pitch is rejected, and test results report the actual pitch.",
     "device_tested": false
   }
 }

@@ -1,0 +1,8 @@
+[
+  {
+    "name": "preserve-first-draft-across-empty-embedded-chat-surfaces",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "      _saveCurrentInputDraft();\n      if (_creatingInitialChat && state.currentChatId != null) {\n        _inputDraftsByChatId.putIfAbsent(\n          state.currentChatId,\n          () => _inputDraftsByChatId[null] ?? TextEditingValue.empty,\n        );\n        _inputDraftsByChatId.remove(null);\n      }\n      _creatingInitialChat = false;",
+    "new": "      if (_creatingInitialChat && state.currentChatId != null) {\n        // Embedded and main surfaces share the first draft. An empty surface\n        // must not erase text entered in the other while creation was pending.\n        final initialDraft = _messageController.text.isNotEmpty\n            ? _messageController.value\n            : _inputDraftsByChatId[null] ?? TextEditingValue.empty;\n        final savedDraft = _inputDraftsByChatId[state.currentChatId];\n        if (savedDraft == null || savedDraft.text.isEmpty) {\n          _inputDraftsByChatId[state.currentChatId] = initialDraft;\n        }\n        _inputDraftsByChatId.remove(null);\n      } else {\n        _saveCurrentInputDraft();\n      }\n      _creatingInitialChat = false;"
+  }
+]

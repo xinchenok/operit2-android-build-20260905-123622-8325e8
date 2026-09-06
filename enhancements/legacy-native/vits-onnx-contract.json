@@ -1,0 +1,49 @@
+{
+  "revision": "legacy-vits-onnx-1",
+  "source_repository": "AAswordman/Operit",
+  "source_commit": "962f922f0e902084f7683116a9e0543c60c51ff1",
+  "source": "VitsVoiceProvider.kt",
+  "provider": "LEGACY_VITS",
+  "preferred_compatible_provider": "LOCAL_MODEL / Sherpa ONNX",
+  "android_class": "app.operit.LegacyVitsOnnxBridge",
+  "entries": {
+    "inspect": "(Context, configJson:String) -> JSON model/input/frontend report",
+    "synthesize": "(Context, requestJson:String) -> JSON WAV path/sample count"
+  },
+  "config_model": {
+    "packagePath": "Verified absolute directory; ZIP is fully extracted before saving",
+    "speakerId": "Original speaker string",
+    "options": "Original recognized VITS options; no metadata requirement",
+    "supportsSpeed": "Derived from actual model scales input"
+  },
+  "implemented": [
+    "lexicon longest match with original ASCII-word handling",
+    "direct_symbols longest token match",
+    "text_mode token_ids / phoneme_ids",
+    "extraParams token_ids / phoneme_ids / ids on host synthesis entry",
+    "BOS/EOS and interleaved blank tokens",
+    "Explicit input IDs/length/scales/speaker input names",
+    "INT32/INT64 integer tensors and float/double scales",
+    "threads, sample_rate, speaker_count, noise_scale, length_scale, noise_w",
+    "Native inference PCM conversion and WAV writing",
+    "Existing Operit2 playback lifecycle"
+  ],
+  "dependency": {
+    "maven": "com.microsoft.onnxruntime:onnxruntime-android:1.24.3",
+    "aar_sha256": "67397e4a970e75617f765d2015ceaf911917e1d822276cfb5792744e8085cbce",
+    "arm64_onnxruntime_sha256": "4d2318b3849abb8862133d3068fc7e807ed8b2671cc6d83657fff2fcb9e1caad",
+    "compatibility": "ARM64 libonnxruntime.so exactly matches current Operit2 Sherpa ONNX 1.13.2 archive; old Android ORT1.17.1 cannot be substituted"
+  },
+  "verification": {
+    "kotlin_compile": "passed with Kotlin 2.2.20, Android 36 and actual ONNX Runtime 1.24.3",
+    "source_sha256": "b0a5c1a82968671df262f6a70186d8ebf640cbb37e31fa1e3b31c621f5571185",
+    "model_inference_device_tested": false,
+    "rust_compile": "passed: Rust 1.95.0 operit-command-core and operit-proxy-local, consolidated 269 application patches"
+  },
+  "explicit_limits": [
+    "Raw lexicon mode still requires a matching lexicon and every requested word/symbol",
+    "Unsupported frontends requiring extra G2P/BERT inputs are reported, not emulated",
+    "A model without scales input accepts speech speed 1.0 only; unsupported speed is rejected before saving",
+    "Original VITS pitch had no inference effect; no claim of pitch transformation"
+  ]
+}

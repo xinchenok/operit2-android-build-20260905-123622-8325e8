@@ -1,0 +1,50 @@
+[
+  {
+    "name": "legacy-vits-onnx-runtime-aligned-with-sherpa",
+    "path": "apps/flutter/app/android/app/build.gradle.kts",
+    "old": "    implementation(\"com.google.mlkit:text-recognition-chinese:16.0.0\")",
+    "new": "    implementation(\"com.google.mlkit:text-recognition-chinese:16.0.0\")\n    implementation(\"com.microsoft.onnxruntime:onnxruntime-android:1.24.3\")"
+  },
+  {
+    "name": "legacy-vits-reflection-entry-keep",
+    "path": "apps/flutter/app/android/app/proguard-rules.pro",
+    "old": "# AndroidRuntimeHost methods are resolved by Rust through JNI GetMethodID.",
+    "new": "# Legacy VITS uses a concrete Android ONNX host, called by exact class/method names.\n-keep class app.operit.LegacyVitsOnnxBridge { *; }\n\n# AndroidRuntimeHost methods are resolved by Rust through JNI GetMethodID."
+  },
+  {
+    "name": "legacy-vits-native-provider-id",
+    "path": "core/crates/foundation/model/src/TtsConfig.rs",
+    "old": "    pub const LOCAL_MODEL: &'static str = \"LOCAL_MODEL\";",
+    "new": "    pub const LOCAL_MODEL: &'static str = \"LOCAL_MODEL\";\n    pub const LEGACY_VITS: &'static str = \"LEGACY_VITS\";"
+  },
+  {
+    "name": "legacy-vits-native-provider-catalog",
+    "path": "core/crates/foundation/model/src/TtsCatalog.rs",
+    "old": "LOCAL_MODEL|本地模型|||wav|POST|application/json||[]|[]|",
+    "new": "LOCAL_MODEL|本地模型|||wav|POST|application/json||[]|[]|\nLEGACY_VITS|Operit 1 VITS ONNX|||wav|POST|application/json||[]|[]|"
+  },
+  {
+    "name": "legacy-vits-native-service",
+    "path": "core/crates/runtime/application/src/services/mod.rs",
+    "old": "#[path = \"TtsSynthesisService.rs\"]\npub mod TtsSynthesisService;",
+    "new": "#[path = \"TtsSynthesisService.rs\"]\npub mod TtsSynthesisService;\n#[path = \"LegacyVitsNative.rs\"]\npub mod LegacyVitsNative;"
+  },
+  {
+    "name": "legacy-vits-native-synthesis-dispatch",
+    "path": "core/crates/runtime/application/src/services/TtsSynthesisService.rs",
+    "old": "        match providerType.as_str() {\n            TtsProviderType::LOCAL_MODEL => {",
+    "new": "        match providerType.as_str() {\n            TtsProviderType::LEGACY_VITS => {\n                let context = self.context.as_ref().ok_or(\"Android HostManager is required for legacy VITS synthesis\")?;\n                Ok(Box::new(crate::services::LegacyVitsNative::LegacyVitsVoiceProvider::new(context)))\n            }\n            TtsProviderType::LOCAL_MODEL => {"
+  },
+  {
+    "name": "legacy-native-and-websocket-tts-are-not-http",
+    "path": "core/crates/runtime/application/src/data/preferences/TtsConfigManager.rs",
+    "old": "        providerType != TtsProviderType::SYSTEM_TTS && providerType != TtsProviderType::LOCAL_MODEL;",
+    "new": "        providerType != TtsProviderType::SYSTEM_TTS && providerType != TtsProviderType::LOCAL_MODEL\n            && providerType != TtsProviderType::LEGACY_VITS && providerType != \"OPENAI_WS_TTS\";"
+  },
+  {
+    "name": "legacy-vits-native-config-validation",
+    "path": "core/crates/runtime/application/src/data/preferences/TtsConfigManager.rs",
+    "old": "    if providerType == TtsProviderType::LOCAL_MODEL {\n        validateLocalModelTtsConfig",
+    "new": "    if providerType == TtsProviderType::LEGACY_VITS {\n        let package: serde_json::Value = serde_json::from_str(&model).map_err(|e| format!(\"Invalid legacy VITS config: {e}\"))?;\n        if package[\"packagePath\"].as_str().is_none_or(|path| path.trim().is_empty())\n            || !package[\"options\"].is_object() || responseFormat != \"wav\" || !config.speed.is_finite() {\n            return Err(\"Legacy VITS requires a package path, options object, WAV output and finite speed\".into());\n        }\n    }\n    if providerType == TtsProviderType::LOCAL_MODEL {\n        validateLocalModelTtsConfig"
+  }
+]

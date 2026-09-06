@@ -1,0 +1,20 @@
+[
+  {
+    "name": "single_system_cache_boundary",
+    "path": "core/crates/provider/services/src/chat/llmprovider/ClaudeProvider.rs",
+    "old": "                    .map(|text| {\n                        json!({\n                            \"type\": \"text\",\n                            \"text\": text,\n                            \"cache_control\": {\"type\": \"ephemeral\"}\n                        })\n                    })",
+    "new": "                    .map(|text| json!({\"type\": \"text\", \"text\": text}))"
+  },
+  {
+    "name": "restore_claude_explicit_cache_ttl",
+    "path": "core/crates/provider/services/src/chat/llmprovider/ClaudeProvider.rs",
+    "old": "    pub fn apply_stable_cache_breakpoints(&self, _request_object: &mut Map<String, Value>) {}",
+    "new": "    /// Operit1 caches the last tool, system block, and cacheable message block.\n    /// The persisted cache_control model parameter selects the actual block TTL.\n    pub fn apply_stable_cache_breakpoints(&self, request_object: &mut Map<String, Value>) {\n        let cache_control = request_object.remove(\"cache_control\")\n            .unwrap_or_else(|| json!({\"type\": \"ephemeral\"}));\n        // Do not also send automatic top-level caching: its final breakpoint can\n        // conflict with explicit blocks, especially if their TTLs differ.\n        for key in [\"tools\", \"system\"] {\n            if let Some(block) = request_object.get_mut(key)\n                .and_then(Value::as_array_mut)\n                .and_then(|blocks| blocks.iter_mut().rev().find_map(Value::as_object_mut)) {\n                block.entry(\"cache_control\".to_string()).or_insert_with(|| cache_control.clone());\n            }\n        }\n        if let Some(messages) = request_object.get_mut(\"messages\").and_then(Value::as_array_mut) {\n            for message in messages.iter_mut().rev() {\n                let Some(content) = message.get_mut(\"content\").and_then(Value::as_array_mut) else { continue; };\n                for value in content.iter_mut().rev() {\n                    let Some(block) = value.as_object_mut() else { continue; };\n                    // Thinking blocks cannot be explicit cache targets.\n                    if matches!(block.get(\"type\").and_then(Value::as_str), Some(\"thinking\" | \"redacted_thinking\")) { continue; }\n                    if block.get(\"type\").and_then(Value::as_str) == Some(\"text\")\n                        && block.get(\"text\").and_then(Value::as_str).is_some_and(|text| text.is_empty()) { continue; }\n                    block.entry(\"cache_control\".to_string()).or_insert_with(|| cache_control.clone());\n                    return;\n                }\n            }\n        }\n    }"
+  },
+  {
+    "name": "keep_claude_cache_parameter_in_its_request_dialect",
+    "path": "core/crates/runtime/application/src/data/preferences/ModelConfigManager.rs",
+    "old": "            parameters: model.parameters.clone(),",
+    "new": "            // The legacy cache setting belongs to the Claude request dialect.\n            // Retain it on the profile if a provider changes, but never send it\n            // to an OpenAI/Gemini endpoint as an unknown API parameter.\n            parameters: model.parameters.iter().filter(|parameter|\n                parameter.id != \"legacy_claude_prompt_cache\"\n                || matches!(provider.providerType, ApiProviderType::ANTHROPIC | ApiProviderType::ANTHROPIC_GENERIC)\n            ).cloned().collect(),"
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Declare the real Deepgram raw-audio STT provider",
+    "path": "core/crates/foundation/model/src/SttConfig.rs",
+    "old": "    pub const HTTP_STT: &'static str = \"HTTP_STT\";",
+    "new": "    pub const HTTP_STT: &'static str = \"HTTP_STT\";\n    pub const DEEPGRAM_STT: &'static str = \"DEEPGRAM_STT\";"
+  },
+  {
+    "name": "Expose Deepgram with Token authentication and transcript response path",
+    "path": "core/crates/foundation/model/src/SttCatalog.rs",
+    "old": "HTTP_STT|HTTP STT|||file|model|language|$.text|[]",
+    "new": "HTTP_STT|HTTP STT|||file|model|language|$.text|[]\nDEEPGRAM_STT|Deepgram|https://api.deepgram.com/v1/listen|nova-2||model|language|$.results.channels[0].alternatives[0].transcript|[{\"name\":\"Authorization\",\"value\":\"Token {apiKey}\"}]"
+  },
+  {
+    "name": "Offer the established Deepgram multilingual model",
+    "path": "core/crates/foundation/model/src/SttCatalog.rs",
+    "old": "const STT_MODEL_ROWS: &str = r#\"\n",
+    "new": "const STT_MODEL_ROWS: &str = r#\"\nDEEPGRAM_STT|nova-2|Nova 2|Deepgram pre-recorded speech recognition|multilingual\n"
+  },
+  {
+    "name": "Route Deepgram requests to the raw audio provider",
+    "path": "core/crates/provider/services/src/stt/SpeechToTextServiceFactory.rs",
+    "old": "        Ok(Box::new(HttpSpeechToTextProvider::new()))",
+    "new": "        if providerType == SttProviderType::DEEPGRAM_STT {\n            return Ok(Box::new(crate::stt::DeepgramSpeechToTextProvider::DeepgramSpeechToTextProvider::new()));\n        }\n        Ok(Box::new(HttpSpeechToTextProvider::new()))"
+  },
+  {
+    "name": "Register the Deepgram implementation",
+    "path": "core/crates/provider/services/src/stt/mod.rs",
+    "old": "#[path = \"HttpSpeechToTextProvider.rs\"]",
+    "new": "#[path = \"DeepgramSpeechToTextProvider.rs\"]\npub mod DeepgramSpeechToTextProvider;\n#[path = \"HttpSpeechToTextProvider.rs\"]"
+  },
+  {
+    "name": "Validate raw-audio endpoints without requiring a multipart file field",
+    "path": "core/crates/runtime/application/src/data/preferences/SttConfigManager.rs",
+    "old": "    requiredText(&config.fileFieldName, \"STT file field name\")?;\n    requiredText(&config.modelFieldName, \"STT model field name\")?;",
+    "new": "    if SttProviderType::normalize(&config.providerType) != SttProviderType::DEEPGRAM_STT {\n        requiredText(&config.fileFieldName, \"STT file field name\")?;\n        requiredText(&config.modelFieldName, \"STT model field name\")?;\n    }"
+  },
+  {
+    "name": "Keep multipart-only fields out of Deepgram settings",
+    "path": "apps/flutter/app/lib/ui/features/settings/tts/SttProviderDialogs.dart",
+    "old": "                if (!localModel)\n                  ExpansionTile(",
+    "new": "                if (!localModel && _providerType != 'DEEPGRAM_STT')\n                  ExpansionTile("
+  }
+]

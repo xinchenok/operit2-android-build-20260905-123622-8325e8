@@ -1,0 +1,86 @@
+[
+  {
+    "name": "register_real_sherpa_ncnn_engine",
+    "path": "core/crates/provider/local-model/src/LocalEngineCatalog.rs",
+    "old": "        vec![Self::sherpaOnnx()]",
+    "new": "        vec![Self::sherpaOnnx(), Self::sherpaNcnn()]"
+  },
+  {
+    "name": "declare_verified_ncnn_android_archive",
+    "path": "core/crates/provider/local-model/src/LocalEngineCatalog.rs",
+    "old": "    /// Returns the Sherpa ONNX engine package for desktop, Android, and OHOS targets.\n",
+    "new": "    /// Returns the official Android NCNN/JNI runtime matching the restored legacy recognizer.\n    pub fn sherpaNcnn() -> LocalEngineManifest {\n        LocalEngineManifest {\n            id: \"sherpa-ncnn\".into(), version: \"2.1.15\".into(), displayName: \"Sherpa NCNN\".into(),\n            description: \"Native NCNN transducer recognition used by Operit 1.\".into(),\n            license: \"apache-2.0\".into(), homepage: \"https://github.com/k2-fsa/sherpa-ncnn\".into(),\n            artifacts: [\n                (LocalArchitecture::Aarch64, \"arm64-v8a\"), (LocalArchitecture::X86_64, \"x86_64\"),\n                (LocalArchitecture::Armv7, \"armeabi-v7a\"), (LocalArchitecture::X86, \"x86\"),\n            ].into_iter().map(|(architecture, abi)| LocalEngineArtifact {\n                target: LocalPlatformTarget { platform: LocalPlatform::Android, architecture },\n                delivery: LocalEngineDelivery::DownloadArchive,\n                url: \"https://github.com/k2-fsa/sherpa-ncnn/releases/download/v2.1.15/sherpa-ncnn-v2.1.15-android.tar.bz2\".into(),\n                sha256: \"7fbdb6f8bb1f8ec092467ed61d9ec85c01f060d125ccf632ef9d7ec5816d4a65\".into(),\n                byteSize: 9_820_071, archiveFormat: LocalEngineArchiveFormat::TarBz2,\n                archiveRoot: \".\".into(), sttExecutable: None, ttsExecutable: None,\n                androidLibraryDir: Some(format!(\"jniLibs/{abi}\")),\n                ohosLibraryDir: None, iosFrameworkDir: None, webRuntimeDir: None,\n            }).collect(),\n        }\n    }\n\n    /// Returns the Sherpa ONNX engine package for desktop, Android, and OHOS targets.\n"
+  },
+  {
+    "name": "enable_ncnn_only_where_native_host_exists",
+    "path": "core/crates/provider/local-model/src/LocalModelManifest.rs",
+    "old": "            Self::SherpaNcnnStreamingTransducer { .. } => false,",
+    "new": "            Self::SherpaNcnnStreamingTransducer { .. } => *platform == LocalPlatform::Android,"
+  },
+  {
+    "name": "expose_original_ncnn_model_in_catalog",
+    "path": "core/crates/provider/local-model/src/LocalModelCatalog.rs",
+    "old": "            Self::sherpaOnnxWebVitsTts(),\n        ]",
+    "new": "            Self::sherpaOnnxWebVitsTts(),\n            Self::oldAssistanceSherpaNcnnStt(),\n        ]"
+  },
+  {
+    "name": "bind_original_ncnn_model_to_real_engine",
+    "path": "core/crates/provider/local-model/src/LocalModelCatalog.rs",
+    "old": "            engineRequirement: None,\n            driver: Some(LocalModelDriver::SherpaNcnnStreamingTransducer {",
+    "new": "            engineRequirement: Some(LocalEngineRequirement {\n                engineId: \"sherpa-ncnn\".into(), version: \"2.1.15\".into(),\n            }),\n            driver: Some(LocalModelDriver::SherpaNcnnStreamingTransducer {"
+  },
+  {
+    "name": "verify_engine_download_with_identity",
+    "path": "core/crates/provider/local-model/src/LocalEngineDownload.rs",
+    "old": "        self.verifyEngineRuntimeFiles(&stagingDir, &artifact)?;",
+    "new": "        self.verifyEngineRuntimeFiles(&stagingDir, &artifact, &request.manifest.id)?;"
+  },
+  {
+    "name": "verify_installed_engine_with_identity",
+    "path": "core/crates/provider/local-model/src/LocalEngineDownload.rs",
+    "old": "            self.verifyEngineRuntimeFiles(&installDir, &registry.installedEngines[index].artifact)?;",
+    "new": "            self.verifyEngineRuntimeFiles(&installDir, &registry.installedEngines[index].artifact, &registry.installedEngines[index].manifest.id)?;"
+  },
+  {
+    "name": "pass_real_engine_identity_to_library_checks",
+    "path": "core/crates/provider/local-model/src/LocalEngineDownload.rs",
+    "old": "        artifact: &crate::LocalEngineManifest::LocalEngineArtifact,\n    ) -> Result<(), LocalEngineDownloadError> {\n        let requiredPaths = requiredEngineRuntimeFiles(installDir, artifact);",
+    "new": "        artifact: &crate::LocalEngineManifest::LocalEngineArtifact,\n        engineId: &str,\n    ) -> Result<(), LocalEngineDownloadError> {\n        let requiredPaths = requiredEngineRuntimeFiles(installDir, artifact, engineId);"
+  },
+  {
+    "name": "identify_engine_runtime_library_set",
+    "path": "core/crates/provider/local-model/src/LocalEngineDownload.rs",
+    "old": "fn requiredEngineRuntimeFiles(\n    installDir: &Path,\n    artifact: &crate::LocalEngineManifest::LocalEngineArtifact,\n) -> Vec<PathBuf> {",
+    "new": "fn requiredEngineRuntimeFiles(\n    installDir: &Path,\n    artifact: &crate::LocalEngineManifest::LocalEngineArtifact,\n    engineId: &str,\n) -> Vec<PathBuf> {"
+  },
+  {
+    "name": "verify_both_real_ncnn_native_libraries",
+    "path": "core/crates/provider/local-model/src/LocalEngineDownload.rs",
+    "old": "            requiredPaths.push(libraryDir.join(\"libonnxruntime.so\"));\n            requiredPaths.push(libraryDir.join(\"libsherpa-onnx-c-api.so\"));\n            requiredPaths.push(libraryDir.join(\"libsherpa-onnx-jni.so\"));",
+    "new": "            if engineId == \"sherpa-ncnn\" {\n                requiredPaths.push(libraryDir.join(\"libncnn.so\"));\n                requiredPaths.push(libraryDir.join(\"libsherpa-ncnn-jni.so\"));\n            } else {\n                requiredPaths.push(libraryDir.join(\"libonnxruntime.so\"));\n                requiredPaths.push(libraryDir.join(\"libsherpa-onnx-c-api.so\"));\n                requiredPaths.push(libraryDir.join(\"libsherpa-onnx-jni.so\"));\n            }"
+  },
+  {
+    "name": "register_ncnn_settings_preparation_service",
+    "path": "core/crates/runtime/application/src/services/mod.rs",
+    "old": "#[path = \"SttRecognitionService.rs\"]\npub mod SttRecognitionService;",
+    "new": "#[path = \"SttRecognitionService.rs\"]\npub mod SttRecognitionService;\n#[path = \"LegacySherpaNcnn.rs\"]\npub mod LegacySherpaNcnn;"
+  },
+  {
+    "name": "route_ncnn_to_actual_android_recognizer",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidLocalInference.kt",
+    "old": "    fun transcribe(requestJson: String): String {\n        val request = JSONObject(requestJson)\n        validateOptions(request.getString(\"optionsJson\"))",
+    "new": "    fun transcribe(requestJson: String): String {\n        val request = JSONObject(requestJson)\n        if (JSONObject(request.getString(\"driverJson\")).has(\"SherpaNcnnStreamingTransducer\")) {\n            return LegacySherpaNcnnInference.transcribe(requestJson)\n        }\n        validateOptions(request.getString(\"optionsJson\"))"
+  },
+  {
+    "name": "keep_ncnn_jni_class_and_field_abi",
+    "path": "apps/flutter/app/android/app/proguard-rules.pro",
+    "old": "# Sherpa ONNX JNI resolves binding classes, constructors, fields, and methods by exact JVM names.\n",
+    "new": "# Sherpa NCNN's downloaded JNI library resolves these exact Kotlin ABI names.\n-keep class com.k2fsa.sherpa.ncnn.** {\n    *;\n}\n\n# Sherpa ONNX JNI resolves binding classes, constructors, fields, and methods by exact JVM names.\n"
+  },
+  {
+    "name": "register_verified_original_ncnn_and_exact_engine",
+    "path": "core/crates/runtime/application/src/services/LocalModelService.rs",
+    "old": "    /// Returns every installation operation retained by this runtime process.\n",
+    "new": "    /// Registers a prepared local NCNN import using the same exact engine and\n    /// engine installation lock as catalog downloads. Model bytes were copied\n    /// and checked by LegacySherpaNcnn before entering this method.\n    pub(crate) fn registerLegacyNcnnModel(\n        &self,\n        installed: InstalledLocalModel,\n    ) -> Result<(), String> {\n        if installed.manifest != LocalModelCatalog::oldAssistanceSherpaNcnnStt() {\n            return Err(\"local NCNN model does not match the original catalog\".into());\n        }\n        self.requirePlatformCompatibleModel(&installed.manifest)?;\n        let requirement = installed.manifest.engineRequirement.as_ref()\n            .ok_or(\"local NCNN engine requirement is missing\")?;\n        let engine_manifest = self.catalogEngine(&requirement.engineId, &requirement.version)?;\n        let target = LocalPlatformTarget::current()?;\n        let artifact = engine_manifest.artifactForTarget(&target)\n            .ok_or(\"local NCNN engine is unavailable on this platform\")?.clone();\n        let lock = engineInstallLock(engineInstallLockKey(&self.runtimeRoot, &engine_manifest, &target))?;\n        let _guard = lock.lock().map_err(|error| format!(\"NCNN engine installation lock: {error}\"))?;\n        let installer = self.engineInstaller()?;\n        let snapshot = installer.readRegistry().map_err(errorString)?;\n        if snapshot.getInstalledEngine(&requirement.engineId, &requirement.version, &target)\n            .is_some_and(|existing| existing.artifact == artifact) {\n            installer.verifyInstalledEngine(&requirement.engineId, &requirement.version, &target,\n                currentTimeMillis()).map_err(errorString)?;\n        } else {\n            installer.install(\n                LocalEngineInstallRequest { manifest: engine_manifest, target, installedAtMs: currentTimeMillis() },\n                HttpDownloadControl::new(), Arc::new(|_| {}),\n            ).map_err(errorString)?;\n        }\n        let store = self.registryStore()?;\n        let mut registry = store.read().map_err(errorString)?;\n        registry.upsert(installed);\n        store.write(&registry).map_err(errorString)\n    }\n\n    /// Returns every installation operation retained by this runtime process.\n"
+  }
+]
