@@ -10,5 +10,23 @@
     "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/HostEventBridge.kt",
     "old": "        registerPowerIdleReceiver(context, runtimeHandle)\n    }",
     "new": "        registerPowerIdleReceiver(context, runtimeHandle)\n        LegacyWorkflowAndroidBridge.start(context)\n    }"
+  },
+  {
+    "name": "legacy-files-list-real-android-root-mount",
+    "path": "core/crates/tool/services/src/files/PathMapper.rs",
+    "old": "            [ROOT_MNT, MNT_ANDROID] if androidSdcardMounted() => {\n                Ok(Some(vec![directoryEntry(MNT_ANDROID_SDCARD)]))\n            }",
+    "new": "            [ROOT_MNT, MNT_ANDROID] if androidSdcardMounted() || androidPathMounted(\"/\") => {\n                let mut entries = Vec::new();\n                if androidSdcardMounted() {\n                    entries.push(directoryEntry(MNT_ANDROID_SDCARD));\n                }\n                if androidPathMounted(\"/\") {\n                    entries.push(directoryEntry(\"root\"));\n                }\n                Ok(Some(entries))\n            }"
+  },
+  {
+    "name": "legacy-files-resolve-real-android-root-under-current-uid",
+    "path": "core/crates/tool/services/src/files/PathMapper.rs",
+    "old": "            [ROOT_MNT, MNT_ANDROID, MNT_ANDROID_SDCARD, rest @ ..] => {",
+    "new": "            [ROOT_MNT, MNT_ANDROID, \"root\", rest @ ..] => {\n                if !androidPathMounted(\"/\") {\n                    return Err(\"/mnt/android/root is not mounted\".to_string());\n                }\n                Ok(ResolvedVfsPath {\n                    vfsPath: joinNormalizedSegments(&[ROOT_MNT, MNT_ANDROID, \"root\"], rest),\n                    physicalPath: physicalPathString(joinUnixPhysical(\"/\", rest)),\n                })\n            }\n            [ROOT_MNT, MNT_ANDROID, MNT_ANDROID_SDCARD, rest @ ..] => {"
+  },
+  {
+    "name": "legacy-files-show-android-mount-before-shared-storage-permission",
+    "path": "core/crates/tool/services/src/files/PathMapper.rs",
+    "old": "    if androidSdcardMounted() {\n        entries.push(directoryEntry(MNT_ANDROID));\n    }",
+    "new": "    if androidSdcardMounted() || androidPathMounted(\"/\") {\n        entries.push(directoryEntry(MNT_ANDROID));\n    }"
   }
 ]

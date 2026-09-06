@@ -6,6 +6,7 @@ use chrono::{Datelike, Duration, Local, NaiveDateTime, TimeZone, Timelike};
 use operit_host_api::{
     HostRuntimeEventSchedule, HostRuntimeEventScheduleFire, HostRuntimeEventScheduleKind,
 };
+use operit_tools::tools::ToolResultDataClasses::ToolResultData;
 use operit_tools::ToolExecutionManager::{AITool, ToolParameter};
 use serde_json::{json, Value};
 use std::collections::{BTreeMap, BTreeSet};
@@ -308,6 +309,7 @@ impl LegacyWorkflowService {
                     for node in array(&workflow["nodes"])? {
                         if field(&node, "type") == "trigger"
                             && field(&node, "triggerType") == "intent"
+                            && flag(&node["triggerConfig"]["enabled"], true)
                         {
                             let action = field(&node["triggerConfig"], "action");
                             if !action.is_empty() {
@@ -1092,8 +1094,8 @@ fn references(node: &Value) -> Vec<String> {
 }
 fn bool_like(raw: &str) -> Option<bool> {
     match raw.trim().to_lowercase().as_str() {
-        "true" | "1" | "yes" | "on" => Some(true),
-        "false" | "0" | "no" | "off" => Some(false),
+        "true" | "1" | "yes" | "y" | "on" => Some(true),
+        "false" | "0" | "no" | "n" | "off" => Some(false),
         _ => None,
     }
 }
@@ -1188,6 +1190,26 @@ fn execute(
             break;
         }
     }
+    // Parameter references may require an upstream node outside the forward
+    // branch. Include its dependencies without firing unrelated trigger nodes.
+    loop {
+        let previous = reachable.len();
+        let ancestors = reachable
+            .iter()
+            .flat_map(|id| dependencies.get(id).into_iter().flatten())
+            .filter(|id| by_id.contains_key(*id))
+            .cloned()
+            .collect::<Vec<_>>();
+        reachable.extend(ancestors);
+        if reachable.len() == previous {
+            break;
+        }
+    }
+    reachable.retain(|id| {
+        by_id
+            .get(id)
+            .is_none_or(|node| field(node, "type") != "trigger" || starts.contains(id))
+    });
     let mut results = BTreeMap::<String, NodeResult>::new();
     for start in &starts {
         if by_id
@@ -1339,17 +1361,30 @@ fn run_node(
                 "delete_workflow" => Some("delete"),
                 "enable_workflow" => Some("enable"),
                 "disable_workflow" => Some("disable"),
-                "trigger_workflow" => Some("trigger"),
+                "trigger_workflow" => None,
                 _ => None,
             };
             if let Some(action) = action {
                 return LegacyWorkflowService::command(runtime, action, Value::Object(payload))
                     .map(|v| text(&v));
             }
+            if is_legacy_host_action(&name) {
+                return execute_legacy_host_action(runtime, &name, Value::Object(payload));
+            }
+            let name = resolve_package_action(runtime, &name);
             let result = runtime
                 .tool_handler()
                 .executeTool(AITool { name, parameters });
             if result.success {
+                if let ToolResultData::MessageSendResultData(data) = &result.result {
+                    if let Some(reply) = data
+                        .aiResponse
+                        .as_value()
+                        .filter(|reply| !reply.trim().is_empty())
+                    {
+                        return Ok(reply.clone());
+                    }
+                }
                 Ok(result.result.toString())
             } else {
                 Err(result.error.unwrap_or_else(|| result.result.toString()))
@@ -1497,9 +1532,13 @@ fn extract(
             })
         }
         "SUB" => {
-            let chars = source.chars().collect::<Vec<_>>();
-            let start = number(&node["startIndex"], 0).max(0) as usize;
-            if start >= chars.len() {
+            let chars = source.encode_utf16().collect::<Vec<_>>();
+            let raw_start = number(&node["startIndex"], 0);
+            if raw_start < 0 || chars.is_empty() {
+                return Ok(fallback);
+            }
+            let start = raw_start as usize;
+            if start > chars.len() {
                 return Ok(fallback);
             }
             let length = number(&node["length"], -1);
@@ -1508,7 +1547,7 @@ fn extract(
             } else {
                 start.saturating_add(length as usize).min(chars.len())
             };
-            Ok(chars[start..end].iter().collect())
+            Ok(String::from_utf16_lossy(&chars[start..end]))
         }
         "CONCAT" => {
             for other in node["others"].as_array().into_iter().flatten() {
@@ -1518,4 +1557,126 @@ fn extract(
         }
         other => Err(format!("Unknown workflow extract mode: {other}")),
     }
+}
+
+fn is_legacy_host_action(name: &str) -> bool {
+    matches!(
+        name,
+        "trigger_workflow"
+            | "execute_shell"
+            | "execute_intent"
+            | "send_broadcast"
+            | "get_page_info"
+            | "capture_screenshot"
+            | "tap"
+            | "long_press"
+            | "click_element"
+            | "set_input_text"
+            | "press_key"
+            | "swipe"
+            | "run_ui_subagent"
+            | "ffmpeg_execute"
+            | "ffmpeg_info"
+            | "ffmpeg_convert"
+            | "call_chat_model"
+            | "get_chat_messages_range"
+            | "list_sandbox_packages"
+            | "set_sandbox_package_enabled"
+            | "execute_sandbox_script_direct"
+            | "restart_mcp_with_logs"
+            | "get_speech_services_config"
+            | "set_speech_services_config"
+            | "test_tts_playback"
+            | "list_model_configs"
+            | "create_model_config"
+            | "update_model_config"
+            | "delete_model_config"
+            | "list_function_model_configs"
+            | "get_function_model_config"
+            | "set_function_model_config"
+            | "test_model_config_connection"
+    )
+}
+#[cfg(feature = "javascript")]
+fn execute_legacy_host_action(
+    runtime: &ToolPkgBridgeRuntime,
+    action: &str,
+    payload: Value,
+) -> Result<String, String> {
+    let engine = operit_js_bridge::javascript::JsEngine::JsEngine::new(std::sync::Arc::new(
+        runtime.tool_handler(),
+    ));
+    let script = format!(
+        "{}\nexports.__operitLegacyWorkflowAction = __operitLegacyWorkflowAction;",
+        include_str!("LegacyWorkflowTools.js")
+    );
+    let params = BTreeMap::from([
+        ("action".into(), json!(action)),
+        ("payload".into(), payload),
+    ]);
+    let result = engine.execute_script_function(
+        &script,
+        "__operitLegacyWorkflowAction",
+        &params,
+        &BTreeMap::new(),
+        None,
+        false,
+        180,
+        None,
+    );
+    engine.destroy();
+    let output = result
+        .map_err(|error| error.to_string())?
+        .unwrap_or_default();
+    let value = serde_json::from_str::<Value>(&output).unwrap_or(json!(output));
+    if value.get("success") == Some(&Value::Bool(false))
+        || value.get("executionSuccess") == Some(&Value::Bool(false))
+    {
+        return Err(value
+            .get("error")
+            .or_else(|| value.get("executionError"))
+            .or_else(|| value.get("message"))
+            .map(text)
+            .filter(|s| !s.is_empty())
+            .unwrap_or_else(|| value.to_string()));
+    }
+    Ok(text(&value))
+}
+#[cfg(not(feature = "javascript"))]
+fn execute_legacy_host_action(
+    _runtime: &ToolPkgBridgeRuntime,
+    action: &str,
+    _payload: Value,
+) -> Result<String, String> {
+    Err(format!(
+        "Workflow action requires the JavaScript host: {action}"
+    ))
+}
+
+fn resolve_package_action(runtime: &ToolPkgBridgeRuntime, name: &str) -> String {
+    let Some((package, function)) = name.split_once(':') else {
+        return name.into();
+    };
+    let handler = runtime.tool_handler();
+    let manager = handler.getOrCreatePackageManager();
+    let mut manager = manager.lock().unwrap_or_else(|error| error.into_inner());
+    let candidates = if package.starts_with("legacy_") || package.starts_with("legacy.") {
+        vec![package.to_string()]
+    } else {
+        vec![
+            format!("legacy_{package}"),
+            format!("legacy.{package}"),
+            package.to_string(),
+        ]
+    };
+    for candidate in candidates {
+        if manager.getPackageTools(&candidate).is_some() {
+            if !manager.isPackageEnabled(&candidate) {
+                manager.enablePackage(&candidate);
+            }
+            manager.usePackage(&candidate);
+            return format!("{candidate}:{function}");
+        }
+    }
+    name.into()
 }

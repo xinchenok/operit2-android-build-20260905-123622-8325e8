@@ -1,0 +1,663 @@
+{
+  "source_commit": "962f922f0e902084f7683116a9e0543c60c51ff1",
+  "package_count": 43,
+  "scope": "Tools API contract adaptation; physical-device behavior is not asserted by static package coverage",
+  "packages": [
+    {
+      "package": "legacy_12306_ticket",
+      "file": "12306.js",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_Automatic_ui_base",
+      "file": "automatic_ui_base.js",
+      "tools_contracts": {
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.listApps": "Existing Operit2 System.listApps",
+        "System.shell": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "System.sleep": "Existing Operit2 System.sleep",
+        "System.startApp": "Existing Operit2 System.startApp",
+        "UI.clickElement": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "UI.longPress": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "UI.pressKey": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "UI.setText": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "UI.swipe": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "UI.tap": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display"
+      },
+      "prerequisites": [
+        "Android accessibility, root or Shizuku authorization as required by the invoked action"
+      ],
+      "device_tested": false,
+      "native_global_dependencies": [
+        "NativeInterface"
+      ]
+    },
+    {
+      "package": "legacy_Automatic_ui_subagent",
+      "file": "automatic_ui_subagent.js",
+      "tools_contracts": {
+        "System.listApps": "Existing Operit2 System.listApps",
+        "UI.runSubAgent": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display"
+      },
+      "prerequisites": [
+        "Android accessibility, root or Shizuku authorization as required by the invoked action"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_code_runner",
+      "file": "code_runner.js",
+      "tools_contracts": {
+        "Files.read": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.terminal.hiddenExec": "Existing Operit2 System.terminal.hiddenExec"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_crossref",
+      "file": "crossref.js",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_daily_life",
+      "file": "daily_life.js",
+      "tools_contracts": {
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.move": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Net.visit": "Existing Operit2 Net.visit",
+        "System.getDeviceInfo": "Existing Operit2 System.getDeviceInfo",
+        "System.setSetting": "Existing Operit2 System.setSetting",
+        "System.shell": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "UI.captureScreenshot": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "UI.pressKey": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "Workflow.create": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.update": "Persistent workflow runtime, actual node execution and completion polling"
+      },
+      "prerequisites": [
+        "Android accessibility, root or Shizuku authorization as required by the invoked action",
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_duckduckgo",
+      "file": "duckduckgo.js",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_extended_memory_tools",
+      "file": "extended_memory_tools.js",
+      "tools_contracts": {
+        "Memory.create": "Existing Operit2 Memory.create",
+        "Memory.deleteLink": "Existing Operit2 Memory.deleteLink",
+        "Memory.deleteMemory": "Existing Operit2 Memory.deleteMemory",
+        "Memory.link": "Existing Operit2 Memory.link",
+        "Memory.move": "Existing Operit2 Memory.move",
+        "Memory.queryLinks": "Existing Operit2 Memory.queryLinks",
+        "Memory.update": "Existing Operit2 Memory.update",
+        "Memory.updateLink": "Existing Operit2 Memory.updateLink"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_extended_http_tools",
+      "file": "extended_http_tools.js",
+      "tools_contracts": {
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_extended_file_tools",
+      "file": "extended_file_tools.js",
+      "tools_contracts": {
+        "Files.copy": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.info": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.move": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.open": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.share": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.unzip": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.zip": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_ffmpeg",
+      "file": "ffmpeg.js",
+      "tools_contracts": {
+        "FFmpeg.convert": "Bundled FFmpeg/FFprobe Android native bridge",
+        "FFmpeg.execute": "Bundled FFmpeg/FFprobe Android native bridge",
+        "FFmpeg.info": "Bundled FFmpeg/FFprobe Android native bridge"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_file_converter",
+      "file": "file_converter.js",
+      "tools_contracts": {
+        "Files.deleteFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.read": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.readBinary": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.writeBinary": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.terminal.create": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "System.terminal.exec": "Existing Operit2 System.terminal.exec"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_google_search",
+      "file": "google_search.js",
+      "tools_contracts": {
+        "Net.visit": "Existing Operit2 Net.visit"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_github",
+      "file": "github.js",
+      "tools_contracts": {
+        "Files.apply": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.deleteFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.terminal.close": "Existing Operit2 System.terminal.close",
+        "System.terminal.create": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "System.terminal.exec": "Existing Operit2 System.terminal.exec"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_extended_chat",
+      "file": "extended_chat.js",
+      "tools_contracts": {
+        "Chat.agentStatus": "Existing Operit2 Chat.agentStatus",
+        "Chat.createNew": "Existing Operit2 Chat.createNew",
+        "Chat.deleteChat": "Existing Operit2 Chat.deleteChat",
+        "Chat.findChat": "Existing Operit2 Chat.findChat",
+        "Chat.getMessages": "Existing Operit2 Chat.getMessages",
+        "Chat.getMessagesRange": "Current model or chat history manager; asynchronous model job avoids application lock reentry",
+        "Chat.listCharacterCards": "Existing Operit2 Chat.listCharacterCards",
+        "Chat.listChats": "Existing Operit2 Chat.listChats",
+        "Chat.sendMessage": "Existing Operit2 Chat.sendMessage",
+        "Chat.startService": "Existing Operit2 Chat.startService",
+        "Chat.updateTitle": "Existing Operit2 Chat.updateTitle"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_nanobanana_draw",
+      "file": "nanobanana_draw.js",
+      "tools_contracts": {
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Net.uploadFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.sleep": "Existing Operit2 System.sleep"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_minimax_draw",
+      "file": "minimax_draw.js",
+      "tools_contracts": {
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.writeBinary": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Net.uploadFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_qwen_draw",
+      "file": "qwen_draw.js",
+      "tools_contracts": {
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.sleep": "Existing Operit2 System.sleep"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_siliconflow_draw",
+      "file": "siliconflow_draw.js",
+      "tools_contracts": {
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.readBinary": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.sleep": "Existing Operit2 System.sleep"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_super_admin",
+      "file": "super_admin.js",
+      "tools_contracts": {
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.shell": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "System.terminal.create": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "System.terminal.exec": "Existing Operit2 System.terminal.exec",
+        "System.terminal.input": "Existing Operit2 System.terminal.input",
+        "System.terminal.screen": "Existing Operit2 System.terminal.screen"
+      },
+      "prerequisites": [
+        "Android accessibility, root or Shizuku authorization as required by the invoked action"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_system_tools",
+      "file": "system_tools.js",
+      "tools_contracts": {
+        "System.bluetooth.accept": "Existing Operit2 System.bluetooth.accept",
+        "System.bluetooth.ble.connect": "Existing Operit2 System.bluetooth.ble.connect",
+        "System.bluetooth.ble.discoverServices": "Existing Operit2 System.bluetooth.ble.discoverServices",
+        "System.bluetooth.ble.readCharacteristic": "Existing Operit2 System.bluetooth.ble.readCharacteristic",
+        "System.bluetooth.ble.readNotifications": "Existing Operit2 System.bluetooth.ble.readNotifications",
+        "System.bluetooth.ble.subscribe": "Existing Operit2 System.bluetooth.ble.subscribe",
+        "System.bluetooth.ble.writeAndReadCharacteristic": "Existing Operit2 System.bluetooth.ble.writeAndReadCharacteristic",
+        "System.bluetooth.ble.writeCharacteristic": "Existing Operit2 System.bluetooth.ble.writeCharacteristic",
+        "System.bluetooth.close": "Existing Operit2 System.bluetooth.close",
+        "System.bluetooth.connect": "Existing Operit2 System.bluetooth.connect",
+        "System.bluetooth.getState": "Existing Operit2 System.bluetooth.getState",
+        "System.bluetooth.listBondedDevices": "Existing Operit2 System.bluetooth.listBondedDevices",
+        "System.bluetooth.listen": "Existing Operit2 System.bluetooth.listen",
+        "System.bluetooth.read": "Existing Operit2 System.bluetooth.read",
+        "System.bluetooth.requestEnable": "Existing Operit2 System.bluetooth.requestEnable",
+        "System.bluetooth.requestPermission": "Existing Operit2 System.bluetooth.requestPermission",
+        "System.bluetooth.scan": "Existing Operit2 System.bluetooth.scan",
+        "System.bluetooth.send": "Existing Operit2 System.bluetooth.send",
+        "System.bluetooth.sendAndRead": "Existing Operit2 System.bluetooth.sendAndRead",
+        "System.getAppUsageTime": "Existing Operit2 System.getAppUsageTime",
+        "System.getDeviceInfo": "Existing Operit2 System.getDeviceInfo",
+        "System.getLocation": "Existing Operit2 System.getLocation",
+        "System.getNotifications": "Existing Operit2 System.getNotifications",
+        "System.getSetting": "Existing Operit2 System.getSetting",
+        "System.installApp": "Existing Operit2 System.installApp",
+        "System.intent": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "System.listApps": "Existing Operit2 System.listApps",
+        "System.sendBroadcast": "Android UI/System host; UI.runSubAgent uses real UI_CONTROLLER model and current or virtual display",
+        "System.setSetting": "Existing Operit2 System.setSetting",
+        "System.startApp": "Existing Operit2 System.startApp",
+        "System.stopApp": "Existing Operit2 System.stopApp",
+        "System.uninstallApp": "Existing Operit2 System.uninstallApp"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_tavily",
+      "file": "tavily.js",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_time",
+      "file": "time.js",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_various_search",
+      "file": "various_search.js",
+      "tools_contracts": {
+        "Net.visit": "Existing Operit2 Net.visit"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_workflow",
+      "file": "workflow.js",
+      "tools_contracts": {
+        "Workflow.create": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.disable": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.enable": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.get": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.getAll": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.patch": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.trigger": "Persistent workflow runtime, actual node execution and completion polling",
+        "Workflow.update": "Persistent workflow runtime, actual node execution and completion polling"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_xai_draw",
+      "file": "xai_draw.js",
+      "tools_contracts": {
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.readBinary": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.sleep": "Existing Operit2 System.sleep"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_openai_draw",
+      "file": "openai_draw.js",
+      "tools_contracts": {
+        "Files.deleteFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.readBinary": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.writeBinary": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_operit_editor",
+      "file": "operit_editor.js",
+      "tools_contracts": {
+        "Files.copy": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.deleteFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.info": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.list": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.read": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.unzip": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.zip": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "SoftwareSettings.clearActiveCharacterCard": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.createCharacterCard": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.createModelConfig": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.deleteCharacterCard": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.deleteModelConfig": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.executeSandboxScriptDirect": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.exportCharacterCardToTavernJson": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.getCharacterCard": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.getFunctionModelConfig": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.getSpeechServicesConfig": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.importCharacterCardFromTavernJson": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.listCharacterCards": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.listFunctionModelConfigs": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.listModelConfigs": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.listSandboxPackages": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.readEnvironmentVariable": "Existing Operit2 SoftwareSettings.readEnvironmentVariable",
+        "SoftwareSettings.restartMcpWithLogs": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.setActiveCharacterCard": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.setFunctionModelConfig": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.setSandboxPackageEnabled": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.setSpeechServicesConfig": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.testModelConfigConnection": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.testTtsPlayback": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.updateCharacterCard": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.updateModelConfig": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "SoftwareSettings.writeEnvironmentVariable": "Existing Operit2 SoftwareSettings.writeEnvironmentVariable",
+        "System.sleep": "Existing Operit2 System.sleep",
+        "System.usePackage": "Existing Operit2 System.usePackage"
+      },
+      "prerequisites": [],
+      "device_tested": false,
+      "retained_inactive_settings": {
+        "package": "legacy_operit_editor",
+        "fields": [
+          "enable_claude_1h_prompt_cache",
+          "tts_vits_*",
+          "tts_service_type=VITS_TTS|OPENAI_WS_TTS",
+          "stt_service_type=SHERPA_NCNN|DEEPGRAM_STT"
+        ],
+        "behavior": "Original values are persisted in private app preferences. Unsupported speech engine updates do not replace the active service. Tool responses and settings reads explicitly list retained fields and say they are not active; this is not a port of those unavailable engines. Existing supported provider settings and Google built-in search are applied to current real profiles."
+      }
+    },
+    {
+      "package": "legacy_browser",
+      "file": "browser.js",
+      "tools_contracts": {
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Net.browserClick": "Existing Operit2 Net.browserClick",
+        "Net.browserClose": "Existing Operit2 Net.browserClose",
+        "Net.browserCloseAll": "Existing Operit2 Net.browserCloseAll",
+        "Net.browserConsoleMessages": "Existing Operit2 Net.browserConsoleMessages",
+        "Net.browserDrag": "Existing Operit2 Net.browserDrag",
+        "Net.browserEvaluate": "Existing Operit2 Net.browserEvaluate",
+        "Net.browserFileUpload": "Existing Operit2 Net.browserFileUpload",
+        "Net.browserFillForm": "Existing Operit2 Net.browserFillForm",
+        "Net.browserHandleDialog": "Existing Operit2 Net.browserHandleDialog",
+        "Net.browserHover": "Existing Operit2 Net.browserHover",
+        "Net.browserNavigate": "Existing Operit2 Net.browserNavigate",
+        "Net.browserNavigateBack": "Existing Operit2 Net.browserNavigateBack",
+        "Net.browserNetworkRequests": "Existing Operit2 Net.browserNetworkRequests",
+        "Net.browserPressKey": "Existing Operit2 Net.browserPressKey",
+        "Net.browserResize": "Existing Operit2 Net.browserResize",
+        "Net.browserRunCode": "Existing Operit2 Net.browserRunCode",
+        "Net.browserSelectOption": "Existing Operit2 Net.browserSelectOption",
+        "Net.browserSnapshot": "Existing Operit2 Net.browserSnapshot",
+        "Net.browserTabs": "Existing Operit2 Net.browserTabs",
+        "Net.browserType": "Existing Operit2 Net.browserType",
+        "Net.browserWaitFor": "Existing Operit2 Net.browserWaitFor"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.context_limiter_c",
+      "file": "context_limiter_c.toolpkg",
+      "tools_contracts": {
+        "SoftwareSettings.writeEnvironmentVariable": "Existing Operit2 SoftwareSettings.writeEnvironmentVariable"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.windows_bundle",
+      "file": "windows_control.toolpkg",
+      "tools_contracts": {
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Net.http": "Existing Operit2 Net.http"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_zhipu_draw",
+      "file": "zhipu_draw.js",
+      "tools_contracts": {
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy_zhipu_search",
+      "file": "zhipu_search.js",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.linux_ssh_bundle",
+      "file": "linux_ssh.toolpkg",
+      "tools_contracts": {
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "SoftwareSettings.writeEnvironmentVariable": "Existing Operit2 SoftwareSettings.writeEnvironmentVariable",
+        "System.terminal.create": "Current provider/role/character/speech/package/MCP/terminal managers with legacy shape conversion",
+        "System.terminal.hiddenExec": "Existing Operit2 System.terminal.hiddenExec",
+        "System.terminal.input": "Existing Operit2 System.terminal.input",
+        "System.terminal.screen": "Existing Operit2 System.terminal.screen"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.deepsearching_bundle",
+      "file": "deepsearching.toolpkg",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false,
+      "native_global_dependencies": [
+        "Java"
+      ]
+    },
+    {
+      "package": "legacy.com.operit.message_insert_bundle",
+      "file": "message_insert.toolpkg",
+      "tools_contracts": {
+        "Net.http": "Existing Operit2 Net.http",
+        "System.getAppUsageTime": "Existing Operit2 System.getAppUsageTime",
+        "System.getLocation": "Existing Operit2 System.getLocation",
+        "System.getNotifications": "Existing Operit2 System.getNotifications"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false,
+      "native_global_dependencies": [
+        "Java"
+      ]
+    },
+    {
+      "package": "legacy.com.operit.message_translation",
+      "file": "message_translation.toolpkg",
+      "tools_contracts": {
+        "Chat.call": "Current model or chat history manager; asynchronous model job avoids application lock reentry"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.apk_reverse_toolkit",
+      "file": "apktool.toolpkg",
+      "tools_contracts": {},
+      "prerequisites": [],
+      "device_tested": false,
+      "native_global_dependencies": [
+        "Java"
+      ]
+    },
+    {
+      "package": "legacy.com.operit.remote_operit_bundle",
+      "file": "remote_operit.toolpkg",
+      "tools_contracts": {
+        "Net.http": "Existing Operit2 Net.http",
+        "SoftwareSettings.writeEnvironmentVariable": "Existing Operit2 SoftwareSettings.writeEnvironmentVariable"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.worldbook",
+      "file": "worldbook.toolpkg",
+      "tools_contracts": {
+        "Chat.findChat": "Existing Operit2 Chat.findChat",
+        "Chat.getMessages": "Existing Operit2 Chat.getMessages",
+        "Chat.listCharacterCards": "Existing Operit2 Chat.listCharacterCards",
+        "Files.deleteFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.read": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.qqbot_bundle",
+      "file": "qqbot.toolpkg",
+      "tools_contracts": {
+        "Chat.createNew": "Existing Operit2 Chat.createNew",
+        "Chat.findChat": "Existing Operit2 Chat.findChat",
+        "Chat.listCharacterCards": "Existing Operit2 Chat.listCharacterCards",
+        "Chat.sendMessageStreaming": "Existing Operit2 Chat.sendMessageStreaming",
+        "Chat.startService": "Existing Operit2 Chat.startService",
+        "Chat.updateTitle": "Existing Operit2 Chat.updateTitle",
+        "Files.deleteFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.download": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.info": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.read": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Net.http": "Existing Operit2 Net.http",
+        "SoftwareSettings.writeEnvironmentVariable": "Existing Operit2 SoftwareSettings.writeEnvironmentVariable",
+        "System.sleep": "Existing Operit2 System.sleep",
+        "System.terminal.hiddenExec": "Existing Operit2 System.terminal.hiddenExec"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.thinking_guidance",
+      "file": "thinking_guidance.toolpkg",
+      "tools_contracts": {
+        "SoftwareSettings.writeEnvironmentVariable": "Existing Operit2 SoftwareSettings.writeEnvironmentVariable"
+      },
+      "prerequisites": [],
+      "device_tested": false
+    },
+    {
+      "package": "legacy.com.operit.plan_mode_bundle",
+      "file": "plan_mode.toolpkg",
+      "tools_contracts": {
+        "Chat.sendMessage": "Existing Operit2 Chat.sendMessage",
+        "Files.deleteFile": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.exists": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.mkdir": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.read": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "Files.write": "Legacy path/environment/argument positions to real Android VFS and Alpine resolver",
+        "System.toast": "Existing Operit2 System.toast"
+      },
+      "prerequisites": [
+        "Configured service credentials/endpoints and network for requested operation"
+      ],
+      "device_tested": false
+    }
+  ]
+}

@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.system.Os
+import java.io.File
 import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
@@ -16,11 +18,44 @@ object LegacyWorkflowAndroidBridge {
     private const val ACTIONS = "registered_actions"
     private var receiver: BroadcastReceiver? = null
 
+    private fun actionsKey(): String = "$ACTIONS@${Os.getenv("OPERIT_ANDROID_RUNTIME_ROOT").orEmpty()}"
+
     @JvmStatic
-    @Synchronized
     fun start(context: Context) {
-        val saved = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(ACTIONS, "[]") ?: "[]"
-        register(context.applicationContext, JSONArray(saved))
+        val application = context.applicationContext
+        AndroidCoreRuntime.get(application).runBackground {
+            try {
+                val root = Os.getenv("OPERIT_ANDROID_RUNTIME_ROOT") ?: return@runBackground
+                val state = File(root, "data/legacy_workflows/state.json")
+                val actions = linkedSetOf<String>()
+                if (state.isFile) {
+                    val workflows = JSONObject(state.readText()).getJSONArray("workflows")
+                    for (index in 0 until workflows.length()) {
+                        val workflow = workflows.getJSONObject(index)
+                        if (!workflow.optBoolean("enabled", true)) continue
+                        val nodes = workflow.optJSONArray("nodes") ?: JSONArray(workflow.optString("nodes", "[]"))
+                        for (nodeIndex in 0 until nodes.length()) {
+                            val node = nodes.getJSONObject(nodeIndex)
+                            if (node.optString("type") != "trigger" || node.optString("triggerType") != "intent") continue
+                            val config = node.optJSONObject("triggerConfig") ?: continue
+                            if (config.optBoolean("enabled", true)) {
+                                config.optString("action").takeIf { it.isNotBlank() }?.let { actions.add(it) }
+                            }
+                        }
+                    }
+                }
+                refresh(application, JSONObject().put("actions", JSONArray(actions.toList())).toString())
+            } catch (error: Exception) {
+                Log.e("LegacyWorkflowAndroidBridge", "Could not restore workflow actions from current runtime", error)
+                try {
+                    val saved = application.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+                        .getString(actionsKey(), "[]") ?: "[]"
+                    synchronized(this) { register(application, JSONArray(saved)) }
+                } catch (restoreError: Exception) {
+                    Log.e("LegacyWorkflowAndroidBridge", "Could not restore saved workflow actions", restoreError)
+                }
+            }
+        }
     }
 
     @JvmStatic
@@ -28,7 +63,7 @@ object LegacyWorkflowAndroidBridge {
     fun refresh(context: Context, actionsJson: String): String {
         val actions = JSONObject(actionsJson).getJSONArray("actions")
         register(context.applicationContext, actions)
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(ACTIONS, actions.toString()).apply()
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(actionsKey(), actions.toString()).apply()
         return JSONObject().put("success", true).put("actions", actions).toString()
     }
 
@@ -72,7 +107,7 @@ class LegacyWorkflowReceiver : BroadcastReceiver() {
         host.runBackground {
             try {
                 if (!host.restoreStorageRoots()) return@runBackground
-                host.ensureRuntimeHandle()
+                val runtimeHandle = host.ensureRuntimeHandle()
                 val extras = bundleJson(intent.extras)
                 val requestedTopic = intent.getStringExtra("topic").orEmpty()
                 val topic = when {
@@ -80,14 +115,16 @@ class LegacyWorkflowReceiver : BroadcastReceiver() {
                     action == TASKER_ACTION -> "legacy.workflow.tasker"
                     else -> "legacy.workflow.intent"
                 }
-                val data = JSONObject().put("action", action).put("extras", extras)
+                val eventAction = if (action == EVENT_ACTION) intent.getStringExtra("action") ?: action else action
+                val data = JSONObject().put("action", eventAction).put("extras", extras)
                     .put("text", intent.getStringExtra("text") ?: intent.getStringExtra("command") ?: "")
                     .put("uri", intent.dataString.orEmpty())
                 extras.opt("params")?.let { data.put("params", it) }
                 val event = JSONObject().put("topic", topic).put("data", data)
                     .put("domain", "host").put("source", "android.broadcast").put("platform", "android")
                     .put("occurredAtMillis", System.currentTimeMillis())
-                host.emitRuntimeEvent(event)
+                // Keep goAsync active until Core accepts this exact event.
+                RuntimeEvents.emit(runtimeHandle, event)
             } catch (error: Exception) {
                 Log.e("LegacyWorkflowReceiver", "Workflow broadcast could not be delivered", error)
             } finally {

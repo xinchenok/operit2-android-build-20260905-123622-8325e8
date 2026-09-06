@@ -8,5 +8,60 @@
     "package": "file_converter",
     "old": "`apt-get install -y ${packageName}`",
     "new": "`apk add --no-cache ${packageName}`"
+  },
+  {
+    "package": "operit_editor",
+    "old": "const SANDBOX_SCRIPT_EXECUTION_ACTION = \"com.ai.assistance.operit.EXECUTE_JS\";\nconst SANDBOX_SCRIPT_EXECUTION_COMPONENT =\n  \"com.ai.assistance.operit/com.ai.assistance.operit.core.tools.javascript.ScriptExecutionReceiver\";\n",
+    "new": ""
+  },
+  {
+    "package": "operit_editor",
+    "old": "const TOOLPKG_DEBUG_INSTALL_ACTION = \"com.ai.assistance.operit.DEBUG_INSTALL_TOOLPKG\";\nconst TOOLPKG_DEBUG_INSTALL_COMPONENT =\n  \"com.ai.assistance.operit/.core.tools.packTool.ToolPkgDebugInstallReceiver\";\n",
+    "new": ""
+  },
+  {
+    "package": "operit_editor",
+    "old": "const SANDBOX_EXTERNAL_PACKAGES_DIR = \"/sdcard/Android/data/com.ai.assistance.operit/files/packages\";",
+    "new": "const operit2CoreCommands = Tools.SoftwareSettings as typeof Tools.SoftwareSettings & { exec(args: string[]): Promise<string> };\nlet SANDBOX_EXTERNAL_PACKAGES_DIR = \"/app/data/runtime/extensions/packages\";"
+  },
+  {
+    "package": "operit_editor",
+    "old": "const SANDBOX_JS_TEMP_DIR = \"/sdcard/Android/data/com.ai.assistance.operit/js_temp\";",
+    "new": "const SANDBOX_JS_TEMP_DIR = \"/sdcard/Download/Operit2/js_temp\";"
+  },
+  {
+    "package": "operit_editor",
+    "old": "    await ensure_android_directory(SANDBOX_EXTERNAL_PACKAGES_DIR);\n    const targetPath = path_join(\n      SANDBOX_EXTERNAL_PACKAGES_DIR,\n      `${safe_debug_file_stem(packageInfo.packageName, \"debug_js_package\")}.",
+    "new": "    const packageDirectory = JSON.parse(await operit2CoreCommands.exec([\"--json\", \"package\", \"dir\"]));\n    SANDBOX_EXTERNAL_PACKAGES_DIR = packageDirectory.packageDirectory;\n    await ensure_android_directory(SANDBOX_EXTERNAL_PACKAGES_DIR);\n    const targetPath = path_join(\n      SANDBOX_EXTERNAL_PACKAGES_DIR,\n      `${safe_debug_file_stem(packageInfo.packageName, \"debug_js_package\")}."
+  },
+  {
+    "package": "operit_editor",
+    "old": "    await ensure_android_directory(SANDBOX_EXTERNAL_PACKAGES_DIR);\n    const targetPath = path_join(\n      SANDBOX_EXTERNAL_PACKAGES_DIR,\n      `${safe_debug_file_stem(resolvedSource.packageId, \"toolpkg\")}.",
+    "new": "    const packageDirectory = JSON.parse(await operit2CoreCommands.exec([\"--json\", \"package\", \"dir\"]));\n    SANDBOX_EXTERNAL_PACKAGES_DIR = packageDirectory.packageDirectory;\n    await ensure_android_directory(SANDBOX_EXTERNAL_PACKAGES_DIR);\n    const targetPath = path_join(\n      SANDBOX_EXTERNAL_PACKAGES_DIR,\n      `${safe_debug_file_stem(resolvedSource.packageId, \"toolpkg\")}."
+  },
+  {
+    "package": "operit_editor",
+    "old": "    const broadcastResult = await Tools.System.sendBroadcast({\n      action: TOOLPKG_DEBUG_INSTALL_ACTION,\n      component: TOOLPKG_DEBUG_INSTALL_COMPONENT,\n      extras: {\n        package_name: resolvedSource.packageId,\n        file_path: targetPath,\n        reset_subpackage_states: resetSubpackageStates\n      }\n    });",
+    "new": "    const imported = JSON.parse(await operit2CoreCommands.exec([\"--json\", \"package\", \"import\", targetPath]));\n    const broadcastResult = { result: JSON.stringify(imported.result) };"
+  },
+  {
+    "package": "operit_editor",
+    "old": "    const removedDuplicateFiles = await delete_duplicate_external_js_package_files(packageInfo.packageName, targetPath);",
+    "new": "    await operit2CoreCommands.exec([\"--json\", \"package\", \"import\", targetPath]);\n    const removedDuplicateFiles = await delete_duplicate_external_js_package_files(packageInfo.packageName, targetPath);"
+  },
+  {
+    "package": "operit_editor",
+    "old": "message: \"Speech services config updated.\",",
+    "new": "message: ((result as typeof result & { compatibilityWarnings?: string[] }).compatibilityWarnings ?? []).length > 0 ? ((result as typeof result & { compatibilityWarnings?: string[] }).compatibilityWarnings ?? []).join(\"\\n\") : \"Speech services config updated.\","
+  },
+  {
+    "package": "operit_editor",
+    "old": "message: \"Model config updated.\",",
+    "new": "message: ((result as typeof result & { compatibilityWarnings?: string[] }).compatibilityWarnings ?? []).length > 0 ? ((result as typeof result & { compatibilityWarnings?: string[] }).compatibilityWarnings ?? []).join(\"\\n\") : \"Model config updated.\","
+  },
+  {
+    "package": "operit_editor",
+    "old": "message: \"Model config created.\",",
+    "new": "message: ((result as typeof result & { compatibilityWarnings?: string[] }).compatibilityWarnings ?? []).length > 0 ? ((result as typeof result & { compatibilityWarnings?: string[] }).compatibilityWarnings ?? []).join(\"\\n\") : \"Model config created.\","
   }
 ]

@@ -51,6 +51,9 @@ def apply_patches(root: Path) -> dict:
             continue
         path = source.relative_to(overlay_root).as_posix()
         content = source.read_text(encoding='utf-8')
+        if path == 'core/crates/runtime/application/src/services/LegacyWorkflowTools.js':
+            content = content.replace('/* OPERIT_LEGACY_TOOLS_FACTORY */',
+                                      (CONFIG.parent/'legacy-tools/compat.js').read_text(encoding='utf-8'))
         target = root/path
         original = target.read_text(encoding='utf-8') if target.exists() else ''
         if target.exists() and original != content and path not in previous.get('overlay_files', []):

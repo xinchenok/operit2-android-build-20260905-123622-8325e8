@@ -22,5 +22,47 @@
     "path": "core/crates/command/core/Cargo.toml",
     "old": "operit-model = { path = \"../../foundation/model\" }",
     "new": "operit-model = { path = \"../../foundation/model\" }\noperit-plugin-sdk = { path = \"../../plugin/sdk\" }"
+  },
+  {
+    "name": "Expose enhanced legacy speech options",
+    "path": "core/crates/runtime/application/src/services/mod.rs",
+    "old": "#[path = \"TtsPlaybackService.rs\"]",
+    "new": "#[path = \"LegacySpeechSettings.rs\"]\npub mod LegacySpeechSettings;\n#[path = \"TtsPlaybackService.rs\"]"
+  },
+  {
+    "name": "Apply legacy cleaner in TtsPlaybackService 5",
+    "path": "core/crates/runtime/application/src/services/TtsPlaybackService.rs",
+    "old": "    pub fn speakForCharacter(\n        &self,\n        characterCardId: &str,\n        text: &str,\n        interrupt: bool,\n    ) -> Result<TtsHostPlaybackResult, String> {\n        let characterCardId = characterCardId.trim();\n        if characterCardId.is_empty() {\n            return Err(\"character card id is empty\".to_string());\n        }\n        let cleanedText = TtsCleaner::clean(text);",
+    "new": "    pub fn speakForCharacter(\n        &self,\n        characterCardId: &str,\n        text: &str,\n        interrupt: bool,\n    ) -> Result<TtsHostPlaybackResult, String> {\n        let characterCardId = characterCardId.trim();\n        if characterCardId.is_empty() {\n            return Err(\"character card id is empty\".to_string());\n        }\n        let cleanedText = crate::services::LegacySpeechSettings::clean(text)?;"
+  },
+  {
+    "name": "Apply legacy cleaner in TtsPlaybackService 6",
+    "path": "core/crates/runtime/application/src/services/TtsPlaybackService.rs",
+    "old": "    pub fn speakWithConfig(\n        &self,\n        ttsConfigId: &str,\n        text: &str,\n        interrupt: bool,\n    ) -> Result<TtsHostPlaybackResult, String> {\n        let ttsConfigId = ttsConfigId.trim();\n        if ttsConfigId.is_empty() {\n            return Err(\"tts config id is empty\".to_string());\n        }\n        let cleanedText = TtsCleaner::clean(text);",
+    "new": "    pub fn speakWithConfig(\n        &self,\n        ttsConfigId: &str,\n        text: &str,\n        interrupt: bool,\n    ) -> Result<TtsHostPlaybackResult, String> {\n        let ttsConfigId = ttsConfigId.trim();\n        if ttsConfigId.is_empty() {\n            return Err(\"tts config id is empty\".to_string());\n        }\n        let cleanedText = crate::services::LegacySpeechSettings::clean(text)?;"
+  },
+  {
+    "name": "Honor configured legacy system speech pitch",
+    "path": "core/crates/runtime/application/src/services/TtsPlaybackService.rs",
+    "old": "                pitch: 1.0,",
+    "new": "                pitch: crate::services::LegacySpeechSettings::pitch()?,"
+  },
+  {
+    "name": "Apply legacy cleaner in TtsSynthesisService 8",
+    "path": "core/crates/runtime/application/src/services/TtsSynthesisService.rs",
+    "old": "    pub fn synthesizeForCharacter(\n        &self,\n        characterCardId: &str,\n        text: &str,\n    ) -> Result<TtsSynthesisResult, String> {\n        let characterCardId = characterCardId.trim();\n        if characterCardId.is_empty() {\n            return Err(\"character card id is empty\".to_string());\n        }\n        let cleanedText = TtsCleaner::clean(text);",
+    "new": "    pub fn synthesizeForCharacter(\n        &self,\n        characterCardId: &str,\n        text: &str,\n    ) -> Result<TtsSynthesisResult, String> {\n        let characterCardId = characterCardId.trim();\n        if characterCardId.is_empty() {\n            return Err(\"character card id is empty\".to_string());\n        }\n        let cleanedText = crate::services::LegacySpeechSettings::clean(text)?;"
+  },
+  {
+    "name": "Apply legacy cleaner in TtsSynthesisService 9",
+    "path": "core/crates/runtime/application/src/services/TtsSynthesisService.rs",
+    "old": "    pub fn synthesizeWithConfig(\n        &self,\n        ttsConfigId: &str,\n        text: &str,\n    ) -> Result<TtsSynthesisResult, String> {\n        let ttsConfigId = ttsConfigId.trim();\n        if ttsConfigId.is_empty() {\n            return Err(\"tts config id is empty\".to_string());\n        }\n        let cleanedText = TtsCleaner::clean(text);",
+    "new": "    pub fn synthesizeWithConfig(\n        &self,\n        ttsConfigId: &str,\n        text: &str,\n    ) -> Result<TtsSynthesisResult, String> {\n        let ttsConfigId = ttsConfigId.trim();\n        if ttsConfigId.is_empty() {\n            return Err(\"tts config id is empty\".to_string());\n        }\n        let cleanedText = crate::services::LegacySpeechSettings::clean(text)?;"
+  },
+  {
+    "name": "Allow transient speech profile without saving test overrides",
+    "path": "core/crates/runtime/application/src/services/TtsSynthesisService.rs",
+    "old": "    fn synthesizeWithResolvedConfig(",
+    "new": "    pub fn synthesizeWithResolvedConfig("
   }
 ]

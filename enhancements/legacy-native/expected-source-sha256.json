@@ -1,38 +1,38 @@
 {
   "examples/deepsearching/src/operit2-host.ts": {
-    "source_sha256": "7bedb58fe3c3a5821f9976d9a74a3077f4be70abb79c1e4f97be8a5bfdef6445",
+    "source_sha256": null,
     "patched_sha256": "d82c8e0cc3eefb3e5819aeec0d42477128f4dbeded3f596e71b48057c7523dfa"
   },
   "examples/deepsearching/src/prompt-turns.ts": {
-    "source_sha256": "34fc6ac142af3c1555ebd974d3bddf3754ac102faf7c739149cd166fafc17d31",
+    "source_sha256": "53db8c8e96c724d0ac72bc0bdc4b6e99c310bf4d1c1e152122964aa3d1942bac",
     "patched_sha256": "34fc6ac142af3c1555ebd974d3bddf3754ac102faf7c739149cd166fafc17d31"
   },
   "examples/deepsearching/src/plugin/deep-search-plugin.ts": {
-    "source_sha256": "1c9dd67c8906fa4cd2a36120137fc8567079873222e8687fc9b2f858da821d86",
+    "source_sha256": "8ad7f1b9599d614c8c360028dc1686ff7c3eb9f25f7642ab4b30e73de63c2e64",
     "patched_sha256": "1c9dd67c8906fa4cd2a36120137fc8567079873222e8687fc9b2f858da821d86"
   },
   "examples/deepsearching/src/planning/task-executor.ts": {
-    "source_sha256": "455c9ce41ad4a1697393261944d0e8ee87b6489c18dac48204c9a75a69a39ea0",
+    "source_sha256": "063f6e596b0ba518a56f22f96137c50617db3f5de34b0b9549695dd635e41852",
     "patched_sha256": "455c9ce41ad4a1697393261944d0e8ee87b6489c18dac48204c9a75a69a39ea0"
   },
   "examples/deepsearching/src/planning/plan-mode-manager.ts": {
-    "source_sha256": "ab4a1535e28dab37ba5bf69478bef80fcbbd07be9f393450682098a2b8520176",
+    "source_sha256": "9d619e95795f58204996746b59222608b113a78e69fc5bcce9db59426b390d26",
     "patched_sha256": "ab4a1535e28dab37ba5bf69478bef80fcbbd07be9f393450682098a2b8520176"
   },
   "examples/apktool/src/packages/apk_reverse.ts": {
-    "source_sha256": "dea6783394622ff05d4e0fae301f8bda14b8f9514f7e25a0f23d40fa1f28910b",
+    "source_sha256": "9ec4a6057aa9d1ef22460d06b3871a6b1382e357d5fa140d72288a387064bc4d",
     "patched_sha256": "dea6783394622ff05d4e0fae301f8bda14b8f9514f7e25a0f23d40fa1f28910b"
   },
   "examples/qqbot/src/shared/qqbot_auto_reply.ts": {
-    "source_sha256": "edbf11f49bd8138916abebd19ae1f29528c2f1b65f2616c1c071709bc468ae70",
+    "source_sha256": "d4a8c5e02945d3e2dd6d5c26d32d62a8c414d0dbbfdeb0b29f37f1f1e066e689",
     "patched_sha256": "edbf11f49bd8138916abebd19ae1f29528c2f1b65f2616c1c071709bc468ae70"
   },
   "examples/message_insert/src/main.ts": {
-    "source_sha256": "3b5f10ab95c25dfbee7471b8e3d92be06acc2e0d22acf9cab26bb056df14de2d",
+    "source_sha256": "7979d5f0ba03eaf93bfb9eccee3e16ad43ea50a68f24ece3bd52b2316702dff9",
     "patched_sha256": "3b5f10ab95c25dfbee7471b8e3d92be06acc2e0d22acf9cab26bb056df14de2d"
   },
   "examples/message_insert/src/shared.ts": {
-    "source_sha256": "c2be95deb932d390d6d75dc3b91746c69c806822276570e8443a34bfa999e90e",
+    "source_sha256": "a9bbc863fe3498f9061a6ad2553d2bd509221fb64d40580fd02ce76d92ff76b9",
     "patched_sha256": "c2be95deb932d390d6d75dc3b91746c69c806822276570e8443a34bfa999e90e"
   }
 }

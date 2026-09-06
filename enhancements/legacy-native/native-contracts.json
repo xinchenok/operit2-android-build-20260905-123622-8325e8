@@ -48,7 +48,8 @@
   },
   "verified": [
     "Four modified TS packages compiled with TypeScript 5.9.3",
-    "No private Operit 1 class emulation or success stubs"
+    "No private Operit 1 class emulation or success stubs",
+    "Kotlin 2.2.20 + Android 36 + real Android dependencies: compilation passed (operit1_import agent)"
   ],
   "device_tested": false,
   "virtual_displays": {
@@ -59,5 +60,11 @@
     "release": "(agentId) -> Boolean",
     "backing": "Real Android PUBLIC + PRESENTATION + OWN_CONTENT_ONLY display and continuous ImageReader frames",
     "requires": "Android 11+ for accessibility and gestures on a named display; existing root/Shizuku permission for shell key injection"
-  }
+  },
+  "native_globals": [
+    "NativeInterface.registerImageFromPath",
+    "setInterval",
+    "clearInterval"
+  ],
+  "core_command_executor": "Same shared Flutter LocalCoreProxy application; scheduled short commands, no secondary runtime initialization"
 }

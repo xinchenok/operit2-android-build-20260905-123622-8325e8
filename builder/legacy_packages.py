@@ -142,8 +142,10 @@ def _prepare_legacy_sources(legacy: Path, sha: str) -> str:
         if Path(relative).is_absolute() or '..' in Path(relative).parts:
             raise RuntimeError(f'Invalid legacy source patch path: {relative}')
         target = legacy/relative
-        content = staged.get(target, target.read_bytes()).decode('utf-8-sig')
-        if spec['old'] in content:
+        content = (staged[target] if target in staged else target.read_bytes()).decode('utf-8-sig').replace('\r\n', '\n')
+        if spec['new'] and spec['new'] in content:
+            pass
+        elif spec['old'] in content:
             content = content.replace(spec['old'], spec['new'])
         elif spec['new'] not in content:
             raise RuntimeError(f'Operit1 source patch needs review: {relative}')
@@ -190,7 +192,7 @@ def convert(source: str, filename: str, available: set[str]) -> tuple[str,dict]:
         'adapted_methods':sorted(set(required)&adapted),
         **host,
         'status':'host_adapters_bundled',
-        'original_sha256':hashlib.sha256(source.encode()).hexdigest(),
+        'compiled_source_sha256':hashlib.sha256(source.encode()).hexdigest(),
         'packaged_sha256':hashlib.sha256(wrapped.encode()).hexdigest(),'device_tested':False}
 
 def _legacy_sync(legacy: Path):
@@ -314,6 +316,10 @@ def install(root: Path, legacy: Path, sha: str) -> dict:
             'source_directory':'examples (official build whitelist)', 'count':len(planned),
             'packages':[item[1] for item in planned.values()], 'device_tested':False}
     old_report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    for family, filename in [('legacy-tools', 'contracts.json'),
+                             ('legacy-tools', 'package-coverage.json'),
+                             ('legacy-native', 'native-contracts.json')]:
+        (report_dir/filename).write_bytes((ENHANCEMENTS/family/filename).read_bytes())
     (report_dir/'UPSTREAM-LICENSE').write_bytes((legacy/'LICENSE').read_bytes())
     (report_dir/'README.txt').write_text('Legacy packages are compiled from the official whitelist with the enhanced source ports and local Tools adapters, namespaced and disabled by default. The manifest records bundled host adapters; it does not claim every external service or Android device has been exercised. Android permissions, service credentials and remote companion software remain required where the original package requires them. Original sources and license are in Operit-legacy-source.zip; enhanced source changes are recorded alongside the build. Enable only one implementation of equivalent input hooks.\n',encoding='utf-8')
     print(f'Legacy whitelist: {len(planned)} packages bundled, including ToolPkg resources.',flush=True)

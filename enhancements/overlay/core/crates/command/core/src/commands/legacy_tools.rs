@@ -23,6 +23,23 @@ fn now() -> i64 { std::time::SystemTime::now().duration_since(std::time::UNIX_EP
 fn json_value(value: &Value) -> Result<Value,String> {
     match value { Value::String(s) => serde_json::from_str(s).map_err(|e|e.to_string()), _=>Ok(value.clone()) }
 }
+const RETAINED_KEY:&str="OPERIT2_RETAINED_LEGACY_SETTINGS";
+fn retained_settings(section:&str)->Result<Value,String>{
+    use operit_runtime::data::preferences::EnvPreferences::EnvPreferences;
+    let all:Value=match EnvPreferences::getInstance().getEnv(RETAINED_KEY).map_err(|e|e.to_string())? {Some(raw)=>serde_json::from_str(&raw).map_err(|e|e.to_string())?,None=>json!({})};
+    Ok(all.get(section).cloned().unwrap_or(json!({})))
+}
+fn retain_settings(section:&str,updates:&Value)->Result<(),String>{
+    use operit_runtime::data::preferences::EnvPreferences::EnvPreferences;
+    let store=EnvPreferences::getInstance();
+    let mut all:Value=match store.getEnv(RETAINED_KEY).map_err(|e|e.to_string())? {Some(raw)=>serde_json::from_str(&raw).map_err(|e|e.to_string())?,None=>json!({})};
+    if !all[section].is_object(){all[section]=json!({});}
+    for (key,value) in updates.as_object().ok_or("Retained legacy settings must be an object")? {all[section][key]=value.clone();}
+    store.setEnv(RETAINED_KEY,&all.to_string()).map_err(|e|e.to_string())
+}
+fn retained_notice(fields:&[String])->Vec<String>{
+    if fields.is_empty(){Vec::new()}else{vec![format!("以下旧版设置已原样保留，但 Operit2 当前没有对应执行引擎，未启用或替换现有设置：{}。请在增强版设置页选择可用服务；不要将保留成功视为功能已生效。",fields.join(", "))]}
+}
 fn active_card(manager: &CharacterCardManager) -> Result<Value,String> {
     Ok(json!(manager.observeActiveCharacterCardId().first().map_err(|e|e.to_string())?))
 }
@@ -55,6 +72,7 @@ fn provider_result(provider: &ProviderProfile, index: usize) -> Result<Value,Str
         let data=encode(&resolved)?;
         for (key, val) in encode(&model.localRuntime)?.as_object().expect("object") {result[key]=val.clone();}
         for (key, val) in encode(&model.summary)?.as_object().expect("object") {result[key]=val.clone();}
+        result["enableGoogleSearch"]=json!(resolved.builtinTools.iter().any(|tool|tool.enabled&&tool.requestFormat==operit_model::ModelConfigData::BuiltinToolRequestFormat::GeminiGoogleSearch));
         result["contextLength"]=data["context"]["maxContextLength"].clone();
         result["maxContextLength"]=data["context"]["maxContextLength"].clone();
         result["enableMaxContextMode"]=data["context"]["enableMaxContextMode"].clone();
@@ -68,6 +86,10 @@ fn provider_result(provider: &ProviderProfile, index: usize) -> Result<Value,Str
         let custom:serde_json::Map<String,Value>=resolved.parameters.iter().filter(|p|p.isCustom&&p.isEnabled).map(|p|(p.apiName.clone(),p.currentValue.clone())).collect();
         result["hasCustomParameters"]=json!(!custom.is_empty());result["customParameters"]=json!(serde_json::to_string(&custom).map_err(|e|e.to_string())?);
     }
+    let retained=retained_settings(&format!("model:{}",provider.id))?;
+    result["retainedLegacySettings"]=retained.clone();
+    let fields=retained.as_object().map(|v|v.keys().cloned().collect::<Vec<_>>()).unwrap_or_default();
+    result["compatibilityWarnings"]=json!(retained_notice(&fields));
     Ok(result)
 }
 fn camel(name:&str)->String {
@@ -94,8 +116,8 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
     let mut provider=manager.getProviderProfile(&id).map_err(|e|e.to_string())?;
     let mut model=provider.models.first().cloned().unwrap_or_else(||ModelProfile::new(String::new()));
     let resolved=if model.id.is_empty(){None}else{Some(manager.getResolvedModelConfig(&id,&model.id).map_err(|e|e.to_string())?)};
-    if let Some(resolved)=resolved {model.parameters=resolved.parameters;model.contextOverride=Some(resolved.context);model.capabilitiesOverride=Some(resolved.capabilities);}
-    let old_model_id=model.id.clone();
+    if let Some(resolved)=resolved {model.parameters=resolved.parameters;model.contextOverride=Some(resolved.context);model.capabilitiesOverride=Some(resolved.capabilities);model.builtinToolsOverride=Some(resolved.builtinTools);}
+    let previous_model_ids=provider.models.iter().map(|m|m.id.clone()).collect::<Vec<_>>();
     let mut provider_json=encode(&provider)?;
     let mut model_json=encode(&model)?;
     for (key,value) in map {
@@ -117,6 +139,14 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
                 let target=match key.as_str(){"enable_direct_image_processing"=>"directImage","enable_direct_audio_processing"=>"directAudio","enable_direct_video_processing"=>"directVideo",_=>"toolCall"};model_json["capabilitiesOverride"][target]=value.clone();
             },
             k if k.starts_with("mnn_")||k.starts_with("llama_")=>model_json["localRuntime"][camel(k)]=value.clone(),
+            "enable_google_search"=>{
+                let enabled=value.as_bool().ok_or("enable_google_search must be boolean")?;
+                if model_json["builtinToolsOverride"].is_null(){model_json["builtinToolsOverride"]=json!([]);}
+                let tools=model_json["builtinToolsOverride"].as_array_mut().ok_or("Missing model built-in tool defaults")?;
+                if let Some(tool)=tools.iter_mut().find(|tool|tool["requestFormat"]=="GeminiGoogleSearch"){tool["enabled"]=json!(enabled);}
+                else{tools.push(json!({"toolType":"WebSearch","displayName":"Google Search","enabled":enabled,"requestFormat":"GeminiGoogleSearch","exclusivity":"CanMixWithExternalTools","config":{}}));}
+            },
+            "enable_claude_1h_prompt_cache"=>{value.as_bool().ok_or("enable_claude_1h_prompt_cache must be boolean")?;},
             "custom_parameters"=>{},
             k if ["max_tokens","temperature","top_p","top_k","presence_penalty","frequency_penalty","repetition_penalty"].iter().any(|p| k==*p||k==format!("{p}_enabled"))=>{},
             _=>return Err(format!("Operit2 has no equivalent model field: {key}")),
@@ -137,11 +167,32 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
         for (name,value) in custom{let mut p=ModelParameter::new(name.clone(),name.clone(),name.clone(),value.clone(),value.clone(),true,if value.is_boolean(){ParameterValueType::BOOLEAN}else if value.is_i64(){ParameterValueType::INT}else if value.is_number(){ParameterValueType::FLOAT}else if value.is_string(){ParameterValueType::STRING}else{ParameterValueType::OBJECT});p.isCustom=true;model.parameters.push(p);}
     }
     provider=serde_json::from_value(provider_json).map_err(|e|e.to_string())?;
-    if !model.id.is_empty(){if provider.models.is_empty(){provider.models.push(model.clone());}else{provider.models[0]=model.clone();}}
+    if let Some(names)=updates["model_name"].as_str(){
+        let names=names.split(',').map(str::trim).filter(|n|!n.is_empty()).collect::<Vec<_>>();
+        let mut selected=Vec::new();
+        for name in names {
+            let mut profile=model.clone();profile.id=name.to_string();selected.push(profile);
+        }
+        provider.models=selected;
+        if let Some(first)=provider.models.first(){model=first.clone();}
+    }else if !model.id.is_empty(){if provider.models.is_empty(){provider.models.push(model.clone());}else{provider.models[0]=model.clone();}}
+    if provider.models.is_empty(){
+        for name in FUNCTIONS{if FunctionalConfigManager::default().getModelBindingForFunction(function(name)?).map_err(|e|e.to_string())?.providerId==id{return Err("A bound provider must retain at least one model".into());}}
+    }
     let saved=manager.updateProviderProfile(provider).map_err(|e|e.to_string())?;
     let mut affected=Vec::new();
-    if !old_model_id.is_empty()&&old_model_id!=model.id{for name in FUNCTIONS{let f=function(name)?;let manager=FunctionalConfigManager::default();let binding=manager.getModelBindingForFunction(f.clone()).map_err(|e|e.to_string())?;if binding.providerId==id&&binding.modelId==old_model_id{manager.setModelForFunction(f,id.clone(),model.id.clone()).map_err(|e|e.to_string())?;affected.push(name.to_string());}}}
-    Ok(json!({"created":created,"updated":!created,"config":provider_result(&saved,0)?,"changedFields":map.keys().collect::<Vec<_>>(),"affectedFunctions":affected}))
+    for name in FUNCTIONS{
+        let role=function(name)?;let functions=FunctionalConfigManager::default();let binding=functions.getModelBindingForFunction(role.clone()).map_err(|e|e.to_string())?;
+        if binding.providerId==id && !saved.models.iter().any(|m|m.id==binding.modelId){
+            let index=previous_model_ids.iter().position(|m|m==&binding.modelId).unwrap_or(0);
+            let replacement=saved.models.get(index.min(saved.models.len().saturating_sub(1))).ok_or("A bound provider must retain at least one model")?;
+            functions.setModelForFunction(role,id.clone(),replacement.id.clone()).map_err(|e|e.to_string())?;affected.push(name.to_string());
+        }
+    }
+    let retained:serde_json::Map<String,Value>=map.iter().filter(|(key,_)|key.as_str()=="enable_claude_1h_prompt_cache").map(|(key,value)|(key.clone(),value.clone())).collect();
+    retain_settings(&format!("model:{id}"),&Value::Object(retained.clone()))?;
+    let retained_fields=retained.keys().cloned().collect::<Vec<_>>();
+    Ok(json!({"created":created,"updated":!created&&map.keys().any(|key|!retained.contains_key(key)),"config":provider_result(&saved,0)?,"changedFields":map.keys().filter(|key|!retained.contains_key(*key)).collect::<Vec<_>>(),"retainedFields":retained_fields,"compatibilityWarnings":retained_notice(&retained_fields),"affectedFunctions":affected}))
 }
 fn write_card(id:Option<&str>, updates:&Value, application:&mut OperitApplication)->Result<Value,String>{
     let manager=CharacterCardManager::getInstance();
@@ -227,6 +278,7 @@ async fn chat_plan_call(handler:AIToolHandler,provider_context:ProviderRuntimeCo
     options.customSystemPromptTemplate=request["customSystemPromptTemplate"].as_str().map(str::to_string);
     options.proxySenderName=request["proxySenderName"].as_str().map(str::to_string);
     options.isSubTask=request["isSubTask"].as_bool().unwrap_or(false);
+    if options.isSubTask && options.customSystemPromptTemplate.is_none(){options.customSystemPromptTemplate=Some(operit_providers::chat::config::SystemPromptConfig::SUBTASK_AGENT_PROMPT_TEMPLATE.to_string());}
     options.enableMemoryAutoUpdate=request["enableMemoryAutoUpdate"].as_bool().unwrap_or(false);
     options.enableThinking=request["enableThinking"].as_bool().unwrap_or(false);
     options.stream=false;options.disableWarning=true;
@@ -239,8 +291,9 @@ async fn chat_plan_call(handler:AIToolHandler,provider_context:ProviderRuntimeCo
         };
         let mut stream=match response {Some(result)=>result.map_err(|e|e.to_string())?,None=>{service.cancelConversation().await;return Err("Subtask cancelled".into());}};
         let mut text=String::new();
+        let mut collect_chunk=|chunk: String|text.push_str(&chunk);
         let finished=tokio::select! {
-            _=stream.collect(&mut |chunk|text.push_str(&chunk))=>true,
+            _=stream.collect(&mut collect_chunk)=>true,
             _=wait_cancelled(&cancelled)=>false
         };
         if !finished{service.cancelConversation().await;return Err("Subtask cancelled".into());}
@@ -263,15 +316,22 @@ pub fn run(application:&mut OperitApplication,args:&[String],output:&mut CoreCom
         },
         "model-create"=>write_model(None,&request)?,
         "model-update"=>write_model(Some(string(&request,"id")?),&request["updates"])?,
-        "model-delete"=>{let id=string(&request,"id")?;let affected=FUNCTIONS.iter().filter_map(|f|function_mapping(f).ok().filter(|v|v["configId"]==id).map(|_|f.to_string())).collect::<Vec<_>>();models.deleteProvider(id).map_err(|e|e.to_string())?;json!({"deleted":true,"configId":id,"affectedFunctions":affected,"fallbackConfigId":function_mapping("CHAT")?["configId"]})},
+        "model-delete"=>{
+            let id=string(&request,"id")?;if id=="LOCAL_MODEL"{return Err("The built-in local model provider cannot be deleted".into());}let functions=FunctionalConfigManager::default();
+            let mut affected=Vec::new();
+            for name in FUNCTIONS {let role=function(name)?;let binding=functions.getModelBindingForFunction(role.clone()).map_err(|e|e.to_string())?;if binding.providerId==id{affected.push((name.to_string(),role));}}
+            let providers=models.getProviderProfiles().map_err(|e|e.to_string())?;
+            let replacement=providers.iter().find(|p|p.id!=id&&!p.models.is_empty());
+            if !affected.is_empty()&&replacement.is_none(){return Err("Add another model configuration before deleting the last bound provider".into());}
+            // Rebind valid functions before deleting the provider so no dangling model ids are saved.
+            if let Some(replacement)=replacement{for (_,role) in &affected{functions.setModelForFunction(role.clone(),replacement.id.clone(),replacement.models[0].id.clone()).map_err(|e|e.to_string())?;}}
+            models.deleteProvider(id).map_err(|e|e.to_string())?;
+            json!({"deleted":true,"configId":id,"affectedFunctions":affected.iter().map(|(name,_)|name).collect::<Vec<_>>(),"fallbackConfigId":replacement.map(|p|p.id.clone())})
+        },
         "function-list"=>json!({"defaultConfigId":function_mapping("CHAT")?["configId"],"mappings":FUNCTIONS.iter().map(|f|function_mapping(f)).collect::<Result<Vec<_>,_>>()?}),
         "function-get"=>{let mut v=function_mapping(string(&request,"id")?)?;v["defaultConfigId"]=function_mapping("CHAT")?["configId"].clone();v},
         "function-set"=>{let name=string(&request,"functionType")?;let id=string(&request,"configId")?;let provider=models.getProviderProfile(id).map_err(|e|e.to_string())?;let index=request["modelIndex"].as_u64().unwrap_or(0) as usize;let model=provider.models.get(index).ok_or("modelIndex out of range")?;FunctionalConfigManager::default().setModelForFunction(function(name)?,id.to_string(),model.id.clone()).map_err(|e|e.to_string())?;let mut result=function_mapping(name)?;result["requestedModelIndex"]=json!(index);result},
-        "model-test"=>{let provider=models.getProviderProfile(string(&request,"configId")?).map_err(|e|e.to_string())?;let index=request["modelIndex"].as_u64().unwrap_or(0) as usize;let model=provider.models.get(index).ok_or("modelIndex out of range")?;run_async(async {
-            let report=application.test_model_connection(provider.id.clone(),model.id.clone()).await?;
-            let passed=report.items.iter().filter(|i|i.success).count();
-            Ok(json!({"configId":provider.id,"configName":provider.name,"providerType":provider.providerTypeId,"requestedModelIndex":index,"actualModelIndex":index,"testedModelName":model.id,"success":report.success,"totalTests":report.items.len(),"passedTests":passed,"failedTests":report.items.len()-passed,"tests":report.items}))
-        })?},
+        "model-test"=>start_blocking_job(application,"model-test",request.clone())?,
         "character-list"=>json!({"cards":cards.getAllCharacterCards().map_err(|e|e.to_string())?.into_iter().map(card_result).collect::<Result<Vec<_>,_>>()?,"totalCount":cards.getAllCharacterCards().map_err(|e|e.to_string())?.len(),"activeCharacterCardId":active_card(&cards)?}),
         "character-get"=>json!({"card":card_result(cards.getCharacterCard(string(&request,"id")?).map_err(|e|e.to_string())?)?,"activeCharacterCardId":active_card(&cards)?}),
         "character-create"=>write_card(None,&request,application)?,
@@ -292,9 +352,9 @@ pub fn run(application:&mut OperitApplication,args:&[String],output:&mut CoreCom
         },
         "speech-get"=>speech_get()?,
         "speech-set"=>speech_set(&request)?,
-        "speech-test"=>speech_test(application,&request)?,
-        "script-run"=>script_run(application,&request)?,
-        "mcp-restart"=>mcp_restart(application,&request)?,
+        "speech-test"=>start_blocking_job(application,"speech-test",request.clone())?,
+        "script-run"=>start_blocking_job(application,"script-run",request.clone())?,
+        "mcp-restart"=>start_blocking_job(application,"mcp-restart",request.clone())?,
         "package-errors"=>{
             let log=application.packageLogText()?;let mut errors=serde_json::Map::new();
             for line in log.lines(){if let Some((_,detail))=line.split_once("package load error ["){if let Some((name,message))=detail.split_once("]: "){errors.insert(name.to_string(),json!(message));}}}
@@ -313,13 +373,15 @@ pub fn run(application:&mut OperitApplication,args:&[String],output:&mut CoreCom
 fn speech_get()->Result<Value,String>{
     use operit_runtime::data::preferences::{TtsConfigManager::TtsConfigManager,SttConfigManager::SttConfigManager};
     let tts=TtsConfigManager::getInstance().getCurrentTtsConfig()?;
+    let extras=operit_runtime::services::LegacySpeechSettings::read()?;
     let stt=SttConfigManager::getInstance().getCurrentSttConfig()?;
+    let retained=retained_settings("speech")?;let retained_fields=retained.as_object().map(|v|v.keys().cloned().collect::<Vec<_>>()).unwrap_or_default();
     Ok(json!({"ttsServiceType":if tts.providerType=="SYSTEM_TTS"{"SIMPLE_TTS"}else{&tts.providerType},
         "ttsHttpConfig":{"urlTemplate":tts.endpoint,"apiKeySet":!tts.apiKey.is_empty(),"apiKeyPreview":if tts.apiKey.is_empty(){""}else{"configured"},
           "headers":tts.headers.iter().map(|h|(h.name.clone(),json!(h.value))).collect::<serde_json::Map<String,Value>>(),
           "httpMethod":tts.httpMethod,"requestBody":tts.requestBody,"contentType":tts.contentType,
           "localeTag":if tts.providerType=="SYSTEM_TTS"{tts.model.clone()}else{String::new()},"voiceId":tts.voice,"modelName":tts.model,"responsePipeline":tts.responsePipeline},
-        "ttsCleanerRegexs":[],"ttsSpeechRate":tts.speed,"ttsPitch":1.0,
+        "retainedFields":retained_fields,"compatibilityWarnings":retained_notice(&retained_fields),"ttsCleanerRegexs":extras["tts_cleaner_regexs"],"ttsSpeechRate":tts.speed,"ttsPitch":extras["tts_pitch"],
         "sttServiceType":if stt.providerType=="OPENAI_COMPATIBLE"{"OPENAI_STT"}else{&stt.providerType},
         "sttHttpConfig":{"endpointUrl":stt.endpoint,"apiKeySet":!stt.apiKey.is_empty(),"apiKeyPreview":if stt.apiKey.is_empty(){""}else{"configured"},"modelName":stt.model}}))
 }
@@ -327,41 +389,65 @@ fn speech_set(request:&Value)->Result<Value,String>{
     use operit_runtime::data::preferences::{TtsConfigManager::TtsConfigManager,SttConfigManager::SttConfigManager};
     let tts_manager=TtsConfigManager::getInstance();let stt_manager=SttConfigManager::getInstance();
     let mut tts=encode(tts_manager.getCurrentTtsConfig()?)?;let mut stt=encode(stt_manager.getCurrentSttConfig()?)?;
-    let updates=request.as_object().ok_or("Speech updates must be object")?;
+    let original=request.as_object().ok_or("Speech updates must be object")?;
+    let tts_unsupported=request["tts_service_type"].as_str().map(|kind|!matches!(kind,"SIMPLE_TTS"|"OPENAI_TTS")&&operit_model::TtsCatalog::TtsCatalog::provider(kind).is_err()).unwrap_or(false);
+    let stt_unsupported=request["stt_service_type"].as_str().map(|kind|kind!="OPENAI_STT"&&operit_model::SttCatalog::SttCatalog::provider(kind).is_err()).unwrap_or(false);
+    let retained:serde_json::Map<String,Value>=original.iter().filter(|(key,_)|key.starts_with("tts_vits_")||(tts_unsupported&&key.starts_with("tts_"))||(stt_unsupported&&key.starts_with("stt_"))).map(|(key,value)|(key.clone(),value.clone())).collect();
+    let applied=Value::Object(original.iter().filter(|(key,_)|!retained.contains_key(*key)).map(|(key,value)|(key.clone(),value.clone())).collect());
+    let request=&applied;let updates=request.as_object().unwrap();
+    if let Some(kind)=request["tts_service_type"].as_str(){
+        let kind=match kind {"SIMPLE_TTS"=>"SYSTEM_TTS","OPENAI_TTS"=>"OPENAI_COMPATIBLE",other=>other};
+        if tts["providerType"]!=kind {
+            let catalog=operit_model::TtsCatalog::TtsCatalog::provider(kind)?;
+            tts["providerType"]=json!(kind);tts["endpoint"]=json!(catalog.defaultEndpoint);tts["model"]=json!(catalog.defaultModel);
+            tts["responseFormat"]=json!(catalog.defaultResponseFormat);tts["httpMethod"]=json!(catalog.defaultHttpMethod);
+            tts["contentType"]=json!(catalog.defaultContentType);tts["requestBody"]=json!(catalog.defaultRequestBody);
+            tts["headers"]=encode(catalog.defaultHeaders)?;tts["responsePipeline"]=encode(catalog.defaultResponsePipeline)?;
+        }
+    }
+
     for (key,value) in updates{
         match key.as_str(){
-            "tts_service_type"=>tts["providerType"]=json!(match value.as_str().ok_or("tts_service_type must be string")?{"SIMPLE_TTS"=>"SYSTEM_TTS",other=>other}),
+            "tts_service_type"=>tts["providerType"]=json!(match value.as_str().ok_or("tts_service_type must be string")?{"SIMPLE_TTS"=>"SYSTEM_TTS","OPENAI_TTS"=>"OPENAI_COMPATIBLE",other=>other}),
             "stt_service_type"=>stt["providerType"]=json!(match value.as_str().ok_or("stt_service_type must be string")?{"OPENAI_STT"=>"OPENAI_COMPATIBLE",other=>other}),
             "tts_url_template"=>tts["endpoint"]=value.clone(),"tts_api_key"=>tts["apiKey"]=value.clone(),"tts_model_name"|"tts_locale"=>tts["model"]=value.clone(),
             "tts_voice_id"=>tts["voice"]=value.clone(),"tts_speech_rate"=>tts["speed"]=value.clone(),
             "tts_http_method"=>tts["httpMethod"]=value.clone(),"tts_request_body"=>tts["requestBody"]=value.clone(),"tts_content_type"=>tts["contentType"]=value.clone(),
-            "tts_headers"=>tts["headers"]=json_value(value)?,"tts_response_pipeline"=>tts["responsePipeline"]=json_value(value)?,
+            "tts_pitch"|"tts_cleaner_regexs"=>{},
+            "tts_headers"=>{let value=json_value(value)?;tts["headers"]=match value.as_object(){Some(map)=>json!(map.iter().map(|(name,value)|json!({"name":name,"value":value})).collect::<Vec<_>>()),None=>value};},
+            "tts_response_pipeline"=>{let mut pipeline=json_value(value)?;for step in pipeline.as_array_mut().ok_or("tts_response_pipeline must be an array")?{if let Some(kind)=step.get("type").cloned(){step["stepType"]=kind;}if step.get("headers").is_none(){step["headers"]=json!([]);}else if let Some(headers)=step["headers"].as_object(){step["headers"]=json!(headers.iter().map(|(name,value)|json!({"name":name,"value":value})).collect::<Vec<_>>());}}tts["responsePipeline"]=pipeline;},
             "stt_endpoint_url"=>stt["endpoint"]=value.clone(),"stt_api_key"=>stt["apiKey"]=value.clone(),"stt_model_name"=>stt["model"]=value.clone(),
             _=>return Err(format!("Speech setting needs a host implementation: {key}"))
         }
     }
     let tts:operit_model::TtsConfig::TtsConfig=serde_json::from_value(tts).map_err(|e|e.to_string())?;
+    operit_runtime::services::LegacySpeechSettings::update(request)?;
     let stt:operit_model::SttConfig::SttConfig=serde_json::from_value(stt).map_err(|e|e.to_string())?;
     if updates.keys().any(|k|k.starts_with("tts_")){tts_manager.updateTtsConfig(tts.clone())?;}
     if updates.keys().any(|k|k.starts_with("stt_")){stt_manager.updateSttConfig(stt.clone())?;}
-    Ok(json!({"updated":!updates.is_empty(),"changedFields":updates.keys().collect::<Vec<_>>(),"ttsServiceType":tts.providerType,"sttServiceType":stt.providerType,"ttsApiKeySet":!tts.apiKey.is_empty(),"sttApiKeySet":!stt.apiKey.is_empty()}))
+    retain_settings("speech",&Value::Object(retained.clone()))?;
+    let retained_fields=retained.keys().cloned().collect::<Vec<_>>();
+    Ok(json!({"retainedFields":retained_fields,"compatibilityWarnings":retained_notice(&retained_fields),"updated":!updates.is_empty(),"changedFields":updates.keys().collect::<Vec<_>>(),"ttsServiceType":tts.providerType,"sttServiceType":stt.providerType,"ttsApiKeySet":!tts.apiKey.is_empty(),"sttApiKeySet":!stt.apiKey.is_empty()}))
 }
-fn speech_test(application:&OperitApplication,request:&Value)->Result<Value,String>{
+fn speech_test(host:&operit_host_api::HostManager::HostManager,request:&Value)->Result<Value,String>{
     use operit_runtime::data::preferences::TtsConfigManager::TtsConfigManager;
     use operit_runtime::services::{TtsPlaybackService::TtsPlaybackService,TtsSynthesisService::TtsSynthesisService};
-    let config=TtsConfigManager::getInstance().getCurrentTtsConfig()?;
+    let mut config=TtsConfigManager::getInstance().getCurrentTtsConfig()?;
+    if let Some(speed)=request["options"]["speech_rate"].as_f64(){config.speed=speed;}
+    let pitch=request["options"]["pitch"].as_f64().unwrap_or(operit_runtime::services::LegacySpeechSettings::pitch()?);
     let text=string(request,"text")?;
+    let cleaned=operit_runtime::services::LegacySpeechSettings::clean(text)?;
     let interrupt=request["options"]["interrupt"].as_bool().unwrap_or(true);
-    let playback=TtsPlaybackService::getInstance(&application.hostManager)?;
+    let playback=TtsPlaybackService::getInstance(host)?;
     let started=if config.providerType=="SYSTEM_TTS"{
-        playback.speakWithConfig(&config.id,text,interrupt)?.active
+        host.ttsPlaybackHost.as_ref().ok_or("System TTS playback host is unavailable")?.speakText(operit_host_api::TtsPlaybackRequest {text:cleaned.clone(),voice:config.voice.clone(),locale:config.model.clone(),speed:config.speed,pitch,interrupt}).map_err(|e|e.to_string())?.active
     }else{
-        let audio=TtsSynthesisService::getInstance(&application.hostManager).synthesizeWithConfig(&config.id,text)?;
+        let audio=TtsSynthesisService::getInstance(host).synthesizeWithResolvedConfig(&config.id,&config,&cleaned)?;
         let mut started=false;for path in audio.audioPaths{started|=playback.playAudio(&path)?.started;}started
     };
-    Ok(json!({"ttsServiceType":config.providerType,"providerClass":"Operit2 configured TTS provider","initialized":true,"playbackTriggered":started,"interrupt":interrupt,"textLength":text.chars().count(),"speechRate":config.speed,"pitch":1.0}))
+    Ok(json!({"ttsServiceType":config.providerType,"providerClass":"Operit2 configured TTS provider","initialized":true,"playbackTriggered":started,"interrupt":interrupt,"textLength":text.chars().count(),"speechRate":config.speed,"pitch":pitch}))
 }
-fn script_run(application:&OperitApplication,request:&Value)->Result<Value,String>{
+fn script_run(handler:AIToolHandler,request:&Value)->Result<Value,String>{
     use std::collections::BTreeMap;
     let source=match request.get("source_code").and_then(Value::as_str){Some(code) if !code.is_empty()=>code.to_string(),_=>std::fs::read_to_string(string(request,"source_path")?).map_err(|e|e.to_string())?};
     let params=request.get("params_json").map(json_value).transpose()?.unwrap_or(json!({}));
@@ -370,7 +456,7 @@ fn script_run(application:&OperitApplication,request:&Value)->Result<Value,Strin
     if let Some(path)=request["env_file_path"].as_str().filter(|p|!p.is_empty()){
         for line in std::fs::read_to_string(path).map_err(|e|e.to_string())?.lines(){let line=line.trim();if line.is_empty()||line.starts_with('#'){continue;}if let Some((key,value))=line.split_once('='){env.insert(key.trim().to_string(),value.trim().trim_matches('"').trim_matches('\'').to_string());}}
     }
-    let engine=application.toolHandler.runtimeDependencies().js_execution_provider().create_execution_engine(std::sync::Arc::new(application.toolHandler.clone()));
+    let engine=handler.runtimeDependencies().js_execution_provider().create_execution_engine(std::sync::Arc::new(handler.clone()));
     // The legacy direct runner executes a script body with `params` and awaits complete().
     let source=format!("exports.__legacy_direct = async function(params) {{\n{source}\n}};");
     let started=now();let wait=request["wait_ms"].as_u64().or_else(||request["wait_ms"].as_str().and_then(|s|s.parse().ok())).unwrap_or(60000);
@@ -381,24 +467,48 @@ fn script_run(application:&OperitApplication,request:&Value)->Result<Value,Strin
         Err(error)=>Err(error.message)
     }
 }
-fn command_json(application:&OperitApplication,args:&[String])->Result<Value,String>{
-    let mut output=CoreCommandOutput::new();output.setJsonMode(true);
-    super::mcp::run_mcp_command(application,args,&mut output)?;output.finalizeJson()?;
-    serde_json::from_str(&output.stdout).map_err(|e|e.to_string())
-}
-fn mcp_restart(application:&OperitApplication,request:&Value)->Result<Value,String>{
+fn mcp_restart(host:operit_host_api::HostManager::HostManager,mut handler:AIToolHandler,request:&Value)->Result<Value,String>{
+    use operit_tools::tools::mcp_runtime::{MCPLocalServer::MCPLocalServer,plugins::{MCPBridge::MCPBridge,MCPStarter::MCPStarter}};
+    use operit_tools::tools::mcp::MCPManager::MCPManager;
     let started=now();let timeout=request["timeoutMs"].as_i64().or_else(||request["timeoutMs"].as_str().and_then(|s|s.parse().ok())).unwrap_or(60000);
-    let servers=command_json(application,&["list".into()])?;
+    let server=MCPLocalServer::getInstance(&host);let servers=server.getAllMCPServers();
     let mut rows=Vec::new();let mut timed_out=false;
-    for item in servers.as_array().ok_or("MCP list must be array")?{
-        if item["enabled"]==false{continue;}
-        if now()-started>=timeout{timed_out=true;break;}
-        let id=string(item,"id")?;
-        let result=command_json(application,&["kill".into(),id.into()]).and_then(|_|command_json(application,&["start".into(),id.into()]));
-        match result{Ok(result)=>rows.push(json!({"id":id,"status":"success","message":"Restarted","log":result.to_string()})),Err(error)=>rows.push(json!({"id":id,"status":"error","message":error,"log":error}))}
+    for (id,_) in &servers{
+        if !server.isServerEnabled(id){continue;}
+        let remaining=timeout-(now()-started);if remaining<=0{timed_out=true;break;}
+        let bridge=MCPBridge::getInstance(&host).unregisterMcpService(id);
+        if bridge["success"]!=true{rows.push(json!({"id":id,"status":"error","message":bridge["error"],"log":bridge.to_string()}));continue;}
+        MCPManager::getInstance(host.clone()).unregisterServer(id);
+        handler.unregisterMcpServerTools(id);handler.unregisterMcpServerPackage(id);
+        let starter=MCPStarter::new(host.clone(),handler.runtimeSupport());let mut logs=Vec::new();
+        let success=starter.startPluginWithTimeout(id,remaining as u64,|status|logs.push(format!("{status:?}")));
+        server.updateServerStatus(id.clone(),None,None,if success{Some(now())}else{None},None)?;
+        rows.push(json!({"id":id,"status":if success{"success"}else{"error"},"message":if success{"Restarted"}else{"Startup failed"},"log":logs.join("\n")}));
     }
     let successes=rows.iter().filter(|r|r["status"]=="success").count();
-    Ok(json!({"timeoutMs":timeout,"elapsedMs":now()-started,"timedOut":timed_out,"progress":if timed_out{0}else{100},"message":"MCP restart finished","pluginsTotal":servers.as_array().unwrap().len(),"pluginsStarted":rows.len(),"successCount":successes,"failedCount":rows.len()-successes,"plugins":rows,"extraLogs":{"package":application.packageLogText()?}}))
+    Ok(json!({"timeoutMs":timeout,"elapsedMs":now()-started,"timedOut":timed_out,"progress":if timed_out{0}else{100},"message":"MCP restart finished","pluginsTotal":servers.len(),"pluginsStarted":rows.len(),"successCount":successes,"failedCount":rows.len()-successes,"plugins":rows,"extraLogs":{}}))
+}
+fn start_blocking_job(application:&OperitApplication,action:&str,request:Value)->Result<Value,String>{
+    static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
+    let id=format!("legacy-host-{}-{}",now(),NEXT.fetch_add(1,std::sync::atomic::Ordering::Relaxed));
+    let state=json!({"executionId":id,"status":"RUNNING"});model_jobs().lock().map_err(|e|e.to_string())?.insert(id.clone(),state.clone());
+    let host=application.hostManager.clone();let handler=application.toolHandler.clone();let context=application.providerRuntimeContext.clone();let action=action.to_string();let job_id=id.clone();
+    let scheduler=operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost();
+    if let Err(error)=scheduler.scheduleHostRuntimeTask("legacy-host-operation",Box::new(move || {
+        let result=match action.as_str(){
+            "script-run"=>script_run(handler,&request),"speech-test"=>speech_test(&host,&request),"mcp-restart"=>mcp_restart(host,handler,&request),
+            "model-test"=>run_async(async {
+                let provider=ModelConfigManager::default().getProviderProfile(string(&request,"configId")?).map_err(|e|e.to_string())?;let index=request["modelIndex"].as_u64().unwrap_or(0) as usize;
+                let model=provider.models.get(index).ok_or("modelIndex out of range")?;
+                let report=ModelConfigManager::default().testModelConnection(&provider.id,&model.id,context).await.map_err(|e|e.to_string())?;
+                let passed=report.items.iter().filter(|i|i.success).count();
+                Ok(json!({"configId":provider.id,"configName":provider.name,"providerType":provider.providerTypeId,"requestedModelIndex":index,"actualModelIndex":index,"testedModelName":model.id,"success":report.success,"totalTests":report.items.len(),"passedTests":passed,"failedTests":report.items.len()-passed,"tests":report.items}))
+            }),_=>Err(format!("Unknown host job: {action}"))
+        };
+        let state=match result{Ok(result)=>json!({"executionId":job_id,"status":"SUCCESS","result":result}),Err(error)=>json!({"executionId":job_id,"status":"FAILED","error":error})};
+        if let Ok(mut jobs)=model_jobs().lock(){jobs.insert(job_id,state);}
+    })){model_jobs().lock().map_err(|e|e.to_string())?.remove(&id);return Err(error.to_string());}
+    Ok(state)
 }
 
 fn model_jobs()->&'static std::sync::Mutex<std::collections::HashMap<String,Value>> {

@@ -1,7 +1,7 @@
 // Operit1 contracts over Operit2 executors. This factory never modifies native Tools.
 function __operitCreateLegacyTools(base) {
   const api = Object.create(base);
-  for (const name of ['Chat', 'Files', 'SoftwareSettings', 'System', 'UI', 'FFmpeg', 'Workflow']) {
+  for (const name of ['Chat', 'Files', 'Net', 'SoftwareSettings', 'System', 'UI', 'FFmpeg', 'Workflow']) {
     api[name] = Object.create(base[name] || null);
   }
   const command = async (action, value) => JSON.parse(await base.SoftwareSettings.exec(
@@ -46,9 +46,9 @@ function __operitCreateLegacyTools(base) {
   api.SoftwareSettings.setFunctionModelConfig = (functionType, configId, modelIndex) =>
     command('function-set', {functionType, configId, modelIndex}).then(textResult);
   api.SoftwareSettings.testModelConfigConnection = (configId, modelIndex) =>
-    command('model-test', {configId, modelIndex}).then(textResult);
+    modelRequest('model-test', {configId, modelIndex});
   api.SoftwareSettings.testTtsPlayback = (text, options) =>
-    command('speech-test', {text, options}).then(textResult);
+    modelRequest('speech-test', {text, options});
   api.SoftwareSettings.listSandboxPackages = async () => {
     const packages = await cli(['package','list']);
     const directory = await cli(['package','dir']);
@@ -71,8 +71,8 @@ function __operitCreateLegacyTools(base) {
     return textResult({packageName,requestedEnabled:enabled,previousEnabled:before.enabled,
       currentEnabled:after.enabled,message:'Package setting saved'});
   };
-  api.SoftwareSettings.executeSandboxScriptDirect = options => command('script-run', options).then(textResult);
-  api.SoftwareSettings.restartMcpWithLogs = timeoutMs => command('mcp-restart', {timeoutMs}).then(textResult);
+  api.SoftwareSettings.executeSandboxScriptDirect = options => modelRequest('script-run', options);
+  api.SoftwareSettings.restartMcpWithLogs = timeoutMs => modelRequest('mcp-restart', {timeoutMs});
   const android = async (action,payload) => {
     const Bridge = Java.type('app.operit.LegacyAndroidTools');
     const response = JSON.parse(await Bridge.execute(Java.getApplicationContext(),JSON.stringify(Object.assign({action},payload))));
@@ -89,6 +89,12 @@ function __operitCreateLegacyTools(base) {
     const options=Object.assign({},value,{path:await filePath(value.path,value.environment)});
     delete options.environment; return base.Files.read(options);
   };
+  api.Files.download = async (value,destination,environment,headers) => {
+    if(typeof value==='string') return base.Files.download(value,await filePath(destination,environment),headers);
+    const options=Object.assign({},value,{destination:await filePath(value.destination,value.environment)});
+    delete options.environment; return base.Files.download(options);
+  };
+  api.Net.uploadFile = async options => base.Net.uploadFile(Object.assign({},options,{files:await Promise.all(options.files.map(async file=>Object.assign({},file,{file_path:await filePath(file.file_path)})))}));
   api.Files.mkdir = async (path,parents,environment) => base.Files.mkdir(await filePath(path,environment),parents);
   api.Files.deleteFile = async (path,recursive,environment) => base.Files.deleteFile(await filePath(path,environment),recursive);
   api.Files.write = async (path,content,append,environment) => base.Files.write(await filePath(path,environment),content,append);
@@ -156,12 +162,14 @@ function __operitCreateLegacyTools(base) {
   api.Workflow.patch = (id,patch) => workflow('patch',Object.assign({workflow_id:id},patch));
   api.Workflow.trigger = async id => {
     const execution=await workflow('trigger',{workflow_id:id});
-    while(true) {
+    const deadline=Date.now()+300000;
+    while(Date.now()<deadline) {
       const state=await workflow('execution',{workflow_id:id,execution_id:execution.executionId});
       if(state.status==='SUCCESS') return 'Workflow execution completed: '+execution.executionId;
-      if(state.status==='FAILED') throw new Error(state.error || 'Workflow execution failed');
+      if(state.status==='FAILED') {const failed=(state.nodes||[]).filter(node=>node.status==='FAILED');throw new Error(state.error || (failed.length?JSON.stringify(failed):'Workflow execution failed'));}
       await base.System.sleep(500);
     }
+    throw new Error('Workflow is still running: '+execution.executionId+'; it was not cancelled or restarted.');
   };
   api.Workflow.setEnabled = (id,enabled) => api.Workflow[enabled?'enable':'disable'](id);
   return api;
@@ -172,6 +180,7 @@ async function __operitLegacyWorkflowAction(params) {
   const api=__operitCreateLegacyTools(globalThis.Tools);
   const p=params.payload;
   const actions={
+    trigger_workflow:()=>api.Workflow.trigger(p.workflow_id),
     execute_shell:()=>api.System.shell(p.command),execute_intent:()=>api.System.intent(p),send_broadcast:()=>api.System.sendBroadcast(p),
     get_page_info:()=>api.UI.getPageInfo(),capture_screenshot:()=>api.UI.captureScreenshot(),
     tap:()=>api.UI.tap(Number(p.x),Number(p.y)),long_press:()=>api.UI.longPress(Number(p.x),Number(p.y)),
@@ -183,7 +192,7 @@ async function __operitLegacyWorkflowAction(params) {
     list_sandbox_packages:()=>api.SoftwareSettings.listSandboxPackages(),set_sandbox_package_enabled:()=>api.SoftwareSettings.setSandboxPackageEnabled(p.package_name,p.enabled===true||p.enabled==='true'),
     execute_sandbox_script_direct:()=>api.SoftwareSettings.executeSandboxScriptDirect(p),restart_mcp_with_logs:()=>api.SoftwareSettings.restartMcpWithLogs(p.timeout_ms),
     get_speech_services_config:()=>api.SoftwareSettings.getSpeechServicesConfig(),set_speech_services_config:()=>api.SoftwareSettings.setSpeechServicesConfig(p),test_tts_playback:()=>api.SoftwareSettings.testTtsPlayback(p.text,p),
-    list_model_configs:()=>api.SoftwareSettings.listModelConfigs(),create_model_config:()=>api.SoftwareSettings.createModelConfig(p),update_model_config:()=>api.SoftwareSettings.updateModelConfig(p.config_id,p.updates||p),delete_model_config:()=>api.SoftwareSettings.deleteModelConfig(p.config_id),
+    list_model_configs:()=>api.SoftwareSettings.listModelConfigs(),create_model_config:()=>api.SoftwareSettings.createModelConfig(p),update_model_config:()=>api.SoftwareSettings.updateModelConfig(p.config_id,p.updates||Object.fromEntries(Object.entries(p).filter(([key])=>key!=='config_id'))),delete_model_config:()=>api.SoftwareSettings.deleteModelConfig(p.config_id),
     list_function_model_configs:()=>api.SoftwareSettings.listFunctionModelConfigs(),get_function_model_config:()=>api.SoftwareSettings.getFunctionModelConfig(p.function_type),set_function_model_config:()=>api.SoftwareSettings.setFunctionModelConfig(p.function_type,p.config_id,p.model_index===undefined?undefined:Number(p.model_index)),test_model_config_connection:()=>api.SoftwareSettings.testModelConfigConnection(p.config_id,p.model_index===undefined?undefined:Number(p.model_index))
   };
   if(!Object.hasOwn(actions,params.action)) throw new Error('Unknown legacy workflow action: '+params.action);

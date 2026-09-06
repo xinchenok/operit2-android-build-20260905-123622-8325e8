@@ -70,14 +70,11 @@ const unrelated = {packageName: "android.system"};'''
                 self.assertEqual(json.loads(metadata)['name'], renamed)
             self.assertEqual(info['package_id'], 'legacy.com.operit.linux_ssh_bundle')
 
-    def test_old_host_classes_are_not_reported_as_matching_apis(self):
+    def test_unported_old_host_classes_block_packaging(self):
         source = ('/* METADATA {"name":"old","tools":[]} */\n'
                   'const Service = Java.type("com.ai.assistance.operit.api.chat.EnhancedAIService");')
-        _, info = legacy.convert(source, 'old.js', set())
-        self.assertEqual(info['missing_methods'], [])
-        self.assertEqual(info['status'], 'requires_host_port')
-        self.assertEqual(info['legacy_host_class_dependencies'],
-                         ['com.ai.assistance.operit.api.chat.EnhancedAIService'])
+        with self.assertRaisesRegex(RuntimeError, 'unported Operit1 classes'):
+            legacy.convert(source, 'old.js', set())
 
     def test_android_java_classes_are_not_misidentified_as_old_operit_classes(self):
         info = legacy.host_dependencies('const File = Java.type("java.io.File"); Android.getContext();')

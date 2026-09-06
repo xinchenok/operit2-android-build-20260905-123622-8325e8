@@ -220,7 +220,7 @@ class LegacyJavaHost(private val context: Context) {
         val nativePath = options.optString("nativeLibraryDir").takeIf { it.isNotBlank() }
         val loader = object : DexClassLoader(code.path, optimized.path, nativePath, parent) {
             override fun loadClass(name: String, resolve: Boolean): Class<*> {
-                synchronized(getClassLoadingLock(name)) {
+                synchronized(this) {
                     findLoadedClass(name)?.let { return it }
                     if (prefixes.any(name::startsWith)) {
                         try { return findClass(name).also { if (resolve) resolveClass(it) } } catch (_: ClassNotFoundException) { }

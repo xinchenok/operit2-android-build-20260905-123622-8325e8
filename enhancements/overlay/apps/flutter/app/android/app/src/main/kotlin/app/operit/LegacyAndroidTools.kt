@@ -104,10 +104,16 @@ object LegacyAndroidTools {
             }
             return "/" + pieces.joinToString("/")
         }
+        fun publicPath(physical: String): String {
+            if (physical == "/sdcard" || physical.startsWith("/sdcard/") ||
+                physical == "/data" || physical.startsWith("/data/")) return physical
+            if (physical == storage || physical.startsWith("$storage/")) return "/sdcard" + physical.removePrefix(storage)
+            return "/mnt/android/root" + physical
+        }
         var guest = normalized(path)
         repeat(40) {
             val bind = binds.firstOrNull { guest == it.first || guest.startsWith(it.first + "/") }
-            if (bind != null) return File(bind.second + guest.removePrefix(bind.first)).canonicalPath
+            if (bind != null) return publicPath(File(bind.second + guest.removePrefix(bind.first)).canonicalPath)
             val parts = guest.trimStart('/').split('/').filter { it.isNotEmpty() }
             for (index in parts.indices) {
                 val prefix = "/" + parts.take(index + 1).joinToString("/")
@@ -119,7 +125,7 @@ object LegacyAndroidTools {
                     return@repeat
                 }
             }
-            return rootfs.trimEnd('/') + guest
+            return publicPath(rootfs.trimEnd('/') + guest)
         }
         throw IllegalStateException("Too many Linux symbolic links while resolving $path")
     }

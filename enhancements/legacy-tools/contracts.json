@@ -9,6 +9,7 @@
     "Files.apply",
     "Files.copy",
     "Files.deleteFile",
+    "Files.download",
     "Files.exists",
     "Files.info",
     "Files.list",
@@ -22,6 +23,7 @@
     "Files.write",
     "Files.writeBinary",
     "Files.zip",
+    "Net.uploadFile",
     "SoftwareSettings.clearActiveCharacterCard",
     "SoftwareSettings.createCharacterCard",
     "SoftwareSettings.createModelConfig",
@@ -71,6 +73,7 @@
     "Workflow.update"
   ],
   "workflow_actions": [
+    "trigger_workflow",
     "execute_shell",
     "execute_intent",
     "send_broadcast",
@@ -110,9 +113,15 @@
     "linux_files": "Resolved using installed Alpine rootfs path; Android and Linux paths kept distinct",
     "remote_services": "User-provided credentials/endpoints, paired devices/PC agent/SSH server as required by each original package"
   },
-  "remaining_parameter_ports": [
-    "operit_editor: obsolete VITS package settings and OpenAI realtime WebSocket TTS protocol are not interchangeable with HTTP/LOCAL_MODEL configs",
-    "operit_editor: provider cache TTL flag and old Google built-in-search boolean need explicit provider payload mapping"
-  ],
-  "device_tested": false
+  "device_tested": false,
+  "retained_inactive_settings": {
+    "package": "legacy_operit_editor",
+    "fields": [
+      "enable_claude_1h_prompt_cache",
+      "tts_vits_*",
+      "tts_service_type=VITS_TTS|OPENAI_WS_TTS",
+      "stt_service_type=SHERPA_NCNN|DEEPGRAM_STT"
+    ],
+    "behavior": "Original values are persisted in private app preferences. Unsupported speech engine updates do not replace the active service. Tool responses and settings reads explicitly list retained fields and say they are not active; this is not a port of those unavailable engines. Existing supported provider settings and Google built-in search are applied to current real profiles."
+  }
 }

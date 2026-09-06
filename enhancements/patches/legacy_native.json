@@ -106,5 +106,11 @@
     "path": "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgMessageProcessingBridge.rs",
     "old": "    manager.releaseToolPkgExecutionEngine(executionId, containerPackageName);\n",
     "new": "    operit_plugin_sdk::legacy_planning_cancellation::cancel_parent(executionId);\n    manager.releaseToolPkgExecutionEngine(executionId, containerPackageName);\n"
+  },
+  {
+    "name": "legacy-register-real-screenshot-image",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsLibraries.rs",
+    "old": "            callToolAsync: function(callbackId, toolType, toolName, paramsJson) {{",
+    "new": "            registerImageFromPath: function(path) {{\n                var result = JSON.parse(__operitNativeCallTool('default', 'read_file', JSON.stringify({{path:path,direct_image:true}})));\n                if (!result.success) throw new Error(result.message);\n                var content = result.data.content;\n                if (typeof content !== 'string' || content.indexOf('<link type=\"image\"') !== 0) throw new Error('Image registration returned no media link');\n                return content;\n            }},\n            callToolAsync: function(callbackId, toolType, toolName, paramsJson) {{"
   }
 ]
