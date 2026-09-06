@@ -4,7 +4,7 @@
 
 ## 首次设置：保存一次固定签名
 
-打开 [新增仓库 Secret](https://github.com/xinchenok/operit2-android-build-20260905-123622-8325e8/settings/secrets/actions/new)。
+打开 [新增仓库 Secret](https://github.com/xinchenok/operit2-android-cx/settings/secrets/actions/new)。
 
 - Name：`OPERIT2_UPDATE_SIGNING`
 - Secret：私下交付的 `OPERIT2_UPDATE_SIGNING.txt` 的全部内容，即一个完整 JSON 对象。
@@ -13,11 +13,11 @@
 
 ## 以后每次构建
 
-打开 [Build latest Android](https://github.com/xinchenok/operit2-android-build-20260905-123622-8325e8/actions/workflows/update-android.yml)，点击 **Run workflow**，保留 `main`，再确认 **Run workflow**。没有需要填写的自定义参数。
+打开 [Build latest Android](https://github.com/xinchenok/operit2-android-cx/actions/workflows/update-android.yml)，点击 **Run workflow**，保留 `main`，再确认 **Run workflow**。没有需要填写的自定义参数。
 
 每轮开始时查询 `AAswordman/Operit2` 默认分支的最新提交，运行库和 APK 使用同一次解析到的源码。始终复用固定签名，递增 Android versionCode。上游和构建脚本均未改变、且已有对应成功 Release 时，跳过重复编译。
 
-成功后打开 [最新 APK 下载页](https://github.com/xinchenok/operit2-android-build-20260905-123622-8325e8/releases/latest)，下载 `operit2-android-arm64-personal-test.apk`；运行摘要也有下载入口。
+成功后打开 [最新 APK 下载页](https://github.com/xinchenok/operit2-android-cx/releases/latest)，下载 `operit2-android-arm64-personal-test.apk`；运行摘要也有下载入口。
 
 获取新源码请用 **Run workflow** 新建运行。旧运行的 **Re-run failed jobs** 用于恢复那一轮已选定的源码，不是重新追踪最新提交。
 
