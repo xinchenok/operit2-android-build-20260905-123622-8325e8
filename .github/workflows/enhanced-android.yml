@@ -3,7 +3,10 @@ on:
   workflow_dispatch:
   push:
     branches: [enhancement/two-build-channels]
-    paths: ['.github/workflows/enhanced-android.yml']
+    paths:
+      - '.github/workflows/enhanced-android.yml'
+      - '.github/workflows/update-android.yml'
+      - 'ci/enhanced-build-request.txt'
 run-name: Build enhanced Android ${{ github.run_number }}
 permissions:
   contents: write
