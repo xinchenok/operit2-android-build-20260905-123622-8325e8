@@ -13,6 +13,8 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from plugin_payload import FIX_REVISION
+
 UPSTREAM = "AAswordman/Operit2"
 APK = "operit2-android-arm64-personal-test.apk"
 TOOL_DEFAULTS = {
@@ -112,6 +114,8 @@ def resolve() -> None:
     builder_sha = os.environ["GITHUB_SHA"]
     build = not (last.get("source_commit") == sha and last.get("builder_commit") == builder_sha)
     code = version_code(source_file("apps/flutter/app/pubspec.yaml", sha), last, int(os.environ["GITHUB_RUN_NUMBER"]))
+    # Source patches must invalidate native/Web caches even when upstream has not changed.
+    tools["OPERIT2_PLUGIN_FIX_REVISION"] = FIX_REVISION
     tool_key = hashlib.sha256(json.dumps(tools, sort_keys=True).encode()).hexdigest()[:16]
     # Runtime inputs are independent of app UI changes. Cache only the exact input trees.
     entries = api(f"repos/{UPSTREAM}/contents/tools/android-runtime?ref={sha}")
