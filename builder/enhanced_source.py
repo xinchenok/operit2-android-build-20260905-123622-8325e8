@@ -26,7 +26,6 @@ def apply_patches(root: Path) -> dict:
             staged[path] = text.replace(spec['old'], spec['new'], 1)
             status = 'applied'
         else:
-            # Do not produce a half-patched APK after an upstream refactor.
             raise RuntimeError(f"Enhanced patch '{spec['name']}' needs review against updated upstream {path}. Original channel is unaffected.")
         statuses.append({'name':spec['name'], 'status':status})
     output = root/'tools/release/dist/compatibility/enhanced'
@@ -41,7 +40,6 @@ def apply_patches(root: Path) -> dict:
         patch_path.write_text(''.join(differences),encoding='utf-8')
     result = {'revision':REVISION,'patches':statuses,'files':{p:hashlib.sha256(t.encode()).hexdigest() for p,t in staged.items()},'device_tested':False}
     (output/'manifest.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
-    # An isolated Flutter regression suite is copied only into enhanced builds.
     tests = CONFIG.parent/'enhanced_chat_regression_test.dart'
     if tests.exists():
         fixture = (root/'apps/flutter/app/test/chat_area_streaming_cursor_test.dart').read_text(encoding='utf-8')
@@ -49,8 +47,15 @@ def apply_patches(root: Path) -> dict:
         fixture = fixture.replace("import 'dart:async';", "import 'dart:async';\nimport 'package:operit2/ui/features/chat/screens/AIChatScreen.dart';", 1)
         fixture = fixture.replace('  bool isLoading = true,', '  ValueChanged<bool>? onFollowChanged,\n  bool isLoading = true,', 1)
         fixture = fixture.replace('onAutoScrollToBottomChanged: (_) {},', 'onAutoScrollToBottomChanged: onFollowChanged ?? (_) {},', 1)
+        # Build a metrics snapshot from the mounted controller; do not depend on
+        # an unexported SDK implementation class in the copied upstream test.
+        fixture = fixture.replace('final metrics = FixedScrollMetrics(',
+                                  'final metrics = scrollController.position.copyWith(')
+        extra = tests.read_text(encoding='utf-8')
+        # The generated API uses an enum, not a string, for structured parts.
+        extra = extra.replace("kind: 'markdown'", 'kind: MessagePartKind.markdown')
         (root/'apps/flutter/app/test/enhanced_chat_regression_test.dart').write_text(
-            fixture + '\n' + tests.read_text(encoding='utf-8'), encoding='utf-8')
+            fixture + '\n' + extra, encoding='utf-8')
     return result
 
 
