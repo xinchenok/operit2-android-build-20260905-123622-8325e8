@@ -6,6 +6,7 @@ This script has not been integration-tested in the current chat environment.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -41,9 +42,18 @@ def build() -> None:
         flutter_pub_get()
         flutter_pub_get(enforce_lockfile=True)
         compatibility = patch_dynamic_color(FLUTTER_APP_DIR, DIST_DIR)
+        DIST_DIR.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(FLUTTER_APP_DIR / "pubspec.lock", DIST_DIR / "resolved-pubspec.lock")
+        shutil.copy2(FLUTTER_APP_DIR / "pubspec.yaml", DIST_DIR / "resolved-pubspec.yaml")
+        command = [flutter, "build", "apk", "--release", "--no-pub",
+                   "--target-platform", "android-arm64", "--split-per-abi"]
+        build_number = os.environ.get("OPERIT2_BUILD_NUMBER")
+        if build_number:
+            if not build_number.isdecimal() or not 0 < int(build_number) <= 2100000000:
+                raise RuntimeError("Invalid Android build number")
+            command.extend(["--build-number", build_number])
         run(
-            [flutter, "build", "apk", "--release", "--no-pub",
-             "--target-platform", "android-arm64", "--split-per-abi"],
+            command,
             cwd=FLUTTER_APP_DIR,
         )
 
@@ -57,19 +67,20 @@ def build() -> None:
         "source_commit": sha,
         "source_url": f"https://github.com/AAswordman/Operit2/tree/{sha}",
         "abi": "arm64-v8a",
+        "version_code": os.environ.get("OPERIT2_BUILD_NUMBER"),
         "package_id": "app.operit",
         "android_dependency_compatibility": compatibility,
         "official_build": False,
         "device_tested": False,
-        "signing": "Personal test key, NOT the upstream author's signing key.",
-        "update_warning": "Without supplied signing secrets, each run uses a new key. "
-                          "Back up app data before uninstalling a differently signed build.",
+        "signing": "Fixed personal update key" if os.environ.get("OPERIT2_BUILD_NUMBER") else "Personal test key, NOT the upstream author's signing key.",
+        "update_warning": "Switching from an old one-time-signed APK needs backup/reinstallation. "
+                          "Future channel updates retain the configured fixed key.",
     }
     (DIST_DIR / "BUILD-INFO.json").write_text(
         json.dumps(info, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     wrapper = Path(__file__).resolve().parent.parent
-    shutil.copy2(wrapper / ".github/workflows/operit2-android-test.yml", DIST_DIR / "build-workflow.yml")
+    shutil.copy2(wrapper / (".github/workflows/update-android.yml" if os.environ.get("OPERIT2_BUILD_NUMBER") else ".github/workflows/operit2-android-test.yml"), DIST_DIR / "build-workflow.yml")
     shutil.copy2(__file__, DIST_DIR / "build_arm64.py")
     shutil.copy2(wrapper / "builder/verify_apk.py", DIST_DIR / "verify_apk.py")
     shutil.copy2(root / "LICENSE", DIST_DIR / "UPSTREAM-LICENSE")
