@@ -1,0 +1,86 @@
+[
+  {
+    "name": "android-terminal-proot-compat-environment",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        cstring(&format!(\"PROOT_LOADER={}\", loader.to_string_lossy()))?,\n        cstring(&format!(\"TMPDIR={}\", tmpDir.to_string_lossy()))?,",
+    "new": "        cstring(&format!(\"PROOT_LOADER={}\", loader.to_string_lossy()))?,\n        cstring(\"PROOT_NO_SECCOMP=1\")?,\n        cstring(&format!(\"TMPDIR={}\", tmpDir.to_string_lossy()))?,"
+  },
+  {
+    "name": "android-common-proot-compat-environment",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
+    "old": "            export PROOT_LOADER=${File(runtimeDir, \"loader\").absolutePath}\n            export UBUNTU_PATH=${rootfsDir.absolutePath}",
+    "new": "            export PROOT_LOADER=${File(runtimeDir, \"loader\").absolutePath}\n            export PROOT_NO_SECCOMP=1\n            export UBUNTU_PATH=${rootfsDir.absolutePath}"
+  },
+  {
+    "name": "android-terminal-drop-do-not-signal-reaped-pid",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        unsafe {\n            libc::kill(self.pid, libc::SIGHUP);\n            libc::kill(self.pid, libc::SIGKILL);\n            let fd = match self.writer.lock() {",
+    "new": "        unsafe {\n            if self.exitCode.is_none() {\n                libc::kill(self.pid, libc::SIGHUP);\n                libc::kill(self.pid, libc::SIGKILL);\n            }\n            let fd = match self.writer.lock() {"
+  },
+  {
+    "name": "android-terminal-reader-stop-before-fd-reuse",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    thread::spawn(move || loop {\n        match readPtyFd(masterFd) {",
+    "new": "    thread::spawn(move || loop {\n        let readResult = {\n            let fd = match writer.lock() {\n                Ok(fd) if *fd >= 0 => fd,\n                _ => break,\n            };\n            // Keep the descriptor owned until this read finishes. Closing or\n            // retrying a session must not redirect this reader to a reused fd.\n            readPtyFd(*fd)\n        };\n        match readResult {"
+  },
+  {
+    "name": "android-terminal-writer-retain-fd-ownership",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    let fd = *writer\n        .lock()\n        .map_err(|_| HostError::new(\"android pty writer mutex poisoned\"))?;\n    writePtyFd(fd, data)",
+    "new": "    let fd = writer\n        .lock()\n        .map_err(|_| HostError::new(\"android pty writer mutex poisoned\"))?;\n    if *fd < 0 {\n        return Err(HostError::new(\"Android PTY session is closed\"));\n    }\n    writePtyFd(*fd, data)"
+  },
+  {
+    "name": "android-terminal-startup-failure-stop-reader",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        closeAndroidPtyProcess(pid, masterFd);\n        return Err(error);",
+    "new": "        // Invalidate the shared handle before close: a retry can immediately\n        // receive the same numeric fd from forkpty.\n        let mut fd = writer\n            .lock()\n            .map_err(|_| HostError::new(\"android pty writer mutex poisoned\"))?;\n        let ownedFd = *fd;\n        *fd = -1;\n        closeAndroidPtyProcess(pid, ownedFd);\n        return Err(error);"
+  },
+  {
+    "name": "android-terminal-check-session-process-before-reuse",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "fn sessionKey(terminalType: &str, name: &str) -> String {\n    format!(\"{terminalType}:{name}\")\n}\n",
+    "new": "fn sessionKey(terminalType: &str, name: &str) -> String {\n    format!(\"{terminalType}:{name}\")\n}\n\nfn androidSessionIsAlive(state: &mut AndroidTerminalState, sessionId: &str) -> HostResult<bool> {\n    let Some(session) = state.ptySessions.get_mut(sessionId) else {\n        return Ok(false);\n    };\n    if session.exitCode.is_none() {\n        session.exitCode = pollPidExitCode(session.pid)?;\n    }\n    Ok(session.exitCode.is_none())\n}\n"
+  },
+  {
+    "name": "android-terminal-recreate-exited-visible-session",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "            if let Some(sessionId) = state.sessionNameToId.get(&key).cloned() {\n                if state.ptySessions.contains_key(&sessionId) {\n                    return Ok(TerminalSessionInfo {\n                        sessionId,\n                        sessionName: normalizedSessionName,\n                        platform: PLATFORM.to_string(),\n                        terminal: PROOT_TERMINAL.to_string(),\n                        terminalType: normalizedTerminalType,\n                        isNewSession: false,\n                    });\n                }\n                state.sessionNameToId.remove(&key);\n            }",
+    "new": "            if let Some(sessionId) = state.sessionNameToId.get(&key).cloned() {\n                if androidSessionIsAlive(&mut state, &sessionId)? {\n                    return Ok(TerminalSessionInfo {\n                        sessionId,\n                        sessionName: normalizedSessionName,\n                        platform: PLATFORM.to_string(),\n                        terminal: PROOT_TERMINAL.to_string(),\n                        terminalType: normalizedTerminalType,\n                        isNewSession: false,\n                    });\n                }\n                state.ptySessions.remove(&sessionId);\n                removeAndroidSessionMappings(&mut state, &sessionId);\n            }"
+  },
+  {
+    "name": "android-terminal-recreate-exited-hidden-executor",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        if let Some(sessionId) = state.hiddenExecutorKeyToSessionId.get(executorKey).cloned() {\n            if state.ptySessions.contains_key(&sessionId) {\n                return Ok(sessionId);\n            }\n            state.hiddenExecutorKeyToSessionId.remove(executorKey);\n            removeAndroidSessionMappings(&mut state, &sessionId);\n        }",
+    "new": "        if let Some(sessionId) = state.hiddenExecutorKeyToSessionId.get(executorKey).cloned() {\n            if androidSessionIsAlive(&mut state, &sessionId)? {\n                return Ok(sessionId);\n            }\n            state.ptySessions.remove(&sessionId);\n            removeAndroidSessionMappings(&mut state, &sessionId);\n        }"
+  },
+  {
+    "name": "android-terminal-prepare-exec-pointers-before-fork",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        let pid =\n            unsafe { libc::forkpty(&mut masterFd, ptr::null_mut(), &mut termios, &mut winsize) };",
+    "new": "        // Build allocations before fork. Another application thread may own\n        // the allocator lock when forkpty creates the single-threaded child.\n        let mut argv = command.argv.iter().map(|item| item.as_ptr()).collect::<Vec<_>>();\n        argv.push(ptr::null());\n        let mut envp = command.envp.iter().map(|item| item.as_ptr()).collect::<Vec<_>>();\n        envp.push(ptr::null());\n        let pid =\n            unsafe { libc::forkpty(&mut masterFd, ptr::null_mut(), &mut termios, &mut winsize) };"
+  },
+  {
+    "name": "android-terminal-no-child-heap-allocation-before-exec",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "                let mut argv = command\n                    .argv\n                    .iter()\n                    .map(|item| item.as_ptr())\n                    .collect::<Vec<_>>();\n                argv.push(ptr::null());\n                let mut envp = command\n                    .envp\n                    .iter()\n                    .map(|item| item.as_ptr())\n                    .collect::<Vec<_>>();\n                envp.push(ptr::null());\n                libc::execve(command.executable.as_ptr(), argv.as_ptr(), envp.as_ptr());\n                libc::write(\n                    libc::STDERR_FILENO,\n                    b\"execve failed\\n\".as_ptr().cast(),",
+    "new": "                libc::execve(command.executable.as_ptr(), argv.as_ptr(), envp.as_ptr());\n                // exec failed; report with async-signal-safe syscalls only.\n                libc::write(\n                    libc::STDERR_FILENO,\n                    b\"execve failed\\n\".as_ptr().cast(),"
+  },
+  {
+    "name": "android-terminal-collect-bind-candidates-before-probing",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
+    "old": "            probe_and_append_bind_arg(){\n              bind_source=\"${'$'}1\"\n              bind_target=\"${'$'}2\"\n              if ! can_access_bind_source \"${'$'}bind_source\"; then",
+    "new": "            probe_and_append_bind_arg(){\n              bind_source=\"${'$'}1\"\n              bind_target=\"${'$'}2\"\n              if [ \"${'$'}{PROOT_COLLECT_BINDS:-0}\" = \"1\" ]; then\n                append_proot_bind_arg \"${'$'}bind_source\" \"${'$'}bind_target\"\n                return 0\n              fi\n              if ! can_access_bind_source \"${'$'}bind_source\"; then"
+  },
+  {
+    "name": "android-terminal-probe-bind-set-once-with-existing-fallback",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
+    "old": "              if ! resolve_proot_runtime; then\n                return 1\n              fi\n$prootBindSetup\n              if [ -n \"${'$'}PROOT_BIND_ARGS\" ]; then",
+    "new": "              if ! resolve_proot_runtime; then\n                return 1\n              fi\n              # Test the accessible bind set once. Repeated Linux cold starts\n              # per directory can otherwise exceed the PTY startup deadline.\n              PROOT_COLLECT_BINDS=1\n$prootBindSetup\n              PROOT_COLLECT_BINDS=0\n              if ! run_proot_probe ${'$'}PROOT_BIND_ARGS; then\n                # Keep the original per-directory fallback for devices with\n                # storage mounts that exist but cannot be used by PRoot.\n                PROOT_BIND_ARGS=\"\"\n$prootBindSetup\n              fi\n              if [ -n \"${'$'}PROOT_BIND_ARGS\" ]; then"
+  },
+  {
+    "name": "android-terminal-allow-cold-proot-startup-deadline",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        waitForInitialAndroidPtyPrompt(commandOutput.clone(), Duration::from_millis(10000))",
+    "new": "        waitForInitialAndroidPtyPrompt(commandOutput.clone(), Duration::from_millis(30000))"
+  }
+]

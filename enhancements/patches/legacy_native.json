@@ -1,0 +1,110 @@
+[
+  {
+    "name": "legacy-java-native-dispatch-registration",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsJavaBridgeDelegates.rs",
+    "old": "use serde_json::Value;",
+    "new": "use serde_json::Value;\nuse std::sync::{Arc, OnceLock, RwLock};\n\ntype LegacyJavaDispatch = dyn Fn(String) -> Result<String, String> + Send + Sync;\nfn legacy_java_dispatch_slot() -> &'static RwLock<Option<Arc<LegacyJavaDispatch>>> {\n    static SLOT: OnceLock<RwLock<Option<Arc<LegacyJavaDispatch>>>> = OnceLock::new();\n    SLOT.get_or_init(|| RwLock::new(None))\n}\npub fn installLegacyJavaDispatch(dispatch: Arc<LegacyJavaDispatch>) {\n    *legacy_java_dispatch_slot().write().expect(\"legacy Java bridge lock\") = Some(dispatch);\n}\npub fn nativeLegacyJavaDispatchString(request: String) -> String {\n    let dispatch = legacy_java_dispatch_slot().read().expect(\"legacy Java bridge lock\").clone();\n    match dispatch {\n        Some(dispatch) => dispatch(request).unwrap_or_else(|error| javaBridgeFailure(&error)),\n        None => javaBridgeFailure(\"Android Java host is not available on this platform\"),\n    }\n}\npub struct LegacyJavaScope { id: String }\nimpl LegacyJavaScope {\n    pub fn new() -> Self { Self { id: uuid::Uuid::new_v4().to_string() } }\n    pub fn dispatch(&self, request: String) -> String {\n        match serde_json::from_str::<Value>(&request) {\n            Ok(mut value) => {\n                value[\"scope\"] = Value::String(self.id.clone());\n                nativeLegacyJavaDispatchString(value.to_string())\n            }\n            Err(error) => javaBridgeFailure(&error.to_string()),\n        }\n    }\n}\nimpl Drop for LegacyJavaScope {\n    fn drop(&mut self) {\n        let _ = nativeLegacyJavaDispatchString(serde_json::json!({\"operation\":\"releaseScope\",\"scope\":self.id}).to_string());\n    }\n}\n"
+  },
+  {
+    "name": "legacy-java-dispatch-engine-binding",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsEngine.rs",
+    "old": "            (\n                \"__operitNativeJavaClassExists\",",
+    "new": "            (\n                \"__operitNativeLegacyJavaDispatch\",\n                {\n                  let scope = crate::javascript::JsJavaBridgeDelegates::LegacyJavaScope::new();\n                  Arc::new(move |arguments| {\n                    let [request] = exactHostJavaScriptArguments(\"__operitNativeLegacyJavaDispatch\", arguments)?;\n                    Ok(scope.dispatch(request))\n                  })\n                },\n            ),\n            (\n                \"__operitNativeJavaClassExists\","
+  },
+  {
+    "name": "legacy-java-native-surface",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsLibraries.rs",
+    "old": "            javaClassExists: function(className) {{\n                return __operitNativeJavaClassExists(String(className || ''));\n            }},",
+    "new": "            legacyJavaDispatch: function(request) {{\n                return __operitNativeLegacyJavaDispatch(JSON.stringify(request));\n            }},\n            javaClassExists: function(className) {{\n                return __operitNativeJavaClassExists(String(className || ''));\n            }},"
+  },
+  {
+    "name": "legacy-java-real-method-surface",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsJavaBridge.rs",
+    "old": "            var __operitJavaInstanceProxies = {};",
+    "new": "            function nativeJavaRequest(operation, values) {\n                var request = Object.assign({ operation: operation }, values || {});\n                return NativeInterface.legacyJavaDispatch(request);\n            }\n            // Imported packages use real JVM objects; this does not impersonate absent Operit 1 classes.\n            NativeInterface.javaClassExists = function(className) {\n                var result = JSON.parse(nativeJavaRequest('classExists', {className:className}));\n                return result.success === true && result.data === true;\n            };\n            NativeInterface.javaGetApplicationContext = function() { return nativeJavaRequest('context'); };\n            NativeInterface.javaNewInstance = function(className, args) { return nativeJavaRequest('new',{className:className,args:JSON.parse(args)}); };\n            NativeInterface.javaCallStatic = function(className, member, args) { return nativeJavaRequest('callStatic',{className:className,member:member,args:JSON.parse(args)}); };\n            NativeInterface.javaCallStaticSuspend = function(className, member, args) { return nativeJavaRequest('callSuspendStatic',{className:className,member:member,args:JSON.parse(args)}); };\n            NativeInterface.javaCallInstance = function(handle, member, args) { return nativeJavaRequest('call',{handle:handle,member:member,args:JSON.parse(args)}); };\n            NativeInterface.javaCallInstanceSuspend = function(handle, member, args) { return nativeJavaRequest('callSuspend',{handle:handle,member:member,args:JSON.parse(args)}); };\n            NativeInterface.javaGetStaticField = function(className, member) { return nativeJavaRequest('getStatic',{className:className,member:member}); };\n            NativeInterface.javaSetStaticField = function(className, member, value) { return nativeJavaRequest('setStatic',{className:className,member:member,value:JSON.parse(value)}); };\n            NativeInterface.javaGetInstanceField = function(handle, member) { return nativeJavaRequest('get',{handle:handle,member:member}); };\n            NativeInterface.javaSetInstanceField = function(handle, member, value) { return nativeJavaRequest('set',{handle:handle,member:member,value:JSON.parse(value)}); };\n\n            var __operitJavaInstanceProxies = {};"
+  },
+  {
+    "name": "legacy-java-instance-suspend-and-release",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsJavaBridge.rs",
+    "old": "                    toJSON: function() {\n                        return {\n                            __javaHandle: handle,",
+    "new": "                    callSuspend: function(methodName) {\n                        var args = Array.prototype.slice.call(arguments, 1);\n                        return Promise.resolve(invokeBridge('javaCallInstanceSuspend', [handle, String(methodName), JSON.stringify(normalizeArgs(args))]));\n                    },\n                    release: function() {\n                        delete __operitJavaInstanceProxies[handle];\n                        return parseBridgeResult(nativeJavaRequest('release', {handle:handle}));\n                    },\n                    toJSON: function() {\n                        return {\n                            __javaHandle: handle,"
+  },
+  {
+    "name": "legacy-java-instance-fields-and-methods",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsJavaBridge.rs",
+    "old": "                        return function() {\n                            var args = Array.prototype.slice.call(arguments);\n                            return invokeBridge('javaCallInstance', [\n                                handle,\n                                prop,\n                                JSON.stringify(normalizeArgs(args))\n                            ]);\n                        };\n                    }\n                });",
+    "new": "                        var member = parseBridgeResult(nativeJavaRequest('member', {handle:handle, member:prop}));\n                        if (member.kind === 'value') return normalizeBridgeValue(member.value);\n                        return function() {\n                            var args = Array.prototype.slice.call(arguments);\n                            return invokeBridge('javaCallInstance', [\n                                handle,\n                                prop,\n                                JSON.stringify(normalizeArgs(args))\n                            ]);\n                        };\n                    },\n                    set: function(obj, prop, value) {\n                        if (prop in obj) { obj[prop] = value; return true; }\n                        invokeBridge('javaSetInstanceField', [handle, String(prop), JSON.stringify(value)]);\n                        return true;\n                    }\n                });"
+  },
+  {
+    "name": "legacy-java-recursive-array-results",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsJavaBridge.rs",
+    "old": "            function normalizeBridgeValue(value) {\n                if (",
+    "new": "            function normalizeBridgeValue(value) {\n                if (Array.isArray(value)) return value.map(normalizeBridgeValue);\n                if ("
+  },
+  {
+    "name": "legacy-java-dex-loading-api",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsJavaBridge.rs",
+    "old": "            var JavaApi = {\n                type:",
+    "new": "            var JavaApi = {\n                loadJar: function(path, options) { return parseBridgeResult(nativeJavaRequest('load', {type:'jar',path:path,options:options || {}})); },\n                loadDex: function(path, options) { return parseBridgeResult(nativeJavaRequest('load', {type:'dex',path:path,options:options || {}})); },\n                listLoadedArtifacts: function() { return parseBridgeResult(nativeJavaRequest('artifacts')); },\n                type:"
+  },
+  {
+    "name": "legacy-java-android-host-entry",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "old": "    private val applicationContext = context.applicationContext\n",
+    "new": "    private val applicationContext = context.applicationContext\n    private val legacyJavaHost by lazy { LegacyJavaHost(applicationContext) }\n\n    /** JNI entry for Java object operations used by imported packages. */\n    fun legacyJavaCall(requestJson: String): String = legacyJavaHost.call(requestJson)\n"
+  },
+  {
+    "name": "legacy-java-android-bridge-dependency",
+    "path": "apps/flutter/native/operit-flutter-bridge/Cargo.toml",
+    "old": "[target.'cfg(target_os = \"android\")'.dependencies]\njni = \"0.21\"",
+    "new": "[target.'cfg(target_os = \"android\")'.dependencies]\noperit-js-bridge = { path = \"../../../../core/crates/plugin/javascript-bridge\" }\njni = \"0.21\""
+  },
+  {
+    "name": "legacy-java-connect-android-jvm",
+    "path": "apps/flutter/native/operit-flutter-bridge/src/AndroidJni.rs",
+    "old": "    if let Err(error) = operit_host_android_native::setAndroidHostSecretStoreBridge(java_vm, host) {",
+    "new": "    let legacy_vm = match env.get_java_vm() {\n        Ok(value) => value,\n        Err(error) => { set_last_create_error(error.to_string()); return 0; }\n    };\n    let legacy_host = host.clone();\n    operit_js_bridge::javascript::JsJavaBridgeDelegates::installLegacyJavaDispatch(\n        std::sync::Arc::new(move |request| {\n            let mut env = legacy_vm.attach_current_thread().map_err(|error| error.to_string())?;\n            env.with_local_frame(16, |env| -> jni::errors::Result<String> {\n                let request = env.new_string(request)?;\n                let request_object = JObject::from(request);\n                let result = match env.call_method(\n                    legacy_host.as_obj(), \"legacyJavaCall\", \"(Ljava/lang/String;)Ljava/lang/String;\",\n                    &[jni::objects::JValue::Object(&request_object)],\n                ) {\n                    Ok(result) => result,\n                    Err(error) => { let _ = env.exception_clear(); return Err(error); }\n                }.l()?;\n                let result = JString::from(result);\n                let text = env.get_string(&result)?;\n                Ok(String::from(text))\n            }).map_err(|error| error.to_string())\n        }),\n    );\n    if let Err(error) = operit_host_android_native::setAndroidHostSecretStoreBridge(java_vm, host) {"
+  },
+  {
+    "name": "legacy-java-reflection-keep",
+    "path": "apps/flutter/app/android/app/proguard-rules.pro",
+    "old": "-keep class app.operit.OperitRuntimeNative {\n    *;\n}",
+    "new": "-keep class app.operit.OperitRuntimeNative {\n    *;\n}\n\n# Concrete Java classes used by imported packages.\n-keep class app.operit.LegacyJavaHost { *; }\n-keep class app.operit.util.OCRUtils** { *; }\n-keep class com.android.apksig.** { *; }\n-keep class com.ai.assistance.operit.core.subpack.KeyStoreHelper { *; }\n-keep class app.operit.LegacyAndroidTools { *; }\n-keep class app.operit.LegacyVirtualDisplays { *; }\n-keep class app.operit.LegacyWorkflowAndroidBridge { *; }\n"
+  },
+  {
+    "name": "legacy-apk-signing-library",
+    "path": "apps/flutter/app/android/app/build.gradle.kts",
+    "old": "dependencies {\n    implementation(\"com.google.mlkit:text-recognition:16.0.0\")",
+    "new": "dependencies {\n    implementation(\"com.android.tools.build:apksig:8.9.1\")\n    implementation(\"com.google.mlkit:text-recognition:16.0.0\")"
+  },
+  {
+    "name": "legacy-background-interval-timers",
+    "path": "core/crates/plugin/javascript-bridge/src/javascript/JsLibraries.rs",
+    "old": "        var setTimeout = NativeInterface.setTimeout;\n        var clearTimeout = NativeInterface.clearTimeout;",
+    "new": "        var setTimeout = NativeInterface.setTimeout;\n        var clearTimeout = NativeInterface.clearTimeout;\n        var __operitIntervals = new Map();\n        var __operitIntervalSequence = 0;\n        function setInterval(callback, delay) {{\n            var args = Array.prototype.slice.call(arguments, 2);\n            var id = ++__operitIntervalSequence;\n            var interval = {{ timer: null }};\n            __operitIntervals.set(id, interval);\n            function tick() {{\n                if (!__operitIntervals.has(id)) return;\n                try {{ callback.apply(undefined, args); }}\n                finally {{\n                    if (__operitIntervals.has(id)) interval.timer = setTimeout(tick, Math.max(1, Number(delay) || 0));\n                }}\n            }}\n            interval.timer = setTimeout(tick, Math.max(1, Number(delay) || 0));\n            return id;\n        }}\n        function clearInterval(id) {{\n            var interval = __operitIntervals.get(id);\n            if (!interval) return;\n            __operitIntervals.delete(id);\n            clearTimeout(interval.timer);\n        }}"
+  },
+  {
+    "name": "legacy-bind-tool-command-executor",
+    "path": "core/crates/tool/services/src/tools/AIToolHandler.rs",
+    "old": "    /// Returns the dependency set associated with this handler.\n",
+    "new": "    /// Binds the existing application command executor after proxy initialization.\n    pub fn bindCoreCommandExecutor(&self, executor: operit_host_api::HostManager::CoreCommandExecutor) {\n        self.inner.lock().expect(\"AIToolHandler mutex poisoned\").context.coreCommandExecutor = Some(executor);\n    }\n\n    /// Returns the dependency set associated with this handler.\n"
+  },
+  {
+    "name": "legacy-bind-existing-application-executor",
+    "path": "core/crates/proxy/local/src/lib.rs",
+    "old": "    /// Returns the runtime storage capability owned by this local core.\n",
+    "new": "    /// Makes plugin CLI calls operate on this application, not a separately initialized runtime.\n    #[cfg(not(target_arch = \"wasm32\"))]\n    pub fn bindLocalCoreCommandExecutor(&mut self) -> Result<(), String> {\n        let toolHandler = self.localApplicationMut().toolHandler.clone();\n        let weakApplication = Arc::downgrade(&self.application);\n        let executor: operit_host_api::HostManager::CoreCommandExecutor = Arc::new(move |args| {\n            let application = weakApplication.upgrade().ok_or(\"The local application has stopped\")?;\n            let (sender, receiver) = std::sync::mpsc::sync_channel(1);\n            operit_host_api::HostRuntimeTaskSchedulerHost::scheduleHostRuntimeAsyncTask(\n                operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost().as_ref(),\n                \"plugin-core-command\",\n                Box::new(move || Box::pin(async move {\n                    let mut application = application.lock().await;\n                    let result = operit_command_core::run_core_command(&mut application, &args).map(|output| output.stdout);\n                    let _ = sender.send(result);\n                })),\n            ).map_err(|error| error.to_string())?;\n            receiver.recv().map_err(|error| error.to_string())?\n        });\n        toolHandler.bindCoreCommandExecutor(executor.clone());\n        self.hostManager.coreCommandExecutor = Some(executor.clone());\n        self.application.try_lock().map_err(|error| error.to_string())?.hostManager.coreCommandExecutor = Some(executor);\n        Ok(())\n    }\n\n    /// Returns the runtime storage capability owned by this local core.\n"
+  },
+  {
+    "name": "legacy-enable-flutter-plugin-core-commands",
+    "path": "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
+    "old": "        let chatRuntimeHolder = core.localApplicationMut().chatRuntimeHolder.clone();\n        let runtimeStorageHost",
+    "new": "        let chatRuntimeHolder = core.localApplicationMut().chatRuntimeHolder.clone();\n        #[cfg(not(target_arch = \"wasm32\"))]\n        core.bindLocalCoreCommandExecutor()?;\n        let runtimeStorageHost"
+  },
+  {
+    "name": "legacy-cancel-native-planning-with-hook",
+    "path": "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgMessageProcessingBridge.rs",
+    "old": "    manager.releaseToolPkgExecutionEngine(executionId, containerPackageName);\n",
+    "new": "    operit_plugin_sdk::legacy_planning_cancellation::cancel_parent(executionId);\n    manager.releaseToolPkgExecutionEngine(executionId, containerPackageName);\n"
+  }
+]

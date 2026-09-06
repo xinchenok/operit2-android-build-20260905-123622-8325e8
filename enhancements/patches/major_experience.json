@@ -1,0 +1,74 @@
+[
+  {
+    "name": "group-send-keeps-explicit-conversation-owner",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "            let chatId = self\n                .chatHistoryDelegate\n                .currentChatIdFlow\n                .value()\n                .unwrap_or_else(|| {",
+    "new": "            let chatId = chatIdOverride\n                .clone()\n                .filter(|id| !id.trim().is_empty())\n                .or_else(|| self.chatHistoryDelegate.currentChatIdFlow.value())\n                .unwrap_or_else(|| {"
+  },
+  {
+    "name": "explicit-chat-route-still-runs-character-group-orchestration",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        if chatIdOverride\n            .as_ref()\n            .map(|value| !value.trim().is_empty())\n            .unwrap_or(false)\n        {\n            return false;\n        }\n        matches!(\n            self.activePromptManager.getActivePrompt(),\n            Ok(ActivePrompt::CharacterGroup { .. })\n        )",
+    "new": "        let targetChatId = chatIdOverride\n            .filter(|id| !id.trim().is_empty())\n            .or_else(|| self.chatHistoryDelegate.currentChatIdFlow.value());\n        targetChatId\n            .as_deref()\n            .and_then(|chatId| self.resolveTargetGroupForChat(chatId))\n            .is_some()"
+  },
+  {
+    "name": "resolve-group-from-owning-chat-before-global-selection",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "        let activePrompt = self.activePromptManager.getActivePrompt().ok()?;\n        let activeGroupId = match activePrompt {\n            ActivePrompt::CharacterGroup { id } if !id.trim().is_empty() => id,\n            _ => return None,\n        };\n        let _boundGroupId = self\n            .chatHistoryDelegate\n            .chatHistoriesFlow\n            .value()\n            .iter()\n            .find(|history| history.id == chatId)\n            .and_then(|history| history.characterGroupId.clone())\n            .filter(|value| !value.trim().is_empty());\n        self.characterGroupCardManager\n            .getCharacterGroupCard(&activeGroupId)\n            .ok()\n            .flatten()",
+    "new": "        let targetChat = self\n            .chatHistoryDelegate\n            .chatHistoriesFlow\n            .value()\n            .into_iter()\n            .find(|history| history.id == chatId);\n        let boundGroupId = targetChat\n            .as_ref()\n            .and_then(|history| history.characterGroupId.clone())\n            .filter(|value| !value.trim().is_empty());\n        if let Some(groupId) = boundGroupId {\n            return self.characterGroupCardManager\n                .getCharacterGroupCard(&groupId)\n                .ok()\n                .flatten();\n        }\n        // A background send for a single-role chat must not adopt the group\n        // currently selected in another chat surface.\n        if targetChat\n            .as_ref()\n            .and_then(|history| history.characterCardName.as_ref())\n            .is_some_and(|name| !name.trim().is_empty())\n        {\n            return None;\n        }\n        let activeGroupId = match self.activePromptManager.getActivePrompt().ok()? {\n            ActivePrompt::CharacterGroup { id } if !id.trim().is_empty() => id,\n            _ => return None,\n        };\n        self.characterGroupCardManager\n            .getCharacterGroupCard(&activeGroupId)\n            .ok()\n            .flatten()"
+  },
+  {
+    "name": "capture-submit-attachments-before-async-hook",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    final text = _messageController.text.trim();\n    final hasAttachments = _attachments.isNotEmpty;\n    if (text.isEmpty && !hasAttachments) {",
+    "new": "    final text = _messageController.text.trim();\n    final inputAttachments = List<AttachmentInfo>.unmodifiable(_attachments);\n    final hasAttachments = inputAttachments.isNotEmpty;\n    if (text.isEmpty && !hasAttachments) {"
+  },
+  {
+    "name": "attachment-edits-during-hook-retain-new-draft",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "      attachmentCount: _attachments.length,\n    );\n    if (!mounted || _currentChatId != chatId ||\n        _messageController.value != inputValue || _replyToMessage != inputReply) {",
+    "new": "      attachmentCount: inputAttachments.length,\n    );\n    if (!mounted || _currentChatId != chatId ||\n        _messageController.value != inputValue || _replyToMessage != inputReply ||\n        inputAttachments.length != _attachments.length ||\n        !inputAttachments.every((attachment) => _attachments.any(\n          (current) => current.filePath == attachment.filePath,\n        ))) {"
+  },
+  {
+    "name": "consumed-hook-clears-only-its-own-attachments",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "          _messageController.clear();\n          await _viewModel.clearAttachments();",
+    "new": "          _messageController.clear();\n          for (final attachment in inputAttachments) {\n            await _viewModel.removeAttachment(attachment.filePath);\n          }\n          await _refreshAttachments();"
+  },
+  {
+    "name": "pass-captured-submit-attachments-to-layout",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    _startSendMessageText(submittedText, chatId!);",
+    "new": "    _startSendMessageText(submittedText, chatId!, inputAttachments);"
+  },
+  {
+    "name": "layout-send-retains-submit-attachment-snapshot",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "  void _startSendMessageText(String text, String chatId) {",
+    "new": "  void _startSendMessageText(\n    String text,\n    String chatId,\n    List<AttachmentInfo> submittedAttachments,\n  ) {"
+  },
+  {
+    "name": "deferred-send-retains-submit-attachment-snapshot",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    _sendMessageAfterNextFrame(text, chatId);",
+    "new": "    _sendMessageAfterNextFrame(text, chatId, submittedAttachments);"
+  },
+  {
+    "name": "frame-callback-uses-submitted-attachments",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "  void _sendMessageAfterNextFrame(String text, String chatId) {",
+    "new": "  void _sendMessageAfterNextFrame(\n    String text,\n    String chatId,\n    List<AttachmentInfo> submittedAttachments,\n  ) {"
+  },
+  {
+    "name": "send-never-rereads-another-drafts-attachments",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "            replyToMessage: submittedReply,\n            chatIdOverride: chatId,\n          )",
+    "new": "            replyToMessage: submittedReply,\n            chatIdOverride: chatId,\n            attachmentsOverride: submittedAttachments,\n          )"
+  },
+  {
+    "name": "accepted-send-preserves-attachments-added-while-awaiting",
+    "path": "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart",
+    "old": "    if (attachments.isNotEmpty) {\n      await _chat.clearAttachments();\n    }",
+    "new": "    // The runtime call can await a group turn or hook. Keep attachments\n    // added for the next draft while this send was pending.\n    for (final attachment in attachments) {\n      await _chat.removeAttachment(filePath: attachment.filePath);\n    }"
+  }
+]

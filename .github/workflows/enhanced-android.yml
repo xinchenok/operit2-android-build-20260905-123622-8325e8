@@ -2,7 +2,7 @@ name: Build enhanced Android
 on:
   workflow_dispatch:
   push:
-    branches: [enhancement/two-build-channels]
+    branches: [enhancement/two-build-channels, enhancement/legacy-runtime-import]
     paths:
       - 'ci/enhanced-build-request.txt'
 run-name: Build enhanced Android ${{ github.run_number }}

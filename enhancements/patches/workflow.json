@@ -1,0 +1,74 @@
+[
+  {
+    "name": "register-enhanced-legacy-workflow-command-module",
+    "path": "core/crates/command/core/src/commands/mod.rs",
+    "old": "mod usage;",
+    "new": "mod usage;\nmod legacy_workflow;"
+  },
+  {
+    "name": "route-enhanced-legacy-workflow-commands",
+    "path": "core/crates/command/core/src/commands/mod.rs",
+    "old": "        \"usage\" => usage::run_usage_command(application, &args[1..], output),",
+    "new": "        \"usage\" => usage::run_usage_command(application, &args[1..], output),\n        \"legacy-workflow\" => legacy_workflow::run_workflow_command(application, &args[1..], output),"
+  },
+  {
+    "name": "register-enhanced-workflow-runtime-service",
+    "path": "core/crates/runtime/application/src/services/mod.rs",
+    "old": "#[path = \"RuntimeEventIngressService.rs\"]",
+    "new": "#[path = \"LegacyWorkflowService.rs\"]\npub mod LegacyWorkflowService;\n#[path = \"RuntimeEventIngressService.rs\"]"
+  },
+  {
+    "name": "share-host-schedule-reconciliation-with-workflows",
+    "path": "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgHostEventHookBridge.rs",
+    "old": "fn syncHostEventSchedules(runtime: &ToolPkgBridgeRuntime) {",
+    "new": "pub(crate) fn syncHostEventSchedules(runtime: &ToolPkgBridgeRuntime) {"
+  },
+  {
+    "name": "merge-workflow-timers-with-existing-toolpkg-schedules",
+    "path": "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgHostEventHookBridge.rs",
+    "old": "    let schedules = hooks\n        .iter()\n        .filter(|hook| hook.enabled)\n        .filter_map(hostEventSchedule)\n        .collect::<Vec<_>>();\n    let hostManager = runtime.host_manager();",
+    "new": "    let mut schedules = hooks\n        .iter()\n        .filter(|hook| hook.enabled)\n        .filter_map(hostEventSchedule)\n        .collect::<Vec<_>>();\n    schedules.extend(crate::services::LegacyWorkflowService::LegacyWorkflowService::schedules(runtime));\n    let hostManager = runtime.host_manager();"
+  },
+  {
+    "name": "dispatch-workflow-timers-with-independent-identity",
+    "path": "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgHostEventHookBridge.rs",
+    "old": "fn dispatchScheduledHostEvent(runtime: &ToolPkgBridgeRuntime, fire: HostRuntimeEventScheduleFire) {\n    let hook = HOST_EVENT_HOOKS",
+    "new": "fn dispatchScheduledHostEvent(runtime: &ToolPkgBridgeRuntime, fire: HostRuntimeEventScheduleFire) {\n    if crate::services::LegacyWorkflowService::LegacyWorkflowService::scheduled(runtime, &fire) {\n        return;\n    }\n    let hook = HOST_EVENT_HOOKS"
+  },
+  {
+    "name": "restore-persisted-workflows-after-plugin-initialization",
+    "path": "core/crates/runtime/application/src/core/application/OperitApplication.rs",
+    "old": "        PluginRegistry::initializeBuiltins(self.toolPkgBridgeRuntime.clone());\n        AppLogger::i(",
+    "new": "        PluginRegistry::initializeBuiltins(self.toolPkgBridgeRuntime.clone());\n        crate::services::LegacyWorkflowService::LegacyWorkflowService::initialize(&self.toolPkgBridgeRuntime);\n        AppLogger::i("
+  },
+  {
+    "name": "accept-real-workflow-host-events-before-closed-topic-deserialization",
+    "path": "core/crates/runtime/application/src/services/RuntimeEventIngressService.rs",
+    "old": "            .startHostRuntimeEventStream(Arc::new(move |eventValue| {\n                match serde_json::from_value::<RuntimeEvent>(eventValue) {",
+    "new": "            .startHostRuntimeEventStream(Arc::new(move |eventValue| {\n                if eventValue.get(\"topic\").and_then(Value::as_str).is_some_and(|topic| topic.starts_with(\"legacy.workflow.\")) {\n                    crate::services::LegacyWorkflowService::LegacyWorkflowService::event(&handlerToolPkgRuntime, &eventValue);\n                    return;\n                }\n                match serde_json::from_value::<RuntimeEvent>(eventValue) {"
+  },
+  {
+    "name": "forward-standard-host-events-to-legacy-workflow-triggers",
+    "path": "core/crates/runtime/application/src/services/RuntimeEventIngressService.rs",
+    "old": "        dispatchAppLifecycleEvent(&self.toolpkg_runtime, &event, payload.clone());\n        ToolPkgHostEventHookBridge::dispatchHostEvent",
+    "new": "        dispatchAppLifecycleEvent(&self.toolpkg_runtime, &event, payload.clone());\n        crate::services::LegacyWorkflowService::LegacyWorkflowService::event(&self.toolpkg_runtime, &payload);\n        ToolPkgHostEventHookBridge::dispatchHostEvent"
+  },
+  {
+    "name": "dispatch-successful-current-stt-to-workflow-speech-triggers",
+    "path": "core/crates/runtime/application/src/services/SttRecognitionService.rs",
+    "old": "        let config = self.configManager.getCurrentSttConfig()?;\n        self.transcribeWithConfig(config, audioBytes, fileName, contentType, language)",
+    "new": "        let config = self.configManager.getCurrentSttConfig()?;\n        let result = self.transcribeWithConfig(config, audioBytes, fileName, contentType, language)?;\n        crate::services::LegacyWorkflowService::LegacyWorkflowService::speech(&result.text, true);\n        Ok(result)"
+  },
+  {
+    "name": "dispatch-successful-selected-stt-to-workflow-speech-triggers",
+    "path": "core/crates/runtime/application/src/services/SttRecognitionService.rs",
+    "old": "        let config = self.configManager.getSttConfig(&configId)?;\n        self.transcribeWithConfig(config, audioBytes, fileName, contentType, language)",
+    "new": "        let config = self.configManager.getSttConfig(&configId)?;\n        let result = self.transcribeWithConfig(config, audioBytes, fileName, contentType, language)?;\n        crate::services::LegacyWorkflowService::LegacyWorkflowService::speech(&result.text, true);\n        Ok(result)"
+  },
+  {
+    "name": "accept-android-workflow-event-ingress-without-closed-enum-rejection",
+    "path": "core/crates/runtime/application/src/core/application/OperitApplication.rs",
+    "old": "    pub fn ingestRuntimeEvent(&self, event: RuntimeEvent) -> serde_json::Value {\n        crate::services::RuntimeEventIngressService::RuntimeEventIngressService::getInstance(",
+    "new": "    pub fn ingestRuntimeEvent(&self, event: serde_json::Value) -> serde_json::Value {\n        if event.get(\"topic\").and_then(serde_json::Value::as_str).is_some_and(|topic| topic.starts_with(\"legacy.workflow.\")) {\n            crate::services::LegacyWorkflowService::LegacyWorkflowService::event(&self.toolPkgBridgeRuntime, &event);\n            return serde_json::json!({\"ok\": true});\n        }\n        let event = match serde_json::from_value::<RuntimeEvent>(event) {\n            Ok(event) => event,\n            Err(error) => return serde_json::json!({\"ok\": false, \"error\": error.to_string()}),\n        };\n        crate::services::RuntimeEventIngressService::RuntimeEventIngressService::getInstance("
+  }
+]

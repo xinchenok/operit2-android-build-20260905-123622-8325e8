@@ -1,0 +1,110 @@
+[
+  {
+    "name": "enhanced-disclaimer-import",
+    "path": "apps/flutter/app/lib/main.dart",
+    "old": "import 'ui/main/OperitApp.dart';",
+    "new": "import 'ui/main/OperitApp.dart';\nimport 'ui/common/EnhancedDisclaimerGate.dart';"
+  },
+  {
+    "name": "enhanced-disclaimer-before-main-ui",
+    "path": "apps/flutter/app/lib/main.dart",
+    "old": "child: const FatalErrorHost(child: OperitApp()),",
+    "new": "child: const FatalErrorHost(\n        child: EnhancedDisclaimerGate(child: OperitApp()),\n      ),"
+  },
+  {
+    "name": "enhanced-disclaimer-backward-compatible-config-field",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapModels.dart",
+    "old": "    required this.activeIdentityId,\n    required this.updatedAt,\n  });",
+    "new": "    required this.activeIdentityId,\n    required this.updatedAt,\n    this.enhancedDisclaimerAccepted = false,\n  });"
+  },
+  {
+    "name": "enhanced-disclaimer-read-old-and-new-bootstrap",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapModels.dart",
+    "old": "      confirmed: json['confirmed'] as bool,\n      runtimeRoot: json['runtimeRoot'] as String,",
+    "new": "      confirmed: json['confirmed'] as bool,\n      enhancedDisclaimerAccepted:\n          json['enhancedDisclaimerAccepted'] as bool? ?? false,\n      runtimeRoot: json['runtimeRoot'] as String,"
+  },
+  {
+    "name": "enhanced-disclaimer-config-property",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapModels.dart",
+    "old": "  final bool confirmed;\n  final String runtimeRoot;",
+    "new": "  final bool confirmed;\n  final bool enhancedDisclaimerAccepted;\n  final String runtimeRoot;"
+  },
+  {
+    "name": "enhanced-disclaimer-config-copy-argument",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapModels.dart",
+    "old": "  LocalRuntimeStorageConfig copyWith({\n    bool? confirmed,\n    String? runtimeRoot,",
+    "new": "  LocalRuntimeStorageConfig copyWith({\n    bool? confirmed,\n    bool? enhancedDisclaimerAccepted,\n    String? runtimeRoot,"
+  },
+  {
+    "name": "enhanced-disclaimer-config-copy-value",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapModels.dart",
+    "old": "      confirmed: confirmed ?? this.confirmed,\n      runtimeRoot: runtimeRoot ?? this.runtimeRoot,",
+    "new": "      confirmed: confirmed ?? this.confirmed,\n      enhancedDisclaimerAccepted:\n          enhancedDisclaimerAccepted ?? this.enhancedDisclaimerAccepted,\n      runtimeRoot: runtimeRoot ?? this.runtimeRoot,"
+  },
+  {
+    "name": "enhanced-disclaimer-persist-config",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapModels.dart",
+    "old": "      'confirmed': confirmed,\n      'runtimeRoot': runtimeRoot,",
+    "new": "      'confirmed': confirmed,\n      'enhancedDisclaimerAccepted': enhancedDisclaimerAccepted,\n      'runtimeRoot': runtimeRoot,"
+  },
+  {
+    "name": "enhanced-disclaimer-save-before-opening",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapManager.dart",
+    "old": "  /// Returns native storage paths for the stored local runtime config.\n  Future<RuntimeStoragePaths> localRuntimeStoragePaths() {",
+    "new": "  /// Records acknowledgement independently of the selected identity.\n  Future<void> acceptEnhancedDisclaimer() async {\n    final acceptedConfig = _config.copyWith(\n      enhancedDisclaimerAccepted: true,\n      updatedAt: DateTime.now().millisecondsSinceEpoch,\n    );\n    // Only publish acceptance after persistence succeeds.\n    await _writeBootstrapConfig(acceptedConfig);\n    await _apply(acceptedConfig, persist: false);\n  }\n\n  /// Returns native storage paths for the stored local runtime config.\n  Future<RuntimeStoragePaths> localRuntimeStoragePaths() {"
+  },
+  {
+    "name": "enhanced-disclaimer-retain-after-storage-confirmation",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapManager.dart",
+    "old": "      'confirm local runtime storage start runtimeRoot=$runtimeRoot workspaceRoot=$workspaceRoot',\n      tag: _logTag,\n    );\n    final localStorage = LocalRuntimeStorageConfig(\n      confirmed: true,\n      runtimeRoot: runtimeRoot.trim(),",
+    "new": "      'confirm local runtime storage start runtimeRoot=$runtimeRoot workspaceRoot=$workspaceRoot',\n      tag: _logTag,\n    );\n    final localStorage = LocalRuntimeStorageConfig(\n      confirmed: true,\n      enhancedDisclaimerAccepted: _config.enhancedDisclaimerAccepted,\n      runtimeRoot: runtimeRoot.trim(),"
+  },
+  {
+    "name": "enhanced-disclaimer-retain-after-storage-migration",
+    "path": "apps/flutter/app/lib/core/runtime/RuntimeBootstrapManager.dart",
+    "old": "      'persist migrated local runtime storage start runtimeRoot=$runtimeRoot workspaceRoot=$workspaceRoot',\n      tag: _logTag,\n    );\n    final localStorage = LocalRuntimeStorageConfig(\n      confirmed: true,\n      runtimeRoot: runtimeRoot.trim(),",
+    "new": "      'persist migrated local runtime storage start runtimeRoot=$runtimeRoot workspaceRoot=$workspaceRoot',\n      tag: _logTag,\n    );\n    final localStorage = LocalRuntimeStorageConfig(\n      confirmed: true,\n      enhancedDisclaimerAccepted: _config.enhancedDisclaimerAccepted,\n      runtimeRoot: runtimeRoot.trim(),"
+  },
+  {
+    "name": "restore-persisted-roots-before-native-runtime-start",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "old": "            val startedAtMillis = System.currentTimeMillis()\n            updateRuntimeStartupStatus(\"preparingAssets\", \"正在准备本地运行时资源\")",
+    "new": "            check(restoreStorageRoots()) {\n                \"Runtime storage has not been confirmed; complete application setup first\"\n            }\n            val startedAtMillis = System.currentTimeMillis()\n            updateRuntimeStartupStatus(\"preparingAssets\", \"正在准备本地运行时资源\")"
+  },
+  {
+    "name": "restore-selected-identity-on-service-process-recreation",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "old": "    /** Returns the active native runtime handle, creating it when required. */\n    fun ensureRuntimeHandle(): Long {",
+    "new": "    /** Returns whether Flutter or persisted bootstrap state configured this process. */\n    fun hasStorageRoots(): Boolean =\n        configuredRuntimeRoot != null && configuredWorkspaceRoot != null\n\n    /** Restores the selected identity when Android recreates a service without Flutter. */\n    fun restoreStorageRoots(): Boolean = synchronized(runtimeLock) {\n        if (hasStorageRoots()) {\n            return@synchronized true\n        }\n        val response = org.json.JSONObject(\n            OperitRuntimeNative.runtimeBootstrapRead(defaultRuntimeRootPath()),\n        )\n        check(response.getBoolean(\"ok\")) {\n            response.optString(\"error\", \"Unable to read runtime bootstrap configuration\")\n        }\n        if (response.isNull(\"value\")) {\n            return@synchronized false\n        }\n        val config = org.json.JSONObject(response.getString(\"value\"))\n        if (!config.optBoolean(\"confirmed\", false)) {\n            return@synchronized false\n        }\n        val identityId = config.getString(\"activeIdentityId\")\n        val identities = config.getJSONArray(\"identities\")\n        require(Regex(\"^identity-[a-z0-9-]+$\").matches(identityId) &&\n            (0 until identities.length()).any {\n                identities.getJSONObject(it).getString(\"id\") == identityId\n            }\n        ) { \"Runtime bootstrap active identity is invalid\" }\n        val runtimeBase = requiredAbsoluteRoot(config.getString(\"runtimeRoot\"), \"runtimeRoot\")\n        val workspaceBase = requiredAbsoluteRoot(config.getString(\"workspaceRoot\"), \"workspaceRoot\")\n        setStorageRoots(\n            File(runtimeBase, \"identities/$identityId\").absolutePath,\n            File(workspaceBase, \"identities/$identityId\").absolutePath,\n        )\n        true\n    }\n\n    /** Returns the active native runtime handle, creating it when required. */\n    fun ensureRuntimeHandle(): Long {"
+  },
+  {
+    "name": "cleared-data-service-waits-for-normal-onboarding",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/OperitCoreService.kt",
+    "old": "        runtimeHost.runBackground {\n            try {\n                runtimeHost.ensureRuntimeHandle()\n                mainHandler.post {",
+    "new": "        runtimeHost.runBackground {\n            try {\n                if (!runtimeHost.restoreStorageRoots()) {\n                    // A cleared application has no confirmed storage. Do not turn\n                    // a sticky service restart into a crash or create a new identity.\n                    mainHandler.post {\n                        if (!destroyed.get()) {\n                            runtimeStartRequested.set(false)\n                            if (runtimeHost.hasStorageRoots()) {\n                                ensureRuntimeStarted()\n                            } else {\n                                stopSelf()\n                            }\n                        }\n                    }\n                    return@runBackground\n                }\n                runtimeHost.ensureRuntimeHandle()\n                mainHandler.post {"
+  },
+  {
+    "name": "keep-main-thread-lifecycle-events-off-runtime-initialization-lock",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "old": "    private val runtimeLock = Any()\n    private val runtimeThreadIndex = AtomicInteger(0)",
+    "new": "    private val runtimeLock = Any()\n    private val runtimeEventLock = Any()\n    private val runtimeThreadIndex = AtomicInteger(0)"
+  },
+  {
+    "name": "publish-bootstrap-roots-without-blocking-main-thread",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "old": "    private var runtimeHandle: Long = 0\n    private val pendingRuntimeEvents = ArrayDeque<String>()\n    private var configuredRuntimeRoot: File? = null\n    private var configuredWorkspaceRoot: File? = null",
+    "new": "    @Volatile private var runtimeHandle: Long = 0\n    private val pendingRuntimeEvents = ArrayDeque<String>()\n    @Volatile private var configuredRuntimeRoot: File? = null\n    @Volatile private var configuredWorkspaceRoot: File? = null"
+  },
+  {
+    "name": "publish-ready-runtime-and-drain-startup-events-atomically",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "old": "                runtimeHandle = OperitRuntimeNative.create(\n                    paths.runtimeRoot.absolutePath,\n                    paths.workspaceRoot.absolutePath,\n                    this,\n                )\n                if (runtimeHandle == 0L) {\n                    updateRuntimeStartupStatus(\"failed\", \"本地运行时启动失败\")\n                    throw IllegalStateException(OperitRuntimeNative.createError())\n                }\n                flushPendingRuntimeEventsLocked()",
+    "new": "                val createdHandle = OperitRuntimeNative.create(\n                    paths.runtimeRoot.absolutePath,\n                    paths.workspaceRoot.absolutePath,\n                    this,\n                )\n                if (createdHandle == 0L) {\n                    updateRuntimeStartupStatus(\"failed\", \"本地运行时启动失败\")\n                    throw IllegalStateException(OperitRuntimeNative.createError())\n                }\n                synchronized(runtimeEventLock) {\n                    runtimeHandle = createdHandle\n                    flushPendingRuntimeEventsLocked()\n                }"
+  },
+  {
+    "name": "queue-android-lifecycle-events-without-blocking-cold-start",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "old": "        val eventJson = event.toString()\n        synchronized(runtimeLock) {\n            val handle = runtimeHandle",
+    "new": "        val eventJson = event.toString()\n        synchronized(runtimeEventLock) {\n            val handle = runtimeHandle"
+  }
+]

@@ -1,0 +1,24 @@
+Operit2 enhanced distribution: legacy FFmpeg tools
+
+Android dependency:
+io.github.jamaismagic.ffmpeg:ffmpeg-kit-main-full-gpl-16kb:6.1.4
+
+FFmpegKit source and build scripts:
+https://github.com/JamaisMagic/ffmpeg-kit-16KB
+https://github.com/arthenica/ffmpeg-kit
+
+FFmpeg source:
+https://ffmpeg.org/
+
+This is the full-gpl variant. It includes GPL-licensed codecs in addition to
+the LGPL components. The FFmpegKit/FFmpeg combined binary is distributed under
+the GNU General Public License version 3. This distribution's application
+source is available at https://github.com/xinchenok/operit2-android-cx and its
+upstream https://github.com/AAswordman/Operit2 under GNU AGPL version 3.
+
+License texts and corresponding build instructions are provided by the source
+repositories above. The Maven source archive for this exact Java wrapper is:
+https://repo.maven.apache.org/maven2/io/github/jamaismagic/ffmpeg/ffmpeg-kit-main-full-gpl-16kb/6.1.4/ffmpeg-kit-main-full-gpl-16kb-6.1.4-sources.jar
+
+No affiliation with or endorsement by the Operit, FFmpeg, or FFmpegKit teams
+is implied by this third-party distribution.

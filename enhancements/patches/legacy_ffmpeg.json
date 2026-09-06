@@ -1,0 +1,20 @@
+[
+  {
+    "name": "legacy-ffmpeg-real-arm64-engine-dependency",
+    "path": "apps/flutter/app/android/app/build.gradle.kts",
+    "old": "    implementation(\"org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0\")",
+    "new": "    implementation(\"org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0\")\n    implementation(\"io.github.jamaismagic.ffmpeg:ffmpeg-kit-main-full-gpl-16kb:6.1.4\")"
+  },
+  {
+    "name": "legacy-ffmpeg-required-android-api",
+    "path": "apps/flutter/app/android/app/build.gradle.kts",
+    "old": "        minSdk = flutter.minSdkVersion",
+    "new": "        minSdk = maxOf(flutter.minSdkVersion, 24)"
+  },
+  {
+    "name": "legacy-ffmpeg-preserve-javascript-reflection-entrypoints",
+    "path": "apps/flutter/app/android/app/proguard-rules.pro",
+    "old": "# Sherpa ONNX JNI resolves binding classes, constructors, fields, and methods by exact JVM names.",
+    "new": "# Legacy FFmpeg tool calls resolve this class through the enhanced Java bridge.\n-keep class app.operit.LegacyFfmpegBridge { *; }\n\n# Sherpa ONNX JNI resolves binding classes, constructors, fields, and methods by exact JVM names."
+  }
+]

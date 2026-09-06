@@ -1,7 +1,4 @@
-"""Bundle legacy build-whitelisted packages without replacing native Operit2 tools.
-
-Static API-name checks are not parameter, hook, native bridge or device tests.
-"""
+"""Build namespaced Operit1 packages with enhanced-only host adapters."""
 from __future__ import annotations
 import hashlib
 import importlib.util
@@ -14,7 +11,8 @@ import sys
 import zipfile
 from pathlib import Path
 
-REVISION = 'legacy-whitelist-js-toolpkg-v4'
+REVISION = 'legacy-host-adapters-v5'
+ENHANCEMENTS = Path(__file__).resolve().parents[1] / 'enhancements'
 METADATA = re.compile(r'/\*\s*METADATA\s*([\s\S]*?)\*/')
 NAME = re.compile(r'([\"\']?name[\"\']?\s*:\s*)([\"\'][^\"\']+[\"\']|[A-Za-z0-9_-]+)')
 ENABLED = re.compile(r'([\"\']?enabled(?:ByDefault|_by_default)[\"\']?\s*:\s*)(true|false)')
@@ -82,6 +80,80 @@ def known_methods(root: Path) -> set[str]:
     bindings = root/'core/crates/plugin/sdk/src/js_sdk/runtime_bindings.rs'
     return {ns+'.'+method for ns,method in re.findall(r'namespace: "([^"]+)", method: "([^"]+)"',bindings.read_text(encoding='utf-8'))}
 
+
+def adapter_methods() -> set[str]:
+    contracts = json.loads((ENHANCEMENTS/'legacy-tools/contracts.json').read_text(encoding='utf-8'))
+    return set(contracts['methods'])
+
+
+def check_native_contracts(classes: list[str] | set[str], package_id: str) -> None:
+    contracts = json.loads((ENHANCEMENTS/'legacy-native/native-contracts.json').read_text(encoding='utf-8'))
+    missing = sorted(set(classes)-set(contracts['supported_legacy_classes']))
+    if missing:
+        raise RuntimeError(f'Legacy package {package_id} still references unported Operit1 classes: {missing}')
+
+
+def wrap_host_script(source: str) -> str:
+    """Keep each package's compatibility bindings local, including ToolPkg helpers."""
+    if not re.search(r'\bTools\b', source):
+        return source
+    if re.search(r'^\s*(?:export\b|import\b(?!\s*\())', source, re.MULTILINE):
+        # Web UI modules use their explicit IPC bridge; they have no host Tools.
+        return source
+    factory = (ENHANCEMENTS/'legacy-tools/compat.js').read_text(encoding='utf-8')
+    return ('(function (baseTools) {\n' + factory + '\n'
+            '(function (Tools) {\n' + source + '\n'
+            '})(__operitCreateLegacyTools(baseTools));\n})(Tools);\n')
+
+
+def _prepare_legacy_sources(legacy: Path, sha: str) -> str:
+    """Apply reviewed source ports before tsc; include their bytes in its cache key."""
+    digest = hashlib.sha256((sha + REVISION).encode())
+    staged = {}
+    for family in ('legacy-native', 'legacy-tools'):
+        base = ENHANCEMENTS/family
+        overrides = base/'source-overrides'
+        if not overrides.exists():
+            continue
+        expected = json.loads((base/'expected-source-sha256.json').read_text(encoding='utf-8'))
+        for source in sorted(overrides.rglob('*')):
+            if not source.is_file():
+                continue
+            relative = source.relative_to(overrides).as_posix()
+            target = legacy/relative
+            data = source.read_bytes()
+            source_hash = hashlib.sha256(data).hexdigest()
+            old_hash = hashlib.sha256(target.read_bytes().replace(b'\r\n', b'\n')).hexdigest() if target.exists() else None
+            record = expected.get(relative)
+            accepted = record.get('source_sha256') if isinstance(record, dict) else record
+            if isinstance(record, dict) and record.get('patched_sha256') != source_hash:
+                raise RuntimeError(f'Enhanced source adapter digest is stale: {relative}')
+            if relative not in expected or old_hash not in (accepted, source_hash):
+                raise RuntimeError(f'Operit1 source changed; review enhanced adapter before replacing {relative}')
+            digest.update(relative.encode()); digest.update(data)
+            staged[target] = data
+    patches_path = ENHANCEMENTS/'legacy-tools/package-patches.json'
+    patches = json.loads(patches_path.read_text(encoding='utf-8')) if patches_path.exists() else []
+    for spec in patches:
+        package = spec['package']
+        if not re.fullmatch(r'[A-Za-z0-9_-]+', package):
+            raise RuntimeError(f'Invalid legacy source patch package: {package}')
+        relative = spec.get('path', f'examples/{package}.ts')
+        if Path(relative).is_absolute() or '..' in Path(relative).parts:
+            raise RuntimeError(f'Invalid legacy source patch path: {relative}')
+        target = legacy/relative
+        content = staged.get(target, target.read_bytes()).decode('utf-8-sig')
+        if spec['old'] in content:
+            content = content.replace(spec['old'], spec['new'])
+        elif spec['new'] not in content:
+            raise RuntimeError(f'Operit1 source patch needs review: {relative}')
+        staged[target] = content.encode()
+        digest.update(json.dumps(spec, sort_keys=True).encode())
+    for target, data in staged.items():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
+    return digest.hexdigest()
+
 def convert(source: str, filename: str, available: set[str]) -> tuple[str,dict]:
     match = METADATA.search(source)
     if not match:
@@ -104,25 +176,20 @@ def convert(source: str, filename: str, available: set[str]) -> tuple[str,dict]:
         metadata = trimmed+comma+'\n"enabledByDefault": false\n'+metadata[end:]
     body = source[:match.start()] + source[match.end():]
     required = sorted(set(TOOLS.findall(body)))
-    missing = sorted(set(required)-available)
+    adapted = adapter_methods()
+    missing = sorted(set(required)-available-adapted)
     host = host_dependencies(body)
-    # Shadow namespaces locally; never mutate global Tools or claim unsupported actions succeeded.
-    setup = ["const legacyTools = Object.create(baseTools);", "const copied = new Map([['', legacyTools]]);"]
-    for api in missing:
-        components=api.split('.')
-        for i in range(1,len(components)):
-            parent='.'.join(components[:i-1]); path='.'.join(components[:i]); key=components[i-1]
-            setup.append(f"if (!copied.has({json.dumps(path)})) {{ const parent = copied.get({json.dumps(parent)}); const child = Object.create(parent[{json.dumps(key)}] || null); parent[{json.dumps(key)}] = child; copied.set({json.dumps(path)}, child); }}")
-        message=f'Operit2 尚未提供旧版接口 Tools.{api}（工具包 {package_id}）；该操作需要移植，未执行。'
-        setup.append(f"copied.get({json.dumps('.'.join(components[:-1]))})[{json.dumps(components[-1])}] = function () {{ throw new Error({json.dumps(message,ensure_ascii=False)}); }};")
+    check_native_contracts(host['legacy_host_class_dependencies'], package_id)
+    if missing:
+        raise RuntimeError(f'Legacy package {package_id} has unported Tools methods: {missing}')
     wrapped=('/* METADATA\n'+metadata.strip()+'\n*/\n'
              '// Adapted for the enhanced Operit2 channel; see bundled legacy report and LICENSE.\n'
-             '(function (baseTools) {\n'+ '\n'.join(setup)+'\n'
-             '(function (Tools) {\n'+body+'\n})(legacyTools);\n})(Tools);\n')
+             + wrap_host_script(body))
     return wrapped, {'file':filename,'original_id':original_id,'package_id':package_id,
         'enabled_by_default':False,'required_methods':required,'missing_methods':missing,
+        'adapted_methods':sorted(set(required)&adapted),
         **host,
-        'status':'requires_host_port' if missing or host['legacy_host_class_dependencies'] else 'static_api_match_only',
+        'status':'host_adapters_bundled',
         'original_sha256':hashlib.sha256(source.encode()).hexdigest(),
         'packaged_sha256':hashlib.sha256(wrapped.encode()).hexdigest(),'device_tested':False}
 
@@ -178,17 +245,24 @@ def _convert_toolpkg(folder: Path, available: set[str], sync, legacy: Path) -> t
                 text = namespace_input_menu(text, original_id)
                 if METADATA.search(text):
                     text,_ = convert(text,name,available)
+                else:
+                    text = wrap_host_script(text)
                 data = text.encode()
                 check_javascript(data, f'{folder.name}/{name}')
             entry=zipfile.ZipInfo(name,date_time=(2020,1,1,0,0,0))
             entry.compress_type=zipfile.ZIP_DEFLATED
             archive.writestr(entry,data)
-    missing=sorted(required-available)
+    adapted=adapter_methods()
+    missing=sorted(required-available-adapted)
+    check_native_contracts(legacy_host_classes, package_id)
+    if missing:
+        raise RuntimeError(f'Legacy ToolPkg {package_id} has unported Tools methods: {missing}')
     return output.getvalue(), {'file':folder.name+'.toolpkg','original_id':original_id,
         'package_id':package_id,'enabled_by_default':False,'required_methods':sorted(required),
         'missing_methods':missing,'native_global_dependencies':sorted(native_globals),
+        'adapted_methods':sorted(required&adapted),
         'legacy_host_class_dependencies':sorted(legacy_host_classes),
-        'status':'requires_host_port' if missing or legacy_host_classes else 'static_api_match_only',
+        'status':'host_adapters_bundled',
         'device_tested':False}
 
 
@@ -203,7 +277,8 @@ def install(root: Path, legacy: Path, sha: str) -> dict:
         plans.append(plan)
     if not plans:
         raise RuntimeError('Legacy build whitelist is empty')
-    _compile_legacy(legacy,[p.source for p in plans if p.mode=='pack'],sha)
+    source_identity = _prepare_legacy_sources(legacy, sha)
+    _compile_legacy(legacy,[p.source for p in plans if p.mode=='pack'],source_identity)
     available=known_methods(root)
     dest=root/'plugins/packages/buildin'
     report_dir=root/'tools/release/dist/compatibility/legacy-operit'
@@ -240,6 +315,6 @@ def install(root: Path, legacy: Path, sha: str) -> dict:
             'packages':[item[1] for item in planned.values()], 'device_tested':False}
     old_report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     (report_dir/'UPSTREAM-LICENSE').write_bytes((legacy/'LICENSE').read_bytes())
-    (report_dir/'README.txt').write_text('Legacy packages are built from the official whitelist, namespaced and disabled by default. API names matching does not establish parameter/result, ToolPkg hook, Java/Android bridge compatibility or device behavior. Missing host API dependencies are listed in the report; no privileged or platform-specific API is silently emulated. Original sources and license are in Operit-legacy-source.zip. Do not enable a legacy hook plugin and the equivalent native plugin simultaneously.\n',encoding='utf-8')
+    (report_dir/'README.txt').write_text('Legacy packages are compiled from the official whitelist with the enhanced source ports and local Tools adapters, namespaced and disabled by default. The manifest records bundled host adapters; it does not claim every external service or Android device has been exercised. Android permissions, service credentials and remote companion software remain required where the original package requires them. Original sources and license are in Operit-legacy-source.zip; enhanced source changes are recorded alongside the build. Enable only one implementation of equivalent input hooks.\n',encoding='utf-8')
     print(f'Legacy whitelist: {len(planned)} packages bundled, including ToolPkg resources.',flush=True)
     return result

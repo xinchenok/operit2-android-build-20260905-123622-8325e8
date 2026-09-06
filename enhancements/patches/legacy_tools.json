@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Register enhanced legacy Tools host",
+    "path": "core/crates/command/core/src/commands/mod.rs",
+    "old": "mod approval;",
+    "new": "mod legacy_tools;\nmod approval;"
+  },
+  {
+    "name": "Dispatch enhanced legacy Tools host",
+    "path": "core/crates/command/core/src/commands/mod.rs",
+    "old": "        \"tool\" => tool::run_tool_command(application, &args[1..], output),",
+    "new": "        \"legacy-tools\" => legacy_tools::run(application, &args[1..], output),\n        \"tool\" => tool::run_tool_command(application, &args[1..], output),"
+  },
+  {
+    "name": "Expose legacy planner cancellation registry",
+    "path": "core/crates/plugin/sdk/src/lib.rs",
+    "old": "pub mod execution_result;",
+    "new": "pub mod legacy_planning_cancellation;\npub mod execution_result;"
+  },
+  {
+    "name": "Link command host to shared planner registry",
+    "path": "core/crates/command/core/Cargo.toml",
+    "old": "operit-model = { path = \"../../foundation/model\" }",
+    "new": "operit-model = { path = \"../../foundation/model\" }\noperit-plugin-sdk = { path = \"../../plugin/sdk\" }"
+  }
+]

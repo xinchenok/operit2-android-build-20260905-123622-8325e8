@@ -1,0 +1,8 @@
+[
+  {
+    "name": "avoid-destroying-in-use-native-bridge-during-process-restart",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidPlatformChannel.kt",
+    "old": "    /** Destroys the native Runtime and terminates the Android process cleanly. */\n    private fun terminateApplication(result: MethodChannel.Result) {\n        runtimeHost.runBackground {\n            try {\n                runtimeHost.destroy()\n                activity.stopService(",
+    "new": "    /** Stops the service and exits without freeing a bridge still used by native calls. */\n    private fun terminateApplication(result: MethodChannel.Result) {\n        runtimeHost.runBackground {\n            try {\n                // JNI calls share the process-level bridge. shutdownNow does not\n                // wait for them, so destroying its raw handle here races those\n                // calls. This path always kills the process; let process exit\n                // reclaim the handle after stopping the foreground service.\n                activity.stopService("
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "examples/deepsearching/src/operit2-host.ts": {
+    "source_sha256": "7bedb58fe3c3a5821f9976d9a74a3077f4be70abb79c1e4f97be8a5bfdef6445",
+    "patched_sha256": "d82c8e0cc3eefb3e5819aeec0d42477128f4dbeded3f596e71b48057c7523dfa"
+  },
+  "examples/deepsearching/src/prompt-turns.ts": {
+    "source_sha256": "34fc6ac142af3c1555ebd974d3bddf3754ac102faf7c739149cd166fafc17d31",
+    "patched_sha256": "34fc6ac142af3c1555ebd974d3bddf3754ac102faf7c739149cd166fafc17d31"
+  },
+  "examples/deepsearching/src/plugin/deep-search-plugin.ts": {
+    "source_sha256": "1c9dd67c8906fa4cd2a36120137fc8567079873222e8687fc9b2f858da821d86",
+    "patched_sha256": "1c9dd67c8906fa4cd2a36120137fc8567079873222e8687fc9b2f858da821d86"
+  },
+  "examples/deepsearching/src/planning/task-executor.ts": {
+    "source_sha256": "455c9ce41ad4a1697393261944d0e8ee87b6489c18dac48204c9a75a69a39ea0",
+    "patched_sha256": "455c9ce41ad4a1697393261944d0e8ee87b6489c18dac48204c9a75a69a39ea0"
+  },
+  "examples/deepsearching/src/planning/plan-mode-manager.ts": {
+    "source_sha256": "ab4a1535e28dab37ba5bf69478bef80fcbbd07be9f393450682098a2b8520176",
+    "patched_sha256": "ab4a1535e28dab37ba5bf69478bef80fcbbd07be9f393450682098a2b8520176"
+  },
+  "examples/apktool/src/packages/apk_reverse.ts": {
+    "source_sha256": "dea6783394622ff05d4e0fae301f8bda14b8f9514f7e25a0f23d40fa1f28910b",
+    "patched_sha256": "dea6783394622ff05d4e0fae301f8bda14b8f9514f7e25a0f23d40fa1f28910b"
+  },
+  "examples/qqbot/src/shared/qqbot_auto_reply.ts": {
+    "source_sha256": "edbf11f49bd8138916abebd19ae1f29528c2f1b65f2616c1c071709bc468ae70",
+    "patched_sha256": "edbf11f49bd8138916abebd19ae1f29528c2f1b65f2616c1c071709bc468ae70"
+  },
+  "examples/message_insert/src/main.ts": {
+    "source_sha256": "3b5f10ab95c25dfbee7471b8e3d92be06acc2e0d22acf9cab26bb056df14de2d",
+    "patched_sha256": "3b5f10ab95c25dfbee7471b8e3d92be06acc2e0d22acf9cab26bb056df14de2d"
+  },
+  "examples/message_insert/src/shared.ts": {
+    "source_sha256": "c2be95deb932d390d6d75dc3b91746c69c806822276570e8443a34bfa999e90e",
+    "patched_sha256": "c2be95deb932d390d6d75dc3b91746c69c806822276570e8443a34bfa999e90e"
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "legacy-android-accessibility-service-registration",
+    "path": "apps/flutter/app/android/app/src/main/AndroidManifest.xml",
+    "old": "        <receiver\n            android:name=\".HostEventScheduleReceiver\"\n            android:exported=\"false\" />",
+    "new": "        <receiver\n            android:name=\".HostEventScheduleReceiver\"\n            android:exported=\"false\" />\n        <service\n            android:name=\".LegacyAccessibilityService\"\n            android:label=\"Operit2 增强版 UI 自动操作\"\n            android:permission=\"android.permission.BIND_ACCESSIBILITY_SERVICE\"\n            android:exported=\"true\">\n            <intent-filter>\n                <action android:name=\"android.accessibilityservice.AccessibilityService\" />\n            </intent-filter>\n            <meta-data android:name=\"android.accessibilityservice\"\n                android:resource=\"@xml/legacy_accessibility_service\" />\n        </service>\n        <receiver android:name=\".LegacyWorkflowReceiver\" android:exported=\"true\">\n            <intent-filter>\n                <action android:name=\"app.operit.LEGACY_WORKFLOW_EVENT\" />\n                <action android:name=\"app.operit.LEGACY_TASKER_EVENT\" />\n                <action android:name=\"com.ai.assistance.operit.TRIGGER_WORKFLOW\" />\n            </intent-filter>\n        </receiver>"
+  },
+  {
+    "name": "legacy-workflow-restore-android-intent-listeners",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/HostEventBridge.kt",
+    "old": "        registerPowerIdleReceiver(context, runtimeHandle)\n    }",
+    "new": "        registerPowerIdleReceiver(context, runtimeHandle)\n        LegacyWorkflowAndroidBridge.start(context)\n    }"
+  }
+]

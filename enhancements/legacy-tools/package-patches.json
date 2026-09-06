@@ -1,0 +1,12 @@
+[
+  {
+    "package": "file_converter",
+    "old": "'apt-get update'",
+    "new": "'apk update'"
+  },
+  {
+    "package": "file_converter",
+    "old": "`apt-get install -y ${packageName}`",
+    "new": "`apk add --no-cache ${packageName}`"
+  }
+]

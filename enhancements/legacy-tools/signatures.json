@@ -1,0 +1,3505 @@
+{
+  "old": {
+    "Chat.startService": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.createNew": [
+      {
+        "name": "group",
+        "optional": true
+      },
+      {
+        "name": "setAsCurrentChat",
+        "optional": true
+      },
+      {
+        "name": "characterCardId",
+        "optional": true
+      }
+    ],
+    "Chat.listAll": [],
+    "Chat.listChats": [
+      {
+        "name": "params",
+        "optional": true
+      }
+    ],
+    "Chat.findChat": [
+      {
+        "name": "params",
+        "optional": false
+      }
+    ],
+    "Chat.agentStatus": [
+      {
+        "name": "chatId",
+        "optional": false
+      }
+    ],
+    "Chat.switchTo": [
+      {
+        "name": "chatId",
+        "optional": false
+      }
+    ],
+    "Chat.updateTitle": [
+      {
+        "name": "chatId",
+        "optional": false
+      },
+      {
+        "name": "title",
+        "optional": false
+      }
+    ],
+    "Chat.deleteChat": [
+      {
+        "name": "chatId",
+        "optional": false
+      }
+    ],
+    "Chat.sendMessage": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "chatId",
+        "optional": true
+      },
+      {
+        "name": "roleCardId",
+        "optional": true
+      },
+      {
+        "name": "senderName",
+        "optional": true
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.sendMessageStreaming": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "chatId",
+        "optional": true
+      },
+      {
+        "name": "roleCardId",
+        "optional": true
+      },
+      {
+        "name": "senderName",
+        "optional": true
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.call": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Chat.listCharacterCards": [],
+    "Chat.getMessages": [
+      {
+        "name": "chatId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.getMessagesRange": [
+      {
+        "name": "chatId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    ".toolCall": [
+      {
+        "name": "toolName",
+        "optional": false
+      }
+    ],
+    ".complete": [
+      {
+        "name": "result",
+        "optional": false
+      }
+    ],
+    "NativeInterface.callTool": [
+      {
+        "name": "toolType",
+        "optional": false
+      },
+      {
+        "name": "toolName",
+        "optional": false
+      },
+      {
+        "name": "paramsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.callToolAsync": [
+      {
+        "name": "callbackId",
+        "optional": false
+      },
+      {
+        "name": "toolType",
+        "optional": false
+      },
+      {
+        "name": "toolName",
+        "optional": false
+      },
+      {
+        "name": "paramsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.callToolAsyncStreaming": [
+      {
+        "name": "callbackId",
+        "optional": false
+      },
+      {
+        "name": "intermediateCallbackId",
+        "optional": false
+      },
+      {
+        "name": "toolType",
+        "optional": false
+      },
+      {
+        "name": "toolName",
+        "optional": false
+      },
+      {
+        "name": "paramsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.logInfo": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "NativeInterface.logError": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "NativeInterface.logDebug": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "data",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgToolboxUiModule": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgAppLifecycleHook": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgMessageProcessingPlugin": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgXmlRenderPlugin": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.getPluginConfigDir": [
+      {
+        "name": "pluginId",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgInputMenuTogglePlugin": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgChatInputHook": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgChatMessageHook": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgChatMessageMenuItem": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgChatRuntimeHook": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerImageFromBase64": [
+      {
+        "name": "base64",
+        "optional": false
+      },
+      {
+        "name": "mimeType",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerImageFromPath": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "NativeInterface.reportError": [
+      {
+        "name": "errorType",
+        "optional": false
+      },
+      {
+        "name": "errorMessage",
+        "optional": false
+      },
+      {
+        "name": "errorLine",
+        "optional": false
+      },
+      {
+        "name": "errorStack",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaClassExists": [
+      {
+        "name": "className",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaLoadDex": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "optionsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaLoadJar": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "optionsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaListLoadedCodePaths": [],
+    "NativeInterface.javaGetApplicationContext": [],
+    "NativeInterface.javaGetCurrentActivity": [],
+    "NativeInterface.javaNewInstance": [
+      {
+        "name": "className",
+        "optional": false
+      },
+      {
+        "name": "argsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaCallStatic": [
+      {
+        "name": "className",
+        "optional": false
+      },
+      {
+        "name": "methodName",
+        "optional": false
+      },
+      {
+        "name": "argsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaCallInstance": [
+      {
+        "name": "instanceHandle",
+        "optional": false
+      },
+      {
+        "name": "methodName",
+        "optional": false
+      },
+      {
+        "name": "argsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaHasInstanceMethod": [
+      {
+        "name": "instanceHandle",
+        "optional": false
+      },
+      {
+        "name": "methodName",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaGetStaticField": [
+      {
+        "name": "className",
+        "optional": false
+      },
+      {
+        "name": "fieldName",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaSetStaticField": [
+      {
+        "name": "className",
+        "optional": false
+      },
+      {
+        "name": "fieldName",
+        "optional": false
+      },
+      {
+        "name": "valueJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaGetInstanceField": [
+      {
+        "name": "instanceHandle",
+        "optional": false
+      },
+      {
+        "name": "fieldName",
+        "optional": false
+      }
+    ],
+    "NativeInterface.javaSetInstanceField": [
+      {
+        "name": "instanceHandle",
+        "optional": false
+      },
+      {
+        "name": "fieldName",
+        "optional": false
+      },
+      {
+        "name": "valueJson",
+        "optional": false
+      }
+    ],
+    "CryptoJS.MD5": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "FFmpeg.execute": [
+      {
+        "name": "command",
+        "optional": false
+      }
+    ],
+    "FFmpeg.info": [],
+    "FFmpeg.convert": [
+      {
+        "name": "inputPath",
+        "optional": false
+      },
+      {
+        "name": "outputPath",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Files.list": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.read": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Files.readPart": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "startLine",
+        "optional": true
+      },
+      {
+        "name": "endLine",
+        "optional": true
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.write": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "content",
+        "optional": false
+      },
+      {
+        "name": "append",
+        "optional": true
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.writeBinary": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "base64Content",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.readBinary": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.deleteFile": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "recursive",
+        "optional": true
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.exists": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.move": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.copy": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      },
+      {
+        "name": "recursive",
+        "optional": true
+      },
+      {
+        "name": "sourceEnvironment",
+        "optional": true
+      },
+      {
+        "name": "destEnvironment",
+        "optional": true
+      }
+    ],
+    "Files.mkdir": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "create_parents",
+        "optional": true
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.find": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "pattern",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.grep": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "pattern",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Files.grepContext": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "intent",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Files.info": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.apply": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "type",
+        "optional": false
+      },
+      {
+        "name": "old",
+        "optional": true
+      },
+      {
+        "name": "newContent",
+        "optional": true
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.create": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "newContent",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.edit": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "oldContent",
+        "optional": false
+      },
+      {
+        "name": "newContent",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.zip": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      },
+      {
+        "name": "include_root_directory",
+        "optional": true
+      }
+    ],
+    "Files.unzip": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.open": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.share": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "title",
+        "optional": true
+      },
+      {
+        "name": "environment",
+        "optional": true
+      }
+    ],
+    "Files.download": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "global.toolCall": [
+      {
+        "name": "toolName",
+        "optional": false
+      }
+    ],
+    "global.complete": [
+      {
+        "name": "result",
+        "optional": false
+      }
+    ],
+    "global.sendIntermediateResult": [
+      {
+        "name": "result",
+        "optional": false
+      }
+    ],
+    "global.getEnv": [
+      {
+        "name": "key",
+        "optional": false
+      }
+    ],
+    "global.getPluginConfigDir": [
+      {
+        "name": "pluginId",
+        "optional": true
+      }
+    ],
+    "global.getState": [],
+    "global.getLang": [],
+    "global.getCallerName": [],
+    "global.getChatId": [],
+    "global.getCallerCardId": [],
+    "Jimp.read": [
+      {
+        "name": "base64",
+        "optional": false
+      }
+    ],
+    "Jimp.create": [
+      {
+        "name": "w",
+        "optional": false
+      },
+      {
+        "name": "h",
+        "optional": false
+      }
+    ],
+    "Memory.query": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.getByTitle": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.create": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.update": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.deleteMemory": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.move": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.link": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.queryLinks": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.updateLink": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.deleteLink": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.httpGet": [
+      {
+        "name": "url",
+        "optional": false
+      },
+      {
+        "name": "ignore_ssl",
+        "optional": true
+      }
+    ],
+    "Net.httpPost": [
+      {
+        "name": "url",
+        "optional": false
+      },
+      {
+        "name": "body",
+        "optional": false
+      },
+      {
+        "name": "ignore_ssl",
+        "optional": true
+      }
+    ],
+    "Net.visit": [
+      {
+        "name": "urlOrParams",
+        "optional": false
+      }
+    ],
+    "Net.startBrowser": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.stopBrowser": [
+      {
+        "name": "sessionIdOrOptions",
+        "optional": true
+      }
+    ],
+    "Net.browserNavigate": [
+      {
+        "name": "urlOrOptions",
+        "optional": false
+      }
+    ],
+    "Net.browserNavigateBack": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserClick": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserClose": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserCloseAll": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserConsoleMessages": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserDrag": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserEvaluate": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserFileUpload": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserFillForm": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserHandleDialog": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserHover": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserNetworkRequests": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserPressKey": [
+      {
+        "name": "keyOrOptions",
+        "optional": false
+      }
+    ],
+    "Net.browserResize": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserRunCode": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserSelectOption": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserSnapshot": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserTabs": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserTakeScreenshot": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserType": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserWaitFor": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptList": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserUserscriptInstall": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptStart": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptStop": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptUninstall": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.http": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.uploadFile": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "pako.inflate": [
+      {
+        "name": "data",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "global.setTimeout": [
+      {
+        "name": "handler",
+        "optional": false
+      },
+      {
+        "name": "timeout",
+        "optional": true
+      },
+      {
+        "name": "args",
+        "optional": false
+      }
+    ],
+    "global.clearTimeout": [
+      {
+        "name": "timerId",
+        "optional": true
+      }
+    ],
+    "global.setInterval": [
+      {
+        "name": "handler",
+        "optional": false
+      },
+      {
+        "name": "timeout",
+        "optional": true
+      },
+      {
+        "name": "args",
+        "optional": false
+      }
+    ],
+    "global.clearInterval": [
+      {
+        "name": "timerId",
+        "optional": true
+      }
+    ],
+    "global.queueMicrotask": [
+      {
+        "name": "callback",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.readEnvironmentVariable": [
+      {
+        "name": "key",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.writeEnvironmentVariable": [
+      {
+        "name": "key",
+        "optional": false
+      },
+      {
+        "name": "value",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.listSandboxPackages": [],
+    "SoftwareSettings.setSandboxPackageEnabled": [
+      {
+        "name": "packageName",
+        "optional": false
+      },
+      {
+        "name": "enabled",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.executeSandboxScriptDirect": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.restartMcpWithLogs": [
+      {
+        "name": "timeoutMs",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.getSpeechServicesConfig": [],
+    "SoftwareSettings.setSpeechServicesConfig": [
+      {
+        "name": "updates",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.testTtsPlayback": [
+      {
+        "name": "text",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.listModelConfigs": [],
+    "SoftwareSettings.createModelConfig": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.updateModelConfig": [
+      {
+        "name": "configId",
+        "optional": false
+      },
+      {
+        "name": "updates",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.deleteModelConfig": [
+      {
+        "name": "configId",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.listFunctionModelConfigs": [],
+    "SoftwareSettings.getFunctionModelConfig": [
+      {
+        "name": "functionType",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.setFunctionModelConfig": [
+      {
+        "name": "functionType",
+        "optional": false
+      },
+      {
+        "name": "configId",
+        "optional": false
+      },
+      {
+        "name": "modelIndex",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.testModelConfigConnection": [
+      {
+        "name": "configId",
+        "optional": false
+      },
+      {
+        "name": "modelIndex",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.listCharacterCards": [],
+    "SoftwareSettings.getCharacterCard": [
+      {
+        "name": "characterCardId",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.createCharacterCard": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.updateCharacterCard": [
+      {
+        "name": "characterCardId",
+        "optional": false
+      },
+      {
+        "name": "updates",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.deleteCharacterCard": [
+      {
+        "name": "characterCardId",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.setActiveCharacterCard": [
+      {
+        "name": "characterCardId",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.clearActiveCharacterCard": [],
+    "SoftwareSettings.importCharacterCardFromTavernJson": [
+      {
+        "name": "tavernJson",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.exportCharacterCardToTavernJson": [
+      {
+        "name": "characterCardId",
+        "optional": false
+      }
+    ],
+    "System.sleep": [
+      {
+        "name": "milliseconds",
+        "optional": false
+      }
+    ],
+    "System.getSetting": [
+      {
+        "name": "setting",
+        "optional": false
+      },
+      {
+        "name": "namespace",
+        "optional": true
+      }
+    ],
+    "System.setSetting": [
+      {
+        "name": "setting",
+        "optional": false
+      },
+      {
+        "name": "value",
+        "optional": false
+      },
+      {
+        "name": "namespace",
+        "optional": true
+      }
+    ],
+    "System.getDeviceInfo": [],
+    "System.toast": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "System.sendNotification": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "title",
+        "optional": true
+      }
+    ],
+    "System.usePackage": [
+      {
+        "name": "packageName",
+        "optional": false
+      }
+    ],
+    "System.installApp": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "System.uninstallApp": [
+      {
+        "name": "packageName",
+        "optional": false
+      }
+    ],
+    "System.stopApp": [
+      {
+        "name": "packageName",
+        "optional": false
+      }
+    ],
+    "System.listApps": [
+      {
+        "name": "includeSystem",
+        "optional": true
+      }
+    ],
+    "System.startApp": [
+      {
+        "name": "packageName",
+        "optional": false
+      },
+      {
+        "name": "activity",
+        "optional": true
+      }
+    ],
+    "System.getNotifications": [
+      {
+        "name": "limit",
+        "optional": true
+      },
+      {
+        "name": "includeOngoing",
+        "optional": true
+      }
+    ],
+    "System.getAppUsageTime": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.getLocation": [
+      {
+        "name": "highAccuracy",
+        "optional": true
+      },
+      {
+        "name": "timeout",
+        "optional": true
+      },
+      {
+        "name": "includeAddress",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.requestPermission": [],
+    "System.bluetooth.getState": [],
+    "System.bluetooth.requestEnable": [],
+    "System.bluetooth.listBondedDevices": [],
+    "System.bluetooth.scan": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.connect": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.listen": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.accept": [
+      {
+        "name": "listenerSessionId",
+        "optional": false
+      },
+      {
+        "name": "timeoutMs",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.send": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.read": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.sendAndRead": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.close": [
+      {
+        "name": "sessionId",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.connect": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.discoverServices": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "timeoutMs",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.ble.readCharacteristic": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.writeCharacteristic": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.writeAndReadCharacteristic": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.subscribe": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.readNotifications": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "limit",
+        "optional": true
+      }
+    ],
+    "System.shell": [
+      {
+        "name": "command",
+        "optional": false
+      }
+    ],
+    "System.intent": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.sendBroadcast": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.terminal.create": [
+      {
+        "name": "sessionName",
+        "optional": true
+      }
+    ],
+    "System.terminal.exec": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "command",
+        "optional": false
+      },
+      {
+        "name": "timeoutMs",
+        "optional": true
+      }
+    ],
+    "System.terminal.execStreaming": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "command",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.terminal.hiddenExec": [
+      {
+        "name": "command",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.terminal.close": [
+      {
+        "name": "sessionId",
+        "optional": false
+      }
+    ],
+    "System.terminal.screen": [
+      {
+        "name": "sessionId",
+        "optional": false
+      }
+    ],
+    "System.terminal.input": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.music.play": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.music.playQueue": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.music.pause": [],
+    "System.music.resume": [],
+    "System.music.stop": [],
+    "System.music.seek": [
+      {
+        "name": "positionMs",
+        "optional": false
+      }
+    ],
+    "System.music.setVolume": [
+      {
+        "name": "volume",
+        "optional": false
+      }
+    ],
+    "System.music.status": [],
+    "global.registerToolPkgToolboxUiModule": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgUiRoute": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgNavigationEntry": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgDesktopWidget": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgAppLifecycleHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgMessageProcessingPlugin": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgXmlRenderPlugin": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgInputMenuTogglePlugin": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatInputHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatViewHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatMessageHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatMessageMenuItem": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatRuntimeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgToolLifecycleHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptInputHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptHistoryHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptEstimateHistoryHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgSystemPromptComposeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgToolPromptComposeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptFinalizeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptEstimateFinalizeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgSummaryGenerateHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgAiProvider": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "UI.getPageInfo": [],
+    "UI.captureScreenshot": [],
+    "UI.tap": [
+      {
+        "name": "x",
+        "optional": false
+      },
+      {
+        "name": "y",
+        "optional": false
+      }
+    ],
+    "UI.longPress": [
+      {
+        "name": "x",
+        "optional": false
+      },
+      {
+        "name": "y",
+        "optional": false
+      }
+    ],
+    "UI.clickElement": [
+      {
+        "name": "type",
+        "optional": false
+      },
+      {
+        "name": "value",
+        "optional": false
+      },
+      {
+        "name": "index",
+        "optional": false
+      }
+    ],
+    "UI.setText": [
+      {
+        "name": "text",
+        "optional": false
+      },
+      {
+        "name": "resourceId",
+        "optional": true
+      }
+    ],
+    "UI.pressKey": [
+      {
+        "name": "keyCode",
+        "optional": false
+      }
+    ],
+    "UI.swipe": [
+      {
+        "name": "startX",
+        "optional": false
+      },
+      {
+        "name": "startY",
+        "optional": false
+      },
+      {
+        "name": "endX",
+        "optional": false
+      },
+      {
+        "name": "endY",
+        "optional": false
+      },
+      {
+        "name": "duration",
+        "optional": true
+      }
+    ],
+    "UI.runSubAgent": [
+      {
+        "name": "intent",
+        "optional": false
+      },
+      {
+        "name": "maxSteps",
+        "optional": true
+      },
+      {
+        "name": "agentId",
+        "optional": true
+      },
+      {
+        "name": "targetApp",
+        "optional": true
+      }
+    ]
+  },
+  "current": {
+    "Chat.agentStatus": [
+      {
+        "name": "chatId",
+        "optional": false
+      }
+    ],
+    "Chat.createNew": [
+      {
+        "name": "group",
+        "optional": true
+      },
+      {
+        "name": "setAsCurrentChat",
+        "optional": true
+      },
+      {
+        "name": "characterCardId",
+        "optional": true
+      }
+    ],
+    "Chat.deleteChat": [
+      {
+        "name": "chatId",
+        "optional": false
+      }
+    ],
+    "Chat.findChat": [
+      {
+        "name": "params",
+        "optional": false
+      }
+    ],
+    "Chat.getMessages": [
+      {
+        "name": "chatId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.listAll": [],
+    "Chat.listCharacterCards": [],
+    "Chat.listChats": [
+      {
+        "name": "params",
+        "optional": true
+      }
+    ],
+    "Chat.sendMessage": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "chatId",
+        "optional": true
+      },
+      {
+        "name": "roleCardId",
+        "optional": true
+      },
+      {
+        "name": "senderName",
+        "optional": true
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.sendMessageStreaming": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "chatId",
+        "optional": true
+      },
+      {
+        "name": "roleCardId",
+        "optional": true
+      },
+      {
+        "name": "senderName",
+        "optional": true
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.startService": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Chat.stopService": [],
+    "Chat.switchTo": [
+      {
+        "name": "chatId",
+        "optional": false
+      }
+    ],
+    "Chat.updateTitle": [
+      {
+        "name": "chatId",
+        "optional": false
+      },
+      {
+        "name": "title",
+        "optional": false
+      }
+    ],
+    "NativeInterface.callTool": [
+      {
+        "name": "toolType",
+        "optional": false
+      },
+      {
+        "name": "toolName",
+        "optional": false
+      },
+      {
+        "name": "paramsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.callToolAsync": [
+      {
+        "name": "callbackId",
+        "optional": false
+      },
+      {
+        "name": "toolType",
+        "optional": false
+      },
+      {
+        "name": "toolName",
+        "optional": false
+      },
+      {
+        "name": "paramsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.callToolAsyncStreaming": [
+      {
+        "name": "callbackId",
+        "optional": false
+      },
+      {
+        "name": "intermediateCallbackId",
+        "optional": false
+      },
+      {
+        "name": "toolType",
+        "optional": false
+      },
+      {
+        "name": "toolName",
+        "optional": false
+      },
+      {
+        "name": "paramsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.crypto": [
+      {
+        "name": "algorithm",
+        "optional": false
+      },
+      {
+        "name": "operation",
+        "optional": false
+      },
+      {
+        "name": "argsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.decompress": [
+      {
+        "name": "data",
+        "optional": false
+      },
+      {
+        "name": "algorithm",
+        "optional": false
+      }
+    ],
+    "NativeInterface.getPluginConfigDir": [
+      {
+        "name": "pluginId",
+        "optional": false
+      }
+    ],
+    "NativeInterface.image_processing": [
+      {
+        "name": "callbackId",
+        "optional": false
+      },
+      {
+        "name": "operation",
+        "optional": false
+      },
+      {
+        "name": "argsJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.logDebug": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "data",
+        "optional": false
+      }
+    ],
+    "NativeInterface.logError": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "NativeInterface.logInfo": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerImageFromBase64": [
+      {
+        "name": "base64",
+        "optional": false
+      },
+      {
+        "name": "mimeType",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerImageFromPath": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgAppLifecycleHook": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgChatInputHook": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgChatMessageHook": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgInputMenuTogglePlugin": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgMessageProcessingPlugin": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgToolboxUiModule": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.registerToolPkgXmlRenderPlugin": [
+      {
+        "name": "specJson",
+        "optional": false
+      }
+    ],
+    "NativeInterface.reportError": [
+      {
+        "name": "errorType",
+        "optional": false
+      },
+      {
+        "name": "errorMessage",
+        "optional": false
+      },
+      {
+        "name": "errorLine",
+        "optional": false
+      },
+      {
+        "name": "errorStack",
+        "optional": false
+      }
+    ],
+    "NativeInterface.setError": [
+      {
+        "name": "error",
+        "optional": false
+      }
+    ],
+    "NativeInterface.setResult": [
+      {
+        "name": "result",
+        "optional": false
+      }
+    ],
+    ".complete": [
+      {
+        "name": "result",
+        "optional": false
+      }
+    ],
+    ".toolCall": [
+      {
+        "name": "toolName",
+        "optional": false
+      }
+    ],
+    "CryptoJS.MD5": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "Files.apply": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "type",
+        "optional": false
+      },
+      {
+        "name": "old",
+        "optional": true
+      },
+      {
+        "name": "newContent",
+        "optional": true
+      }
+    ],
+    "Files.copy": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      },
+      {
+        "name": "recursive",
+        "optional": true
+      }
+    ],
+    "Files.create": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "newContent",
+        "optional": false
+      }
+    ],
+    "Files.deleteFile": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "recursive",
+        "optional": true
+      }
+    ],
+    "Files.download": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Files.edit": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "oldContent",
+        "optional": false
+      },
+      {
+        "name": "newContent",
+        "optional": false
+      }
+    ],
+    "Files.exists": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "Files.find": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "pattern",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Files.grep": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "pattern",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Files.grepContext": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "intent",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Files.info": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "Files.list": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "Files.mkdir": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "create_parents",
+        "optional": true
+      }
+    ],
+    "Files.open": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "Files.move": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      }
+    ],
+    "Files.readBinary": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "Files.readPart": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "startLine",
+        "optional": true
+      },
+      {
+        "name": "endLine",
+        "optional": true
+      }
+    ],
+    "Files.read": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Files.share": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "title",
+        "optional": true
+      }
+    ],
+    "Files.unzip": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      }
+    ],
+    "Files.write": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "content",
+        "optional": false
+      },
+      {
+        "name": "append",
+        "optional": true
+      }
+    ],
+    "Files.writeBinary": [
+      {
+        "name": "path",
+        "optional": false
+      },
+      {
+        "name": "base64Content",
+        "optional": false
+      }
+    ],
+    "Files.zip": [
+      {
+        "name": "source",
+        "optional": false
+      },
+      {
+        "name": "destination",
+        "optional": false
+      },
+      {
+        "name": "include_root_directory",
+        "optional": true
+      }
+    ],
+    "global.toolCall": [
+      {
+        "name": "toolName",
+        "optional": false
+      }
+    ],
+    "global.complete": [
+      {
+        "name": "result",
+        "optional": false
+      }
+    ],
+    "global.sendIntermediateResult": [
+      {
+        "name": "result",
+        "optional": false
+      }
+    ],
+    "global.getEnv": [
+      {
+        "name": "key",
+        "optional": false
+      }
+    ],
+    "global.getPluginConfigDir": [
+      {
+        "name": "pluginId",
+        "optional": true
+      }
+    ],
+    "global.getState": [],
+    "global.getLang": [],
+    "global.getCallerName": [],
+    "global.getChatId": [],
+    "global.getCallerCardId": [],
+    "Jimp.read": [
+      {
+        "name": "base64",
+        "optional": false
+      }
+    ],
+    "Jimp.create": [
+      {
+        "name": "w",
+        "optional": false
+      },
+      {
+        "name": "h",
+        "optional": false
+      }
+    ],
+    "Memory.create": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.deleteLink": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.deleteMemory": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.getByTitle": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.link": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.move": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.queryLinks": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.query": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.updateLink": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.updateUserPreferences": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Memory.update": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserClick": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserClose": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserCloseAll": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserConsoleMessages": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserDrag": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserEvaluate": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserFileUpload": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserFillForm": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserHandleDialog": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserHover": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserNavigate": [
+      {
+        "name": "urlOrOptions",
+        "optional": false
+      }
+    ],
+    "Net.browserNavigateBack": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserNetworkRequests": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserPressKey": [
+      {
+        "name": "keyOrOptions",
+        "optional": false
+      }
+    ],
+    "Net.browserResize": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserRunCode": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserSelectOption": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserSnapshot": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserTabs": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserTakeScreenshot": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserType": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptInstall": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptList": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.browserUserscriptStart": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptStop": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserUserscriptUninstall": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.browserWaitFor": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.http": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.httpGet": [
+      {
+        "name": "url",
+        "optional": false
+      },
+      {
+        "name": "ignore_ssl",
+        "optional": true
+      }
+    ],
+    "Net.httpPost": [
+      {
+        "name": "url",
+        "optional": false
+      },
+      {
+        "name": "body",
+        "optional": false
+      },
+      {
+        "name": "ignore_ssl",
+        "optional": true
+      }
+    ],
+    "Net.startBrowser": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "Net.stopBrowser": [
+      {
+        "name": "sessionIdOrOptions",
+        "optional": true
+      }
+    ],
+    "Net.uploadFile": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "Net.visit": [
+      {
+        "name": "urlOrParams",
+        "optional": false
+      }
+    ],
+    "pako.inflate": [
+      {
+        "name": "data",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "global.setTimeout": [
+      {
+        "name": "handler",
+        "optional": false
+      },
+      {
+        "name": "timeout",
+        "optional": true
+      },
+      {
+        "name": "args",
+        "optional": false
+      }
+    ],
+    "global.clearTimeout": [
+      {
+        "name": "timerId",
+        "optional": true
+      }
+    ],
+    "global.setInterval": [
+      {
+        "name": "handler",
+        "optional": false
+      },
+      {
+        "name": "timeout",
+        "optional": true
+      },
+      {
+        "name": "args",
+        "optional": false
+      }
+    ],
+    "global.clearInterval": [
+      {
+        "name": "timerId",
+        "optional": true
+      }
+    ],
+    "global.queueMicrotask": [
+      {
+        "name": "callback",
+        "optional": false
+      }
+    ],
+    ".withContext": [
+      {
+        "name": "kind",
+        "optional": false
+      },
+      {
+        "name": "envs",
+        "optional": false
+      },
+      {
+        "name": "runner",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "SoftwareSettings.exec": [
+      {
+        "name": "args",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.readEnvironmentVariable": [
+      {
+        "name": "key",
+        "optional": false
+      }
+    ],
+    "SoftwareSettings.writeEnvironmentVariable": [
+      {
+        "name": "key",
+        "optional": false
+      },
+      {
+        "name": "value",
+        "optional": true
+      }
+    ],
+    "System.getAppUsageTime": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.getDeviceInfo": [],
+    "System.getLocation": [
+      {
+        "name": "highAccuracy",
+        "optional": true
+      },
+      {
+        "name": "timeout",
+        "optional": true
+      },
+      {
+        "name": "includeAddress",
+        "optional": true
+      }
+    ],
+    "System.getNotifications": [
+      {
+        "name": "limit",
+        "optional": true
+      },
+      {
+        "name": "includeOngoing",
+        "optional": true
+      }
+    ],
+    "System.getSetting": [
+      {
+        "name": "setting",
+        "optional": false
+      },
+      {
+        "name": "namespace",
+        "optional": true
+      }
+    ],
+    "System.installApp": [
+      {
+        "name": "path",
+        "optional": false
+      }
+    ],
+    "System.listApps": [
+      {
+        "name": "includeSystem",
+        "optional": true
+      }
+    ],
+    "System.sendNotification": [
+      {
+        "name": "message",
+        "optional": false
+      },
+      {
+        "name": "title",
+        "optional": true
+      }
+    ],
+    "System.setSetting": [
+      {
+        "name": "setting",
+        "optional": false
+      },
+      {
+        "name": "value",
+        "optional": false
+      },
+      {
+        "name": "namespace",
+        "optional": true
+      }
+    ],
+    "System.sleep": [
+      {
+        "name": "milliseconds",
+        "optional": false
+      }
+    ],
+    "System.startApp": [
+      {
+        "name": "packageName",
+        "optional": false
+      },
+      {
+        "name": "activity",
+        "optional": true
+      }
+    ],
+    "System.stopApp": [
+      {
+        "name": "packageName",
+        "optional": false
+      }
+    ],
+    "System.toast": [
+      {
+        "name": "message",
+        "optional": false
+      }
+    ],
+    "System.uninstallApp": [
+      {
+        "name": "packageName",
+        "optional": false
+      }
+    ],
+    "System.usePackage": [
+      {
+        "name": "packageName",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.accept": [
+      {
+        "name": "listenerSessionId",
+        "optional": false
+      },
+      {
+        "name": "timeoutMs",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.close": [
+      {
+        "name": "sessionId",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.connect": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.getState": [],
+    "System.bluetooth.listBondedDevices": [],
+    "System.bluetooth.listen": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.read": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.requestEnable": [],
+    "System.bluetooth.requestPermission": [],
+    "System.bluetooth.scan": [
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.send": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.sendAndRead": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.connect": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.discoverServices": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "timeoutMs",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.ble.readCharacteristic": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.readNotifications": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "limit",
+        "optional": true
+      }
+    ],
+    "System.bluetooth.ble.subscribe": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.writeAndReadCharacteristic": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.bluetooth.ble.writeCharacteristic": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.terminal.close": [
+      {
+        "name": "sessionId",
+        "optional": false
+      }
+    ],
+    "System.terminal.create": [
+      {
+        "name": "sessionName",
+        "optional": false
+      }
+    ],
+    "System.terminal.exec": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "command",
+        "optional": false
+      },
+      {
+        "name": "timeoutMs",
+        "optional": true
+      }
+    ],
+    "System.terminal.execStreaming": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "command",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.terminal.hiddenExec": [
+      {
+        "name": "command",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.terminal.info": [],
+    "System.terminal.input": [
+      {
+        "name": "sessionId",
+        "optional": false
+      },
+      {
+        "name": "options",
+        "optional": true
+      }
+    ],
+    "System.terminal.screen": [
+      {
+        "name": "sessionId",
+        "optional": false
+      }
+    ],
+    "System.music.pause": [],
+    "System.music.play": [
+      {
+        "name": "options",
+        "optional": false
+      }
+    ],
+    "System.music.resume": [],
+    "System.music.seek": [
+      {
+        "name": "positionMs",
+        "optional": false
+      }
+    ],
+    "System.music.setVolume": [
+      {
+        "name": "volume",
+        "optional": false
+      }
+    ],
+    "System.music.status": [],
+    "System.music.stop": [],
+    "global.registerToolPkgAiProvider": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgAppLifecycleHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatInputHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatMessageHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgChatViewHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgDesktopWidget": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgHostEventHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgInputMenuTogglePlugin": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgMessageProcessingPlugin": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgNavigationEntry": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptEstimateFinalizeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptEstimateHistoryHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptFinalizeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptHistoryHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgPromptInputHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgSummaryGenerateHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgSystemPromptComposeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgToolLifecycleHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgToolPromptComposeHook": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgToolboxUiModule": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgUiRoute": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "global.registerToolPkgXmlRenderPlugin": [
+      {
+        "name": "definition",
+        "optional": false
+      }
+    ],
+    "UI.clickElement": [
+      {
+        "name": "type",
+        "optional": false
+      },
+      {
+        "name": "value",
+        "optional": false
+      },
+      {
+        "name": "index",
+        "optional": false
+      }
+    ],
+    "UI.getPageInfo": [],
+    "UI.longPress": [
+      {
+        "name": "x",
+        "optional": false
+      },
+      {
+        "name": "y",
+        "optional": false
+      }
+    ],
+    "UI.pressKey": [
+      {
+        "name": "keyCode",
+        "optional": false
+      }
+    ],
+    "UI.runSubAgent": [
+      {
+        "name": "intent",
+        "optional": false
+      },
+      {
+        "name": "maxSteps",
+        "optional": true
+      },
+      {
+        "name": "agentId",
+        "optional": true
+      },
+      {
+        "name": "targetApp",
+        "optional": true
+      }
+    ],
+    "UI.setText": [
+      {
+        "name": "text",
+        "optional": false
+      },
+      {
+        "name": "resourceId",
+        "optional": true
+      }
+    ],
+    "UI.swipe": [
+      {
+        "name": "startX",
+        "optional": false
+      },
+      {
+        "name": "startY",
+        "optional": false
+      },
+      {
+        "name": "endX",
+        "optional": false
+      },
+      {
+        "name": "endY",
+        "optional": false
+      },
+      {
+        "name": "duration",
+        "optional": true
+      }
+    ],
+    "UI.tap": [
+      {
+        "name": "x",
+        "optional": false
+      },
+      {
+        "name": "y",
+        "optional": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "revision": "legacy-native-host-v1",
+  "supported_legacy_classes": [
+    "com.ai.assistance.operit.core.subpack.KeyStoreHelper"
+  ],
+  "supported_android_classes": [
+    "app.operit.LegacyJavaHost",
+    "app.operit.util.OCRUtils",
+    "app.operit.LegacyVirtualDisplays"
+  ],
+  "java_operations": [
+    "context",
+    "classExists",
+    "new",
+    "call",
+    "callStatic",
+    "callSuspend",
+    "callSuspendStatic",
+    "get",
+    "getStatic",
+    "set",
+    "setStatic",
+    "member",
+    "load",
+    "artifacts",
+    "release",
+    "releaseScope"
+  ],
+  "ported_packages": {
+    "com.operit.deepsearching_bundle": "Uses current EnhancedAIService through legacy-tools chat-plan-call/chat-plan-cancel; original planner/task DAG retained.",
+    "com.operit.message_insert_bundle": "Uses real Android SharedPreferences/time/battery and app.operit.util.OCRUtils.",
+    "com.operit.message_translation": "Existing message menu/Compose contract; Tools.Chat.call implemented by legacy Tools adapter.",
+    "com.operit.qqbot_bundle": "Legacy private Waifu cleanup moved to equivalent local text function; gateway remains genuine Python+QQ OpenAPI.",
+    "com.operit.apk_reverse_toolkit": "Real Java reflection, per-engine Android DexClassLoader and real debug signing KeyStoreHelper."
+  },
+  "external_requirements": {
+    "com.operit.qqbot_bundle": [
+      "Configured QQ bot application credentials",
+      "Python 3 in configured terminal environment",
+      "Network access to QQ gateway/OpenAPI"
+    ],
+    "com.operit.message_insert_bundle": [
+      "Enabled Android permissions for location/notifications/screen capture when these sources are selected"
+    ],
+    "com.operit.deepsearching_bundle": [
+      "Configured working AI provider and network; search tools may require provider keys"
+    ]
+  },
+  "verified": [
+    "Four modified TS packages compiled with TypeScript 5.9.3",
+    "No private Operit 1 class emulation or success stubs"
+  ],
+  "device_tested": false,
+  "virtual_displays": {
+    "class": "app.operit.LegacyVirtualDisplays",
+    "ensure": "(Context, agentId) -> displayId",
+    "resolveDisplayId": "(agentId) -> displayId | null",
+    "capture": "(Context, displayId) -> PNG path",
+    "release": "(agentId) -> Boolean",
+    "backing": "Real Android PUBLIC + PRESENTATION + OWN_CONTENT_ONLY display and continuous ImageReader frames",
+    "requires": "Android 11+ for accessibility and gestures on a named display; existing root/Shizuku permission for shell key injection"
+  }
+}
