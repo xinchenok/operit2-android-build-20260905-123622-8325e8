@@ -148,5 +148,29 @@
     "path": "apps/flutter/app/test/chat_area_streaming_cursor_test.dart",
     "old": "      find.byKey(const ValueKey<String>('markdown-paragraph-break')),",
     "new": "      find.byWidgetPredicate((widget) {\n        final key = widget.key;\n        return key is ValueKey<String> &&\n            key.value.startsWith('markdown-paragraph-break-');\n      }),"
+  },
+  {
+    "name": "send-explicit-attachment-snapshot",
+    "path": "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart",
+    "old": "    ChatUiMessage? replyToMessage,\n    String? chatIdOverride,\n  }) async {\n    debugPrint(",
+    "new": "    ChatUiMessage? replyToMessage,\n    String? chatIdOverride,\n    List<AttachmentInfo>? attachmentsOverride,\n  }) async {\n    debugPrint("
+  },
+  {
+    "name": "respect-explicit-send-attachments",
+    "path": "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart",
+    "old": "    final attachments = await _chat.attachments();\n    await _chat.sendUserMessage(",
+    "new": "    final attachments = attachmentsOverride ?? await _chat.attachments();\n    await _chat.sendUserMessage("
+  },
+  {
+    "name": "queued-text-does-not-steal-current-draft-attachments",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    await _viewModel.sendUserMessage(\n      queuedText.trim(),\n      chatIdOverride: queueChatId,\n    );",
+    "new": "    await _viewModel.sendUserMessage(\n      queuedText.trim(),\n      chatIdOverride: queueChatId,\n      attachmentsOverride: const <AttachmentInfo>[],\n    );"
+  },
+  {
+    "name": "restore-dequeued-message-when-submit-hook-fails",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    var queuedText = item.text;\n    final decision = await _viewModel.dispatchChatInputSubmitRequested(\n      chatId: queueChatId,\n      text: queuedText,\n      selectionStart: queuedText.length,\n      selectionEnd: queuedText.length,\n      attachmentCount: 0,\n    );",
+    "new": "    var queuedText = item.text;\n    ChatInputSubmitDecision? decision;\n    try {\n      decision = await _viewModel.dispatchChatInputSubmitRequested(\n        chatId: queueChatId,\n        text: queuedText,\n        selectionStart: queuedText.length,\n        selectionEnd: queuedText.length,\n        attachmentCount: 0,\n      );\n    } catch (_) {\n      // The runtime removed this item before running its hook; no send has begun.\n      await _viewModel.restorePendingQueueMessage(\n        chatId: queueChatId,\n        message: item,\n      );\n      rethrow;\n    }"
   }
 ]

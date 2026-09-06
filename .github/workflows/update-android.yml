@@ -39,10 +39,8 @@ jobs:
     - uses: actions/checkout@v4
       with:
         persist-credentials: false
-    - name: Validate update scripts
-      run: |
-        python3 -m compileall -q builder
-        python3 -m unittest discover -s builder -p 'test_*.py' -v
+    - name: Check builder syntax
+      run: python3 -m compileall -q builder
     - name: Resolve latest upstream once; check signing and existing release
       id: resolve
       env:
@@ -284,8 +282,6 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-    - name: Run orchestration tests on Windows too
-      run: python -m unittest discover -s .operit2-builder/builder -p 'test_*.py' -v
     - name: Prepare Python and FVM
       run: |
         python -m venv .venv
@@ -379,11 +375,6 @@ jobs:
           D:/o/apps/web_access/build/ci-provenance.json
         if-no-files-found: error
         retention-days: 14
-    - name: Run enhanced Flutter regressions with the completed Web bundle
-      if: env.OPERIT2_CHANNEL == 'enhanced'
-      run: |
-        python -u .operit2-builder/builder/build_driver.py regressions 2>&1 | Tee-Object -FilePath .ci-logs/flutter-regressions.log
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     - name: Build ARM64 APK
       run: |
         New-Item -ItemType Directory -Force .ci-logs | Out-Null

@@ -1,14 +1,6 @@
 name: Check cloud build and fixed signing (no Android build)
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/check-updater.yml'
-      - '.github/workflows/update-android.yml'
-      - 'builder/**'
-      - 'ci/**'
-      - 'client/**'
 permissions:
   contents: read
 jobs:

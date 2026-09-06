@@ -14,7 +14,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-REVISION = 'legacy-whitelist-js-toolpkg-v3'
+REVISION = 'legacy-whitelist-js-toolpkg-v4'
 METADATA = re.compile(r'/\*\s*METADATA\s*([\s\S]*?)\*/')
 NAME = re.compile(r'([\"\']?name[\"\']?\s*:\s*)([\"\'][^\"\']+[\"\']|[A-Za-z0-9_-]+)')
 ENABLED = re.compile(r'([\"\']?enabled(?:ByDefault|_by_default)[\"\']?\s*:\s*)(true|false)')
@@ -25,6 +25,30 @@ PACKAGE_REFERENCE = re.compile(
     r'(?P<quote>[\"\x27])(?P<value>[^\"\x27]+)(?P=quote)'
 )
 LEGACY_HOST_CLASS = re.compile(r'\bcom\.ai\.assistance\.operit\.(?:[A-Za-z_$][\w$]*\.)*[A-Z][\w$]*')
+MENU_IDENTIFIERS = {
+    'com.operit.thinking_guidance': {
+        ('TOGGLE_ID', 'thinking_guidance'): 'legacy_thinking_guidance',
+        ('ENV_KEY', 'OPERIT_THINKING_GUIDANCE_ENABLED'): 'LEGACY_OPERIT_THINKING_GUIDANCE_ENABLED',
+    },
+    'com.operit.context_limiter_c': {
+        ('limiter', 'ctx_limiter_toggle'): 'legacy_ctx_limiter_toggle',
+        ('adjust', 'ctx_limiter_adjust'): 'legacy_ctx_limiter_adjust',
+    },
+    'com.operit.message_insert_bundle': {
+        ('id', 'message_extra_info_injection'): 'legacy_message_extra_info_injection',
+    },
+}
+
+
+def namespace_input_menu(source: str, package_id: str) -> str:
+    # Flutter routes clicks by toggle id alone. Distinct container ids do not
+    # prevent a legacy toggle from dispatching to the native package's hook.
+    replacements = MENU_IDENTIFIERS.get(package_id, {})
+    pattern = r'\b(?P<field>TOGGLE_ID|ENV_KEY|limiter|adjust|id)(?P<assign>\s*[:=]\s*)(?P<quote>[\"\x27])(?P<value>[^\"\x27]+)(?P=quote)'
+    def replace(match):
+        value = replacements.get((match['field'], match['value']), match['value'])
+        return match['field'] + match['assign'] + match['quote'] + value + match['quote']
+    return re.sub(pattern, replace, source)
 
 
 def namespace_references(source: str, package_ids: dict[str, str]) -> str:
@@ -151,6 +175,7 @@ def _convert_toolpkg(folder: Path, available: set[str], sync, legacy: Path) -> t
                 legacy_host_classes.update(host['legacy_host_class_dependencies'])
                 # UI modules and IPC helpers address the renamed manifest ids explicitly.
                 text = namespace_references(text, package_ids)
+                text = namespace_input_menu(text, original_id)
                 if METADATA.search(text):
                     text,_ = convert(text,name,available)
                 data = text.encode()

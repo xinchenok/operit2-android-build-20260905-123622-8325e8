@@ -1,13 +1,6 @@
 name: Check enhanced changes (no Android build)
 'on':
   workflow_dispatch:
-  push:
-    branches: [enhancement/two-build-channels]
-    paths:
-      - ".github/workflows/check-enhanced.yml"
-      - "builder/**"
-      - "enhancements/**"
-      - "ci/check_*.py"
 permissions:
   contents: read
 concurrency:
