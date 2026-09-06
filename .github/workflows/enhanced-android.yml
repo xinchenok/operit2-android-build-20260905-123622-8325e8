@@ -1,6 +1,9 @@
 name: Build enhanced Android
 on:
   workflow_dispatch:
+  push:
+    branches: [enhancement/two-build-channels]
+    paths: ['.github/workflows/enhanced-android.yml']
 run-name: Build enhanced Android ${{ github.run_number }}
 permissions:
   contents: write
