@@ -121,7 +121,9 @@ def _prepare_legacy_sources(legacy: Path, sha: str) -> str:
                 continue
             relative = source.relative_to(overrides).as_posix()
             target = legacy/relative
-            data = source.read_bytes()
+            # Git may check these reviewed text ports out as CRLF on Windows.
+            # Manifest hashes describe canonical Git/LF contents, as does tsc input.
+            data = source.read_bytes().replace(b'\r\n', b'\n')
             source_hash = hashlib.sha256(data).hexdigest()
             old_hash = hashlib.sha256(target.read_bytes().replace(b'\r\n', b'\n')).hexdigest() if target.exists() else None
             record = expected.get(relative)
