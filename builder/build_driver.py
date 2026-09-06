@@ -1,11 +1,9 @@
 """CI-only orchestration: inherited tools, real prerequisites, reusable Web bundle.
 
-Documented plugin source fixes are applied; signing policy is unchanged.
-Run from the resolved upstream source root.
-This module's local unit tests do not replace a Windows/Android integration build.
+Documented enhanced-only fixes do not change the original channel or signing key.
+Local unit tests do not replace a Windows/Android integration build.
 """
 from __future__ import annotations
-
 import argparse
 import json
 import os
@@ -13,25 +11,21 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-
-from plugin_payload import FIX_REVISION, apply_source_fixes, inspect_generated, verify_apk_plugins
+from plugin_payload import inspect_generated, verify_apk_plugins
+from channel_policy import channel, modification_identity, prepare_application
 
 ROOT = Path.cwd()
 sys.path.insert(0, str(ROOT / "tools" / "build_scripts"))
 
-
 def prepend_path(directory: Path) -> None:
-    """Update the parent environment, not merely one subprocess's env argument."""
     value = str(directory.resolve())
     parts = [p for p in os.environ.get("PATH", "").split(os.pathsep) if p]
     normalized = os.path.normcase(value)
     parts = [p for p in parts if os.path.normcase(os.path.abspath(p)) != normalized]
     os.environ["PATH"] = os.pathsep.join([value, *parts])
 
-
 def prepare_tools() -> Path:
     from common import ensure_typescript
-
     version = os.environ.get("TYPESCRIPT_VERSION", "5.9.3")
     binary_dir = ensure_typescript(version)
     prepend_path(binary_dir)
@@ -43,21 +37,15 @@ def prepare_tools() -> Path:
     output = subprocess.check_output([resolved, "--version"], text=True).strip()
     if output != f"Version {version}":
         raise RuntimeError(f"Unexpected TypeScript version: {output}")
-
-    # Test the same inherited lookup used inside Gradle -> Python -> tsc.cmd.
     python = ROOT / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-    subprocess.run(
-        [str(python), "-c",
-         "import subprocess,sys; subprocess.run([sys.argv[1], '--version'], check=True)",
-         command], check=True, cwd=ROOT,
-    )
-    # Also expose this directory to subsequent, independent GitHub Actions steps.
+    subprocess.run([str(python), "-c",
+        "import subprocess,sys; subprocess.run([sys.argv[1], '--version'], check=True)", command],
+        check=True, cwd=ROOT)
     if os.environ.get("GITHUB_PATH"):
         with open(os.environ["GITHUB_PATH"], "a", encoding="utf-8", newline="\n") as file:
             file.write(str(binary_dir.resolve()) + "\n")
     print(f"Verified inherited TypeScript lookup: {resolved}", flush=True)
     return binary_dir
-
 
 def preflight() -> None:
     from common import (
@@ -67,7 +55,6 @@ def preflight() -> None:
     )
     from build_flutter_android import configure_android_flutter_sdk, ensure_android_signing
     from prepare_android import patch_dynamic_color, prepare_gradle_wrapper
-
     prepare_tools()
     ensure_android_signing()
     flutter = flutter_command()
@@ -83,36 +70,28 @@ def preflight() -> None:
         flutter_pub_get()
         flutter_pub_get(enforce_lockfile=True)
         patch_dynamic_color(FLUTTER_APP_DIR, DIST_DIR)
-        # Unlike `help`, these tasks execute the previously failing plugin packer.
         run([str(gradle), ":app:syncOperitPlugins", ":app:verifyOperitAndroidRuntimeArtifacts",
              "--no-daemon", "--console=plain", "--stacktrace",
              "-Ptarget-platform=android-arm64"], cwd=android)
         generate_dart_proxy_artifacts()
     print("Actual Gradle plugin packing, runtime payload checks and Dart code generation passed.", flush=True)
 
-
-def web_identity(source_commit: str) -> dict[str, str | int]:
+def web_identity(source_commit: str) -> dict:
     return {
-        "schema": 1,
-        "source_commit": source_commit,
+        "schema": 1, "source_commit": source_commit,
         "flutter": os.environ.get("FLUTTER_VERSION", "3.41.9"),
         "rust": os.environ.get("RUST_TOOLCHAIN_VERSION", "1.95.0"),
         "typescript": os.environ.get("TYPESCRIPT_VERSION", "5.9.3"),
         "terser": os.environ.get("TERSER_VERSION", "5.44.0"),
         "wasm_bindgen": os.environ.get("WASM_BINDGEN_VERSION", "0.2.122"),
         "wasi_sdk": os.environ.get("WASI_SDK_VERSION", "20.0"),
-        "base_href": "/",
-        "runtime_plugins": "sync-runtime-before-web-v1",
-        "plugin_source_fixes": FIX_REVISION,
+        "base_href": "/", "runtime_plugins": "sync-runtime-before-web-v1",
+        "application_identity": modification_identity(),
     }
 
-
 def valid_web_cache(bundle: Path, marker: Path, identity: dict) -> bool:
-    from common import (
-        WEB_ACCESS_REQUIRED_FILES, WEB_ACCESS_VERSION_FILE,
-        compute_web_access_bundle_digest, read_web_access_version_manifest,
-    )
-
+    from common import (WEB_ACCESS_REQUIRED_FILES, WEB_ACCESS_VERSION_FILE,
+        compute_web_access_bundle_digest, read_web_access_version_manifest)
     try:
         if json.loads(marker.read_text(encoding="utf-8")) != identity:
             return False
@@ -122,25 +101,20 @@ def valid_web_cache(bundle: Path, marker: Path, identity: dict) -> bool:
         if not manifest:
             return False
         digest, count, size = compute_web_access_bundle_digest(bundle)
-        return (digest, count, size) == (
-            manifest["contentHash"], manifest["fileCount"], manifest["byteSize"],
-        )
+        return (digest, count, size) == (manifest["contentHash"], manifest["fileCount"], manifest["byteSize"])
     except (OSError, ValueError, KeyError, TypeError, RuntimeError) as error:
         print(f"Web checkpoint is missing or unusable; rebuilding: {error}", flush=True)
         return False
 
-
 def build_web() -> None:
     from common import WEB_ACCESS_BUNDLE_DIR, prepare_web_access_embedded_assets
     from build_flutter_web_access import main as upstream_web_build
-
     prepare_tools()
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     identity = web_identity(commit)
     marker = WEB_ACCESS_BUNDLE_DIR.parent / "ci-provenance.json"
     if valid_web_cache(WEB_ACCESS_BUNDLE_DIR, marker, identity):
-        # preflight() generates the Dart proxies even when the Web build is reused.
-        print("Reusing the verified Web bundle for this exact source and toolchain.", flush=True)
+        print("Reusing the verified Web bundle for this source, toolchain and channel.", flush=True)
         prepare_web_access_embedded_assets()
     else:
         marker.unlink(missing_ok=True)
@@ -153,13 +127,10 @@ def build_web() -> None:
             raise RuntimeError("Newly built Web bundle failed its content manifest check")
     print("Web checkpoint complete; it can be saved before APK compilation.", flush=True)
 
-
 def build_apk() -> None:
     from build_arm64 import build
     from common import DIST_DIR
-
     prepare_tools()
-    # Updating os.environ ensures the entire Flutter -> Gradle -> Python tree inherits PATH.
     build()
     apk = DIST_DIR / "operit2-android-arm64-personal-test.apk"
     report = verify_apk_plugins(ROOT, apk)
@@ -167,25 +138,32 @@ def build_apk() -> None:
     info = json.loads(info_file.read_text(encoding="utf-8"))
     info["embedded_plugins"] = {"count": report["count"], "native_bytes_verified": True,
                                 "report": "compatibility/plugin-payload/manifest.json"}
-    info["plugin_source_fixes"] = json.loads(
-        (DIST_DIR / "compatibility/extended_chat/manifest.json").read_text(encoding="utf-8")
-    )
+    info["build_channel"] = channel()
+    info["application_identity"] = modification_identity()
+    if channel() == "enhanced":
+        info["plugin_source_fixes"] = json.loads(
+            (DIST_DIR / "compatibility/extended_chat/manifest.json").read_text(encoding="utf-8"))
+        info["legacy_packages"] = json.loads(
+            (DIST_DIR / "compatibility/legacy-operit/manifest.json").read_text(encoding="utf-8"))
     info_file.write_text(json.dumps(info, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     shutil.copy2(Path(__file__).with_name("plugin_payload.py"),
                  DIST_DIR / "compatibility/plugin-payload/plugin_payload.py")
     shutil.copy2(__file__, DIST_DIR / "build_driver.py")
 
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", choices=("preflight", "web", "apk"))
     args = parser.parse_args()
-    apply_source_fixes(ROOT)
+    if channel() == "enhanced":
+        prepare_tools()
+    prepare_application(ROOT)
     {"preflight": preflight, "web": build_web, "apk": build_apk}[args.stage]()
+    if args.stage == "preflight" and channel() == "enhanced":
+        from enhanced_source import run_flutter_regressions
+        run_flutter_regressions(ROOT)
     if args.stage == "preflight":
         report = inspect_generated(ROOT)
         print(f"Plugin preflight: {report['count']} generated packages have usable payloads.", flush=True)
-
 
 if __name__ == "__main__":
     main()

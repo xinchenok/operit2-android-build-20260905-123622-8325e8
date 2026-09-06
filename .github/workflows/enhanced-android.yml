@@ -1,0 +1,14 @@
+name: Build enhanced Android
+on:
+  workflow_dispatch:
+run-name: Build enhanced Android ${{ github.run_number }}
+permissions:
+  contents: write
+  actions: read
+jobs:
+  enhanced:
+    uses: ./.github/workflows/update-android.yml
+    with:
+      channel: enhanced
+    secrets:
+      OPERIT2_UPDATE_SIGNING: ${{ secrets.OPERIT2_UPDATE_SIGNING }}

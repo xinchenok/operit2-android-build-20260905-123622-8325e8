@@ -1,10 +1,9 @@
-"""Small source fixes and byte-for-byte checks for Rust-embedded tool packages.
+"""Source fixes (enhanced only) and checks for Rust-embedded tool packages.
 
 Packages are include_bytes! data in liboperit_flutter_bridge.so, not APK assets.
 This verifies packaging, not installation, permissions, or device behavior.
 """
 from __future__ import annotations
-
 import difflib
 import hashlib
 import importlib.util
@@ -26,12 +25,9 @@ TIMER_PATTERN = re.compile(
 OLD_ERROR = "message: `读取对话消息失败: ${message}`,"
 NEW_ERROR = "message: `工具 ${func.name.replace(/_impl$/, '')} 执行失败: ${message}`,"
 
-
 def fix_source(text: str) -> tuple[str, dict[str, str]]:
-    """Only replace the known upstream blocks; leave changed upstream code alone."""
     newline = "\r\n" if "\r\n" in text else "\n"
     text = text.replace("\r\n", "\n")
-
     def timer(match: re.Match) -> str:
         indent, generic = match["i"], match["t"] or ""
         annotation = ": ReturnType<typeof setTimeout> | undefined" if generic else ""
@@ -39,26 +35,20 @@ def fix_source(text: str) -> tuple[str, dict[str, str]]:
             "// operit2-personal: release the agent timeout timer on every outcome.",
             f"let timeoutId{annotation};",
             f"const timeoutPromise = new Promise{generic}((resolve) => {{",
-            "    timeoutId = setTimeout(() => resolve(null), timeoutMs);",
-            "});",
+            "    timeoutId = setTimeout(() => resolve(null), timeoutMs);", "});",
             "const sendResult = await Promise.race([sendPromise, timeoutPromise]).finally(() => {",
-            "    if (timeoutId !== undefined) clearTimeout(timeoutId);",
-            "});",
+            "    if (timeoutId !== undefined) clearTimeout(timeoutId);", "});",
         ]
         return "\n".join(indent + line for line in lines)
-
     text, count = TIMER_PATTERN.subn(timer, text)
     timer_status = "applied" if count else (
         "already_applied" if "// operit2-personal: release the agent timeout timer" in text
-        else "upstream_changed_not_modified"
-    )
+        else "upstream_changed_not_modified")
     error_count = text.count(OLD_ERROR)
     text = text.replace(OLD_ERROR, NEW_ERROR)
     error_status = "applied" if error_count else (
-        "already_applied" if NEW_ERROR in text else "upstream_changed_not_modified"
-    )
+        "already_applied" if NEW_ERROR in text else "upstream_changed_not_modified")
     return text.replace("\n", newline), {"timer_cleanup": timer_status, "error_label": error_status}
-
 
 def apply_source_fixes(root: Path) -> dict:
     source = root / PLUGIN_SOURCE
@@ -72,7 +62,6 @@ def apply_source_fixes(root: Path) -> dict:
         before = source.read_bytes()
         after_text, statuses = fix_source(before.decode("utf-8"))
         after = after_text.encode("utf-8")
-        # Preserve the original patch/provenance when preflight, Web and APK each call us.
         if before == after and manifest_file.is_file():
             previous = json.loads(manifest_file.read_text(encoding="utf-8"))
             if previous.get("after_sha256") == hashlib.sha256(after).hexdigest():
@@ -85,14 +74,12 @@ def apply_source_fixes(root: Path) -> dict:
             (folder / "extended_chat.ts").write_bytes(after)
             diff = "".join(difflib.unified_diff(
                 before.decode().splitlines(keepends=True), after_text.splitlines(keepends=True),
-                fromfile="a/" + PLUGIN_SOURCE, tofile="b/" + PLUGIN_SOURCE,
-            ))
+                fromfile="a/" + PLUGIN_SOURCE, tofile="b/" + PLUGIN_SOURCE))
             (folder / "source.patch").write_text(diff, encoding="utf-8")
             source.write_bytes(after)
     manifest_file.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("Plugin source fixes: " + json.dumps(result, ensure_ascii=False), flush=True)
     return result
-
 
 def load_sync(root: Path):
     path = root / "plugins/tools/sync_plugin_packages.py"
@@ -100,10 +87,9 @@ def load_sync(root: Path):
     if spec is None or spec.loader is None:
         raise RuntimeError(f"Cannot load upstream plugin sync helper: {path}")
     module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module  # dataclasses resolves its module via sys.modules
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
-
 
 def generated_plugins(root: Path) -> list[tuple[str, str, Path]]:
     sync = load_sync(root)
@@ -122,7 +108,6 @@ def generated_plugins(root: Path) -> list[tuple[str, str, Path]]:
         raise RuntimeError("No built-in packages were planned; check the upstream plugin layout")
     return result
 
-
 def inspect_toolpkg(data: bytes, name: str) -> dict:
     with zipfile.ZipFile(io.BytesIO(data)) as archive:
         bad = archive.testzip()
@@ -130,21 +115,25 @@ def inspect_toolpkg(data: bytes, name: str) -> dict:
             raise RuntimeError(f"Corrupt ToolPkg {name}: {bad}")
         names = set(archive.namelist())
         if "manifest.hjson" in names:
-            # HJSON is intentionally not misparsed as JSON; the upstream loader handles its syntax.
             return {"manifest": "manifest.hjson", "entry_check": "upstream_hjson_loader"}
         if "manifest.json" not in names:
             raise RuntimeError(f"Missing ToolPkg manifest: {name}")
         manifest = json.loads(archive.read("manifest.json").decode("utf-8-sig"))
         entries = [manifest.get("main")]
         entries.extend(item.get("entry") for item in manifest.get("subpackages", []))
-        entries.extend(item.get("path") for item in manifest.get("resources", []))
         for entry in filter(None, entries):
             key = entry.removeprefix("./")
             if key not in names or not archive.getinfo(key).file_size:
                 raise RuntimeError(f"Missing/empty ToolPkg entry in {name}: {entry}")
+        for resource in manifest.get("resources", []):
+            key = resource["path"].removeprefix("./").rstrip("/")
+            if key in names and archive.getinfo(key).file_size:
+                continue
+            if any(n.startswith(key + "/") and archive.getinfo(n).file_size for n in names):
+                continue
+            raise RuntimeError(f"Missing/empty ToolPkg resource in {name}: {key}")
         return {"manifest": "manifest.json", "package_id": manifest.get("toolpkg_id"),
                 "entry_check": "passed", "checked_entries": len(list(filter(None, entries)))}
-
 
 def inspect_generated(root: Path, native: bytes | None = None) -> dict:
     packages = []
@@ -163,7 +152,6 @@ def inspect_generated(root: Path, native: bytes | None = None) -> dict:
     return {"schema": 1, "native_entry": NATIVE_ENTRY, "packages": packages,
             "count": len(packages), "native_bytes_verified": native is not None,
             "device_tested": False}
-
 
 def verify_apk_plugins(root: Path, apk: Path) -> dict:
     with zipfile.ZipFile(apk) as archive:

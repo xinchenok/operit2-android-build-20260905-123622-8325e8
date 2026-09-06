@@ -1,4 +1,4 @@
-"""Resolve upstream once and publish only verified, consistently signed Android builds."""
+"""Resolve upstream once and publish verified, consistently signed Android channels."""
 from __future__ import annotations
 import argparse
 import base64
@@ -12,8 +12,7 @@ import time
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
-
-from plugin_payload import FIX_REVISION
+from channel_policy import channel, modification_identity
 
 UPSTREAM = "AAswordman/Operit2"
 APK = "operit2-android-arm64-personal-test.apk"
@@ -65,7 +64,6 @@ def tool_versions(fvm: str, workflow: str) -> dict[str, str]:
     return result
 
 def version_code(pubspec: str, last: dict, run_number: int) -> int:
-    # Parse the numeric Android build suffix, independently of versionName format.
     match = re.search(r"(?m)^version:\s*[^\r\n+]+\+(\d+)\s*$", pubspec)
     if not match:
         raise RuntimeError("Cannot read upstream Android versionCode from pubspec.yaml")
@@ -73,6 +71,46 @@ def version_code(pubspec: str, last: dict, run_number: int) -> int:
     if not 0 < value <= 2_100_000_000:
         raise RuntimeError("Android versionCode is out of range")
     return value
+
+def published_builds(repo: str) -> list[dict]:
+    """Both channels contribute to a shared, monotonically increasing versionCode."""
+    builds = []
+    page = 1
+    while True:
+        releases = api(f"repos/{repo}/releases?per_page=100&page={page}")
+        for release in releases:
+            tag = release.get("tag_name", "")
+            if release.get("draft") or not re.fullmatch(r"android-(?:(?:original|enhanced)-)?[0-9]+-[0-9a-f]+", tag):
+                continue
+            assets = [a for a in release.get("assets", []) if a["name"] == "UPDATE.json"]
+            if len(assets) != 1:
+                raise RuntimeError(f"Published Android release {tag} is missing its update metadata")
+            inferred_channel = tag.split('-')[1] if tag.split('-')[1] in ("original", "enhanced") else "legacy-personal"
+            code = int(re.search(r"(?:^|-)([0-9]+)-[0-9a-f]+$", tag)[1])
+            builds.append({"tag": tag, "channel": inferred_channel, "version_code": code,
+                           "metadata_url": assets[0]["browser_download_url"]})
+        if len(releases) < 100:
+            break
+        page += 1
+    return sorted(builds, key=lambda row: row["version_code"], reverse=True)
+
+def release_state(repo: str, fingerprint: str, kind: str) -> tuple[dict, int]:
+    records = published_builds(repo)
+    high_water = max((row["version_code"] for row in records), default=0)
+    selected = next((row for row in records if row["channel"] == kind), None)
+    candidates = {row['tag']: row for row in [records[0] if records else None, selected] if row}
+    last = {}
+    for tag, row in candidates.items():
+        meta = get(row["metadata_url"], api=False)
+        if meta.get("certificate_sha256") != fingerprint:
+            raise RuntimeError("Signing certificate differs from the existing update channel; retain the configured key")
+        if int(meta.get("version_code", -1)) != row["version_code"]:
+            raise RuntimeError(f"Release version metadata does not match {tag}")
+        if row is selected:
+            if meta.get("build_channel") != kind:
+                raise RuntimeError(f"Release {tag} has inconsistent channel metadata")
+            last = meta
+    return last, high_water
 
 def resolve() -> None:
     raw = os.environ.get("OPERIT2_UPDATE_SIGNING", "").strip()
@@ -101,23 +139,25 @@ def resolve() -> None:
     sha = commit["sha"]
     if not re.fullmatch(r"[0-9a-f]{40}", sha):
         raise RuntimeError("GitHub did not return a full upstream commit ID")
-    last = {}
-    release = api(f"repos/{owner_repo}/releases/latest", missing=True)
-    if release:
-        assets = [a for a in release["assets"] if a["name"] == "UPDATE.json"]
-        if len(assets) != 1:
-            raise RuntimeError("Existing latest release has no unambiguous UPDATE.json; it was not replaced")
-        last = get(assets[0]["browser_download_url"], api=False)
-        if last.get("certificate_sha256") != fingerprint:
-            raise RuntimeError("Signing certificate differs from the last release. Restore the existing key; do not generate a new one")
+    kind = channel()
+    last, high_water = release_state(owner_repo, fingerprint, kind)
+    legacy_sha = ""
+    if kind == "enhanced":
+        legacy = api("repos/AAswordman/Operit")
+        legacy_sha = api(f"repos/AAswordman/Operit/commits/{quote(legacy['default_branch'], safe='')}")["sha"]
+        if not re.fullmatch(r"[0-9a-f]{40}", legacy_sha):
+            raise RuntimeError("Invalid resolved Operit legacy commit")
+    os.environ["LEGACY_SHA"] = legacy_sha
     tools = tool_versions(source_file("apps/flutter/app/.fvmrc", sha), source_file(".github/workflows/android-flutter-build.yml", sha))
     builder_sha = os.environ["GITHUB_SHA"]
-    build = not (last.get("source_commit") == sha and last.get("builder_commit") == builder_sha)
-    code = version_code(source_file("apps/flutter/app/pubspec.yaml", sha), last, int(os.environ["GITHUB_RUN_NUMBER"]))
-    # Source patches must invalidate native/Web caches even when upstream has not changed.
-    tools["OPERIT2_PLUGIN_FIX_REVISION"] = FIX_REVISION
+    identity = modification_identity()
+    build = not (last.get("source_commit") == sha and last.get("builder_commit") == builder_sha
+                 and last.get("application_identity") == identity
+                 and int(last.get("version_code", 0)) == high_water)
+    code = version_code(source_file("apps/flutter/app/pubspec.yaml", sha),
+                        {"version_code": high_water}, int(os.environ["GITHUB_RUN_NUMBER"]))
     tool_key = hashlib.sha256(json.dumps(tools, sort_keys=True).encode()).hexdigest()[:16]
-    # Runtime inputs are independent of app UI changes. Cache only the exact input trees.
+    app_key = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()[:16]
     entries = api(f"repos/{UPSTREAM}/contents/tools/android-runtime?ref={sha}")
     runtime_inputs = sorted((entry["path"], entry["sha"]) for entry in entries)
     runtime_key = hashlib.sha256(json.dumps(runtime_inputs).encode()).hexdigest()[:16]
@@ -126,17 +166,17 @@ def resolve() -> None:
         "build_number": str(code), "flutter_version": tools["FLUTTER_VERSION"],
         "toolchain": json.dumps(tools, separators=(",", ":")), "tool_key": tool_key,
         "runtime_key": runtime_key, "certificate_sha256": fingerprint,
+        "app_key": app_key, "legacy_sha": legacy_sha, "channel": kind,
     }
     with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as stream:
         for key, value in outputs.items():
             stream.write(f"{key}={value}\n")
-    print(f"Upstream {branch}: {sha}; {'building' if build else 'already built; download latest release'}")
+    print(f"Channel {kind}; Upstream {branch}: {sha}; {'building' if build else 'already built; download latest release'}")
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as stream:
-        stream.write(f"## Update target\nUpstream: `{UPSTREAM}` / `{branch}` / `{sha}`\n\n")
+        stream.write(f"## {kind.title()} update target\nUpstream: `{UPSTREAM}` / `{branch}` / `{sha}`\n\n")
         stream.write(f"{'Building a new APK entirely on GitHub' if build else 'No rebuild needed; the latest successful release already matches'}.\n\n")
         if not build:
-            stream.write(f"[Download the latest APK](https://github.com/{owner_repo}/releases/latest)\n")
-
+            stream.write(f"[Download the channel APK](https://github.com/{owner_repo}/releases)\n")
 
 def certificate_digest(signature: str) -> str:
     values = re.findall(r"(?mi)^(?:Signer #\d+|V\d(?:\.\d+)? Signer):?\s+certificate SHA-256 digest:\s*([0-9a-f]{64})\s*$", signature)
@@ -145,13 +185,15 @@ def certificate_digest(signature: str) -> str:
         raise RuntimeError("Expected exactly one APK signing certificate fingerprint")
     return unique.pop()
 
-
 def publish() -> None:
     dist = Path("dist")
     apk = dist / APK
     info = json.loads((dist / "BUILD-INFO.json").read_text(encoding="utf-8"))
     sha = os.environ["SOURCE_SHA"]
     code = int(os.environ["BUILD_NUMBER"])
+    kind = channel()
+    if info.get("build_channel") != kind:
+        raise RuntimeError("APK channel is different from this workflow")
     if info["source_commit"] != sha or int(info["version_code"]) != code:
         raise RuntimeError("APK build provenance does not match this update request")
     digest = hashlib.sha256(apk.read_bytes()).hexdigest()
@@ -168,11 +210,16 @@ def publish() -> None:
         "certificate_sha256": certificate, "apk_sha256": digest,
         "apk_filename": APK, "run_id": os.environ["GITHUB_RUN_ID"],
         "official": False, "device_tested": False,
+        "build_channel": kind, "application_identity": info["application_identity"],
     }
+    published_name = f"operit2-{kind}-arm64.apk"
+    apk.replace(dist / published_name)
+    (dist / "SHA256SUMS").write_text(f"{digest}  {published_name}\n", encoding="ascii")
+    metadata["apk_filename"] = published_name
     (dist / "UPDATE.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
-    tag = f"android-{code}-{sha[:7]}"
+    tag = f"android-{kind}-{code}-{sha[:7]}"
     repo = os.environ["GITHUB_REPOSITORY"]
-    notes = ("Unofficial personal ARM64 build of AAswordman/Operit2.\n\n"
+    notes = (f"Unofficial {kind.upper()} ARM64 build of AAswordman/Operit2.\n\n"
              f"Upstream source: {sha}\nBuilder: {os.environ['GITHUB_SHA']}\n"
              f"Android versionCode: {code}\n\nFixed personal signing key. Not device-tested. "
              "An APK signed with a different key cannot be overwritten by this build; back up app data before switching signing channels.\n")
@@ -184,10 +231,10 @@ def publish() -> None:
         return
     if not existing:
         subprocess.run(["gh", "release", "create", tag, *common, "--draft", "--target", os.environ["GITHUB_SHA"],
-                        "--title", f"Operit2 ARM64 {sha[:7]} ({code})", "--notes-file", str(notes_path)], check=True)
+                        "--title", f"Operit2 {kind.title()} ARM64 {sha[:7]} ({code})", "--notes-file", str(notes_path)], check=True)
     files = [str(p) for p in sorted(dist.iterdir()) if p.is_file()]
     subprocess.run(["gh", "release", "upload", tag, *common, *files, "--clobber"], check=True)
-    subprocess.run(["gh", "release", "edit", tag, *common, "--draft=false", "--latest"], check=True)
+    subprocess.run(["gh", "release", "edit", tag, *common, "--draft=false", "--latest" if kind == "original" else "--latest=false"], check=True)
     print(f"Published {tag}")
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:

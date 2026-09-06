@@ -1,7 +1,17 @@
-name: Build latest Android
+name: Build latest Android (Original)
 'on':
   workflow_dispatch:
-run-name: Build latest Android ${{ github.run_number }}
+  workflow_call:
+    inputs:
+      channel:
+        type: string
+        default: original
+    secrets:
+      OPERIT2_UPDATE_SIGNING:
+        required: true
+run-name: Build ${{ inputs.channel || 'original' }} Android ${{ github.run_number }}
+env:
+  OPERIT2_CHANNEL: ${{ inputs.channel || 'original' }}
 permissions:
   contents: read
 concurrency:
@@ -20,6 +30,8 @@ jobs:
       tool_key: ${{ steps.resolve.outputs.tool_key }}
       runtime_key: ${{ steps.resolve.outputs.runtime_key }}
       certificate_sha256: ${{ steps.resolve.outputs.certificate_sha256 }}
+      app_key: ${{ steps.resolve.outputs.app_key }}
+      legacy_sha: ${{ steps.resolve.outputs.legacy_sha }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -75,7 +87,6 @@ jobs:
     - name: Fetch runtime sources
       shell: pwsh
       run: |
-        # Transport retries only; the upstream script checks the archive hashes.
         function Invoke-WebRequest {
           param([string]$Uri, [string]$OutFile)
           $PSNativeCommandUseErrorActionPreference = $false
@@ -164,6 +175,8 @@ jobs:
       SOURCE_SHA: ${{ needs.resolve.outputs.source_sha }}
       OPERIT2_BUILD_NUMBER: ${{ needs.resolve.outputs.build_number }}
       FLUTTER_VERSION: ${{ needs.resolve.outputs.flutter_version }}
+      LEGACY_SHA: ${{ needs.resolve.outputs.legacy_sha }}
+      LEGACY_SOURCE_ROOT: D:/o/.operit2-legacy
     steps:
     - name: Enable symlink checkout required by upstream web assets
       run: git config --global core.symlinks true
@@ -179,6 +192,18 @@ jobs:
       with:
         path: .operit2-builder
         persist-credentials: false
+    - name: Checkout resolved legacy source for enhanced packages only
+      if: env.OPERIT2_CHANNEL == 'enhanced'
+      uses: actions/checkout@v4
+      with:
+        repository: AAswordman/Operit
+        ref: ${{ needs.resolve.outputs.legacy_sha }}
+        path: .operit2-legacy
+        persist-credentials: false
+        sparse-checkout: |
+          examples
+          app/src/main/assets/packages
+          tools/example_packages
     - name: Stage source at short Windows build root
       working-directory: ${{ github.workspace }}
       id: stage
@@ -188,6 +213,16 @@ jobs:
         git clone --local --no-hardlinks -- "$env:GITHUB_WORKSPACE" $root
         if ($LASTEXITCODE -ne 0) { throw 'Unable to create short-path source clone' }
         Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE '.operit2-builder') -Destination (Join-Path $root '.operit2-builder') -Recurse
+        if ($env:OPERIT2_CHANNEL -eq 'enhanced') {
+          git clone --no-checkout --local --no-hardlinks -- (Join-Path $env:GITHUB_WORKSPACE '.operit2-legacy') (Join-Path $root '.operit2-legacy')
+          if ($LASTEXITCODE -ne 0) { throw 'Legacy short-path checkout failed' }
+          git -C (Join-Path $root '.operit2-legacy') sparse-checkout set examples app/src/main/assets/packages tools/example_packages
+          if ($LASTEXITCODE -ne 0) { throw 'Legacy sparse checkout setup failed' }
+          git -C (Join-Path $root '.operit2-legacy') checkout --detach $env:LEGACY_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Legacy checkout failed' }
+          $legacyHead = (git -C (Join-Path $root '.operit2-legacy') rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $legacyHead -ne $env:LEGACY_SHA) { throw 'Unexpected legacy source commit' }
+        }
         $head = (git -C $root rev-parse HEAD).Trim()
         if ($LASTEXITCODE -ne 0 -or $head -ne $env:SOURCE_SHA) { throw 'Unexpected source commit' }
         New-Item -ItemType Directory -Force (Join-Path $root '.ci-logs') | Out-Null
@@ -215,8 +250,8 @@ jobs:
           D:/o/apps/flutter/native/operit-flutter-bridge/target
           D:/o/apps/flutter/app/lib/core/proxy/generated/CoreProxyClients.g.dart
           D:/o/apps/flutter/app/lib/core/proxy/generated/CoreProxyModels.g.dart
-        key: operit2-update-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-v1-${{ github.run_id }}-${{ github.run_attempt }}
-        restore-keys: operit2-update-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-v1-
+        key: operit2-channel-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-v1-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: operit2-channel-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-v1-
     - name: Install bootstrap Flutter
       uses: subosito/flutter-action@v2
       with:
@@ -237,7 +272,7 @@ jobs:
       with:
         node-version: '22'
     - name: Install Java
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: temurin
         java-version: '17'
@@ -250,12 +285,10 @@ jobs:
     - name: Prepare Python and FVM
       run: |
         python -m venv .venv
-        if ($LASTEXITCODE -ne 0) { throw 'Python venv creation failed' }
+        if ($LASTEXITCODE -ne 0) { throw 'Python venv preparation failed' }
         dart pub global activate fvm $env:FVM_VERSION
         if ($LASTEXITCODE -ne 0) { throw 'FVM installation failed' }
-        $pubCache = $env:PUB_CACHE
-        if (-not $pubCache) { $pubCache = Join-Path $env:LOCALAPPDATA 'Pub/Cache' }
-        (Join-Path $pubCache 'bin') | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+        "$env:LOCALAPPDATA\Pub\Cache\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
     - name: Restore pinned FVM SDK
       id: fvm_cache
       uses: actions/cache/restore@v5
@@ -302,7 +335,7 @@ jobs:
       run: '& .\.operit2-builder\builder\restore_update_signing.ps1'
     - name: Check upstream build environment
       run: python tools/build_scripts/check_environment.py --products app --github-runner
-    - name: Execute actual Gradle plugin packing and native prerequisites
+    - name: Prepare channel, compile packages and run enhanced Flutter regressions
       id: preflight
       run: |
         New-Item -ItemType Directory -Force .ci-logs | Out-Null
@@ -315,7 +348,7 @@ jobs:
         path: |
           D:/o/apps/web_access/build/bundle
           D:/o/apps/web_access/build/ci-provenance.json
-        key: operit2-update-web-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-sync-v1
+        key: operit2-channel-web-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-sync-v1
     - name: Build or reuse verified Web Access checkpoint
       run: |
         New-Item -ItemType Directory -Force .ci-logs | Out-Null
@@ -330,7 +363,7 @@ jobs:
         path: |
           D:/o/apps/web_access/build/bundle
           D:/o/apps/web_access/build/ci-provenance.json
-        key: operit2-update-web-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-sync-v1
+        key: operit2-channel-web-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-sync-v1
     - name: Archive reusable Web checkpoint independently
       continue-on-error: true
       uses: actions/upload-artifact@v4
@@ -370,6 +403,10 @@ jobs:
       run: |
         git archive --format=zip --output=tools/release/dist/Operit2-source.zip HEAD
         if ($LASTEXITCODE -ne 0) { throw "Source archive failed" }
+        if ($env:OPERIT2_CHANNEL -eq 'enhanced') {
+          git -C .operit2-legacy archive --format=zip --output=D:/o/tools/release/dist/Operit-legacy-source.zip HEAD examples tools/example_packages LICENSE
+          if ($LASTEXITCODE -ne 0) { throw 'Legacy source archive failed' }
+        }
         git -C .operit2-builder archive --format=zip --output=D:/o/tools/release/dist/Operit2-builder.zip HEAD
         if ($LASTEXITCODE -ne 0) { throw "Builder archive failed" }
     - name: Archive dependency patch and build information
@@ -393,6 +430,7 @@ jobs:
           D:/o/tools/release/dist/Operit2-build-info.zip
           D:/o/tools/release/dist/resolved-pubspec.lock
           D:/o/tools/release/dist/resolved-pubspec.yaml
+          D:/o/tools/release/dist/enhanced-workflow.yml
         if-no-files-found: error
         retention-days: 14
     - name: Upload corresponding upstream source
@@ -402,6 +440,7 @@ jobs:
         path: |
           D:/o/tools/release/dist/Operit2-source.zip
           D:/o/tools/release/dist/Operit2-builder.zip
+          D:/o/tools/release/dist/Operit-legacy-source.zip
         if-no-files-found: error
         retention-days: 14
     - name: Preserve diagnostic logs even on failure
@@ -442,7 +481,7 @@ jobs:
           D:/o/apps/flutter/native/operit-flutter-bridge/target
           D:/o/apps/flutter/app/lib/core/proxy/generated/CoreProxyClients.g.dart
           D:/o/apps/flutter/app/lib/core/proxy/generated/CoreProxyModels.g.dart
-        key: operit2-update-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-v1-${{ github.run_id }}-${{ github.run_attempt }}
+        key: operit2-channel-win-${{ needs.resolve.outputs.source_sha }}-${{ needs.resolve.outputs.tool_key }}-${{ needs.resolve.outputs.app_key }}-v1-${{ github.run_id }}-${{ github.run_attempt }}
   publish:
     needs: [resolve, apk]
     if: needs.resolve.outputs.should_build == 'true' && needs.apk.result == 'success'

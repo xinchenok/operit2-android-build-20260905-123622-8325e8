@@ -52,6 +52,9 @@ class PatchTests(unittest.TestCase):
         self.assertEqual(f.read_text(),'changed script')
 
 class ResolveTests(unittest.TestCase):
+    def setUp(self):
+        self.env=patch.dict(os.environ,{'OPERIT2_CHANNEL':'original','LEGACY_SHA':''})
+        self.env.start();self.addCleanup(self.env.stop)
     def test_missing_key_fails_before_network(self):
         with patch.dict(os.environ,{'OPERIT2_UPDATE_SIGNING':''}),patch.object(c,'api') as request:
             with self.assertRaises(RuntimeError):c.resolve()
@@ -68,7 +71,7 @@ class ResolveTests(unittest.TestCase):
         def answer(path, **kw):
             if path==f'repos/{c.UPSTREAM}':return {'default_branch':'main'}
             if '/commits/' in path:return {'sha':source}
-            if path.endswith('releases/latest'):return None if last is None else {'assets':[{'name':'UPDATE.json','browser_download_url':'https://example.invalid/meta'}]}
+            if '/releases?' in path:return [] if last is None else [{'tag_name':'android-original-'+str(last.get('version_code',1000000002))+'-'+('a'*7),'assets':[{'name':'UPDATE.json','browser_download_url':'https://example.invalid/meta'}]}]
             if '/contents/tools/android-runtime' in path:return [{'path':'tools/android-runtime/test','sha':'d'*40}]
             raise AssertionError(path)
         with patch.dict(os.environ,env),patch.object(c,'api',side_effect=answer),patch.object(c,'get',return_value=last),patch.object(c,'source_file',side_effect=lambda path,sha: '{"flutter":"3.41.9"}' if path.endswith('.fvmrc') else ('version: 1.0.0+1\n' if path.endswith('pubspec.yaml') else '')):
@@ -76,10 +79,10 @@ class ResolveTests(unittest.TestCase):
         return dict(line.split('=',1) for line in (root/'out').read_text().splitlines())
     def test_new_source_builds(self):self.assertEqual(self._simulate()['should_build'],'true')
     def test_same_commit_skips_expensive_build(self):
-        last={'source_commit':'a'*40,'builder_commit':'c'*40,'certificate_sha256':'b'*64,'version_code':1000000002}
+        last={'source_commit':'a'*40,'builder_commit':'c'*40,'certificate_sha256':'b'*64,'version_code':1000000002,'build_channel':'original','application_identity':{'channel':'original','application_modifications':False}}
         self.assertEqual(self._simulate(last=last)['should_build'],'false')
     def test_new_builder_rebuilds(self):
-        last={'source_commit':'a'*40,'builder_commit':'e'*40,'certificate_sha256':'b'*64,'version_code':1000000002}
+        last={'source_commit':'a'*40,'builder_commit':'e'*40,'certificate_sha256':'b'*64,'version_code':1000000002,'build_channel':'original','application_identity':{'channel':'original','application_modifications':False}}
         self.assertEqual(self._simulate(last=last)['should_build'],'true')
     def test_key_change_is_not_silent(self):
         with self.assertRaises(RuntimeError):self._simulate(last={'certificate_sha256':'f'*64})
@@ -93,5 +96,4 @@ class SignatureTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):c.certificate_digest('Signer #1 certificate SHA-256 digest: '+ 'a'*64 +'\nSigner #2 certificate SHA-256 digest: '+ 'b'*64)
     def test_no_signer(self):
         with self.assertRaises(RuntimeError):c.certificate_digest('no certificate')
-
 if __name__=='__main__':unittest.main()

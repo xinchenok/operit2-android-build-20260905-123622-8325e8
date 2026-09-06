@@ -1,5 +1,5 @@
 name: Check enhanced changes (no Android build)
-on:
+'on':
   workflow_dispatch:
   push:
     branches: [enhancement/two-build-channels]
@@ -12,6 +12,9 @@ jobs:
   inspect:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    outputs:
+      source_sha: ${{ steps.source.outputs.sha }}
+      flutter: ${{ steps.source.outputs.flutter }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,20 +36,56 @@ jobs:
             app/src/main/assets/packages
             examples
             tools/example_packages
-      - name: Inspect source identities
-        run: |
-          git -C upstream rev-parse HEAD
-          git -C legacy rev-parse HEAD
-          cd wrapper
-          python3 -m unittest discover -s builder -p 'test_*.py' -v
-      - name: Archive source fixtures without credentials
-        run: |
-          mkdir snapshot
-          git -C wrapper archive --format=zip -o "$GITHUB_WORKSPACE/snapshot/wrapper.zip" HEAD
-          git -C upstream archive --format=zip -o "$GITHUB_WORKSPACE/snapshot/upstream.zip" HEAD apps/flutter/app/lib apps/flutter/app/test apps/flutter/app/pubspec.yaml apps/flutter/app/.fvmrc plugins core/crates/plugin core/crates/runtime/application/build.rs tools/build_scripts .github/workflows/android-flutter-build.yml LICENSE
-          git -C legacy archive --format=zip -o "$GITHUB_WORKSPACE/snapshot/legacy.zip" HEAD app/src/main/assets/packages examples tools/example_packages LICENSE
-      - uses: actions/upload-artifact@v4
+      - uses: actions/setup-node@v4
         with:
-          name: enhanced-source-fixtures
-          path: snapshot/*.zip
-          retention-days: 3
+          node-version: '22'
+      - name: Install the isolated TypeScript compiler for source tests
+        run: npm install --global typescript@5.9.3
+      - name: Resolve test source versions
+        id: source
+        run: |
+          echo "sha=$(git -C upstream rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "flutter=$(python3 -c 'import json; print(json.load(open("upstream/apps/flutter/app/.fvmrc"))["flutter"])')" >> "$GITHUB_OUTPUT"
+      - name: Unit tests and real source / legacy archive checks
+        run: |
+          python3 -m unittest discover -s wrapper/builder -p 'test_*.py' -v
+          python3 wrapper/ci/check_enhanced_sources.py upstream legacy
+      - name: Save actual patch and compatibility report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: enhanced-source-validation
+          path: upstream/tools/release/dist/compatibility
+          retention-days: 7
+  flutter:
+    needs: inspect
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      CARGO_BUILD_JOBS: '3'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: AAswordman/Operit2
+          ref: ${{ needs.inspect.outputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: .operit2-builder
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ needs.inspect.outputs.flutter }}
+          cache: true
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.95.0'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            core/target
+          key: enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-v1
+      - name: Type-check patched sources and run Flutter regression tests
+        run: python3 .operit2-builder/ci/check_flutter_enhanced.py

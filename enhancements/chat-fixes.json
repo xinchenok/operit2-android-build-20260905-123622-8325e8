@@ -1,0 +1,116 @@
+[
+  {
+    "name": "first-null-chat-subscription",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    if (chatId == _requestedChatFlowChatId) {",
+    "new": "    if (_chatFlowBindingGeneration > 0 && chatId == _requestedChatFlowChatId) {"
+  },
+  {
+    "name": "bootstrap-empty-conversation",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    if (chatId == null || chatId.isEmpty) {\n      return;\n    }\n    _messagesSubscription = _viewModel",
+    "new": "    if (chatId == null || chatId.isEmpty) {\n      _creatingInitialChat = true;\n      _messages.clear();\n      _replyToMessage = null;\n      _loading = true;\n      _publishChatContentData();\n      try {\n        await _viewModel.ensureInitialChat();\n      } catch (error, stackTrace) {\n        if (mounted && generation == _chatFlowBindingGeneration) {\n          _creatingInitialChat = false;\n          _handleChatFlowError(error, stackTrace);\n        }\n      }\n      return;\n    }\n    _messagesSubscription = _viewModel"
+  },
+  {
+    "name": "initial-draft-and-submit-state",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "  bool _pendingQueueEnqueueInFlight = false;",
+    "new": "  bool _pendingQueueEnqueueInFlight = false;\n  bool _creatingInitialChat = false;\n  bool _submitInFlight = false;"
+  },
+  {
+    "name": "preserve-draft-during-first-chat-creation",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "      _saveCurrentInputDraft();\n      _currentChatId = state.currentChatId;",
+    "new": "      _saveCurrentInputDraft();\n      if (_creatingInitialChat && state.currentChatId != null) {\n        _inputDraftsByChatId.putIfAbsent(\n          state.currentChatId,\n          () => _inputDraftsByChatId[null] ?? TextEditingValue.empty,\n        );\n        _inputDraftsByChatId.remove(null);\n      }\n      _creatingInitialChat = false;\n      _replyToMessage = null;\n      _currentChatId = state.currentChatId;"
+  },
+  {
+    "name": "bootstrap-single-flight",
+    "path": "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart",
+    "old": "  /// Watches the selected chat id used to bind per-chat Core flows.",
+    "new": "  // All main-chat surfaces share one initial creation, including embedded views.\n  static Future<void>? _initialChatCreation;\n\n  Future<void> ensureInitialChat() {\n    return _initialChatCreation ??= _createInitialChatIfNeeded().whenComplete(() {\n      _initialChatCreation = null;\n    });\n  }\n\n  Future<void> _createInitialChatIfNeeded() async {\n    final current = await watchCurrentChatId().first;\n    if (current != null && current.trim().isNotEmpty) return;\n    await clients.chatRuntimeHolderMain.createNewChat(\n      characterCardName: null,\n      group: null,\n      inheritGroupFromCurrent: true,\n      setAsCurrentChat: true,\n      characterGroupId: null,\n    );\n  }\n\n  /// Watches the selected chat id used to bind per-chat Core flows."
+  },
+  {
+    "name": "submit-single-flight-and-errors",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "  void _sendMessage() {\n    unawaited(_sendMessageWithHooks());\n  }",
+    "new": "  void _sendMessage() {\n    unawaited(_submitMessageOnce());\n  }\n\n  Future<void> _submitMessageOnce() async {\n    if (_submitInFlight) return;\n    _submitInFlight = true;\n    final submittingChat = _currentChatId;\n    try {\n      await _sendMessageWithHooks();\n    } catch (error, stackTrace) {\n      if (mounted && _currentChatId == submittingChat) {\n        _handleChatFlowError(error, stackTrace);\n      }\n    } finally {\n      _submitInFlight = false;\n    }\n  }"
+  },
+  {
+    "name": "do-not-send-draft-changed-during-hook",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    if (!mounted || _currentChatId != chatId) {\n      return;\n    }\n    if (decision != null) {",
+    "new": "    if (!mounted || _currentChatId != chatId ||\n        _messageController.value != inputValue) {\n      // A hook may await network/UI: never send or clear a newer draft.\n      return;\n    }\n    if (decision != null) {"
+  },
+  {
+    "name": "cancel-stale-bottom-callback",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    _bottomScrollScheduled = true;\n    WidgetsBinding.instance.addPostFrameCallback((_) {\n      _bottomScrollScheduled = false;\n      if (!mounted || !_scrollController.hasClients) {",
+    "new": "    _bottomScrollScheduled = true;\n    final scheduledChatId = _currentChatId;\n    WidgetsBinding.instance.addPostFrameCallback((_) {\n      _bottomScrollScheduled = false;\n      if (!mounted || !_autoScrollToBottom ||\n          _currentChatId != scheduledChatId || _hasNewerDisplayHistory ||\n          _isLoadingDisplayWindow || !_scrollController.hasClients) {"
+  },
+  {
+    "name": "ignore-nested-scroll-metrics",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
+    "old": "  ) {\n    final viewportDimension = notification.metrics.viewportDimension;",
+    "new": "  ) {\n    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    final viewportDimension = notification.metrics.viewportDimension;"
+  },
+  {
+    "name": "manual-scroll-cancels-locator",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
+    "old": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification is UserScrollNotification) {",
+    "new": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    if (notification is ScrollStartNotification && notification.dragDetails != null) {\n      _clearPendingMessageJump();\n      _userScrollSessionActive = true;\n      widget.onAutoScrollToBottomChanged(false);\n    }\n    if (notification is UserScrollNotification) {"
+  },
+  {
+    "name": "user-intent-cancels-locator-wheel",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
+    "old": "      if (notification.direction != ScrollDirection.idle) {\n        _userScrollSessionActive = true;",
+    "new": "      if (notification.direction != ScrollDirection.idle) {\n        _clearPendingMessageJump();\n        _userScrollSessionActive = true;"
+  },
+  {
+    "name": "do-not-reenable-on-upward-release",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
+    "old": "        if (_isAtBottom(notification.metrics) &&\n            !widget.autoScrollToBottomListenable.value) {",
+    "new": "        if (!_userScrollsTowardHistory && _isAtBottom(notification.metrics) &&\n            !widget.autoScrollToBottomListenable.value) {"
+  },
+  {
+    "name": "only-user-downward-scroll-reenables-follow",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
+    "old": "      if (_isAtBottom(notification.metrics) &&\n          !_userScrollsTowardHistory &&",
+    "new": "      if (_userScrollSessionActive &&\n          notification.dragDetails != null &&\n          (notification.scrollDelta ?? 0) > 0 &&\n          _isAtBottom(notification.metrics) &&\n          !_userScrollsTowardHistory &&"
+  },
+  {
+    "name": "navigator-does-not-touch-detached-controller",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
+    "old": "  Future<void> _scrollToBottomFromNavigator() async {\n    widget.onAutoScrollToBottomChanged(true);",
+    "new": "  Future<void> _scrollToBottomFromNavigator() async {\n    _clearPendingMessageJump();\n    if (!mounted || !widget.scrollController.hasClients) return;\n    widget.onAutoScrollToBottomChanged(true);"
+  },
+  {
+    "name": "bind-reply-before-deferred-send",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "  void _sendMessageAfterNextFrame(String text, String chatId) {\n    WidgetsBinding.instance.addPostFrameCallback((_) {\n      if (!mounted) {",
+    "new": "  void _sendMessageAfterNextFrame(String text, String chatId) {\n    final submittedReply = _replyToMessage;\n    WidgetsBinding.instance.addPostFrameCallback((_) {\n      if (!mounted) {"
+  },
+  {
+    "name": "send-captured-reply",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "            replyToMessage: _replyToMessage,\n            chatIdOverride: chatId,",
+    "new": "            replyToMessage: submittedReply,\n            chatIdOverride: chatId,"
+  },
+  {
+    "name": "recover-failed-send-draft",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "            debugPrint('Failed to send chat message: $error\\n$stackTrace');\n            if (!mounted) {",
+    "new": "            debugPrint('Failed to send chat message: $error\\n$stackTrace');\n            final savedDraft = _inputDraftsByChatId[chatId];\n            if (savedDraft == null || savedDraft.text.isEmpty) {\n              final recovered = TextEditingValue(\n                text: text, selection: TextSelection.collapsed(offset: text.length),\n              );\n              _inputDraftsByChatId[chatId] = recovered;\n              if (mounted && _currentChatId == chatId && _messageController.text.isEmpty) {\n                _messageController.value = recovered;\n              }\n            }\n            if (!mounted) {"
+  },
+  {
+    "name": "speech-owns-original-editor",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "  Future<void> _finishSpeechInput() async {\n    _mutateChatContentData(() {",
+    "new": "  Future<void> _finishSpeechInput() async {\n    final recordingChatId = _currentChatId;\n    final recordingDraft = _messageController.value;\n    _mutateChatContentData(() {"
+  },
+  {
+    "name": "speech-does-not-overwrite-new-draft",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "      _messageController.value = TextEditingValue(\n        text: text,\n        selection: TextSelection.collapsed(offset: text.length),\n      );\n      _inputFocusNode.requestFocus();\n    } finally {",
+    "new": "      if (!mounted) return;\n      if (_currentChatId != recordingChatId || _messageController.value != recordingDraft) {\n        _showLocalToast('语音识别完成，但对话或草稿已变更，未覆盖当前输入：$text');\n        return;\n      }\n      _messageController.value = TextEditingValue(\n        text: text,\n        selection: TextSelection.collapsed(offset: text.length),\n      );\n      _inputFocusNode.requestFocus();\n    } finally {"
+  }
+]
