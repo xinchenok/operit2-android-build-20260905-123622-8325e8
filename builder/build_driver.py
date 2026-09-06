@@ -1,6 +1,7 @@
 """CI-only orchestration: inherited tools, real prerequisites, reusable Web bundle.
 
-No application code or signing policy is changed. Run from the pinned source root.
+Documented plugin source fixes are applied; signing policy is unchanged.
+Run from the resolved upstream source root.
 This module's local unit tests do not replace a Windows/Android integration build.
 """
 from __future__ import annotations
@@ -12,6 +13,8 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+from plugin_payload import FIX_REVISION, apply_source_fixes, inspect_generated, verify_apk_plugins
 
 ROOT = Path.cwd()
 sys.path.insert(0, str(ROOT / "tools" / "build_scripts"))
@@ -100,6 +103,7 @@ def web_identity(source_commit: str) -> dict[str, str | int]:
         "wasi_sdk": os.environ.get("WASI_SDK_VERSION", "20.0"),
         "base_href": "/",
         "runtime_plugins": "sync-runtime-before-web-v1",
+        "plugin_source_fixes": FIX_REVISION,
     }
 
 
@@ -157,6 +161,18 @@ def build_apk() -> None:
     prepare_tools()
     # Updating os.environ ensures the entire Flutter -> Gradle -> Python tree inherits PATH.
     build()
+    apk = DIST_DIR / "operit2-android-arm64-personal-test.apk"
+    report = verify_apk_plugins(ROOT, apk)
+    info_file = DIST_DIR / "BUILD-INFO.json"
+    info = json.loads(info_file.read_text(encoding="utf-8"))
+    info["embedded_plugins"] = {"count": report["count"], "native_bytes_verified": True,
+                                "report": "compatibility/plugin-payload/manifest.json"}
+    info["plugin_source_fixes"] = json.loads(
+        (DIST_DIR / "compatibility/extended_chat/manifest.json").read_text(encoding="utf-8")
+    )
+    info_file.write_text(json.dumps(info, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    shutil.copy2(Path(__file__).with_name("plugin_payload.py"),
+                 DIST_DIR / "compatibility/plugin-payload/plugin_payload.py")
     shutil.copy2(__file__, DIST_DIR / "build_driver.py")
 
 
@@ -164,7 +180,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", choices=("preflight", "web", "apk"))
     args = parser.parse_args()
+    apply_source_fixes(ROOT)
     {"preflight": preflight, "web": build_web, "apk": build_apk}[args.stage]()
+    if args.stage == "preflight":
+        report = inspect_generated(ROOT)
+        print(f"Plugin preflight: {report['count']} generated packages have usable payloads.", flush=True)
 
 
 if __name__ == "__main__":
