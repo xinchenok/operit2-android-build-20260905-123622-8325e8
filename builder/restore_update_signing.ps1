@@ -14,8 +14,9 @@ $store = Join-Path $dir 'operit2-release.keystore'
 $keytool = Join-Path $env:JAVA_HOME 'bin/keytool.exe'
 if (-not (Test-Path -LiteralPath $keytool)) { $keytool = Join-Path $env:JAVA_HOME 'bin/keytool' }
 # .NET and Java may choose different PKCS#12 alias names. Discover instead of guessing.
-$list = & $keytool -J-Duser.language=en -J-Duser.country=US -list -v -storetype PKCS12 -keystore $pfx -storepass:env OPERIT_KEY_PASS 2>&1
-if ($LASTEXITCODE -ne 0) { throw 'Unable to open the supplied PKCS#12 signing key.' }
+$listArgs = @('-J-Duser.language=en', '-J-Duser.country=US', '-list', '-v', '-storetype', 'PKCS12', '-keystore', $pfx, '-storepass:env', 'OPERIT_KEY_PASS')
+$list = & $keytool @listArgs 2>&1
+if ($LASTEXITCODE -ne 0) { throw ('Unable to open the supplied PKCS#12 signing key: ' + ($list -join "`n")) }
 $aliases = @([regex]::Matches(($list -join "`n"), '(?m)^Alias name: (.+)\r?$'))
 if ($aliases.Count -ne 1 -or ($list -join "`n") -notmatch 'PrivateKeyEntry') { throw 'Expected exactly one private signing key.' }
 $sourceAlias = $aliases[0].Groups[1].Value.Trim()
