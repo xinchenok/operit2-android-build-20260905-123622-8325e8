@@ -1,6 +1,9 @@
 name: Build latest Android (Original)
 'on':
   workflow_dispatch:
+  push:
+    branches: [enhancement/two-build-channels]
+    paths: ['ci/original-build-request.txt']
   workflow_call:
     inputs:
       channel:
@@ -334,7 +337,7 @@ jobs:
       run: '& .\.operit2-builder\builder\restore_update_signing.ps1'
     - name: Check upstream build environment
       run: python tools/build_scripts/check_environment.py --products app --github-runner
-    - name: Prepare channel, compile packages and run enhanced Flutter regressions
+    - name: Prepare channel, compile packages and generate Dart APIs
       id: preflight
       run: |
         New-Item -ItemType Directory -Force .ci-logs | Out-Null
@@ -374,6 +377,11 @@ jobs:
           D:/o/apps/web_access/build/ci-provenance.json
         if-no-files-found: error
         retention-days: 14
+    - name: Run enhanced Flutter regressions with the completed Web bundle
+      if: env.OPERIT2_CHANNEL == 'enhanced'
+      run: |
+        python -u .operit2-builder/builder/build_driver.py regressions 2>&1 | Tee-Object -FilePath .ci-logs/flutter-regressions.log
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     - name: Build ARM64 APK
       run: |
         New-Item -ItemType Directory -Force .ci-logs | Out-Null

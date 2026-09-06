@@ -152,15 +152,22 @@ def build_apk() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=("preflight", "web", "apk"))
+    parser.add_argument("stage", choices=("preflight", "web", "regressions", "apk"))
     args = parser.parse_args()
     if channel() == "enhanced":
         prepare_tools()
     prepare_application(ROOT)
-    {"preflight": preflight, "web": build_web, "apk": build_apk}[args.stage]()
-    if args.stage == "preflight" and channel() == "enhanced":
+    if args.stage == "regressions":
+        if channel() != "enhanced":
+            raise RuntimeError("Flutter enhancement regressions belong to the enhanced channel")
+        # Native Flutter test hooks bundle the real Web Access output too.
+        # The workflow builds/restores it before entering this stage.
+        from common import prepare_web_access_embedded_assets
         from enhanced_source import run_flutter_regressions
+        prepare_web_access_embedded_assets()
         run_flutter_regressions(ROOT)
+    else:
+        {"preflight": preflight, "web": build_web, "apk": build_apk}[args.stage]()
     if args.stage == "preflight":
         report = inspect_generated(ROOT)
         print(f"Plugin preflight: {report['count']} generated packages have usable payloads.", flush=True)

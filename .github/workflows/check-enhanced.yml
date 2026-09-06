@@ -3,6 +3,11 @@ name: Check enhanced changes (no Android build)
   workflow_dispatch:
   push:
     branches: [enhancement/two-build-channels]
+    paths:
+      - ".github/workflows/check-enhanced.yml"
+      - "builder/**"
+      - "enhancements/**"
+      - "ci/check_*.py"
 permissions:
   contents: read
 concurrency:
@@ -67,9 +72,10 @@ jobs:
   flutter:
     needs: inspect
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 90
     env:
       CARGO_BUILD_JOBS: '3'
+      OPERIT2_CHANNEL: enhanced
     steps:
       - uses: actions/checkout@v4
         with:
@@ -84,15 +90,27 @@ jobs:
         with:
           flutter-version: ${{ needs.inspect.outputs.flutter }}
           cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare pinned FVM command for the real Web prerequisite
+        run: |
+          dart pub global activate fvm 4.1.2
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: '1.95.0'
+          targets: wasm32-unknown-unknown
       - uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
             core/target
+            target/operit-build-tools
+            .ci-tools
+            apps/flutter/native/operit-flutter-bridge/target
+            apps/web_access/build
           key: enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-v2-${{ github.run_id }}
           restore-keys: |
             enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-
@@ -123,4 +141,8 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             core/target
+            target/operit-build-tools
+            .ci-tools
+            apps/flutter/native/operit-flutter-bridge/target
+            apps/web_access/build
           key: enhanced-check-linux-${{ needs.inspect.outputs.source_sha }}-v2-${{ github.run_id }}

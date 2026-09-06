@@ -31,7 +31,7 @@ class SeparationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d,patch.dict(os.environ,{'OPERIT2_CHANNEL':'enhanced','LEGACY_SOURCE_ROOT':'','LEGACY_SHA':''}),self.assertRaises(RuntimeError):policy.prepare_application(Path(d))
 
 class PatchTests(unittest.TestCase):
-    def specs(self):return json.loads(enhanced.CONFIG.read_text())
+    def specs(self):return json.loads(enhanced.CONFIG.read_text(encoding='utf-8'))
     def test_patch_transaction_is_repeatable_and_records_original_diff(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);p=root/'example.dart';p.write_text('original')

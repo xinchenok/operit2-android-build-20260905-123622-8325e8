@@ -15,7 +15,7 @@
     "name": "initial-draft-and-submit-state",
     "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
     "old": "  bool _pendingQueueEnqueueInFlight = false;",
-    "new": "  bool _pendingQueueEnqueueInFlight = false;\n  bool _creatingInitialChat = false;\n  bool _submitInFlight = false;"
+    "new": "  bool _pendingQueueEnqueueInFlight = false;\n  bool _creatingInitialChat = false;\n  bool _submitInFlight = false;\n  String? _speechRecordingChatId;\n  TextEditingValue? _speechRecordingDraft;"
   },
   {
     "name": "preserve-draft-during-first-chat-creation",
@@ -39,7 +39,7 @@
     "name": "do-not-send-draft-changed-during-hook",
     "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
     "old": "    if (!mounted || _currentChatId != chatId) {\n      return;\n    }\n    if (decision != null) {",
-    "new": "    if (!mounted || _currentChatId != chatId ||\n        _messageController.value != inputValue) {\n      // A hook may await network/UI: never send or clear a newer draft.\n      return;\n    }\n    if (decision != null) {"
+    "new": "    if (!mounted || _currentChatId != chatId ||\n        _messageController.value != inputValue || _replyToMessage != inputReply) {\n      // A hook may await network/UI: never send or clear a newer draft.\n      return;\n    }\n    if (decision != null) {"
   },
   {
     "name": "cancel-stale-bottom-callback",
@@ -51,13 +51,13 @@
     "name": "ignore-nested-scroll-metrics",
     "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
     "old": "  ) {\n    final viewportDimension = notification.metrics.viewportDimension;",
-    "new": "  ) {\n    if (notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    final viewportDimension = notification.metrics.viewportDimension;"
+    "new": "  ) {\n    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    final viewportDimension = notification.metrics.viewportDimension;"
   },
   {
     "name": "manual-scroll-cancels-locator",
     "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
     "old": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification is UserScrollNotification) {",
-    "new": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    if (notification is ScrollStartNotification && notification.dragDetails != null) {\n      _clearPendingMessageJump();\n      _userScrollSessionActive = true;\n      widget.onAutoScrollToBottomChanged(false);\n    }\n    if (notification is UserScrollNotification) {"
+    "new": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    if (notification is ScrollStartNotification && notification.dragDetails != null) {\n      _clearPendingMessageJump();\n      _userScrollSessionActive = true;\n      widget.onAutoScrollToBottomChanged(false);\n    }\n    if (notification is UserScrollNotification) {"
   },
   {
     "name": "user-intent-cancels-locator-wheel",
@@ -105,12 +105,36 @@
     "name": "speech-owns-original-editor",
     "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
     "old": "  Future<void> _finishSpeechInput() async {\n    _mutateChatContentData(() {",
-    "new": "  Future<void> _finishSpeechInput() async {\n    final recordingChatId = _currentChatId;\n    final recordingDraft = _messageController.value;\n    _mutateChatContentData(() {"
+    "new": "  Future<void> _finishSpeechInput() async {\n    final recordingChatId = _speechRecordingChatId;\n    final recordingDraft = _speechRecordingDraft;\n    _mutateChatContentData(() {"
   },
   {
     "name": "speech-does-not-overwrite-new-draft",
     "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
     "old": "      _messageController.value = TextEditingValue(\n        text: text,\n        selection: TextSelection.collapsed(offset: text.length),\n      );\n      _inputFocusNode.requestFocus();\n    } finally {",
     "new": "      if (!mounted) return;\n      if (_currentChatId != recordingChatId || _messageController.value != recordingDraft) {\n        _showLocalToast('语音识别完成，但对话或草稿已变更，未覆盖当前输入：$text');\n        return;\n      }\n      _messageController.value = TextEditingValue(\n        text: text,\n        selection: TextSelection.collapsed(offset: text.length),\n      );\n      _inputFocusNode.requestFocus();\n    } finally {"
+  },
+  {
+    "name": "bind-reply-before-submit-hook",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    final inputValue = _messageController.value;\n    final decision = await _viewModel.dispatchChatInputSubmitRequested(",
+    "new": "    final inputValue = _messageController.value;\n    final inputReply = _replyToMessage;\n    final decision = await _viewModel.dispatchChatInputSubmitRequested("
+  },
+  {
+    "name": "preserve-new-reply-after-send-completes",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "            _replyToMessage = null;\n            await _refreshAttachments();",
+    "new": "            if (_replyToMessage == submittedReply) {\n              _replyToMessage = null;\n            }\n            await _refreshAttachments();"
+  },
+  {
+    "name": "speech-captures-recording-start-owner",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "  Future<void> _startSpeechInput() async {\n    final selectedConfigId = await _viewModel",
+    "new": "  Future<void> _startSpeechInput() async {\n    final recordingChatId = _currentChatId;\n    final recordingDraft = _messageController.value;\n    final selectedConfigId = await _viewModel"
+  },
+  {
+    "name": "speech-retains-recording-start-owner",
+    "path": "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "old": "    _mutateChatContentData(() {\n      _isSpeechRecording = true;\n    });",
+    "new": "    _mutateChatContentData(() {\n      _speechRecordingChatId = recordingChatId;\n      _speechRecordingDraft = recordingDraft;\n      _isSpeechRecording = true;\n    });"
   }
 ]

@@ -54,6 +54,37 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     controller.dispose(); follow.dispose();
   });
+  testWidgets('nested vertical notification does not change transcript follow', (tester) async {
+    final controller = ScrollController();
+    final follow = ValueNotifier<bool>(true);
+    await tester.pumpWidget(_enhancedTranscript(controller, follow));
+    await tester.pump();
+    // Dispatch below the transcript viewport: a nested scroll notification
+    // reaches its listener at depth 1, whereas the transcript itself uses 0.
+    final context = tester.element(find.byType(CursorStyleChatMessage).first);
+    UserScrollNotification(metrics: controller.position,
+      context: context, direction: ScrollDirection.forward).dispatch(context);
+    expect(follow.value, isTrue);
+    await tester.pumpWidget(const SizedBox.shrink());
+    controller.dispose(); follow.dispose();
+  });
+  testWidgets('touch scroll start cancels a queued bottom follow', (tester) async {
+    final controller = ScrollController();
+    final follow = ValueNotifier<bool>(true);
+    await tester.pumpWidget(_enhancedTranscript(controller, follow));
+    await tester.pump();
+    final context = tester.element(find.byType(ListView).first);
+    ScrollStartNotification(metrics: controller.position,
+      context: context, dragDetails: DragStartDetails()).dispatch(context);
+    expect(follow.value, isFalse);
+    controller.jumpTo(0);
+    await tester.pumpWidget(_enhancedTranscript(controller, follow, count: 31));
+    await tester.pump();
+    expect(follow.value, isFalse);
+    expect(controller.offset, closeTo(0, 1));
+    await tester.pumpWidget(const SizedBox.shrink());
+    controller.dispose(); follow.dispose();
+  });
   testWidgets('reading older messages survives newly appended content', (tester) async {
     final controller = ScrollController();
     final follow = ValueNotifier<bool>(true);

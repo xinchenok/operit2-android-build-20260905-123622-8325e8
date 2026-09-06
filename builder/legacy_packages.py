@@ -14,11 +14,45 @@ import sys
 import zipfile
 from pathlib import Path
 
-REVISION = 'legacy-whitelist-js-toolpkg-v2'
+REVISION = 'legacy-whitelist-js-toolpkg-v3'
 METADATA = re.compile(r'/\*\s*METADATA\s*([\s\S]*?)\*/')
 NAME = re.compile(r'([\"\']?name[\"\']?\s*:\s*)([\"\'][^\"\']+[\"\']|[A-Za-z0-9_-]+)')
 ENABLED = re.compile(r'([\"\']?enabled(?:ByDefault|_by_default)[\"\']?\s*:\s*)(true|false)')
 TOOLS = re.compile(r'\bTools\.([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)+)\s*\(')
+PACKAGE_REFERENCE = re.compile(
+    r'(?P<prefix>\b(?:[A-Z][A-Z0-9_]*_)?(?:PACKAGE_NAME|TOOLPKG_ID|SUBPACKAGE_ID)\s*=\s*'
+    r'|\b(?:packageName|subpackageId|toolPkgId|toolpkgId)\s*:\s*)'
+    r'(?P<quote>[\"\x27])(?P<value>[^\"\x27]+)(?P=quote)'
+)
+LEGACY_HOST_CLASS = re.compile(r'\bcom\.ai\.assistance\.operit\.(?:[A-Za-z_$][\w$]*\.)*[A-Z][\w$]*')
+
+
+def namespace_references(source: str, package_ids: dict[str, str]) -> str:
+    """Update package identifiers in known code contexts, preserving paths and labels."""
+    def replace(match):
+        value = package_ids.get(match['value'], match['value'])
+        return match['prefix'] + match['quote'] + value + match['quote']
+    return PACKAGE_REFERENCE.sub(replace, source)
+
+
+def host_dependencies(source: str) -> dict:
+    return {'native_global_dependencies': sorted(set(re.findall(r'\b(Java|Android|NativeInterface)\s*\.', source))),
+            'legacy_host_class_dependencies': sorted({name for name in LEGACY_HOST_CLASS.findall(source)
+                                                     if not name.rsplit('.', 1)[-1].isupper()})}
+
+
+def check_javascript(data: bytes, filename: str) -> None:
+    # Bundled browser resources have ES import/export declarations; generated
+    # ToolPkg host scripts use CommonJS. Make the grammar explicit for stdin.
+    # Node's .js autodetection can return success without checking ESM syntax.
+    source = data.decode('utf-8-sig')
+    module = bool(re.search(r'^\s*(?:export\b|import\b(?!\s*\())', source, re.MULTILINE))
+    kind = 'module' if module else 'commonjs'
+    checked = subprocess.run(['node', f'--input-type={kind}', '--check', '-'],
+                             input=data, capture_output=True)
+    if checked.returncode:
+        raise RuntimeError(f'Invalid bundled JavaScript {filename}:\n'
+                           + checked.stderr.decode('utf-8', errors='replace'))
 
 def known_methods(root: Path) -> set[str]:
     bindings = root/'core/crates/plugin/sdk/src/js_sdk/runtime_bindings.rs'
@@ -47,6 +81,7 @@ def convert(source: str, filename: str, available: set[str]) -> tuple[str,dict]:
     body = source[:match.start()] + source[match.end():]
     required = sorted(set(TOOLS.findall(body)))
     missing = sorted(set(required)-available)
+    host = host_dependencies(body)
     # Shadow namespaces locally; never mutate global Tools or claim unsupported actions succeeded.
     setup = ["const legacyTools = Object.create(baseTools);", "const copied = new Map([['', legacyTools]]);"]
     for api in missing:
@@ -62,7 +97,8 @@ def convert(source: str, filename: str, available: set[str]) -> tuple[str,dict]:
              '(function (Tools) {\n'+body+'\n})(legacyTools);\n})(Tools);\n')
     return wrapped, {'file':filename,'original_id':original_id,'package_id':package_id,
         'enabled_by_default':False,'required_methods':required,'missing_methods':missing,
-        'status':'requires_host_port' if missing else 'static_api_match_only',
+        **host,
+        'status':'requires_host_port' if missing or host['legacy_host_class_dependencies'] else 'static_api_match_only',
         'original_sha256':hashlib.sha256(source.encode()).hexdigest(),
         'packaged_sha256':hashlib.sha256(wrapped.encode()).hexdigest(),'device_tested':False}
 
@@ -92,12 +128,15 @@ def _convert_toolpkg(folder: Path, available: set[str], sync, legacy: Path) -> t
     package_id = 'legacy.' + original_id
     manifest['toolpkg_id'] = package_id
     manifest['enabled_by_default'] = False
+    package_ids = {original_id: package_id}
     for subpackage in manifest.get('subpackages', []):
-        subpackage['id'] = 'legacy_' + subpackage['id']
+        original_subpackage = subpackage['id']
+        subpackage['id'] = 'legacy_' + original_subpackage
+        package_ids[original_subpackage] = subpackage['id']
         subpackage['enabled_by_default'] = False
     # Upstream packer includes directory resources and ignored generated dist entries.
     files = sync._iter_files_for_pack(legacy, folder)
-    output = io.BytesIO(); required = set(); native_globals = set()
+    output = io.BytesIO(); required = set(); native_globals = set(); legacy_host_classes = set()
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as archive:
         for file in files:
             name = file.relative_to(folder).as_posix()
@@ -107,11 +146,15 @@ def _convert_toolpkg(folder: Path, available: set[str], sync, legacy: Path) -> t
             elif file.suffix == '.js':
                 text = data.decode('utf-8-sig')
                 required.update(TOOLS.findall(text))
-                native_globals.update(re.findall(r'\b(Java|Android|NativeInterface)\s*\.',text))
+                host = host_dependencies(text)
+                native_globals.update(host['native_global_dependencies'])
+                legacy_host_classes.update(host['legacy_host_class_dependencies'])
+                # UI modules and IPC helpers address the renamed manifest ids explicitly.
+                text = namespace_references(text, package_ids)
                 if METADATA.search(text):
                     text,_ = convert(text,name,available)
-                    data = text.encode()
-                subprocess.run(['node','--check',str(file)],check=True,capture_output=True)
+                data = text.encode()
+                check_javascript(data, f'{folder.name}/{name}')
             entry=zipfile.ZipInfo(name,date_time=(2020,1,1,0,0,0))
             entry.compress_type=zipfile.ZIP_DEFLATED
             archive.writestr(entry,data)
@@ -119,7 +162,8 @@ def _convert_toolpkg(folder: Path, available: set[str], sync, legacy: Path) -> t
     return output.getvalue(), {'file':folder.name+'.toolpkg','original_id':original_id,
         'package_id':package_id,'enabled_by_default':False,'required_methods':sorted(required),
         'missing_methods':missing,'native_global_dependencies':sorted(native_globals),
-        'status':'requires_host_port' if missing else 'static_api_match_only',
+        'legacy_host_class_dependencies':sorted(legacy_host_classes),
+        'status':'requires_host_port' if missing or legacy_host_classes else 'static_api_match_only',
         'device_tested':False}
 
 
@@ -154,7 +198,7 @@ def install(root: Path, legacy: Path, sha: str) -> dict:
         info['output']=output; info['packaged_sha256']=hashlib.sha256(data).hexdigest()
         planned[output]=(data,info)
     old_report=report_dir/'manifest.json'
-    previous=json.loads(old_report.read_text()) if old_report.exists() else {}
+    previous=json.loads(old_report.read_text(encoding='utf-8')) if old_report.exists() else {}
     owned={p.get('output',p['package_id']+'.js') for p in previous.get('packages',[])}
     for name in planned:
         if (dest/name).exists() and name not in owned:

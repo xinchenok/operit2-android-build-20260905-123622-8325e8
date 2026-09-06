@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import shutil
 
-REVISION = 'chat-initial-scroll-submit-v1'
+REVISION = 'chat-initial-scroll-submit-v2'
 CONFIG = Path(__file__).resolve().parents[1] / 'enhancements/chat-fixes.json'
 
 def apply_patches(root: Path) -> dict:
