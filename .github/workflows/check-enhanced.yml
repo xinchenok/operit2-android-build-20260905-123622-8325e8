@@ -1,0 +1,52 @@
+name: Check enhanced changes (no Android build)
+on:
+  workflow_dispatch:
+  push:
+    branches: [enhancement/two-build-channels]
+permissions:
+  contents: read
+concurrency:
+  group: enhanced-check-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: wrapper
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: AAswordman/Operit2
+          ref: main
+          path: upstream
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: AAswordman/Operit
+          ref: main
+          path: legacy
+          persist-credentials: false
+          sparse-checkout: |
+            app/src/main/assets/packages
+            examples
+            tools/example_packages
+      - name: Inspect source identities
+        run: |
+          git -C upstream rev-parse HEAD
+          git -C legacy rev-parse HEAD
+          cd wrapper
+          python3 -m unittest discover -s builder -p 'test_*.py' -v
+      - name: Archive source fixtures without credentials
+        run: |
+          mkdir snapshot
+          git -C wrapper archive --format=zip -o "$GITHUB_WORKSPACE/snapshot/wrapper.zip" HEAD
+          git -C upstream archive --format=zip -o "$GITHUB_WORKSPACE/snapshot/upstream.zip" HEAD apps/flutter/app/lib apps/flutter/app/test apps/flutter/app/pubspec.yaml apps/flutter/app/.fvmrc plugins core/crates/plugin core/crates/runtime/application/build.rs tools/build_scripts .github/workflows/android-flutter-build.yml LICENSE
+          git -C legacy archive --format=zip -o "$GITHUB_WORKSPACE/snapshot/legacy.zip" HEAD app/src/main/assets/packages examples tools/example_packages LICENSE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enhanced-source-fixtures
+          path: snapshot/*.zip
+          retention-days: 3
