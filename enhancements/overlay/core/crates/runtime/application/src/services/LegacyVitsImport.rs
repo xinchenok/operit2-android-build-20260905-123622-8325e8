@@ -44,10 +44,20 @@ pub fn prepare(host: &HostManager, request: &Value) -> Result<TtsConfig, String>
         return Err("VITS 模型包路径为空；请设置应用可读取的本地模型目录或 ZIP 文件".into());
     }
     let source = if package.starts_with("file:") {
-        url::Url::parse(package)
-            .map_err(err)?
-            .to_file_path()
-            .map_err(|_| "VITS file URL 无法转换成本地路径".to_string())?
+        // `Url::to_file_path` only exists on native file-system targets.
+        // Web Access forwards imports to a native Core; its wasm build must
+        // still compile without pretending the browser can read local paths.
+        #[cfg(any(unix, windows, target_os = "redox", target_os = "wasi", target_os = "hermit"))]
+        {
+            url::Url::parse(package)
+                .map_err(err)?
+                .to_file_path()
+                .map_err(|_| "VITS file URL 无法转换成本地路径".to_string())?
+        }
+        #[cfg(not(any(unix, windows, target_os = "redox", target_os = "wasi", target_os = "hermit")))]
+        {
+            return Err("本地 VITS 模型导入需要连接原生 Core 服务".into());
+        }
     } else {
         PathBuf::from(package)
     };
