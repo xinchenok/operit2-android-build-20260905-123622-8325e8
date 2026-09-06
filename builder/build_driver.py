@@ -92,7 +92,7 @@ def web_identity(source_commit: str) -> dict[str, str | int]:
     return {
         "schema": 1,
         "source_commit": source_commit,
-        "flutter": "3.41.9",
+        "flutter": os.environ.get("FLUTTER_VERSION", "3.41.9"),
         "rust": os.environ.get("RUST_TOOLCHAIN_VERSION", "1.95.0"),
         "typescript": os.environ.get("TYPESCRIPT_VERSION", "5.9.3"),
         "terser": os.environ.get("TERSER_VERSION", "5.44.0"),
