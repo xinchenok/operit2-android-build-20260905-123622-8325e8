@@ -75,14 +75,23 @@ def version_code(pubspec: str, last: dict, run_number: int) -> int:
 def resolve() -> None:
     raw = os.environ.get("OPERIT2_UPDATE_SIGNING", "").strip()
     if not raw:
-        raise RuntimeError("Fixed signing is not configured. Run Update-Operit2.cmd once on your Windows PC first. No Android build was started.")
+        message = ("Fixed signing is not configured. In GitHub Settings > Secrets and variables > Actions, "
+                   "add OPERIT2_UPDATE_SIGNING once using the complete private signing bundle. "
+                   "No desktop script is needed. No Android build was started.")
+        summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        repo = os.environ.get("GITHUB_REPOSITORY", "")
+        if summary:
+            with open(summary, "a", encoding="utf-8") as stream:
+                stream.write("## First-time signing setup\n" + message + "\n\n")
+                stream.write(f"[Add the repository Secret](https://github.com/{repo}/settings/secrets/actions/new)\n")
+        raise RuntimeError(message)
     try:
         signing = json.loads(raw)
         fingerprint = signing["certificate_sha256"].lower()
         if signing.get("schema") != 1 or not signing["pfx_base64"] or not signing["password"] or not re.fullmatch(r"[0-9a-f]{64}", fingerprint):
             raise ValueError()
     except (ValueError, KeyError, TypeError, AttributeError):
-        raise RuntimeError("Fixed signing secret is malformed; restore it from the updater's saved key") from None
+        raise RuntimeError("Fixed signing secret is malformed; restore the complete private signing bundle in OPERIT2_UPDATE_SIGNING. Do not generate a replacement key for an existing update channel") from None
     owner_repo = os.environ["GITHUB_REPOSITORY"]
     upstream = api(f"repos/{UPSTREAM}")
     branch = upstream["default_branch"]
@@ -120,7 +129,9 @@ def resolve() -> None:
     print(f"Upstream {branch}: {sha}; {'building' if build else 'already built; download latest release'}")
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as stream:
         stream.write(f"## Update target\nUpstream: `{UPSTREAM}` / `{branch}` / `{sha}`\n\n")
-        stream.write(f"{'Building a new APK' if build else 'No rebuild needed; the latest successful release already matches'}.\n")
+        stream.write(f"{'Building a new APK entirely on GitHub' if build else 'No rebuild needed; the latest successful release already matches'}.\n\n")
+        if not build:
+            stream.write(f"[Download the latest APK](https://github.com/{owner_repo}/releases/latest)\n")
 
 
 def certificate_digest(signature: str) -> str:
@@ -160,7 +171,7 @@ def publish() -> None:
     notes = ("Unofficial personal ARM64 build of AAswordman/Operit2.\n\n"
              f"Upstream source: {sha}\nBuilder: {os.environ['GITHUB_SHA']}\n"
              f"Android versionCode: {code}\n\nFixed personal signing key. Not device-tested. "
-             "The old one-time-signed APK needs a one-time backup/reinstall before switching to this channel.\n")
+             "An APK signed with a different key cannot be overwritten by this build; back up app data before switching signing channels.\n")
     notes_path = Path("release-notes.txt"); notes_path.write_text(notes, encoding="utf-8")
     common = ["--repo", repo]
     existing = api(f"repos/{repo}/releases/tags/{tag}", missing=True)
@@ -174,6 +185,11 @@ def publish() -> None:
     subprocess.run(["gh", "release", "upload", tag, *common, *files, "--clobber"], check=True)
     subprocess.run(["gh", "release", "edit", tag, *common, "--draft=false", "--latest"], check=True)
     print(f"Published {tag}")
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with open(summary, "a", encoding="utf-8") as stream:
+            stream.write(f"## APK ready\n[Download this build](https://github.com/{repo}/releases/tag/{tag})\n\n")
+            stream.write(f"Source: `{sha}`\n\nAndroid versionCode: `{code}`\n\nCertificate SHA-256: `{certificate}`\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
