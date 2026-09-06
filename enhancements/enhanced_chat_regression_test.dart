@@ -1,7 +1,6 @@
 // Appended to a copy of the upstream transcript regression harness by enhanced_source.py.
 void main() {
   upstreamRegressionTests();
-
   test('enhanced screen stays compatible with the actual generated proxy API', () {
     expect(const AIChatScreen(), isA<Widget>());
   });
@@ -24,41 +23,37 @@ void main() {
     await vm.ensureInitialChat();
     expect(bridge.creations, 2);
   });
-
   testWidgets('nested horizontal scroll does not disable transcript follow', (tester) async {
     final controller = ScrollController();
+    final horizontal = ScrollController();
     final follow = ValueNotifier<bool>(true);
-    await tester.pumpWidget(_enhancedTranscript(controller, follow));
+    await tester.pumpWidget(Stack(textDirection: TextDirection.ltr, children: [
+      _enhancedTranscript(controller, follow),
+      Positioned(top: 0, left: 0, right: 0, height: 40,
+        child: Directionality(textDirection: TextDirection.ltr,
+          child: SingleChildScrollView(controller: horizontal,
+            scrollDirection: Axis.horizontal,
+            child: const SizedBox(width: 2000, height: 40)))),
+    ]));
     await tester.pump();
     final context = tester.element(find.byType(ListView).first);
-    UserScrollNotification(
-      metrics: FixedScrollMetrics(minScrollExtent: 0, maxScrollExtent: 100,
-        pixels: 50, viewportDimension: 50, axisDirection: AxisDirection.right,
-        devicePixelRatio: 1),
-      context: context, direction: ScrollDirection.forward,
-    ).dispatch(context);
+    UserScrollNotification(metrics: horizontal.position,
+      context: context, direction: ScrollDirection.forward).dispatch(context);
     expect(follow.value, isTrue);
     await tester.pumpWidget(const SizedBox.shrink());
-    controller.dispose(); follow.dispose();
+    controller.dispose(); horizontal.dispose(); follow.dispose();
   });
-
   testWidgets('programmatic bottom notification cannot resume disabled follow', (tester) async {
     final controller = ScrollController();
     final follow = ValueNotifier<bool>(false);
     await tester.pumpWidget(_enhancedTranscript(controller, follow));
     await tester.pump();
-    final context = tester.element(find.byType(ListView).first);
-    ScrollUpdateNotification(
-      metrics: FixedScrollMetrics(minScrollExtent: 0, maxScrollExtent: 100,
-        pixels: 100, viewportDimension: 50, axisDirection: AxisDirection.down,
-        devicePixelRatio: 1),
-      context: context, scrollDelta: 10,
-    ).dispatch(context);
+    controller.jumpTo(controller.position.maxScrollExtent);
+    await tester.pump();
     expect(follow.value, isFalse);
     await tester.pumpWidget(const SizedBox.shrink());
     controller.dispose(); follow.dispose();
   });
-
   testWidgets('reading older messages survives newly appended content', (tester) async {
     final controller = ScrollController();
     final follow = ValueNotifier<bool>(true);
@@ -79,7 +74,6 @@ void main() {
     controller.dispose(); follow.dispose();
   });
 }
-
 Widget _enhancedTranscript(ScrollController controller, ValueNotifier<bool> follow, {int count=30}) {
   return _chatArea(
     messages: List.generate(count, (index) => _aiMessage(timestamp: index+1,
@@ -91,7 +85,6 @@ Widget _enhancedTranscript(ScrollController controller, ValueNotifier<bool> foll
     isLoading: false, onFollowChanged: (value) => follow.value=value,
   );
 }
-
 class _BootstrapViewModel extends ChatViewModel {
   _BootstrapViewModel(_BootstrapBridge b, this.selected) : super(bridge: b);
   final String? selected;

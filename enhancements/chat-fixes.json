@@ -51,13 +51,13 @@
     "name": "ignore-nested-scroll-metrics",
     "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
     "old": "  ) {\n    final viewportDimension = notification.metrics.viewportDimension;",
-    "new": "  ) {\n    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    final viewportDimension = notification.metrics.viewportDimension;"
+    "new": "  ) {\n    if (notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    final viewportDimension = notification.metrics.viewportDimension;"
   },
   {
     "name": "manual-scroll-cancels-locator",
     "path": "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
     "old": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification is UserScrollNotification) {",
-    "new": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    if (notification is ScrollStartNotification && notification.dragDetails != null) {\n      _clearPendingMessageJump();\n      _userScrollSessionActive = true;\n      widget.onAutoScrollToBottomChanged(false);\n    }\n    if (notification is UserScrollNotification) {"
+    "new": "  bool _handleScrollNotification(ScrollNotification notification) {\n    if (notification.metrics.axis != Axis.vertical) {\n      return false;\n    }\n    if (notification is ScrollStartNotification && notification.dragDetails != null) {\n      _clearPendingMessageJump();\n      _userScrollSessionActive = true;\n      widget.onAutoScrollToBottomChanged(false);\n    }\n    if (notification is UserScrollNotification) {"
   },
   {
     "name": "user-intent-cancels-locator-wheel",
