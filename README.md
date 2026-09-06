@@ -1,34 +1,42 @@
-# Operit2 Android：GitHub 一键构建最新代码
+# Operit2 Android：原版与增强版
 
-个人 ARM64 构建，非官方发行版。编译全部在 GitHub Actions 运行，不需要在自己的电脑上安装或执行启动器。
+全部编译在 GitHub Actions 完成，无需在电脑上安装开发环境或运行启动器。
 
-## 首次设置：保存一次固定签名
+## 两个独立入口
 
-打开 [新增仓库 Secret](https://github.com/xinchenok/operit2-android-cx/settings/secrets/actions/new)。
+| 工作流 | 应用行为 | 发布文件 |
+| --- | --- | --- |
+| [Build latest Android (Original)](../../actions/workflows/update-android.yml) | 跟随 Operit2 最新默认分支，只做必需的编译兼容；不加入聊天修复，不导入旧版工具包 | `operit2-original-arm64.apk` |
+| [Build enhanced Android](../../actions/workflows/enhanced-android.yml) | 跟随最新源码，额外应用聊天修复及旧 Operit 工具包兼容导入 | `operit2-enhanced-arm64.apk` |
 
-- Name：`OPERIT2_UPDATE_SIGNING`
-- Secret：私下交付的 `OPERIT2_UPDATE_SIGNING.txt` 的全部内容，即一个完整 JSON 对象。
+打开对应工作流，点击 **Run workflow**，保持 `main`，再次点击 **Run workflow**。无需填写提交号或其他参数。编译成功后到 [Releases](../../releases) 下载对应渠道 APK。失败记录不是安装包。
 
-点击 **Add secret**。签名文件包含私钥及口令，不要提交到公开仓库、Issue 或日志；请私下保存备份。已有固定签名时复用原 Secret，不要换新密钥。无需运行 PowerShell、GitHub CLI 或本地脚本。
+原版仍包含 ARM64 架构选择、固定个人签名、递增版本号、上游非 OpenHarmony 构建处理，以及必要的第三方构建脚本兼容补丁。它不是作者签名的官方发行包，但不会应用增强版的应用行为改动。
 
-## 以后每次构建
+## 固定签名与渠道切换
 
-打开 [Build latest Android](https://github.com/xinchenok/operit2-android-cx/actions/workflows/update-android.yml)，点击 **Run workflow**，保留 `main`，再确认 **Run workflow**。没有需要填写的自定义参数。
+两条工作流都使用已经配置的 `OPERIT2_UPDATE_SIGNING` Secret；不生成或更换密钥。不要删除该 Secret，也不要提交密钥到公开仓库。
 
-每轮开始时查询 `AAswordman/Operit2` 默认分支的最新提交，运行库和 APK 使用同一次解析到的源码。始终复用固定签名，递增 Android versionCode。上游和构建脚本均未改变、且已有对应成功 Release 时，跳过重复编译。
+两个渠道保留同一个包名 `app.operit`，**不能同时作为两个独立应用安装**。构建流程跨渠道递增版本号，可用于同签名正常覆盖；应用数据迁移仍由上游实现决定，重要数据请先备份。旧的一次性测试签名 APK 不属于这套固定签名，不能直接同签名覆盖。
 
-成功后打开 [最新 APK 下载页](https://github.com/xinchenok/operit2-android-cx/releases/latest)，下载 `operit2-android-arm64-personal-test.apk`；运行摘要也有下载入口。
+## 增强版的修改范围
 
-获取新源码请用 **Run workflow** 新建运行。旧运行的 **Re-run failed jobs** 用于恢复那一轮已选定的源码，不是重新追踪最新提交。
+增强版包含首次空会话初始化、首次输入保留、手动上滑优先、过期自动滚动取消、发送钩子等待期间草稿保护、重复提交抑制、失败发送草稿恢复、引用绑定和语音识别结果防误覆盖，以及增强对话插件的定时器清理和错误提示修正。
 
-## 签名与旧版
+修补前后差异、补丁匹配状态和源码版本随构建信息提供。测试通过不等于所有手机和上游未来提交都已验证。上游修改了补丁对应代码时，增强版会明确报告需要适配的位置，不悄悄输出半修补的版本；原版入口独立，不受增强补丁匹配影响。
 
-后续使用同一把个人签名私钥，不是每轮随机生成，也不靠会过期的缓存保存。它不是作者的官方签名。
+## 旧 Operit 工具包
 
-签名不同的旧 APK 不能直接覆盖安装。请先备份应用数据，在新 APK 成功生成后再处理首次迁移，不要提前卸载旧应用。迁移到固定签名版本后，后续构建保持包名、签名并递增版本号。
+增强版按 `AAswordman/Operit` 的正式构建白名单，从当轮确定的源码提交编译并打包。当前适配目标是 **31 个 JavaScript 包和 11 个 ToolPkg**，包含清单引用的资源；不是只复制预编译 JS。
 
-旧的固定提交、一次性签名工作流已经退役，只保留跳转提示。不要再使用 `Start-Build.cmd` 或 `Update-Operit2.cmd`。
+旧包名称增加 `legacy_` / `legacy.` 前缀，避免覆盖 Operit2 自带同名包，默认不启用，避免重复工具和钩子冲突。可从包管理中选择启用。
 
-## 验证状态
+**打包成功不代表全部旧接口都已经移植。** 旧 Shell、UI、FFmpeg、Java/Android 桥接或 ToolPkg 钩子等能力可能需要进一步适配。构建报告逐包列出静态检测到的缺失接口；接口名称匹配也不保证参数、结果和设备行为兼容。缺失能力不会被伪装成执行成功。不要同时启用旧版钩子包和对应的 Operit2 原生包。
 
-`Check cloud build and fixed signing (no Android build)` 只检查脚本和签名导入，不编译 APK。检查通过不代表全量 Android 构建成功；以 **Build latest Android** 的运行结果和实际 Release 产物为准。上游最新开发代码仍可能存在编译或运行问题。
+## 验证与产物
+
+先执行脚本测试；增强版额外执行实际 Flutter 回归测试和旧包编译。APK 完成后检查 ZIP、架构、运行库、原生库中完整工具包字节、版本号、签名和哈希，然后发布。
+
+原版与增强版隔离应用缓存、Web 成品及发布元数据；匹配的 SDK、工具链和终端运行库可以复用。原版发布可标为 Latest，增强版单独标明，按文件名下载。
+
+发布附带上游源码、构建脚本、兼容补丁和许可证；增强版额外包含旧 Operit 源码与兼容清单。没有手机安装或运行验证时，构建元数据保持 `device_tested: false`。
