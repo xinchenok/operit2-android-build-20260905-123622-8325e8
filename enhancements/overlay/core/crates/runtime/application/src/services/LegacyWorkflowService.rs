@@ -1115,6 +1115,9 @@ fn resolve(value: &Value, results: &BTreeMap<String, NodeResult>) -> Result<Stri
                 result.output
             ));
         }
+        if result.status == "SKIPPED" {
+            return Err(format!("Referenced workflow node was skipped: {id}"));
+        }
         return Ok(result.output.clone());
     }
     Ok(value.get("value").map(text).unwrap_or_else(|| text(value)))
@@ -1296,9 +1299,9 @@ fn execute(
                 .ok_or_else(|| format!("Missing workflow node: {id}"))?;
             let incoming = edges
                 .iter()
-                .filter(|e| {
-                    field(e, "targetNodeId") == id && reachable.contains(&field(e, "sourceNodeId"))
-                })
+                // An inactive trigger still gates its own branch. Dropping its
+                // edge would turn a joined ancestor into an unconditional root.
+                .filter(|e| field(e, "targetNodeId") == id)
                 .collect::<Vec<_>>();
             let should_run = incoming.is_empty()
                 || incoming
@@ -1528,9 +1531,9 @@ fn extract(
     let mut source = resolve(&node["source"], results)?;
     if source.trim().is_empty() && reference(&node["source"]).is_none() {
         if let Some(result) = incoming
-            .first()
-            .and_then(|edge| results.get(&field(edge, "sourceNodeId")))
-            .filter(|r| r.status == "SUCCESS")
+            .iter()
+            .filter_map(|edge| results.get(&field(edge, "sourceNodeId")))
+            .find(|r| r.status == "SUCCESS")
         {
             source = result.output.clone();
         }

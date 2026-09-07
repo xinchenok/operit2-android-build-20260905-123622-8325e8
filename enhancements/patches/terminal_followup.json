@@ -1,0 +1,50 @@
+[
+  {
+    "name": "android-pty-write-release-global-session-lock",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        let state = self.lockState()?;\n        let session = state.ptySessions.get(sessionId).ok_or_else(|| {\n            HostError::new(format!(\"Android PTY session does not exist: {sessionId}\"))\n        })?;\n        writeAndroidPtyBytes(&session.writer, data)",
+    "new": "        let writer = {\n            let state = self.lockState()?;\n            state.ptySessions.get(sessionId).ok_or_else(|| {\n                HostError::new(format!(\"Android PTY session does not exist: {sessionId}\"))\n            })?.writer.clone()\n        };\n        // Backpressure in one PTY must not block closing it or using another.\n        writeAndroidPtyBytes(&writer, data)"
+  },
+  {
+    "name": "android-pty-input-release-global-session-lock",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        let mut state = self.lockState()?;\n        let session = state\n            .ptySessions\n            .get_mut(&normalizedSessionId)\n            .ok_or_else(|| {\n                HostError::new(format!(\"Terminal session does not exist: {sessionId}\"))\n            })?;\n        let acceptedChars =\n            applyAndroidPtyTerminalInput(session, input, control.and_then(normalizeControl))?;",
+    "new": "        let writer = {\n            let state = self.lockState()?;\n            state.ptySessions.get(&normalizedSessionId).ok_or_else(|| {\n                HostError::new(format!(\"Terminal session does not exist: {sessionId}\"))\n            })?.writer.clone()\n        };\n        let acceptedChars =\n            applyAndroidPtyTerminalInput(&writer, input, control.and_then(normalizeControl))?;"
+  },
+  {
+    "name": "android-pty-input-use-owned-writer-handle",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "fn applyAndroidPtyTerminalInput(\n    session: &mut AndroidPtySession,\n    input: Option<&str>,\n    control: Option<&str>,\n) -> HostResult<usize> {\n    let mut acceptedChars = 0;\n    if let Some(input) = input {\n        writeAndroidPtyBytes(&session.writer, input.as_bytes())?;\n        acceptedChars += input.chars().count();\n    }\n    if let Some(control) = control {\n        let sequence = match control {\n            \"enter\" => \"\\r\".to_string(),\n            value => controlToSequence(value, input)?,\n        };\n        writeAndroidPtyBytes(&session.writer, sequence.as_bytes())?;\n        acceptedChars += sequence.chars().count();\n    }\n    Ok(acceptedChars)\n}",
+    "new": "fn applyAndroidPtyTerminalInput(\n    writer: &Arc<Mutex<RawFd>>,\n    input: Option<&str>,\n    control: Option<&str>,\n) -> HostResult<usize> {\n    let mut acceptedChars = 0;\n    if let Some(input) = input {\n        writeAndroidPtyBytes(writer, input.as_bytes())?;\n        acceptedChars += input.chars().count();\n    }\n    if let Some(control) = control {\n        let sequence = match control {\n            \"enter\" => \"\\r\".to_string(),\n            value => controlToSequence(value, input)?,\n        };\n        writeAndroidPtyBytes(writer, sequence.as_bytes())?;\n        acceptedChars += sequence.chars().count();\n    }\n    Ok(acceptedChars)\n}"
+  },
+  {
+    "name": "android-pty-retry-partial-writes-without-locking-reader",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "fn writeAndroidPtyBytes(writer: &Arc<Mutex<RawFd>>, data: &[u8]) -> HostResult<usize> {\n    let fd = writer\n        .lock()\n        .map_err(|_| HostError::new(\"android pty writer mutex poisoned\"))?;\n    if *fd < 0 {\n        return Err(HostError::new(\"Android PTY session is closed\"));\n    }\n    writePtyFd(*fd, data)\n}",
+    "new": "fn writeAndroidPtyBytes(writer: &Arc<Mutex<RawFd>>, data: &[u8]) -> HostResult<usize> {\n    let mut written = 0;\n    let mut progressAt = Instant::now();\n    while written < data.len() {\n        let count = {\n            let fd = writer.lock()\n                .map_err(|_| HostError::new(\"android pty writer mutex poisoned\"))?;\n            if *fd < 0 {\n                return Err(HostError::new(\"Android PTY session is closed\"));\n            }\n            // The fd is nonblocking. Release ownership between attempts so the\n            // reader can drain output while the child is blocked printing it.\n            writePtyFd(*fd, &data[written..])?\n        };\n        if count > 0 {\n            written += count;\n            progressAt = Instant::now();\n        } else {\n            if progressAt.elapsed() >= Duration::from_secs(5) {\n                return Err(HostError::new(format!(\n                    \"Android PTY stopped accepting input ({written}/{} bytes written)\", data.len()\n                )));\n            }\n            thread::sleep(Duration::from_millis(2));\n        }\n    }\n    Ok(written)\n}"
+  },
+  {
+    "name": "android-pty-master-nonblocking-before-reader-start",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        Ok((pid, masterFd))\n    }\n}\n\n#[cfg(target_os = \"android\")]\nfn operitTermios()",
+    "new": "        // A blocking master write while holding the fd mutex also blocks the\n        // sole reader. A child printing before reading then deadlocks both ends.\n        let flags = unsafe { libc::fcntl(masterFd, libc::F_GETFL) };\n        if flags < 0 || unsafe { libc::fcntl(masterFd, libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {\n            let error = std::io::Error::last_os_error();\n            closeAndroidPtyProcess(pid, masterFd);\n            return Err(HostError::new(format!(\"Unable to configure Android PTY: {error}\")));\n        }\n        Ok((pid, masterFd))\n    }\n}\n\n#[cfg(target_os = \"android\")]\nfn operitTermios()"
+  },
+  {
+    "name": "android-pty-nonblocking-read-handle-transient-errors",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        if count < 0 {\n            androidLogError(&format!(\"read failed fd={fd} available={available}\"));\n            return Err(HostError::new(\"read failed for Android PTY\"));\n        }",
+    "new": "        if count < 0 {\n            let error = std::io::Error::last_os_error();\n            if matches!(error.kind(), std::io::ErrorKind::WouldBlock | std::io::ErrorKind::Interrupted) {\n                return Ok(Vec::new());\n            }\n            androidLogError(&format!(\"read failed fd={fd} available={available}: {error}\"));\n            return Err(HostError::new(format!(\"read failed for Android PTY: {error}\")));\n        }"
+  },
+  {
+    "name": "android-pty-nonblocking-write-handle-backpressure",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "        let count = unsafe { libc::write(fd, data.as_ptr().cast(), data.len()) };\n        if count < 0 {\n            androidLogError(&format!(\"write failed fd={fd} bytes={}\", data.len()));\n            return Err(HostError::new(\"write failed for Android PTY\"));\n        }\n        Ok(count as usize)",
+    "new": "        let count = unsafe { libc::write(fd, data.as_ptr().cast(), data.len()) };\n        if count < 0 {\n            let error = std::io::Error::last_os_error();\n            if matches!(error.kind(), std::io::ErrorKind::WouldBlock | std::io::ErrorKind::Interrupted) {\n                return Ok(0);\n            }\n            androidLogError(&format!(\"write failed fd={fd} bytes={}: {error}\", data.len()));\n            return Err(HostError::new(format!(\"write failed for Android PTY: {error}\")));\n        }\n        Ok(count as usize)"
+  },
+  {
+    "name": "android-pty-bound-full-command-output-to-avoid-app-oom",
+    "path": "hosts/android/src/terminal.rs",
+    "old": "    let mut drained = 0usize;\n    while let Some(value) = buffer.pop_front() {\n        collected.push(value);\n        drained += 1;\n    }\n    Ok(drained)",
+    "new": "    let drained = buffer.len();\n    collected.extend(buffer.drain(..));\n    // The shared queue is bounded, but a long-running noisy command used to\n    // copy every drained byte into this unbounded second buffer until timeout.\n    if collected.len() > PTY_OUTPUT_LIMIT {\n        const NOTICE: &[u8] = b\"[Earlier terminal output was truncated]\\r\\n\";\n        let discard = collected.len() + NOTICE.len() - PTY_OUTPUT_LIMIT;\n        collected.drain(..discard);\n        collected.splice(..0, NOTICE.iter().copied());\n    }\n    Ok(drained)"
+  }
+]

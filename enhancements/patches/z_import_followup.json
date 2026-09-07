@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Full snapshot import tolerates a removed selected model",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let selected = parsed.selectedChatConfig()?;\n        let selectedModelId = selected\n            .selectedModelId\n            .clone()\n            .ok_or_else(|| \"Operit1 快照里的聊天模型索引没有对应模型\".to_string())?;\n        let fileImportPlan = SnapshotFileImportPlan::forSnapshot(&parsed, &self.paths)?;\n        let mut modelConfig =\n            self.importModelConfigsFromParsed(&parsed, selected.configId.clone(), selectedModelId, true)?;",
+    "new": "        // Editing a legacy provider's comma-separated model list does not repair\n        // function indices. An obsolete selection must not block unrelated chats.\n        let selectedModelId = parsed.configById(&parsed.chatMapping.configId).ok()\n            .and_then(|config| splitModelIds(&config.modelName)\n                .get(parsed.chatMapping.modelIndex as usize).cloned())\n            .unwrap_or_default();\n        let fileImportPlan = SnapshotFileImportPlan::forSnapshot(&parsed, &self.paths)?;\n        let mut modelConfig = self.importModelConfigsFromParsed(\n            &parsed, parsed.chatMapping.configId.clone(), selectedModelId, true,\n        )?;"
+  },
+  {
+    "name": "Preserve explicit single-model validation while permitting stale full-snapshot selection",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let selectedConfig = parsed.configById(&configId)?;\n        if !splitModelIds(&selectedConfig.modelName).contains(&modelId) {\n            return Err(format!(\"模型配置「{}」不包含模型：{modelId}\", selectedConfig.name));\n        }",
+    "new": "        let selectedConfig = if importAll {\n            parsed.configById(&configId).ok()\n        } else {\n            Some(parsed.configById(&configId)?)\n        };\n        let selectedModelExists = selectedConfig.as_ref()\n            .is_some_and(|config| splitModelIds(&config.modelName).contains(&modelId));\n        if !importAll && !selectedModelExists {\n            return Err(format!(\"模型配置「{configId}」不包含模型：{modelId}\"));\n        }"
+  },
+  {
+    "name": "Retain model preview metadata even when the former chat provider is missing",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let selectedProviderTypeId = selectedConfig.apiProviderTypeId.clone();\n        let selectedProviderName = selectedConfig.name.clone();\n        let sourceConfigs = if importAll { parsed.configs.clone() } else { vec![selectedConfig] };",
+    "new": "        let selectedProviderTypeId = selectedConfig.as_ref()\n            .map(|config| config.apiProviderTypeId.clone()).unwrap_or_default();\n        let selectedProviderName = selectedConfig.as_ref()\n            .map(|config| config.name.clone()).unwrap_or_else(|| configId.clone());\n        let sourceConfigs = if importAll { parsed.configs.clone() }\n            else { selectedConfig.into_iter().collect() };"
+  },
+  {
+    "name": "Report obsolete legacy chat selection and retain the current selection",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let mut skippedFields = vec![\n            \"contextLength\".to_string(), \"summaryCustomRules\".to_string(),\n            \"enableGoogleSearch\".to_string(),\n        ];\n        for config in sourceConfigs {",
+    "new": "        let mut skippedFields = vec![\n            \"contextLength\".to_string(), \"summaryCustomRules\".to_string(),\n            \"enableGoogleSearch\".to_string(),\n        ];\n        if importAll && !selectedModelExists {\n            skippedFields.push(format!(\n                \"原聊天模型绑定已失效（配置 {configId}）；已导入可用模型配置和聊天记录，保留二代当前聊天模型\"\n            ));\n        }\n        for config in sourceConfigs {"
+  },
+  {
+    "name": "An obsolete non-chat function index cannot abort a full data import",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                let mappedModel = provider.models.get(mapping.modelIndex as usize)\n                    .ok_or_else(|| format!(\"{functionName} 的模型索引不存在：{}\", mapping.modelIndex))?;\n                bindings.insert(function, crate::data::preferences::FunctionalConfigManager::FunctionModelBinding::new(",
+    "new": "                let Some(mappedModel) = provider.models.get(mapping.modelIndex as usize) else {\n                    skippedFields.push(format!(\n                        \"{functionName} 的旧模型索引已失效：{}；保留二代当前功能绑定\", mapping.modelIndex\n                    ));\n                    continue;\n                };\n                bindings.insert(function, crate::data::preferences::FunctionalConfigManager::FunctionModelBinding::new("
+  },
+  {
+    "name": "Do not install an empty or nonexistent chat model binding",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let chatBindingUpdated = selected.as_ref()\n            .is_some_and(|provider| provider.providerType != ApiProviderType::LOCAL_MODEL);",
+    "new": "        let chatBindingUpdated = selectedModelExists && selected.as_ref()\n            .is_some_and(|provider| provider.providerType != ApiProviderType::LOCAL_MODEL);"
+  }
+]

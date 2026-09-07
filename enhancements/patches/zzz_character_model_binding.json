@@ -1,0 +1,272 @@
+[
+  {
+    "name": "Add optional provider identity to native and Tavern character card schemas (2)",
+    "path": "core/crates/foundation/model/src/CharacterCard.rs",
+    "old": "    pub marks: String,\n    #[serde(default = \"default_character_chat_model_binding_mode\")]\n    pub chatModelBindingMode: String,\n    #[serde(default)]\n    pub chatModelId: Option<String>,\n    #[serde(default)]\n    pub ttsConfigId: Option<String>,\n    #[serde(default = \"default_character_memory_binding_mode\")]\n    pub memoryBindingMode: String,\n",
+    "new": "    pub marks: String,\n    #[serde(default = \"default_character_chat_model_binding_mode\")]\n    pub chatModelBindingMode: String,\n    #[serde(default)]\n    pub chatModelId: Option<String>,\n    #[serde(default)]\n    pub chatProviderId: Option<String>,\n    #[serde(default)]\n    pub ttsConfigId: Option<String>,\n    #[serde(default = \"default_character_memory_binding_mode\")]\n    pub memoryBindingMode: String,\n"
+  },
+  {
+    "name": "Add optional provider identity to native and Tavern character card schemas (1)",
+    "path": "core/crates/foundation/model/src/CharacterCard.rs",
+    "old": "    pub avatarUri: Option<String>,\n    pub attachedTagIds: Vec<String>,\n    pub advancedCustomPrompt: String,\n    pub marks: String,\n    pub chatModelBindingMode: String,\n    pub chatModelId: Option<String>,\n    pub ttsConfigId: Option<String>,\n    #[serde(default = \"default_character_memory_binding_mode\")]\n    pub memoryBindingMode: String,\n    #[serde(default)]\n",
+    "new": "    pub avatarUri: Option<String>,\n    pub attachedTagIds: Vec<String>,\n    pub advancedCustomPrompt: String,\n    pub marks: String,\n    pub chatModelBindingMode: String,\n    pub chatModelId: Option<String>,\n    #[serde(default)]\n    pub chatProviderId: Option<String>,\n    pub ttsConfigId: Option<String>,\n    #[serde(default = \"default_character_memory_binding_mode\")]\n    pub memoryBindingMode: String,\n    #[serde(default)]\n"
+  },
+  {
+    "name": "Read stored character provider identity",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "            chatModelId: preferences\n                .get(&stringPreferencesKey(&format!(\n                    \"character_card_{id}_chat_model_id\"\n                )))\n                .cloned(),",
+    "new": "            chatModelId: preferences\n                .get(&stringPreferencesKey(&format!(\n                    \"character_card_{id}_chat_model_id\"\n                )))\n                .cloned(),\n            chatProviderId: preferences\n                .get(&stringPreferencesKey(&format!(\"character_card_{id}_chat_provider_id\")))\n                .cloned().filter(|value| !value.trim().is_empty()),"
+  },
+  {
+    "name": "Preserve provider identity in backup import and Tavern export (2)",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "                advancedCustomPrompt: card.advancedCustomPrompt.clone(),\n                marks: card.marks.clone(),\n                chatModelBindingMode: CharacterCardChatModelBindingMode::normalize(Some(\n                    &card.chatModelBindingMode,\n                )),\n                chatModelId: card\n                    .chatModelId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                ttsConfigId: card\n                    .ttsConfigId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                memoryBindingMode: CharacterCardMemoryBindingMode::normalize(Some(\n                    &card.memoryBindingMode,\n",
+    "new": "                advancedCustomPrompt: card.advancedCustomPrompt.clone(),\n                marks: card.marks.clone(),\n                chatModelBindingMode: CharacterCardChatModelBindingMode::normalize(Some(\n                    &card.chatModelBindingMode,\n                )),\n                chatModelId: card\n                    .chatModelId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                chatProviderId: card.chatProviderId.clone().filter(|value| !value.trim().is_empty()),\n                ttsConfigId: card\n                    .ttsConfigId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                memoryBindingMode: CharacterCardMemoryBindingMode::normalize(Some(\n                    &card.memoryBindingMode,\n"
+  },
+  {
+    "name": "Preserve provider identity in backup import and Tavern export (1)",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "                attachedTagIds: remapAttachedTagIds(&card.attachedTagIds, &importedTagIdMap),\n                chatModelBindingMode: CharacterCardChatModelBindingMode::normalize(Some(\n                    &card.chatModelBindingMode,\n                )),\n                chatModelId: card\n                    .chatModelId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                ttsConfigId: card\n                    .ttsConfigId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                memoryBindingMode: CharacterCardMemoryBindingMode::normalize(Some(\n                    &card.memoryBindingMode,\n",
+    "new": "                attachedTagIds: remapAttachedTagIds(&card.attachedTagIds, &importedTagIdMap),\n                chatModelBindingMode: CharacterCardChatModelBindingMode::normalize(Some(\n                    &card.chatModelBindingMode,\n                )),\n                chatModelId: card\n                    .chatModelId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                chatProviderId: card.chatProviderId.clone().filter(|value| !value.trim().is_empty()),\n                ttsConfigId: card\n                    .ttsConfigId\n                    .clone()\n                    .filter(|value| !value.trim().is_empty()),\n                memoryBindingMode: CharacterCardMemoryBindingMode::normalize(Some(\n                    &card.memoryBindingMode,\n"
+  },
+  {
+    "name": "Restore provider identity from Tavern payload",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "            chatModelId: payload\n                .chatModelId\n                .clone()\n                .filter(|value| !value.trim().is_empty()),",
+    "new": "            chatModelId: payload\n                .chatModelId\n                .clone()\n                .filter(|value| !value.trim().is_empty()),\n            chatProviderId: payload.chatProviderId.clone().filter(|value| !value.trim().is_empty()),"
+  },
+  {
+    "name": "Default character construction has no provider binding",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "            chatModelId: None,\n            ttsConfigId: None,",
+    "new": "            chatModelId: None,\n            chatProviderId: None,\n            ttsConfigId: None,"
+  },
+  {
+    "name": "Persist or remove the actual character provider identity",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "        if let Some(value) = &card.chatModelId {",
+    "new": "        if let Some(value) = card.chatProviderId.as_ref().filter(|value| !value.trim().is_empty()) {\n            preferences.set(&stringPreferencesKey(&format!(\"character_card_{id}_chat_provider_id\")), value.clone());\n        } else {\n            preferences.remove(&stringPreferencesKey(&format!(\"character_card_{id}_chat_provider_id\")));\n        }\n        if let Some(value) = &card.chatModelId {"
+  },
+  {
+    "name": "Clear provider binding on reset",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "        preferences.remove(&stringPreferencesKey(&format!(\n            \"character_card_{id}_chat_model_id\"\n        )));",
+    "new": "        preferences.remove(&stringPreferencesKey(&format!(\"character_card_{id}_chat_provider_id\")));\n        preferences.remove(&stringPreferencesKey(&format!(\n            \"character_card_{id}_chat_model_id\"\n        )));"
+  },
+  {
+    "name": "Delete stored provider identity with its character",
+    "path": "core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs",
+    "old": "            \"chat_model_binding_mode\",\n            \"chat_model_id\",",
+    "new": "            \"chat_model_binding_mode\",\n            \"chat_provider_id\",\n            \"chat_model_id\","
+  },
+  {
+    "name": "CLI-created characters have optional provider binding",
+    "path": "core/crates/command/core/src/commands/people.rs",
+    "old": "                    chatModelId: None,\n                    ttsConfigId: None,",
+    "new": "                    chatModelId: None,\n                    chatProviderId: None,\n                    ttsConfigId: None,"
+  },
+  {
+    "name": "CLI can preserve and edit the provider/model pair",
+    "path": "core/crates/command/core/src/commands/people.rs",
+    "old": "                \"chatModelId\" => card.chatModelId = nonBlankString(value.clone()),",
+    "new": "                \"chatModelId\" => card.chatModelId = nonBlankString(value.clone()),\n                \"chatProviderId\" => card.chatProviderId = nonBlankString(value.clone()),"
+  },
+  {
+    "name": "Advertise supported provider field in CLI errors",
+    "path": "core/crates/command/core/src/commands/people.rs",
+    "old": "| chatModelBindingMode | chatModelId\".to_string())",
+    "new": "| chatModelBindingMode | chatModelId | chatProviderId\".to_string())"
+  },
+  {
+    "name": "Resolve character provider and model together during regeneration",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "old": "            .filter(|summary| summary.modelId == fixedModelId);",
+    "new": "            .filter(|summary| summary.modelId == fixedModelId && roleCard.chatProviderId.as_ref()\n                .filter(|id| !id.trim().is_empty()).is_none_or(|id| &summary.providerId == id));"
+  },
+  {
+    "name": "Expose actual role model binding through runtime support",
+    "path": "core/crates/provider/services/src/runtime_support.rs",
+    "old": "    /// Returns deployed skill package descriptions for provider prompt composition.",
+    "new": "    /// Resolves a role's fixed provider/model pair; legacy unqualified IDs must be unique.\n    fn characterModelBinding(&self, card: &CharacterCard) -> Result<Option<ProviderFunctionModelBinding>, String>;\n\n    /// Returns deployed skill package descriptions for provider prompt composition."
+  },
+  {
+    "name": "Resolve fixed role requests without selecting an arbitrary duplicate provider",
+    "path": "core/crates/runtime/application/src/services/ProviderRuntimeSupportService.rs",
+    "old": "    /// Returns skill package descriptions visible to AI prompt composition.",
+    "new": "    fn characterModelBinding(&self, card: &operit_model::CharacterCard::CharacterCard)\n        -> Result<Option<ProviderFunctionModelBinding>, String> {\n        use operit_model::CharacterCard::CharacterCardChatModelBindingMode;\n        if CharacterCardChatModelBindingMode::normalize(Some(&card.chatModelBindingMode))\n            != CharacterCardChatModelBindingMode::FIXED_MODEL { return Ok(None); }\n        let modelId = card.chatModelId.as_ref().filter(|id| !id.trim().is_empty())\n            .ok_or_else(|| format!(\"角色「{}」的固定模型未就绪，请重新选择供应商和模型\", card.name))?;\n        let providerId = card.chatProviderId.as_ref().filter(|id| !id.trim().is_empty());\n        let mut candidates = ModelConfigManager::default().getAllModelSummaries()\n            .map_err(|error| error.to_string())?.into_iter()\n            .filter(|summary| &summary.modelId == modelId && providerId.is_none_or(|id| &summary.providerId == id));\n        let selected = candidates.next().ok_or_else(|| format!(\"角色「{}」的固定模型不可用：{modelId}，请重新选择\", card.name))?;\n        if candidates.next().is_some() {\n            return Err(format!(\"角色「{}」有多个同名模型 {modelId}，请明确选择供应商\", card.name));\n        }\n        Ok(Some(ProviderFunctionModelBinding { providerId: selected.providerId, modelId: selected.modelId }))\n    }\n\n    /// Returns skill package descriptions visible to AI prompt composition."
+  },
+  {
+    "name": "Honor fixed character model for ordinary CHAT requests and runtime capabilities",
+    "path": "core/crates/provider/services/src/chat/EnhancedAIService.rs",
+    "old": "        let (modelConfig, modelParameters, selectedService) = match (\n            options.chatProviderIdOverride.as_ref(),\n            options.chatModelIdOverride.as_ref(),\n        ) {\n            (Some(providerId), Some(modelId))\n                if !providerId.trim().is_empty() && !modelId.trim().is_empty() =>\n            {\n                self.multi_service_manager\n                    .getServiceBundleForModel(providerId.clone(), modelId.clone())?\n            }\n            (None, None) => self\n                .multi_service_manager\n                .getServiceBundleForFunction(options.functionType.clone())?,\n            _ => {\n                return Err(AiServiceError::RequestFailed(\n                    \"chat provider and model override must be set together\".to_string(),\n                ));\n            }\n        };\n        let roleCardId = options.roleCardId.as_ref().ok_or_else(|| {\n            AiServiceError::RequestFailed(\"roleCardId is required to resolve USER.md\".to_string())\n        })?;\n        let characterPromptContext = self\n            .provider_runtime_context\n            .support()\n            .characterPromptContext(roleCardId, options.promptFunctionType.clone())\n            .map_err(AiServiceError::RequestFailed)?;\n        let activeCard = &characterPromptContext.activeCard;\n",
+    "new": "        let roleCardId = options.roleCardId.as_ref().ok_or_else(|| {\n            AiServiceError::RequestFailed(\"roleCardId is required to resolve USER.md\".to_string())\n        })?;\n        let characterPromptContext = self.provider_runtime_context.support()\n            .characterPromptContext(roleCardId, options.promptFunctionType.clone())\n            .map_err(AiServiceError::RequestFailed)?;\n        let activeCard = &characterPromptContext.activeCard;\n        let fixedBinding = if options.functionType == FunctionType::CHAT\n            && options.chatProviderIdOverride.is_none() && options.chatModelIdOverride.is_none() {\n            self.provider_runtime_context.support().characterModelBinding(activeCard)\n                .map_err(AiServiceError::RequestFailed)?\n        } else { None };\n        let providerOverride = options.chatProviderIdOverride.as_ref()\n            .or_else(|| fixedBinding.as_ref().map(|binding| &binding.providerId));\n        let modelOverride = options.chatModelIdOverride.as_ref()\n            .or_else(|| fixedBinding.as_ref().map(|binding| &binding.modelId));\n        let (modelConfig, modelParameters, selectedService) = match (providerOverride, modelOverride) {\n            (Some(providerId), Some(modelId))\n                if !providerId.trim().is_empty() && !modelId.trim().is_empty() =>\n                self.multi_service_manager.getServiceBundleForModel(providerId.clone(), modelId.clone())?,\n            (None, None) => self.multi_service_manager.getServiceBundleForFunction(options.functionType.clone())?,\n            _ => return Err(AiServiceError::RequestFailed(\"chat provider and model override must be set together\".to_string())),\n        };\n"
+  },
+  {
+    "name": "Carry per-import provider identity map in file plan",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    characterIds: HashMap<String, String>,",
+    "new": "    characterIds: HashMap<String, String>,\n    providerIds: HashMap<String, String>,"
+  },
+  {
+    "name": "Initialize provider identity map",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            characterIds: HashMap::new(),",
+    "new": "            characterIds: HashMap::new(),\n            providerIds: HashMap::new(),"
+  },
+  {
+    "name": "Capture newly imported providers for role bindings",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let fileImportPlan = SnapshotFileImportPlan::forSnapshot(&parsed, &self.paths)?;\n        let mut modelConfig = self.importModelConfigsFromParsed(\n            &parsed, parsed.chatMapping.configId.clone(), selectedModelId, true,\n        )?;",
+    "new": "        let mut fileImportPlan = SnapshotFileImportPlan::forSnapshot(&parsed, &self.paths)?;\n        let mut modelConfig = self.importModelConfigsFromParsed(\n            &parsed, parsed.chatMapping.configId.clone(), selectedModelId, true,\n            Some(&mut fileImportPlan.providerIds),\n        )?;"
+  },
+  {
+    "name": "Single model imports do not request a role identity map",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        self.importModelConfigsFromParsed(parsed, configId, modelId, false)",
+    "new": "        self.importModelConfigsFromParsed(parsed, configId, modelId, false, None)"
+  },
+  {
+    "name": "Accept per-import mapping destination",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        importAll: bool,\n    ) -> Result<Operit1ModelConfigImportResult, String> {",
+    "new": "        importAll: bool,\n        importedProviderIds: Option<&mut HashMap<String, String>>,\n    ) -> Result<Operit1ModelConfigImportResult, String> {"
+  },
+  {
+    "name": "Publish actual provider identities only after successful persistence",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        functionalManager.saveFunctionModelBinding(bindings).map_err(|error| error.to_string())?;\n        Ok(Operit1ModelConfigImportResult {",
+    "new": "        functionalManager.saveFunctionModelBinding(bindings).map_err(|error| error.to_string())?;\n        if let Some(ids) = importedProviderIds {\n            ids.extend(sourceProviders.iter().map(|(source, provider)| (source.clone(), provider.id.clone())));\n        }\n        Ok(Operit1ModelConfigImportResult {"
+  },
+  {
+    "name": "Return role binding warnings to the completed import report",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        self.importStructuredPreferences(&parsed, &fileImportPlan)?;",
+    "new": "        modelConfig.skippedFields.extend(self.importStructuredPreferences(&parsed, &fileImportPlan)?);"
+  },
+  {
+    "name": "Collect unavailable fixed role binding warnings during structured import",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    fn importStructuredPreferences(\n        &self,\n        parsed: &ParsedOperit1Snapshot,\n        fileImportPlan: &SnapshotFileImportPlan,\n    ) -> Result<(), String> {\n        let paths = self.paths.clone();",
+    "new": "    fn importStructuredPreferences(\n        &self,\n        parsed: &ParsedOperit1Snapshot,\n        fileImportPlan: &SnapshotFileImportPlan,\n    ) -> Result<Vec<String>, String> {\n        let mut notes = Vec::new();\n        let paths = self.paths.clone();"
+  },
+  {
+    "name": "Keep imported roles and report unresolved fixed models",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            let cards = buildOperit2CharacterCards(parsed, fileImportPlan)?;\n            let backup = serde_json::json!({",
+    "new": "            let cards = buildOperit2CharacterCards(parsed, fileImportPlan)?;\n            for card in &cards {\n                if card.chatModelBindingMode == CharacterCardChatModelBindingMode::FIXED_MODEL\n                    && (card.chatProviderId.is_none() || card.chatModelId.is_none()) {\n                    notes.push(format!(\"角色「{}」的旧固定模型无法对应；已保留角色和原始配置，请重新选择模型，不会自动改用其他供应商\", card.name));\n                }\n            }\n            let backup = serde_json::json!({"
+  },
+  {
+    "name": "Finish structured import with precise role migration notes",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        Ok(())\n    }\n\n    /// Preserves original speech stores,",
+    "new": "        Ok(notes)\n    }\n\n    /// Preserves original speech stores,"
+  },
+  {
+    "name": "Keep old fixed config identity instead of resolving by globally ambiguous model name",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let chatModelId = resolveOperit1CharacterChatModelId(parsed, preferences, &id)?;",
+    "new": "        let mut chatModelId = resolveOperit1CharacterChatModelId(parsed, preferences, &id)\n            .unwrap_or_else(|error| { AppLogger::w(\"Operit1SnapshotImport\", &error); None });\n        let chatProviderId = if chatModelBindingMode.as_deref() == Some(\"FIXED_CONFIG\") {\n            optionalPreferenceString(preferences, &format!(\"character_card_{id}_chat_model_config_id\"))?\n                .and_then(|source| fileImportPlan.providerIds.get(&source).cloned())\n        } else { None };\n        if chatProviderId.is_none() { chatModelId = None; }"
+  },
+  {
+    "name": "Persist both members of imported role binding",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            chatModelId,\n            ttsConfigId: None,",
+    "new": "            chatModelId,\n            chatProviderId,\n            ttsConfigId: None,"
+  },
+  {
+    "name": "Editor tracks selected provider alongside model",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "  String? _chatModelId;",
+    "new": "  String? _chatModelId;\n  String? _chatProviderId;"
+  },
+  {
+    "name": "Editor loads provider binding",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "    _chatModelId = card.chatModelId;",
+    "new": "    _chatModelId = card.chatModelId;\n    _chatProviderId = card.chatProviderId;"
+  },
+  {
+    "name": "Save selected provider identity",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "          chatModelId: _chatModelBindingMode == _chatModelFixedConfig",
+    "new": "          chatProviderId: _chatModelBindingMode == _chatModelFixedConfig ? _chatProviderId : null,\n          chatModelId: _chatModelBindingMode == _chatModelFixedConfig"
+  },
+  {
+    "name": "Model selector receives the full current binding",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "      currentModelId: _chatModelId,",
+    "new": "      currentModelId: _chatModelId,\n      currentProviderId: _chatProviderId,"
+  },
+  {
+    "name": "Model selection saves the provider actually clicked",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "      _chatModelId = selected.modelId;",
+    "new": "      _chatModelId = selected.modelId;\n      _chatProviderId = selected.providerId;"
+  },
+  {
+    "name": "Display fixed model using provider identity",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "      widget.modelSummaries,\n      _chatModelId,\n    );",
+    "new": "      widget.modelSummaries,\n      _chatModelId,\n      _chatProviderId,\n    );"
+  },
+  {
+    "name": "Clear both fixed binding members when following global",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "                                _chatModelId = null;",
+    "new": "                                _chatModelId = null;\n                                _chatProviderId = null;"
+  },
+  {
+    "name": "Require selector provider argument",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "    required this.currentModelId,\n  });",
+    "new": "    required this.currentModelId,\n    required this.currentProviderId,\n  });"
+  },
+  {
+    "name": "Store selector provider identity",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "  final String? currentModelId;\n\n  static Future<core_proxy.ProviderModelSummary?> show({",
+    "new": "  final String? currentModelId;\n  final String? currentProviderId;\n\n  static Future<core_proxy.ProviderModelSummary?> show({"
+  },
+  {
+    "name": "Forward selected provider through dialog construction",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "    required String? currentModelId,\n  }) {",
+    "new": "    required String? currentModelId,\n    required String? currentProviderId,\n  }) {"
+  },
+  {
+    "name": "Retain selector current provider",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "        currentModelId: currentModelId,\n      ),",
+    "new": "        currentModelId: currentModelId,\n        currentProviderId: currentProviderId,\n      ),"
+  },
+  {
+    "name": "Do not mark multiple same-named provider models selected",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
+    "old": "                      selected: summary.modelId == widget.currentModelId,",
+    "new": "                      selected: identical(summary, _providerModelSummaryById(\n                        widget.summaries, widget.currentModelId, widget.currentProviderId,\n                      )),"
+  },
+  {
+    "name": "Match role display model by both provider and model or unique legacy fallback",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart",
+    "old": "  String? id,\n) {\n  for (final summary in summaries) {\n    if (summary.modelId == id) {\n      return summary;\n    }\n  }\n  return null;\n}",
+    "new": "  String? id,\n  String? providerId,\n) {\n  final candidates = summaries.where((summary) => summary.modelId == id &&\n      (providerId == null || providerId.trim().isEmpty || summary.providerId == providerId)).toList();\n  return candidates.length == 1 ? candidates.single : null;\n}"
+  },
+  {
+    "name": "Character duplication retains supplier binding",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart",
+    "old": "    chatModelId: card.chatModelId,\n    ttsConfigId: card.ttsConfigId,",
+    "new": "    chatModelId: card.chatModelId,\n    chatProviderId: card.chatProviderId,\n    ttsConfigId: card.ttsConfigId,"
+  },
+  {
+    "name": "New editor card starts with no provider binding",
+    "path": "apps/flutter/app/lib/ui/features/settings/characters/CharacterSettingsPanel.dart",
+    "old": "      chatModelId: null,\n      ttsConfigId: null,",
+    "new": "      chatModelId: null,\n      chatProviderId: null,\n      ttsConfigId: null,"
+  },
+  {
+    "name": "Use fixed role provider capabilities when preparing image audio and video attachments",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "old": "            (None, None) => {\n                let binding = self\n                    .functionalConfigManager\n                    .getModelBindingForFunction(FunctionType::CHAT)\n                    .map_err(|error| {\n                        operit_providers::chat::llmprovider::AIService::AiServiceError::RequestFailed(\n                            error.to_string(),\n                        )\n                    })?;\n                (binding.providerId, binding.modelId)\n            }",
+    "new": "            (None, None) => {\n                use operit_model::CharacterCard::CharacterCardChatModelBindingMode;\n                use operit_providers::chat::llmprovider::AIService::AiServiceError;\n                let card = CharacterCardManager::getInstance().getCharacterCard(&request.roleCardId)\n                    .map_err(|error| AiServiceError::RequestFailed(error.to_string()))?;\n                if CharacterCardChatModelBindingMode::normalize(Some(&card.chatModelBindingMode))\n                    == CharacterCardChatModelBindingMode::FIXED_MODEL {\n                    let model = card.chatModelId.as_ref().filter(|id| !id.trim().is_empty())\n                        .ok_or_else(|| AiServiceError::RequestFailed(format!(\"角色「{}」的固定模型未就绪，请重新选择\", card.name)))?;\n                    let provider = card.chatProviderId.as_ref().filter(|id| !id.trim().is_empty());\n                    let mut candidates = self.modelConfigManager.getAllModelSummaries()\n                        .map_err(|error| AiServiceError::RequestFailed(error.to_string()))?.into_iter()\n                        .filter(|summary| &summary.modelId == model && provider.is_none_or(|id| &summary.providerId == id));\n                    let selected = candidates.next().ok_or_else(|| AiServiceError::RequestFailed(format!(\"角色「{}」的固定模型不可用，请重新选择\", card.name)))?;\n                    if candidates.next().is_some() {\n                        return Err(AiServiceError::RequestFailed(format!(\"角色「{}」有多个同名模型，请明确选择供应商\", card.name)));\n                    }\n                    (selected.providerId, selected.modelId)\n                } else {\n                    let binding = self.functionalConfigManager.getModelBindingForFunction(FunctionType::CHAT)\n                        .map_err(|error| AiServiceError::RequestFailed(error.to_string()))?;\n                    (binding.providerId, binding.modelId)\n                }\n            }"
+  }
+]

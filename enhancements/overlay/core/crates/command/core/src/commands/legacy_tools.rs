@@ -56,9 +56,13 @@ fn card_result(card: CharacterCard) -> Result<Value,String> {
     value["chatModelBindingMode"]=json!(if value["chatModelBindingMode"]=="FIXED_MODEL"{"FIXED_CONFIG"}else{"FOLLOW_GLOBAL"});
     value["chatModelConfigId"]=Value::Null;
     if let Some(model_id)=value["chatModelId"].as_str().map(str::to_string){
+        let provider_id=value["chatProviderId"].as_str().filter(|id|!id.trim().is_empty()).map(str::to_string);
+        let mut matches=Vec::new();
         for provider in ModelConfigManager::default().getProviderProfiles().map_err(|e|e.to_string())? {
-            if let Some(index)=provider.models.iter().position(|m|m.id==model_id){value["chatModelConfigId"]=json!(provider.id);value["chatModelIndex"]=json!(index);break;}
+            if provider_id.as_ref().is_some_and(|id|id!=&provider.id){continue;}
+            if let Some(index)=provider.models.iter().position(|m|m.id==model_id){matches.push((provider.id,index));}
         }
+        if matches.len()==1{value["chatModelConfigId"]=json!(matches[0].0);value["chatModelIndex"]=json!(matches[0].1);}
     }
     if value.get("chatModelIndex").is_none(){value["chatModelIndex"] = json!(0);}
     value["memoryProfileBindingMode"] = json!(if value["memoryBindingMode"] == "SHARED" {"FIXED_PROFILE"}else{"FOLLOW_GLOBAL"});
@@ -248,11 +252,12 @@ fn write_card(id:Option<&str>, updates:&Value, application:&mut OperitApplicatio
             "chat_model_binding_mode"=>card["chatModelBindingMode"]=json!(if value=="FIXED_CONFIG"{"FIXED_MODEL"}else{"FOLLOW_GLOBAL"}),
             "chat_model_config_id"=>{
                 let provider_id=value.as_str().ok_or("chat_model_config_id must be string")?;
-                if provider_id.is_empty(){card["chatModelId"]=Value::Null;}else{
+                if provider_id.is_empty(){card["chatModelId"]=Value::Null;card["chatProviderId"]=Value::Null;}else{
                     let provider=ModelConfigManager::default().getProviderProfile(provider_id).map_err(|e|e.to_string())?;
                     let index=updates["chat_model_index"].as_u64().unwrap_or(0) as usize;
                     let model=provider.models.get(index).ok_or("chat_model_index out of range")?;
                     card["chatModelId"]=json!(model.id);
+                    card["chatProviderId"]=json!(provider.id);
                 }
             },
             "chat_model_index"=>{},
