@@ -1,0 +1,98 @@
+[
+  {
+    "name": "onboarding-import-navigation-state",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  Future<void> _goToPreviousPage() async {\n    if (_currentPage == 0) {",
+    "new": "  bool get _operit1ImportBusy =>\n      _readingOperit1Snapshot || _importingOperit1Snapshot;\n\n  // A selected snapshot is only a preview until the import API succeeds.\n  bool get _canSkipGuide =>\n      _agreementAccepted &&\n      _storageConfirmed &&\n      !_operit1ImportBusy &&\n      !(_isImportPage && _operit1Snapshot != null);\n\n  Future<void> _skipGuide() async {\n    if (!_canSkipGuide) return;\n    try {\n      await widget.onSkip();\n    } catch (error) {\n      if (mounted) setState(() => _setupError = '$error');\n    }\n  }\n\n  Future<void> _goToPreviousPage() async {\n    if (_operit1ImportBusy || _currentPage == 0) {"
+  },
+  {
+    "name": "onboarding-import-forward-guard",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  Future<void> _goToNextPage() async {\n    if (_currentPage == _introPageIndex) {",
+    "new": "  Future<void> _goToNextPage() async {\n    if (_operit1ImportBusy) return;\n    if (_currentPage == _introPageIndex) {"
+  },
+  {
+    "name": "onboarding-import-dispose-ownership",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "    if (session != null) {\n      unawaited(session.discard());\n    }\n    _agreementCountdownTimer?.cancel();",
+    "new": "    // An active import owns its upload until the Core call finishes.\n    if (session != null && !_importingOperit1Snapshot) {\n      unawaited(discardOperit1ImportSession(session));\n    }\n    _agreementCountdownTimer?.cancel();"
+  },
+  {
+    "name": "onboarding-import-selection-guard",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  Future<void> _pickOperit1Snapshot() async {\n    final previousSession",
+    "new": "  Future<void> _pickOperit1Snapshot() async {\n    if (_operit1ImportBusy || _completedOperit1Import != null) return;\n    final previousSession"
+  },
+  {
+    "name": "onboarding-import-commit-and-open-conversation",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  Future<void> _saveOperit1Import() async {\n    if (_importingOperit1Snapshot) return;\n    if (_completedOperit1Import != null) {\n      setState(() {\n        _importingOperit1Snapshot = true;\n        _setupError = null;\n      });\n      try {\n        await widget.onComplete();\n      } catch (error) {\n        if (mounted) {\n          setState(() => _setupError = '数据已导入，进入应用失败：$error；再次继续不会重复导入');\n        }\n      } finally {\n        if (mounted) setState(() => _importingOperit1Snapshot = false);\n      }\n      return;\n    }\n    final session = _operit1SnapshotSession;\n    if (session == null) {\n      setState(() {\n        _setupError = '请选择 Operit1 快照文件';\n      });\n      return;\n    }\n\n    setState(() {\n      _importingOperit1Snapshot = true;\n      _setupError = null;\n    });\n    SnapshotImportSession? supplementalSession;\n    try {\n      final resources = await pickLegacyImportResources(context, widget.clients);\n      supplementalSession = resources.session;\n      if (resources.cancelled || !mounted) return;\n      ClientLogger.i(\n        'snapshot import started bytes=${session.byteLength}',\n        tag: _operit1SnapshotImportLogTag,\n      );\n      _subscribeOperit1ImportProgress();\n      final result = await widget.clients.servicesSnapshotImportManager\n          .importOperit1SnapshotWithResources(\n            archive: session.archive,\n            resources: supplementalSession?.archive,\n          );\n      _completedOperit1Import = result;\n      _operit1SnapshotSession = null;\n      ClientLogger.i(\n        'snapshot import completed chats=${result.importedChats} messages=${result.importedMessages} memories=${result.importedMemories} files=${result.importedFiles + result.importedExternalFiles + result.importedWorkspaceFiles}',\n        tag: _operit1SnapshotImportLogTag,\n      );\n      await discardOperit1ImportSession(session);\n      if (mounted) await showOperit1ImportResultDialog(context, result);\n      if (!mounted) {\n        return;\n      }\n      await widget.onComplete();\n    } catch (error, stackTrace) {\n      ClientLogger.e(\n        _completedOperit1Import == null\n            ? 'snapshot import failed'\n            : 'snapshot imported; startup transition failed',\n        tag: _operit1SnapshotImportLogTag,\n        error: error,\n        stackTrace: stackTrace,\n      );\n      if (!mounted) {\n        return;\n      }\n      setState(() {\n        _setupError = _completedOperit1Import == null\n            ? '$error'\n            : '数据已导入，进入应用失败：$error；再次继续不会重复导入';\n      });\n    } finally {\n      await discardOperit1ImportSession(supplementalSession);\n      if (mounted) {\n        setState(() {\n          _importingOperit1Snapshot = false;\n        });\n      }\n    }\n  }\n\n",
+    "new": "  Future<void> _saveOperit1Import() async {\n    if (_operit1ImportBusy) return;\n    if (_completedOperit1Import != null) {\n      setState(() {\n        _importingOperit1Snapshot = true;\n        _setupError = null;\n      });\n      try {\n        await _completeOperit1Import();\n      } catch (error) {\n        if (mounted) {\n          setState(() => _setupError = '数据已导入，进入应用失败：$error；再次点击“进入应用”不会重复导入');\n        }\n      } finally {\n        if (mounted) setState(() => _importingOperit1Snapshot = false);\n      }\n      return;\n    }\n    final session = _operit1SnapshotSession;\n    if (session == null) {\n      setState(() {\n        _setupError = '请选择 Operit1 快照文件';\n      });\n      return;\n    }\n\n    setState(() {\n      _importingOperit1Snapshot = true;\n      _setupError = null;\n    });\n    SnapshotImportSession? supplementalSession;\n    try {\n      final resources = await pickLegacyImportResources(context, widget.clients);\n      supplementalSession = resources.session;\n      if (resources.cancelled || !mounted) return;\n      ClientLogger.i(\n        'snapshot import started bytes=${session.byteLength}',\n        tag: _operit1SnapshotImportLogTag,\n      );\n      _subscribeOperit1ImportProgress();\n      final result = await widget.clients.servicesSnapshotImportManager\n          .importOperit1SnapshotWithResources(\n            archive: session.archive,\n            resources: supplementalSession?.archive,\n          );\n      _completedOperit1Import = result;\n      _operit1SnapshotSession = null;\n      ClientLogger.i(\n        'snapshot import completed chats=${result.importedChats} messages=${result.importedMessages} memories=${result.importedMemories} files=${result.importedFiles + result.importedExternalFiles + result.importedWorkspaceFiles}',\n        tag: _operit1SnapshotImportLogTag,\n      );\n      await discardOperit1ImportSession(session);\n      if (mounted) await showOperit1ImportResultDialog(context, result);\n      if (!mounted) {\n        return;\n      }\n      await _completeOperit1Import();\n    } catch (error, stackTrace) {\n      ClientLogger.e(\n        _completedOperit1Import == null\n            ? 'snapshot import failed'\n            : 'snapshot imported; startup transition failed',\n        tag: _operit1SnapshotImportLogTag,\n        error: error,\n        stackTrace: stackTrace,\n      );\n      if (!mounted) {\n        return;\n      }\n      setState(() {\n        _setupError = _completedOperit1Import == null\n            ? '$error'\n            : '数据已导入，进入应用失败：$error；再次点击“进入应用”不会重复导入';\n      });\n    } finally {\n      await discardOperit1ImportSession(supplementalSession);\n      if (!mounted && _completedOperit1Import == null) {\n        await discardOperit1ImportSession(session);\n      }\n      if (mounted) {\n        setState(() {\n          _importingOperit1Snapshot = false;\n        });\n      }\n    }\n  }\n\n  /// Restore a real conversation before the first chat screen can create an\n  /// empty one. Retrying this transition never imports the snapshot again.\n  Future<void> _completeOperit1Import() async {\n    final result = _completedOperit1Import;\n    if (result == null) return;\n    final chat = widget.clients.chatRuntimeHolderMain;\n    if (result.importedChats > 0) {\n      final current = await chat.currentChatIdFlow().first;\n      if (current == null || current.trim().isEmpty) {\n        final histories = await chat.chatHistoryListItemsFlow().first;\n        if (histories.isNotEmpty) {\n          var selected = histories.first;\n          for (final history in histories.skip(1)) {\n            if ((int.tryParse(history.updatedAt) ?? 0) >\n                (int.tryParse(selected.updatedAt) ?? 0)) {\n              selected = history;\n            }\n          }\n          final latestCurrent = await chat.currentChatIdFlow().first;\n          if (latestCurrent == null || latestCurrent.trim().isEmpty) {\n            await chat.switchChat(chatId: selected.id);\n          }\n        }\n      }\n    }\n    if (mounted) await widget.onComplete();\n  }\n\n"
+  },
+  {
+    "name": "onboarding-import-page-completion-state",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "                                    importing: _importingOperit1Snapshot,\n                                    progress: _operit1ImportProgress,",
+    "new": "                                    importing: _importingOperit1Snapshot,\n                                    completed: _completedOperit1Import != null,\n                                    progress: _operit1ImportProgress,"
+  },
+  {
+    "name": "onboarding-import-chrome-guard",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "                      canSkip: _agreementAccepted && _storageConfirmed,\n                      isAgreementPage: _isAgreementPage,\n                      isPermissionPage: _isPermissionPage,\n                      onBack: _goToPreviousPage,\n                      onPrimary: _primaryAction,\n                      onSkip: () {\n                        widget.onSkip();\n                      },",
+    "new": "                      canSkip: _canSkipGuide,\n                      isAgreementPage: _isAgreementPage,\n                      isPermissionPage: _isPermissionPage,\n                      onBack: _operit1ImportBusy ? null : _goToPreviousPage,\n                      onPrimary: _primaryAction,\n                      onSkip: _skipGuide,"
+  },
+  {
+    "name": "onboarding-import-nullable-back-button",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  final VoidCallback onBack;\n  final VoidCallback onPrimary;",
+    "new": "  final VoidCallback? onBack;\n  final VoidCallback onPrimary;"
+  },
+  {
+    "name": "onboarding-import-system-back-wrapper-start",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "    return Material(\n      color: colorScheme.surface,\n      child: AnimatedContainer(",
+    "new": "    final guide = Material(\n      color: colorScheme.surface,\n      child: AnimatedContainer("
+  },
+  {
+    "name": "onboarding-import-system-back-wrapper-end",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  }\n\n  String get _primaryActionLabel {",
+    "new": "    return PopScope(canPop: !_operit1ImportBusy, child: guide);\n  }\n\n  String get _primaryActionLabel {"
+  },
+  {
+    "name": "onboarding-import-explicit-action-label",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "      return _importingOperit1Snapshot ? '导入中' : '继续';",
+    "new": "      if (_completedOperit1Import != null) {\n        return _importingOperit1Snapshot ? '正在进入' : '进入应用';\n      }\n      return _importingOperit1Snapshot ? '导入中' : '开始导入';"
+  },
+  {
+    "name": "onboarding-import-page-completed-parameter",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "    required this.importing,\n    required this.progress,",
+    "new": "    required this.importing,\n    required this.completed,\n    required this.progress,"
+  },
+  {
+    "name": "onboarding-import-page-completed-field",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  final bool importing;\n  final core_proxy.Operit1SnapshotImportProgress? progress;",
+    "new": "  final bool importing;\n  final bool completed;\n  final core_proxy.Operit1SnapshotImportProgress? progress;"
+  },
+  {
+    "name": "onboarding-import-preserve-committed-selection",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "                  onPressed: reading || importing ? null : onPickSnapshot,",
+    "new": "                  onPressed: reading || importing || completed\n                      ? null\n                      : onPickSnapshot,"
+  },
+  {
+    "name": "onboarding-import-preview-is-not-commit",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "                  '检测到可迁移内容',",
+    "new": "                  completed ? '快照已导入' : '快照预览（尚未导入）',"
+  },
+  {
+    "name": "onboarding-import-explicit-instructions",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "                  importing ? '正在导入快照内容，请稍候。' : '点击继续后会开始迁移整份快照。',",
+    "new": "                  completed\n                      ? '数据已保存。点击“进入应用”打开迁移后的会话，不会重复导入。'\n                      : importing\n                      ? '正在导入快照内容，请稍候。'\n                      : '点击“开始导入”，选择补充资源或“仅导入快照”。导入完成后会显示实际结果，再进入应用。',"
+  }
+]
