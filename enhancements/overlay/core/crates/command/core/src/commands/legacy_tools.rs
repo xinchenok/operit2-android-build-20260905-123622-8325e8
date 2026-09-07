@@ -104,7 +104,7 @@ fn provider_result(provider: &ProviderProfile, index: usize) -> Result<Value,Str
         for (key, val) in encode(&model.localRuntime)?.as_object().expect("object") {result[key]=val.clone();}
         for (key, val) in encode(&model.summary)?.as_object().expect("object") {result[key]=val.clone();}
         result["enableGoogleSearch"]=json!(resolved.builtinTools.iter().any(|tool|tool.enabled&&tool.requestFormat==operit_model::ModelConfigData::BuiltinToolRequestFormat::GeminiGoogleSearch));
-        result["contextLength"]=data["context"]["maxContextLength"].clone();
+        result["contextLength"]=json!(resolved.context.normalContextLength());
         result["maxContextLength"]=data["context"]["maxContextLength"].clone();
         result["enableMaxContextMode"]=data["context"]["enableMaxContextMode"].clone();
         for (old,new) in [("enableDirectImageProcessing","directImage"),("enableDirectAudioProcessing","directAudio"),("enableDirectVideoProcessing","directVideo"),("enableToolCall","toolCall")] {result[old]=data["capabilities"][new].clone();}
@@ -169,9 +169,9 @@ fn write_model(id:Option<&str>, updates:&Value)->Result<Value,String>{
             "request_limit_per_minute"|"max_concurrent_requests"=>provider_json[camel(key)]=value.clone(),
             "max_context_length"|"context_length"|"enable_max_context_mode"=>{
                 if model_json["contextOverride"].is_null(){model_json["contextOverride"]=encode(operit_model::ModelConfigData::ModelContextSpec::default())?;}
-                let target=if key=="context_length"{"maxContextLength".to_string()}else{camel(key)};model_json["contextOverride"][target]=value.clone();
+                model_json["contextOverride"][camel(key)]=value.clone();
             },
-            "enable_summary"|"summary_token_threshold"|"enable_summary_by_message_count"|"summary_message_count_threshold"=>model_json["summary"][camel(key)]=value.clone(),
+            "enable_summary"|"summary_token_threshold"|"enable_summary_by_message_count"|"summary_message_count_threshold"|"summary_custom_rules"=>model_json["summary"][camel(key)]=value.clone(),
             "enable_direct_image_processing"|"enable_direct_audio_processing"|"enable_direct_video_processing"|"enable_tool_call"=>{
                 if model_json["capabilitiesOverride"].is_null(){model_json["capabilitiesOverride"]=encode(operit_model::ModelConfigData::ModelCapabilities::default())?;}
                 let target=match key.as_str(){"enable_direct_image_processing"=>"directImage","enable_direct_audio_processing"=>"directAudio","enable_direct_video_processing"=>"directVideo",_=>"toolCall"};model_json["capabilitiesOverride"][target]=value.clone();

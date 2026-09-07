@@ -1,0 +1,176 @@
+[
+  {
+    "name": "portable-memory-document-metadata",
+    "path": "core/crates/foundation/model/src/MemoryExportModel.rs",
+    "old": "    pub tagNames: Vec<String>,\n}",
+    "new": "    pub tagNames: Vec<String>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub documentPath: Option<String>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub isDocumentNode: Option<bool>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub chunkIndexFilePath: Option<String>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub lastAccessedAt: Option<i64>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub properties: Option<Vec<crate::Memory::MemoryProperty>>,\n}"
+  },
+  {
+    "name": "export-document-memories-and-their-links",
+    "path": "core/crates/persistence/store/src/repository/MemoryRepository.rs",
+    "old": "            .into_iter()\n            .filter(|memory| !memory.isDocumentNode)\n            .collect::<Vec<_>>();",
+    "new": "            .into_iter()\n            .collect::<Vec<_>>();"
+  },
+  {
+    "name": "export-portable-document-fields",
+    "path": "core/crates/persistence/store/src/repository/MemoryRepository.rs",
+    "old": "                tagNames: memory.tags.into_iter().map(|tag| tag.name).collect(),\n            })",
+    "new": "                tagNames: memory.tags.into_iter().map(|tag| tag.name).collect(),\n                documentPath: memory.documentPath,\n                isDocumentNode: Some(memory.isDocumentNode),\n                chunkIndexFilePath: memory.chunkIndexFilePath,\n                lastAccessedAt: Some(memory.lastAccessedAt),\n                properties: Some(memory.properties),\n            })"
+  },
+  {
+    "name": "update-document-fields-when-present-in-portable-import",
+    "path": "core/crates/persistence/store/src/repository/MemoryRepository.rs",
+    "old": "                    existing.tags = buildTags(serializableMemory.tagNames);\n                    let saved = self",
+    "new": "                    existing.tags = buildTags(serializableMemory.tagNames);\n                    if let Some(isDocumentNode) = serializableMemory.isDocumentNode {\n                        existing.isDocumentNode = isDocumentNode;\n                        existing.documentPath = serializableMemory.documentPath;\n                        existing.chunkIndexFilePath = serializableMemory.chunkIndexFilePath;\n                    }\n                    if let Some(lastAccessedAt) = serializableMemory.lastAccessedAt {\n                        existing.lastAccessedAt = lastAccessedAt;\n                    }\n                    if let Some(properties) = serializableMemory.properties {\n                        existing.properties = properties;\n                    }\n                    let saved = self"
+  },
+  {
+    "name": "create-memory-with-restored-document-metadata",
+    "path": "core/crates/persistence/store/src/repository/MemoryRepository.rs",
+    "old": "            importance: serializable.importance,\n            documentPath: None,\n            isDocumentNode: false,\n            chunkIndexFilePath: None,\n            folderPath: Self::normalizeFolderPath(serializable.folderPath.as_deref()),\n            createdAt: serializable.createdAt,\n            updatedAt: serializable.updatedAt,\n            lastAccessedAt: now,\n            tags: buildTags(serializable.tagNames),\n            properties: Vec::new(),",
+    "new": "            importance: serializable.importance,\n            documentPath: serializable.documentPath,\n            isDocumentNode: serializable.isDocumentNode.unwrap_or(false),\n            chunkIndexFilePath: serializable.chunkIndexFilePath,\n            folderPath: Self::normalizeFolderPath(serializable.folderPath.as_deref()),\n            createdAt: serializable.createdAt,\n            updatedAt: serializable.updatedAt,\n            lastAccessedAt: serializable.lastAccessedAt.unwrap_or(now),\n            tags: buildTags(serializable.tagNames),\n            properties: serializable.properties.unwrap_or_default(),"
+  },
+  {
+    "name": "import-memory-property-type",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "use operit_model::MemoryExportModel::{",
+    "new": "use operit_model::Memory::MemoryProperty;\nuse operit_model::MemoryExportModel::{"
+  },
+  {
+    "name": "objectbox-document-and-property-entity-keys",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "const OPERIT1_OBJECTBOX_KEY_MEMORY_TAG_RELATION: [u8; 4] = [0x20, 0x00, 0x00, 0x20];",
+    "new": "const OPERIT1_OBJECTBOX_KEY_MEMORY_TAG_RELATION: [u8; 4] = [0x08, 0x00, 0x00, 0x1c];\nconst OPERIT1_OBJECTBOX_KEY_PROPERTY: [u8; 4] = [0x18, 0x00, 0x00, 0x18];\nconst OPERIT1_OBJECTBOX_KEY_DOCUMENT_CHUNK: [u8; 4] = [0x18, 0x00, 0x00, 0x20];\nconst OPERIT1_OBJECTBOX_KEY_MEMORY_PROPERTY_RELATION: [u8; 4] = [0x08, 0x00, 0x00, 0x20];"
+  },
+  {
+    "name": "report-document-resource-migration-notes",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let (importedMemories, importedMemoryLinks) = self.importObjectBoxMemoryStore(&parsed, &fileImportPlan)?;",
+    "new": "        let (importedMemories, importedMemoryLinks, memoryNotes) =\n            self.importObjectBoxMemoryStore(&parsed, &fileImportPlan)?;\n        modelConfig.skippedFields.extend(memoryNotes);"
+  },
+  {
+    "name": "collect-document-notes-across-memory-profiles",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    fn importObjectBoxMemoryStore(\n        &self,\n        parsed: &ParsedOperit1Snapshot,\n        fileImportPlan: &SnapshotFileImportPlan,\n    ) -> Result<(i32, i32), String> {",
+    "new": "    fn importObjectBoxMemoryStore(\n        &self,\n        parsed: &ParsedOperit1Snapshot,\n        fileImportPlan: &SnapshotFileImportPlan,\n    ) -> Result<(i32, i32, Vec<String>), String> {"
+  },
+  {
+    "name": "initialize-document-import-notes",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            let mut totalMemoryCount = 0;\n            let mut totalLinkCount = 0;\n            for (profileIndex, profileId) in profiles.into_iter().enumerate() {",
+    "new": "            let mut totalMemoryCount = 0;\n            let mut totalLinkCount = 0;\n            let mut memoryNotes = Vec::new();\n            for (profileIndex, profileId) in profiles.into_iter().enumerate() {"
+  },
+  {
+    "name": "resolve-document-paths-against-actual-copy-plan",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                let exportData = self.withStagedArchiveEntry(\n                    parsed,\n                    &entry,\n                    OPERIT1_SNAPSHOT_OBJECTBOX_IMPORT_PATH,",
+    "new": "                let (exportData, documentNotes) = self.withStagedArchiveEntry(\n                    parsed,\n                    &entry,\n                    OPERIT1_SNAPSHOT_OBJECTBOX_IMPORT_PATH,"
+  },
+  {
+    "name": "pass-document-path-plan-to-objectbox-conversion",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                            OPERIT1_SNAPSHOT_OBJECTBOX_IMPORT_PATH,\n                            entryLength,\n                        )",
+    "new": "                            OPERIT1_SNAPSHOT_OBJECTBOX_IMPORT_PATH,\n                            entryLength,\n                            fileImportPlan,\n                        )"
+  },
+  {
+    "name": "preserve-profile-in-document-import-notes",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                totalMemoryCount += exportData.memories.len() as i32;",
+    "new": "                memoryNotes.extend(documentNotes.into_iter()\n                    .map(|note| format!(\"记忆库「{storeName}」：{note}\")));\n                totalMemoryCount += exportData.memories.len() as i32;"
+  },
+  {
+    "name": "return-document-import-notes",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            Ok((totalMemoryCount, totalLinkCount))",
+    "new": "            Ok((totalMemoryCount, totalLinkCount, memoryNotes))"
+  },
+  {
+    "name": "map-only-included-original-document-files",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    fn importedSpeechResource(&self, source: &str) -> Result<String, String> {",
+    "new": "    fn importedDocumentPath(&self, source: Option<&str>) -> Option<String> {\n        let source = source?.trim().replace('\\\\', \"/\");\n        let source = source.strip_prefix(\"file://\").unwrap_or(&source);\n        self.resourcePaths.iter().find_map(|(path, target)| {\n            (path.strip_prefix(\"file://\").unwrap_or(path) == source)\n                .then(|| target.clone())\n        })\n    }\n\n    fn importedSpeechResource(&self, source: &str) -> Result<String, String> {"
+  },
+  {
+    "name": "read-source-document-node-metadata",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    updatedAt: i64,\n    isDocumentNode: bool,\n}",
+    "new": "    updatedAt: i64,\n    lastAccessedAt: i64,\n    documentPath: Option<String>,\n    isDocumentNode: bool,\n    chunkIndexFilePath: Option<String>,\n}"
+  },
+  {
+    "name": "define-source-document-chunk-record",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "struct Operit1MemoryTagRecord {\n    id: u32,\n    name: String,\n}\n",
+    "new": "struct Operit1MemoryTagRecord {\n    id: u32,\n    name: String,\n}\n\n#[derive(Clone, Debug, Serialize)]\n#[allow(non_snake_case)]\nstruct Operit1DocumentChunkRecord {\n    id: u32,\n    content: String,\n    chunkIndex: i32,\n    memoryId: u32,\n}\n"
+  },
+  {
+    "name": "collect-document-records-and-properties",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    byteLength: u64,\n) -> Result<MemoryExportData, String> {\n    let mut memories = BTreeMap::<u32, Operit1MemoryRecord>::new();\n    let mut links = BTreeMap::<u32, Operit1MemoryLinkRecord>::new();\n    let mut tags = BTreeMap::<u32, Operit1MemoryTagRecord>::new();\n    let mut memoryTagPairs = BTreeSet::<(u32, u32)>::new();",
+    "new": "    byteLength: u64,\n    fileImportPlan: &SnapshotFileImportPlan,\n) -> Result<(MemoryExportData, Vec<String>), String> {\n    let mut memories = BTreeMap::<u32, Operit1MemoryRecord>::new();\n    let mut links = BTreeMap::<u32, Operit1MemoryLinkRecord>::new();\n    let mut tags = BTreeMap::<u32, Operit1MemoryTagRecord>::new();\n    let mut memoryTagPairs = BTreeSet::<(u32, u32)>::new();\n    let mut properties = BTreeMap::<u32, MemoryProperty>::new();\n    let mut memoryPropertyPairs = BTreeSet::<(u32, u32)>::new();\n    let mut chunksByMemoryId = BTreeMap::<u32, Vec<Operit1DocumentChunkRecord>>::new();\n    let mut notes = Vec::new();"
+  },
+  {
+    "name": "parse-document-chunk-and-property-lmdb-records",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            let tag = parseOperit1MemoryTagRecord(value)?;\n            tags.insert(tag.id, tag);\n        } else if key.len() == 16",
+    "new": "            let tag = parseOperit1MemoryTagRecord(value)?;\n            tags.insert(tag.id, tag);\n        } else if key.len() == 8 && key[0..4] == OPERIT1_OBJECTBOX_KEY_PROPERTY && !value.is_empty() {\n            let table = FlatObjectBoxTable::new(value)?;\n            let id = table.requiredU32(0, \"MemoryProperty.id\")?;\n            properties.insert(id, MemoryProperty {\n                id: id as i64,\n                key: table.optionalString(1)?.unwrap_or_default(),\n                value: table.optionalString(2)?.unwrap_or_default(),\n            });\n        } else if key.len() == 8 && key[0..4] == OPERIT1_OBJECTBOX_KEY_DOCUMENT_CHUNK && !value.is_empty() {\n            let table = FlatObjectBoxTable::new(value)?;\n            let chunk = Operit1DocumentChunkRecord {\n                id: table.requiredU32(0, \"DocumentChunk.id\")?,\n                content: table.optionalString(1)?.unwrap_or_default(),\n                chunkIndex: table.optionalI32(2)?.unwrap_or(0),\n                memoryId: table.requiredU32(4, \"DocumentChunk.memoryId\")?,\n            };\n            chunksByMemoryId.entry(chunk.memoryId).or_default().push(chunk);\n        } else if key.len() == 12\n            && key[0..4] == OPERIT1_OBJECTBOX_KEY_MEMORY_PROPERTY_RELATION\n            && value.is_empty()\n        {\n            memoryPropertyPairs.insert((readBigEndianU32(&key[4..8])?, readBigEndianU32(&key[8..12])?));\n        } else if key.len() == 16"
+  },
+  {
+    "name": "decode-real-objectbox-standalone-memory-tag-relations",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        } else if key.len() == 16\n            && key[0..4] == OPERIT1_OBJECTBOX_KEY_MEMORY_TAG_RELATION\n            && value.is_empty()\n        {\n            let memoryId = readBigEndianU32(&key[8..12])?;\n            let tagId = readBigEndianU32(&key[12..16])?;",
+    "new": "        } else if key.len() == 12\n            && key[0..4] == OPERIT1_OBJECTBOX_KEY_MEMORY_TAG_RELATION\n            && value.is_empty()\n        {\n            let memoryId = readBigEndianU32(&key[4..8])?;\n            let tagId = readBigEndianU32(&key[8..12])?;"
+  },
+  {
+    "name": "resolve-memory-properties-and-stable-document-chunk-order",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    let mut memoryUuidById = HashMap::<u32, String>::new();\n    let mut serializableMemories = Vec::new();",
+    "new": "    let mut propertiesByMemoryId = HashMap::<u32, Vec<MemoryProperty>>::new();\n    for (memoryId, propertyId) in memoryPropertyPairs {\n        let property = properties.get(&propertyId)\n            .ok_or_else(|| format!(\"Operit1 记忆属性关系引用不存在的属性：{propertyId}\"))?;\n        propertiesByMemoryId.entry(memoryId).or_default().push(property.clone());\n    }\n    for (memoryId, chunks) in &mut chunksByMemoryId {\n        if !memories.contains_key(memoryId) {\n            return Err(format!(\"Operit1 文档分块引用不存在的记忆：{memoryId}；请保留原始快照\"));\n        }\n        chunks.sort_by_key(|chunk| (chunk.chunkIndex, chunk.id));\n    }\n    let mut memoryUuidById = HashMap::<u32, String>::new();\n    let mut serializableMemories = Vec::new();"
+  },
+  {
+    "name": "restore-document-body-with-metadata-instead-of-skipping-node",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        if memory.isDocumentNode {\n            continue;\n        }\n        memoryUuidById.insert(memory.id, memory.uuid.clone());",
+    "new": "        let chunks = chunksByMemoryId.remove(&memory.id).unwrap_or_default();\n        let isDocument = memory.isDocumentNode || !chunks.is_empty();\n        let mut content = memory.content.clone();\n        let mut memoryProperties = propertiesByMemoryId.remove(&memory.id).unwrap_or_default();\n        let documentPath = fileImportPlan.importedDocumentPath(memory.documentPath.as_deref());\n        if isDocument {\n            let metadata = serde_json::json!({\n                \"description\": memory.content,\n                \"documentPath\": memory.documentPath,\n                \"chunkIndexFilePath\": memory.chunkIndexFilePath,\n                \"isDocumentNode\": memory.isDocumentNode,\n                \"retrieval\": \"lexical\",\n            });\n            let propertyId = memoryProperties.iter().map(|property| property.id).max().unwrap_or(0) + 1;\n            memoryProperties.push(MemoryProperty {\n                id: propertyId,\n                key: \"operit1.document.metadata.v1\".to_string(),\n                value: metadata.to_string(),\n            });\n            if !chunks.is_empty() {\n                content = chunks.iter().map(|chunk| chunk.content.as_str()).collect::<Vec<_>>().join(\"\\n\\n\");\n                memoryProperties.push(MemoryProperty {\n                    id: propertyId + 1,\n                    key: \"operit1.document.chunks.v1\".to_string(),\n                    value: serde_json::to_string(&chunks).map_err(|error| error.to_string())?,\n                });\n            } else {\n                let detail = if let Some(path) = &documentPath {\n                    format!(\"原文件已迁移至 {path}，可打开原文件；快照未含正文分块\")\n                } else {\n                    \"快照未含正文分块或原文件，请补充原文档；已保留文档节点、原说明及关联\".to_string()\n                };\n                content.push_str(&format!(\"\\n\\n迁移说明：{detail}。\"));\n                notes.push(format!(\"文档「{}」：{detail}\", memory.title));\n            }\n            if documentPath.is_none() && !chunks.is_empty() {\n                let source = memory.documentPath.as_deref().unwrap_or(\"未记录原文件路径\");\n                notes.push(format!(\"文档「{}」的全部 {} 个正文分块已恢复并可读取、检索；原文件未包含在快照或补充包中（{source}），如需原格式请补充文件\", memory.title, chunks.len()));\n            }\n        }\n        memoryUuidById.insert(memory.id, memory.uuid.clone());"
+  },
+  {
+    "name": "persist-restored-document-content-and-properties",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            content: memory.content.clone(),\n            contentType: memory.contentType.clone(),",
+    "new": "            content,\n            contentType: memory.contentType.clone(),"
+  },
+  {
+    "name": "portable-source-document-fields",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            tagNames: tagNamesByMemoryId.remove(&memory.id).unwrap_or_default(),\n        });",
+    "new": "            tagNames: tagNamesByMemoryId.remove(&memory.id).unwrap_or_default(),\n            documentPath,\n            isDocumentNode: Some(isDocument),\n            // Operit1 HNSW files address ObjectBox IDs and cannot back this SQLite store.\n            chunkIndexFilePath: None,\n            lastAccessedAt: Some(memory.lastAccessedAt),\n            properties: Some(memoryProperties),\n        });"
+  },
+  {
+    "name": "return-document-conversion-report",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    Ok(MemoryExportData {\n        memories: serializableMemories,\n        links: serializableLinks,\n        exportDate: currentTimeMillis(),\n        version: \"1.0\".to_string(),\n    })",
+    "new": "    if serializableMemories.iter().any(|memory| memory.isDocumentNode == Some(true)) {\n        notes.push(\"文档节点、已有正文分块、元数据和记忆关联已迁移，缺失项已单独列出；增强版使用正文关键词检索，没有复用旧版 HNSW 向量索引\".to_string());\n    }\n    Ok((MemoryExportData {\n        memories: serializableMemories,\n        links: serializableLinks,\n        exportDate: currentTimeMillis(),\n        version: \"1.1\".to_string(),\n    }, notes))"
+  },
+  {
+    "name": "parse-optional-document-fields-and-access-time",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        isDocumentNode: table.optionalBool(13)?.unwrap_or(false),\n        folderPath: table.optionalString(17)?,",
+    "new": "        lastAccessedAt: if table.fieldAbs(10).is_some() {\n            table.requiredI64(10, \"Memory.lastAccessedAt\")?\n        } else { table.requiredI64(9, \"Memory.updatedAt\")? },\n        documentPath: table.optionalString(12)?,\n        isDocumentNode: table.optionalBool(13)?.unwrap_or(false),\n        chunkIndexFilePath: table.optionalString(14)?,\n        folderPath: table.optionalString(17)?,"
+  },
+  {
+    "name": "parse-zero-default-document-chunk-index",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    #[allow(non_snake_case)]\n    fn optionalBool(&self, index: usize) -> Result<Option<bool>, String> {",
+    "new": "    #[allow(non_snake_case)]\n    fn optionalI32(&self, index: usize) -> Result<Option<i32>, String> {\n        let Some(abs) = self.fieldAbs(index) else { return Ok(None); };\n        if abs + 4 > self.bytes.len() {\n            return Err(\"Operit1 ObjectBox 整数字段越界\".to_string());\n        }\n        readLittleEndianI32(&self.bytes[abs..abs + 4]).map(Some)\n    }\n\n    #[allow(non_snake_case)]\n    fn optionalBool(&self, index: usize) -> Result<Option<bool>, String> {"
+  },
+  {
+    "name": "read-imported-document-chunks-in-memory-tool",
+    "path": "core/crates/tool/services/src/tools/defaultTool/standard/StandardMemoryTools.rs",
+    "old": "    match repository.findMemoryByTitle(&title) {\n        Ok(Some(memory)) => successData(\n            tool,\n            ToolResultData::MemoryQueryResultData(memoryQueryResultData(\n                &[OwnedMemoryResult { ownerKey, memory }],\n                None,\n                false,\n                0,\n            )),\n        ),",
+    "new": "    match repository.findMemoryByTitle(&title) {\n        Ok(Some(memory)) => {\n            match importedDocumentChunkResult(tool, &ownerKey, &memory) {\n                Ok(Some(data)) => successData(tool, ToolResultData::MemoryQueryResultData(data)),\n                Ok(None) => successData(tool, ToolResultData::MemoryQueryResultData(memoryQueryResultData(\n                    &[OwnedMemoryResult { ownerKey, memory }], None, false, 0,\n                ))),\n                Err(error) => errorResult(tool, &error),\n            }\n        },"
+  },
+  {
+    "name": "select-preserved-document-chunks-by-index-range-or-query",
+    "path": "core/crates/tool/services/src/tools/defaultTool/standard/StandardMemoryTools.rs",
+    "old": "fn executeCreateMemory(tool: &AITool) -> ToolResult {",
+    "new": "#[derive(serde::Deserialize)]\n#[allow(non_snake_case)]\nstruct ImportedDocumentChunk {\n    content: String,\n    chunkIndex: i32,\n}\n\nfn importedDocumentChunkResult(\n    tool: &AITool,\n    ownerKey: &str,\n    memory: &operit_model::Memory::Memory,\n) -> Result<Option<MemoryQueryResultData>, String> {\n    let query = optionalParameterValue(tool, \"query\").filter(|value| !value.trim().is_empty());\n    let range = optionalParameterValue(tool, \"chunk_range\").filter(|value| !value.trim().is_empty());\n    let index = optionalParameterValue(tool, \"chunk_index\").filter(|value| !value.trim().is_empty());\n    if !memory.isDocumentNode || (query.is_none() && range.is_none() && index.is_none()) {\n        return Ok(None);\n    }\n    let property = memory.properties.iter().rev()\n        .find(|property| property.key == \"operit1.document.chunks.v1\")\n        .ok_or_else(|| \"该文档没有已恢复的正文分块，请补充原文档；文档节点和原说明仍然保留\".to_string())?;\n    let chunks: Vec<ImportedDocumentChunk> = serde_json::from_str(&property.value)\n        .map_err(|error| format!(\"无法读取文档分块：{error}\"))?;\n    let total = chunks.len();\n    let mut selected = if let Some(query) = query {\n        let query = query.trim().to_lowercase();\n        let terms = query.split_whitespace().collect::<Vec<_>>();\n        let limit = parseLimit(optionalParameterValue(tool, \"limit\").as_deref(), 20)?;\n        let mut scored = chunks.iter().filter_map(|chunk| {\n            let content = chunk.content.to_lowercase();\n            let score = terms.iter().map(|term| content.matches(*term).count()).sum::<usize>();\n            (score > 0).then_some((score, chunk))\n        }).collect::<Vec<_>>();\n        scored.sort_by(|left, right| right.0.cmp(&left.0)\n            .then_with(|| left.1.chunkIndex.cmp(&right.1.chunkIndex)));\n        scored.into_iter().take(limit).map(|(_, chunk)| chunk).collect::<Vec<_>>()\n    } else {\n        let parseIndex = |raw: &str| -> Result<i32, String> {\n            let value = raw.trim().parse::<i32>().map_err(|_| \"分块编号必须是从 1 开始的整数\".to_string())?;\n            if value <= 0 { return Err(\"分块编号必须从 1 开始\".to_string()); }\n            Ok(value - 1)\n        };\n        let (start, end) = if let Some(range) = range {\n            let (start, end) = range.split_once('-')\n                .ok_or_else(|| \"chunk_range 格式应为起止编号，例如 1-3\".to_string())?;\n            (parseIndex(start)?, parseIndex(end)?)\n        } else {\n            let index = parseIndex(index.as_deref().unwrap_or(\"1\"))?;\n            (index, index)\n        };\n        if start > end || !chunks.iter().any(|chunk| chunk.chunkIndex == start)\n            || !chunks.iter().any(|chunk| chunk.chunkIndex == end) {\n            return Err(format!(\"分块范围不存在；该文档保留了 {total} 个正文分块\"));\n        }\n        chunks.iter().filter(|chunk| chunk.chunkIndex >= start && chunk.chunkIndex <= end)\n            .collect::<Vec<_>>()\n    };\n    if selected.is_empty() {\n        return Err(\"没有匹配的文档分块；可使用正文关键词或分块编号查询\".to_string());\n    }\n    selected.sort_by_key(|chunk| chunk.chunkIndex);\n    let indices = selected.iter().map(|chunk| chunk.chunkIndex).collect::<Vec<_>>();\n    let mut info = memoryInfo(&OwnedMemoryResult { ownerKey: ownerKey.to_string(), memory: memory.clone() });\n    info.content = selected.iter().map(|chunk| chunk.content.as_str()).collect::<Vec<_>>().join(\"\\n\\n\");\n    info.chunkInfo = JsOptional::Value(format!(\"已返回 {} / {total} 个文档分块\", selected.len()));\n    info.chunkIndices = JsOptional::Value(indices);\n    Ok(Some(MemoryQueryResultData {\n        memories: vec![info], snapshotId: JsOptional::Null,\n        snapshotCreated: Some(false), excludedBySnapshotCount: Some(0),\n    }))\n}\n\nfn executeCreateMemory(tool: &AITool) -> ToolResult {"
+  }
+]

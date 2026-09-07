@@ -1,0 +1,140 @@
+[
+  {
+    "name": "supplemental-resource-import-type",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "use crate::data::archive::ArchiveSource::ArchiveSource;",
+    "new": "use crate::data::archive::ArchiveSource::ArchiveSource;\nuse crate::services::LegacyImportResources::{LegacyImportResourcesArchive, LegacyImportResourceLocation};"
+  },
+  {
+    "name": "supplemental-resource-plan",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    resourcePaths: Vec<(String, String)>,\n    copyPlan: Option<SnapshotFileCopyPlan>,",
+    "new": "    resourcePaths: Vec<(String, String)>,\n    supplementalResources: Option<LegacyImportResourcesArchive>,\n    copyPlan: Option<SnapshotFileCopyPlan>,"
+  },
+  {
+    "name": "supplemental-resource-plan-default",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            resourcePaths: Vec::new(),\n            copyPlan: None,",
+    "new": "            resourcePaths: Vec::new(),\n            supplementalResources: None,\n            copyPlan: None,"
+  },
+  {
+    "name": "supplemental-resource-source-entrypoint",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        AppLogger::i(\"Operit1SnapshotImport\", \"full snapshot import started\");\n        let result = self.importSnapshotSourceInner(source);",
+    "new": "        self.importSnapshotSourceWithResources(source, None)\n    }\n\n    pub(crate) fn importSnapshotSourceWithResources(\n        &self,\n        source: Arc<dyn ArchiveSource>,\n        resources: Option<Arc<dyn ArchiveSource>>,\n    ) -> Result<Operit1SnapshotImportResult, String> {\n        AppLogger::i(\"Operit1SnapshotImport\", \"full snapshot import started\");\n        let result = self.importSnapshotSourceInner(source, resources);"
+  },
+  {
+    "name": "supplemental-resource-inner-argument",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    fn importSnapshotSourceInner(\n        &self,\n        source: Arc<dyn ArchiveSource>,\n    ) -> Result<Operit1SnapshotImportResult, String> {",
+    "new": "    fn importSnapshotSourceInner(\n        &self,\n        source: Arc<dyn ArchiveSource>,\n        resources: Option<Arc<dyn ArchiveSource>>,\n    ) -> Result<Operit1SnapshotImportResult, String> {"
+  },
+  {
+    "name": "supplemental-resource-plan-before-writes",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let mut fileImportPlan = SnapshotFileImportPlan::forSnapshot(&parsed, &self.paths)?;\n        let mut modelConfig = self.importModelConfigsFromParsed(",
+    "new": "        let mut fileImportPlan = SnapshotFileImportPlan::forSnapshot(&parsed, &self.paths)?;\n        if let Some(source) = resources {\n            fileImportPlan.addSupplementalResources(\n                LegacyImportResourcesArchive::fromSource(source)?, &self.paths,\n            )?;\n        }\n        // Materialize resources before persisting models or chats. A bad ZIP or\n        // interrupted write must not leave newly imported messages with dead paths.\n        publishOperit1SnapshotImportProgress(Operit1SnapshotImportProgress::stage(\n            \"files\", \"准备资源文件\", \"正在复制快照与补充资源。\", 0.14,\n        ));\n        let mut fileImportResult = self.importSnapshotFiles(&parsed, &fileImportPlan)?;\n        if let Some(resources) = &fileImportPlan.supplementalResources {\n            resources.copyFiles(self.storageWriteHost.as_ref())?;\n            fileImportResult.importedFiles += resources.internalFileCount();\n            fileImportResult.importedExternalFiles += resources.externalFileCount();\n            fileImportResult.importedWorkspaceFiles += resources.workspaceFileCount();\n            fileImportResult.importedWorkspaces = fileImportPlan.workspaceIds.len() as i32;\n        }\n        publishOperit1SnapshotImportProgress(Operit1SnapshotImportProgress::stage(\n            \"model_config\",\n            \"迁移模型配置\",\n            \"正在写入供应商、密钥和默认聊天模型。\",\n            0.22,\n        ));\n        let mut modelConfig = self.importModelConfigsFromParsed("
+  },
+  {
+    "name": "supplemental-resource-copy-before-speech",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let fileImportResult = self.importSnapshotFiles(&parsed, &fileImportPlan)?;\n        publishOperit1SnapshotImportProgress(Operit1SnapshotImportProgress::stage(",
+    "new": "        if let Some(resources) = &fileImportPlan.supplementalResources {\n            modelConfig.skippedFields.extend(resources.importWorkflows(|value| {\n                fileImportPlan.rewriteResourceValue(value)\n            }));\n        }\n        publishOperit1SnapshotImportProgress(Operit1SnapshotImportProgress::stage("
+  },
+  {
+    "name": "supplemental-public-message-reference",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        if !content.contains(\"/data/\") && !content.contains(\"/Android/data/\") {\n            return content.to_string();\n        }",
+    "new": "        if !content.contains(\"/data/\") && !content.contains(\"/Android/data/\")\n            && !content.contains(\"/Download/Operit/\") && !content.contains(\"/cache/\") {\n            return content.to_string();\n        }"
+  },
+  {
+    "name": "supplemental-resource-methods",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    fn importedSpeechResource(&self, source: &str) -> Result<String, String> {",
+    "new": "    fn addSupplementalResources(\n        &mut self,\n        mut resources: LegacyImportResourcesArchive,\n        paths: &RuntimeStorePaths,\n    ) -> Result<(), String> {\n        let mut occupied = self.copyPlan.as_ref().into_iter()\n            .flat_map(|plan| plan.items.iter().map(|item| item.targetPath.clone()))\n            .collect::<HashSet<_>>();\n        for item in &mut resources.items {\n            let workspace = if matches!(item.location,\n                LegacyImportResourceLocation::Public | LegacyImportResourceLocation::Internal) {\n                item.relativePath.strip_prefix(\"workspace/\")\n                    .filter(|relative| relative.contains('/'))\n            } else { None };\n            let target = if let Some(relative) = workspace {\n                let (id, rest) = splitWorkspaceRelativePath(relative)?;\n                if rest.is_empty() { continue; }\n                let targetId = self.workspaceIds.entry(id.to_string())\n                    .or_insert_with(|| Uuid::new_v4().to_string());\n                item.workspace = true;\n                format!(\"{WORKSPACE_DIR_PATH}/{targetId}/{rest}\")\n            } else {\n                let root = match item.location {\n                    LegacyImportResourceLocation::Public => format!(\"{}/public\", self.importedExternalFilesRoot),\n                    LegacyImportResourceLocation::Internal => self.importedFilesRoot.clone(),\n                    LegacyImportResourceLocation::External => self.importedExternalFilesRoot.clone(),\n                    LegacyImportResourceLocation::Cache => format!(\"{}/cache\", self.importedFilesRoot),\n                };\n                joinVirtualPath(&root, &item.relativePath)\n            };\n            let physical = if let Some(relative) = workspace {\n                let (id, rest) = splitWorkspaceRelativePath(relative)?;\n                paths.workspace_path(&self.workspaceIds[id]).join(rest)\n                    .to_string_lossy().into_owned()\n            } else {\n                paths.runtime_storage_path(&target).to_string_lossy().into_owned()\n            };\n            for prefix in item.sourcePrefixes(&self.legacyPackageName) {\n                let mut sourcePath = format!(\"{prefix}{}\", item.relativePath);\n                let mut targetPath = physical.clone();\n                // Only map directories evidenced by an actual archived child.\n                // Workspaces use independently allocated IDs, so stop at that ID.\n                let stop = if let Some(relative) = workspace {\n                    let (id, _) = splitWorkspaceRelativePath(relative)?;\n                    format!(\"{prefix}workspace/{id}\")\n                } else { prefix.trim_end_matches('/').to_string() };\n                loop {\n                    for source in [format!(\"file://{sourcePath}\"), sourcePath.clone()] {\n                        if !self.resourcePaths.iter().any(|(existing, _)| existing == &source) {\n                            self.resourcePaths.push((source, targetPath.clone()));\n                        }\n                    }\n                    if sourcePath == stop { break; }\n                    let Some((parent, _)) = sourcePath.rsplit_once('/') else { break; };\n                    let Some((targetParent, _)) = targetPath.rsplit_once('/') else { break; };\n                    sourcePath = parent.to_string();\n                    targetPath = targetParent.to_string();\n                }\n            }\n            // The snapshot wins when both files refer to the same destination.\n            if occupied.insert(target.clone()) { item.targetPath = Some(target); }\n        }\n        self.resourcePaths.sort_by(|left, right| right.0.len().cmp(&left.0.len()));\n        self.supplementalResources = Some(resources);\n        Ok(())\n    }\n\n    fn rewriteResourceValue(&self, value: &mut Value) {\n        match value {\n            Value::String(text) => {\n                let normalized = text.strip_prefix(\"file://\").unwrap_or(text)\n                    .replace('\\\\', \"/\");\n                if let Some((_, target)) = self.resourcePaths.iter()\n                    .find(|(source, _)| source == &normalized) {\n                    *text = target.clone();\n                } else if normalized.contains(\"/workspace/\") {\n                    if let Ok(target) = self.rewriteWorkspacePath(&normalized) {\n                        if target != normalized { *text = target; return; }\n                    }\n                    *text = self.rewriteMessageContent(text);\n                } else {\n                    *text = self.rewriteMessageContent(text);\n                }\n            }\n            Value::Array(values) => values.iter_mut().for_each(|v| self.rewriteResourceValue(v)),\n            Value::Object(values) => values.values_mut().for_each(|v| self.rewriteResourceValue(v)),\n            _ => {}\n        }\n    }\n\n    fn importedSpeechResource(&self, source: &str) -> Result<String, String> {"
+  },
+  {
+    "name": "supplemental-resource-copy-progress",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                        0.90,\n                        1.0,\n                        copiedFileCount,",
+    "new": "                        0.14,\n                        0.20,\n                        copiedFileCount,"
+  },
+  {
+    "name": "supplemental-empty-copy-progress",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                \"快照没有可迁移的资源文件。\".to_string(),\n                0.90,\n                1.0,",
+    "new": "                \"快照没有可迁移的资源文件。\".to_string(),\n                0.14,\n                0.20,"
+  },
+  {
+    "name": "supplemental-copy-before-model-progress",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        let parsed = ParsedOperit1Snapshot::fromSource(source)?;\n        publishOperit1SnapshotImportProgress(Operit1SnapshotImportProgress::stage(\n            \"model_config\",\n            \"迁移模型配置\",\n            \"正在写入供应商、密钥和默认聊天模型。\",\n            0.22,\n        ));",
+    "new": "        let parsed = ParsedOperit1Snapshot::fromSource(source)?;\n        // Resource copying finishes before the model-config stage below."
+  },
+  {
+    "name": "supplemental-ncnn-pass-resource-plan",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "self.importOperit1SttProfile(&host, &preferences, &name, current)",
+    "new": "self.importOperit1SttProfile(&host, &preferences, &name, current, plan)"
+  },
+  {
+    "name": "supplemental-ncnn-profile-plan-argument",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    fn importOperit1SttProfile(&self, host: &operit_host_api::HostManager::HostManager,\n        preferences: &HashMap<String, Operit1PreferenceValue>, name: &str, current: bool) -> Result<(), String> {",
+    "new": "    fn importOperit1SttProfile(&self, host: &operit_host_api::HostManager::HostManager,\n        preferences: &HashMap<String, Operit1PreferenceValue>, name: &str, current: bool,\n        plan: &SnapshotFileImportPlan) -> Result<(), String> {"
+  },
+  {
+    "name": "supplemental-ncnn-restore-real-cached-model",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            crate::services::LegacySherpaNcnn::prepare(host, &serde_json::json!({}))?",
+    "new": "            let manifest = operit_local_models::LocalModelCatalog::LocalModelCatalog::oldAssistanceSherpaNcnnStt();\n            // Operit1 SherpaSpeechProvider copies this exact fixed model into\n            // files/.sherpa_ncnn_models/<model id>; never choose an arbitrary model.\n            let source = format!(\"/data/user/0/{}/files/.sherpa_ncnn_models/{}\",\n                plan.legacyPackageName, manifest.id);\n            let mut request = serde_json::json!({});\n            // The map contains only actual snapshot/supplement payloads. Even a\n            // partial supplied directory reaches prepare's file/hash diagnostics;\n            // absent cache retains the existing download path.\n            if let Ok(directory) = plan.importedSpeechResource(&source) {\n                request[\"legacy_ncnn_model_directory\"] = serde_json::json!(directory);\n            }\n            crate::services::LegacySherpaNcnn::prepare(host, &request)?"
+  },
+  {
+    "name": "supplemental-resource-runtime-method",
+    "path": "core/crates/runtime/application/src/services/SnapshotImportManager.rs",
+    "old": "    /// Observes the latest Operit1 snapshot import progress state.",
+    "new": "    /// Imports a snapshot and optional public resources using one identity/path plan.\n    #[allow(non_snake_case)]\n    pub fn importOperit1SnapshotWithResources(\n        &self,\n        archive: StagedArchive,\n        resources: Option<StagedArchive>,\n    ) -> Result<Operit1SnapshotImportResult, String> {\n        let resources = resources.as_ref().map(|archive|\n            self.archiveTransferManager.openStagedArchive(archive)).transpose()?;\n        self.operit1Importer().importSnapshotSourceWithResources(\n            self.archiveTransferManager.openStagedArchive(&archive)?, resources,\n        )\n    }\n\n    /// Observes the latest Operit1 snapshot import progress state."
+  },
+  {
+    "name": "supplemental-resource-module",
+    "path": "core/crates/runtime/application/src/services/mod.rs",
+    "old": "#[path = \"SnapshotImportManager.rs\"]\npub mod SnapshotImportManager;",
+    "new": "#[path = \"SnapshotImportManager.rs\"]\npub mod SnapshotImportManager;\n#[path = \"LegacyImportResources.rs\"]\npub(crate) mod LegacyImportResources;"
+  },
+  {
+    "name": "supplemental-resource-picker-argument",
+    "path": "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
+    "old": "  static Future<SnapshotImportFile?> pick() async {\n    if (_usesNativeDocumentStream) {\n      return _pickNativeDocumentStream();\n    }\n    return _pickFileSelectorStream();\n  }",
+    "new": "  static Future<SnapshotImportFile?> pick({bool allowJson = false}) async {\n    if (_usesNativeDocumentStream) {\n      return _pickNativeDocumentStream(allowJson: allowJson);\n    }\n    return _pickFileSelectorStream(allowJson: allowJson);\n  }"
+  },
+  {
+    "name": "supplemental-resource-native-json-picker",
+    "path": "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
+    "old": "  static Future<SnapshotImportFile?> _pickNativeDocumentStream() async {\n    final value = await _snapshotImportInputChannel\n        .invokeMapMethod<String, Object?>('pick');",
+    "new": "  static Future<SnapshotImportFile?> _pickNativeDocumentStream({required bool allowJson}) async {\n    final value = await _snapshotImportInputChannel\n        .invokeMapMethod<String, Object?>('pick', <String, Object?>{'allowJson': allowJson});"
+  },
+  {
+    "name": "supplemental-resource-web-json-picker",
+    "path": "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
+    "old": "  static Future<SnapshotImportFile?> _pickFileSelectorStream() async {\n    final file = await openFile(\n      acceptedTypeGroups: const <XTypeGroup>[\n        XTypeGroup(\n          label: 'Operit snapshot',\n          extensions: <String>['opsnapshot', 'zip'],",
+    "new": "  static Future<SnapshotImportFile?> _pickFileSelectorStream({required bool allowJson}) async {\n    final file = await openFile(\n      acceptedTypeGroups: <XTypeGroup>[\n        XTypeGroup(\n          label: allowJson ? 'Operit resources' : 'Operit snapshot',\n          extensions: <String>['opsnapshot', 'zip', if (allowJson) 'json'],"
+  },
+  {
+    "name": "supplemental-resource-android-picker-argument",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/SnapshotImportInputChannel.kt",
+    "old": "            \"pick\" -> pickSnapshot(result)",
+    "new": "            \"pick\" -> pickSnapshot(result, call.argument<Boolean>(\"allowJson\") == true)"
+  },
+  {
+    "name": "supplemental-resource-android-picker-signature",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/SnapshotImportInputChannel.kt",
+    "old": "    private fun pickSnapshot(result: MethodChannel.Result) {",
+    "new": "    private fun pickSnapshot(result: MethodChannel.Result, allowJson: Boolean) {"
+  },
+  {
+    "name": "supplemental-resource-android-picker-types",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/SnapshotImportInputChannel.kt",
+    "old": "            type = \"application/zip\"\n            putExtra(\n                Intent.EXTRA_MIME_TYPES,\n                arrayOf(\n                    \"application/zip\",\n                    \"application/x-zip-compressed\",\n                    \"application/octet-stream\",\n                ),\n            )",
+    "new": "            type = if (allowJson) \"*/*\" else \"application/zip\"\n            val types = mutableListOf(\"application/zip\", \"application/x-zip-compressed\", \"application/octet-stream\")\n            if (allowJson) types.addAll(listOf(\"application/json\", \"text/plain\"))\n            putExtra(Intent.EXTRA_MIME_TYPES, types.toTypedArray())"
+  }
+]

@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Import shared migration result and resource picker DataSettingsPanel.dart",
+    "path": "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart",
+    "old": "import '../../../../core/snapshot/SnapshotImportUploader.dart';",
+    "new": "import '../../../../core/snapshot/SnapshotImportUploader.dart';\nimport '../../../../core/snapshot/LegacyImportResourcesPicker.dart';\nimport '../../../common/Operit1ImportResultDialog.dart';"
+  },
+  {
+    "name": "Import shared migration result and resource picker OnboardingStartupRoute.dart",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "import '../../../core/snapshot/SnapshotImportUploader.dart';",
+    "new": "import '../../../core/snapshot/SnapshotImportUploader.dart';\nimport '../../../core/snapshot/LegacyImportResourcesPicker.dart';\nimport '../../common/Operit1ImportResultDialog.dart';"
+  },
+  {
+    "name": "Choose optional resources before writing snapshot data",
+    "path": "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart",
+    "old": "    setState(() {\n      _busy = true;\n      _operit1ImportProgress = null;\n    });\n    try {\n      ClientLogger.i(\n        'settings snapshot import started bytes=${session.byteLength}',",
+    "new": "    setState(() {\n      _busy = true;\n      _operit1ImportProgress = null;\n    });\n    SnapshotImportSession? supplementalSession;\n    try {\n      final resources = await pickLegacyImportResources(context, widget.clients);\n      supplementalSession = resources.session;\n      if (resources.cancelled || !mounted) {\n        await discardOperit1ImportSession(session);\n        return;\n      }\n      ClientLogger.i(\n        'settings snapshot import started bytes=${session.byteLength}',"
+  },
+  {
+    "name": "Import snapshot and resources in one identity mapping",
+    "path": "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart",
+    "old": "      final result = await session.commitOperit1();",
+    "new": "      final result = await widget.clients.servicesSnapshotImportManager\n          .importOperit1SnapshotWithResources(\n            archive: session.archive,\n            resources: supplementalSession?.archive,\n          );"
+  },
+  {
+    "name": "Display all migration notes and counters DataSettingsPanel.dart",
+    "path": "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart",
+    "old": "      final migrationNotes = result.modelConfig.skippedFields\n          .where((note) => note.contains(': ') || note.contains('：'))\n          .toList();\n      if (migrationNotes.isNotEmpty && mounted) {\n        await showDialog<void>(\n          context: context,\n          barrierDismissible: false,\n          builder: (dialogContext) => AlertDialog(\n            title: const Text('数据已导入，部分配置需要处理'),\n            content: SingleChildScrollView(\n              child: SelectableText(migrationNotes.join('\\n\\n')),\n            ),\n            actions: <Widget>[\n              TextButton(\n                onPressed: () => Navigator.of(dialogContext).pop(),\n                child: const Text('我知道了'),\n              ),\n            ],\n          ),\n        );\n      }",
+    "new": "      if (mounted) await showOperit1ImportResultDialog(context, result);"
+  },
+  {
+    "name": "Display all migration notes and counters OnboardingStartupRoute.dart",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "      final migrationNotes = result.modelConfig.skippedFields\n          .where((note) => note.contains(': ') || note.contains('：'))\n          .toList();\n      if (migrationNotes.isNotEmpty && mounted) {\n        await showDialog<void>(\n          context: context,\n          barrierDismissible: false,\n          builder: (dialogContext) => AlertDialog(\n            title: const Text('数据已导入，部分配置需要处理'),\n            content: SingleChildScrollView(\n              child: SelectableText(migrationNotes.join('\\n\\n')),\n            ),\n            actions: <Widget>[\n              TextButton(\n                onPressed: () => Navigator.of(dialogContext).pop(),\n                child: const Text('我知道了'),\n              ),\n            ],\n          ),\n        );\n      }",
+    "new": "      if (mounted) await showOperit1ImportResultDialog(context, result);"
+  },
+  {
+    "name": "Do not misreport accepted import when upload cleanup fails",
+    "path": "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart",
+    "old": "      await session.discard();\n      if (!mounted) {\n        return;\n      }\n      if (mounted) await showOperit1ImportResultDialog(context, result);",
+    "new": "      await discardOperit1ImportSession(session);\n      if (!mounted) {\n        return;\n      }\n      await showOperit1ImportResultDialog(context, result);"
+  },
+  {
+    "name": "Keep original snapshot error if cleanup also fails",
+    "path": "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart",
+    "old": "        'settings snapshot import failed',\n        tag: _operit1SnapshotImportLogTag,\n        error: error,\n        stackTrace: stackTrace,\n      );\n      await session.discard();",
+    "new": "        'settings snapshot import failed',\n        tag: _operit1SnapshotImportLogTag,\n        error: error,\n        stackTrace: stackTrace,\n      );\n      await discardOperit1ImportSession(session);"
+  },
+  {
+    "name": "Release supplemental upload after success cancellation or error",
+    "path": "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart",
+    "old": "    } finally {\n      if (mounted) {\n        setState(() => _busy = false);\n      }\n    }\n  }\n\n  /// Exports all chat histories to a JSON file.",
+    "new": "    } finally {\n      await discardOperit1ImportSession(supplementalSession);\n      if (mounted) {\n        setState(() => _busy = false);\n      }\n    }\n  }\n\n  /// Exports all chat histories to a JSON file."
+  },
+  {
+    "name": "Remember committed import before navigating out of onboarding",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  SnapshotImportSession? _operit1SnapshotSession;\n  String? _operit1SnapshotFileName;",
+    "new": "  SnapshotImportSession? _operit1SnapshotSession;\n  core_proxy.Operit1SnapshotImportResult? _completedOperit1Import;\n  String? _operit1SnapshotFileName;"
+  },
+  {
+    "name": "Reset completed snapshot only when selecting a new import",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "      _operit1SnapshotSession = null;\n      _operit1SnapshotFileName = null;",
+    "new": "      _operit1SnapshotSession = null;\n      _completedOperit1Import = null;\n      _operit1SnapshotFileName = null;"
+  },
+  {
+    "name": "A retry after successful import only retries entering the app",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "  Future<void> _saveOperit1Import() async {\n    final session = _operit1SnapshotSession;",
+    "new": "  Future<void> _saveOperit1Import() async {\n    if (_importingOperit1Snapshot) return;\n    if (_completedOperit1Import != null) {\n      setState(() {\n        _importingOperit1Snapshot = true;\n        _setupError = null;\n      });\n      try {\n        await widget.onComplete();\n      } catch (error) {\n        if (mounted) {\n          setState(() => _setupError = '数据已导入，进入应用失败：$error；再次继续不会重复导入');\n        }\n      } finally {\n        if (mounted) setState(() => _importingOperit1Snapshot = false);\n      }\n      return;\n    }\n    final session = _operit1SnapshotSession;"
+  },
+  {
+    "name": "Select optional shared resources in the onboarding import",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "    setState(() {\n      _importingOperit1Snapshot = true;\n      _setupError = null;\n    });\n    try {\n      ClientLogger.i(\n        'snapshot import started bytes=${session.byteLength}',",
+    "new": "    setState(() {\n      _importingOperit1Snapshot = true;\n      _setupError = null;\n    });\n    SnapshotImportSession? supplementalSession;\n    try {\n      final resources = await pickLegacyImportResources(context, widget.clients);\n      supplementalSession = resources.session;\n      if (resources.cancelled || !mounted) return;\n      ClientLogger.i(\n        'snapshot import started bytes=${session.byteLength}',"
+  },
+  {
+    "name": "Commit supplemental resources alongside the snapshot once",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "      final result = await session.commitOperit1();",
+    "new": "      final result = await widget.clients.servicesSnapshotImportManager\n          .importOperit1SnapshotWithResources(\n            archive: session.archive,\n            resources: supplementalSession?.archive,\n          );\n      _completedOperit1Import = result;\n      _operit1SnapshotSession = null;"
+  },
+  {
+    "name": "Cleanup cannot turn a completed migration into a failed one",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "      await session.discard();\n      if (mounted) await showOperit1ImportResultDialog(context, result);",
+    "new": "      await discardOperit1ImportSession(session);\n      if (mounted) await showOperit1ImportResultDialog(context, result);"
+  },
+  {
+    "name": "Release optional resource upload after onboarding import",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "    } finally {\n      if (mounted) {\n        setState(() {\n          _importingOperit1Snapshot = false;\n        });\n      }\n    }\n  }\n\n  /// Completes onboarding without joining another device space.",
+    "new": "    } finally {\n      await discardOperit1ImportSession(supplementalSession);\n      if (mounted) {\n        setState(() {\n          _importingOperit1Snapshot = false;\n        });\n      }\n    }\n  }\n\n  /// Completes onboarding without joining another device space."
+  },
+  {
+    "name": "Report startup failure separately after import has already committed",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "        'snapshot import failed',\n        tag: _operit1SnapshotImportLogTag,\n        error: error,\n        stackTrace: stackTrace,\n      );\n      if (!mounted) {\n        return;\n      }\n      setState(() {\n        _setupError = '$error';\n      });",
+    "new": "        _completedOperit1Import == null\n            ? 'snapshot import failed'\n            : 'snapshot imported; startup transition failed',\n        tag: _operit1SnapshotImportLogTag,\n        error: error,\n        stackTrace: stackTrace,\n      );\n      if (!mounted) {\n        return;\n      }\n      setState(() {\n        _setupError = _completedOperit1Import == null\n            ? '$error'\n            : '数据已导入，进入应用失败：$error；再次继续不会重复导入';\n      });"
+  },
+  {
+    "name": "Explain the shared-resource import option at the first-run entry",
+    "path": "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "old": "请在 Operit1 的聊天备份设置中导出原始快照 ZIP，再选择该文件。仅迁移快照内的数据；旧版未备份的共享文件、工作流和媒体缓存需另行迁移。",
+    "new": "请在 Operit1 的聊天备份设置中导出原始快照 ZIP，再选择该文件。导入前可添加 Download/Operit 目录的资源 ZIP 或单独的工作流 JSON，一起恢复旧版未备份的共享文件；不存在于备份和补充包中的文件无法恢复。"
+  }
+]
