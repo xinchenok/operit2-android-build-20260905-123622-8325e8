@@ -1,0 +1,415 @@
+diff --git a/apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart b/apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart
+--- a/apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart
++++ b/apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart
+@@ -120,6 +120,7 @@
+   String? _avatarUri;
+   late String _chatModelBindingMode;
+   String? _chatModelId;
++  String? _chatProviderId;
+   late bool _ttsBindingEnabled;
+   String? _ttsConfigId;
+   late String _memoryBindingMode;
+@@ -163,6 +164,7 @@
+       card.chatModelBindingMode,
+     );
+     _chatModelId = card.chatModelId;
++    _chatProviderId = card.chatProviderId;
+     _ttsBindingEnabled = card.ttsConfigId != null;
+     _ttsConfigId = card.ttsConfigId;
+     _memoryBindingMode = _normalizeMemoryBindingMode(card.memoryBindingMode);
+@@ -247,6 +249,7 @@
+           advancedCustomPrompt: _advancedPromptController.text,
+           marks: _marksController.text,
+           chatModelBindingMode: _chatModelBindingMode,
++          chatProviderId: _chatModelBindingMode == _chatModelFixedConfig ? _chatProviderId : null,
+           chatModelId: _chatModelBindingMode == _chatModelFixedConfig
+               ? _chatModelId
+               : null,
+@@ -462,12 +465,14 @@
+       ),
+       summaries: widget.modelSummaries,
+       currentModelId: _chatModelId,
++      currentProviderId: _chatProviderId,
+     );
+     if (selected == null) {
+       return;
+     }
+     setState(() {
+       _chatModelId = selected.modelId;
++      _chatProviderId = selected.providerId;
+     });
+   }
+ 
+@@ -560,6 +565,7 @@
+     final selectedModel = _providerModelSummaryById(
+       widget.modelSummaries,
+       _chatModelId,
++      _chatProviderId,
+     );
+     final selectedTtsConfig = _ttsConfigById(widget.ttsConfigs, _ttsConfigId);
+     final toolAccessSummary = _toolAccessSummary(l10n, _toolAccessConfig);
+@@ -686,6 +692,7 @@
+                                   : _chatModelFollowGlobal;
+                               if (!value) {
+                                 _chatModelId = null;
++                                _chatProviderId = null;
+                               }
+                             });
+                           },
+@@ -1088,17 +1095,20 @@
+     required this.title,
+     required this.summaries,
+     required this.currentModelId,
++    required this.currentProviderId,
+   });
+ 
+   final String title;
+   final List<core_proxy.ProviderModelSummary> summaries;
+   final String? currentModelId;
++  final String? currentProviderId;
+ 
+   static Future<core_proxy.ProviderModelSummary?> show({
+     required BuildContext context,
+     required String title,
+     required List<core_proxy.ProviderModelSummary> summaries,
+     required String? currentModelId,
++    required String? currentProviderId,
+   }) {
+     return showDialog<core_proxy.ProviderModelSummary>(
+       context: context,
+@@ -1106,6 +1116,7 @@
+         title: title,
+         summaries: summaries,
+         currentModelId: currentModelId,
++        currentProviderId: currentProviderId,
+       ),
+     );
+   }
+@@ -1167,7 +1178,9 @@
+                     final summary = filteredModels[index];
+                     return _CharacterModelOptionTile(
+                       summary: summary,
+-                      selected: summary.modelId == widget.currentModelId,
++                      selected: identical(summary, _providerModelSummaryById(
++                        widget.summaries, widget.currentModelId, widget.currentProviderId,
++                      )),
+                       onTap: () => _selectModel(summary),
+                     );
+                   },
+diff --git a/apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart b/apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart
+--- a/apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart
++++ b/apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart
+@@ -761,13 +761,11 @@
+ core_proxy.ProviderModelSummary? _providerModelSummaryById(
+   List<core_proxy.ProviderModelSummary> summaries,
+   String? id,
++  String? providerId,
+ ) {
+-  for (final summary in summaries) {
+-    if (summary.modelId == id) {
+-      return summary;
+-    }
+-  }
+-  return null;
++  final candidates = summaries.where((summary) => summary.modelId == id &&
++      (providerId == null || providerId.trim().isEmpty || summary.providerId == providerId)).toList();
++  return candidates.length == 1 ? candidates.single : null;
+ }
+ 
+ String _characterModelBindingText(
+@@ -888,6 +886,7 @@
+     marks: card.marks,
+     chatModelBindingMode: card.chatModelBindingMode,
+     chatModelId: card.chatModelId,
++    chatProviderId: card.chatProviderId,
+     ttsConfigId: card.ttsConfigId,
+     memoryBindingMode: card.memoryBindingMode,
+     sharedMemoryId: card.sharedMemoryId,
+diff --git a/apps/flutter/app/lib/ui/features/settings/characters/CharacterSettingsPanel.dart b/apps/flutter/app/lib/ui/features/settings/characters/CharacterSettingsPanel.dart
+--- a/apps/flutter/app/lib/ui/features/settings/characters/CharacterSettingsPanel.dart
++++ b/apps/flutter/app/lib/ui/features/settings/characters/CharacterSettingsPanel.dart
+@@ -594,6 +594,7 @@
+       marks: '',
+       chatModelBindingMode: 'FOLLOW_GLOBAL',
+       chatModelId: null,
++      chatProviderId: null,
+       ttsConfigId: null,
+       memoryBindingMode: _memoryBindingCharacter,
+       sharedMemoryId: null,
+diff --git a/core/crates/command/core/src/commands/people.rs b/core/crates/command/core/src/commands/people.rs
+--- a/core/crates/command/core/src/commands/people.rs
++++ b/core/crates/command/core/src/commands/people.rs
+@@ -114,6 +114,7 @@
+                     chatModelBindingMode: CharacterCardChatModelBindingMode::FOLLOW_GLOBAL
+                         .to_string(),
+                     chatModelId: None,
++                    chatProviderId: None,
+                     ttsConfigId: None,
+                     memoryBindingMode: CharacterCardMemoryBindingMode::CHARACTER.to_string(),
+                     sharedMemoryId: None,
+@@ -162,8 +163,9 @@
+                         CharacterCardChatModelBindingMode::normalize(Some(&value))
+                 }
+                 "chatModelId" => card.chatModelId = nonBlankString(value.clone()),
++                "chatProviderId" => card.chatProviderId = nonBlankString(value.clone()),
+                 _ => {
+-                    return Err("character fields: name | description | characterSetting | openingStatement | otherContentChat | otherContentVoice | avatarUri | attachedTagIds | advancedCustomPrompt | marks | chatModelBindingMode | chatModelId".to_string())
++                    return Err("character fields: name | description | characterSetting | openingStatement | otherContentChat | otherContentVoice | avatarUri | attachedTagIds | advancedCustomPrompt | marks | chatModelBindingMode | chatModelId | chatProviderId".to_string())
+                 }
+             }
+             let updated = card.clone();
+diff --git a/core/crates/foundation/model/src/CharacterCard.rs b/core/crates/foundation/model/src/CharacterCard.rs
+--- a/core/crates/foundation/model/src/CharacterCard.rs
++++ b/core/crates/foundation/model/src/CharacterCard.rs
+@@ -62,6 +62,8 @@
+     pub marks: String,
+     pub chatModelBindingMode: String,
+     pub chatModelId: Option<String>,
++    #[serde(default)]
++    pub chatProviderId: Option<String>,
+     pub ttsConfigId: Option<String>,
+     #[serde(default = "default_character_memory_binding_mode")]
+     pub memoryBindingMode: String,
+@@ -199,6 +201,8 @@
+     pub chatModelBindingMode: String,
+     #[serde(default)]
+     pub chatModelId: Option<String>,
++    #[serde(default)]
++    pub chatProviderId: Option<String>,
+     #[serde(default)]
+     pub ttsConfigId: Option<String>,
+     #[serde(default = "default_character_memory_binding_mode")]
+diff --git a/core/crates/provider/services/src/chat/EnhancedAIService.rs b/core/crates/provider/services/src/chat/EnhancedAIService.rs
+--- a/core/crates/provider/services/src/chat/EnhancedAIService.rs
++++ b/core/crates/provider/services/src/chat/EnhancedAIService.rs
+@@ -1031,34 +1031,29 @@
+         &mut self,
+         options: &SendMessageOptions,
+     ) -> Result<SendMessageRuntime, AiServiceError> {
+-        let (modelConfig, modelParameters, selectedService) = match (
+-            options.chatProviderIdOverride.as_ref(),
+-            options.chatModelIdOverride.as_ref(),
+-        ) {
+-            (Some(providerId), Some(modelId))
+-                if !providerId.trim().is_empty() && !modelId.trim().is_empty() =>
+-            {
+-                self.multi_service_manager
+-                    .getServiceBundleForModel(providerId.clone(), modelId.clone())?
+-            }
+-            (None, None) => self
+-                .multi_service_manager
+-                .getServiceBundleForFunction(options.functionType.clone())?,
+-            _ => {
+-                return Err(AiServiceError::RequestFailed(
+-                    "chat provider and model override must be set together".to_string(),
+-                ));
+-            }
+-        };
+         let roleCardId = options.roleCardId.as_ref().ok_or_else(|| {
+             AiServiceError::RequestFailed("roleCardId is required to resolve USER.md".to_string())
+         })?;
+-        let characterPromptContext = self
+-            .provider_runtime_context
+-            .support()
++        let characterPromptContext = self.provider_runtime_context.support()
+             .characterPromptContext(roleCardId, options.promptFunctionType.clone())
+             .map_err(AiServiceError::RequestFailed)?;
+         let activeCard = &characterPromptContext.activeCard;
++        let fixedBinding = if options.functionType == FunctionType::CHAT
++            && options.chatProviderIdOverride.is_none() && options.chatModelIdOverride.is_none() {
++            self.provider_runtime_context.support().characterModelBinding(activeCard)
++                .map_err(AiServiceError::RequestFailed)?
++        } else { None };
++        let providerOverride = options.chatProviderIdOverride.as_ref()
++            .or_else(|| fixedBinding.as_ref().map(|binding| &binding.providerId));
++        let modelOverride = options.chatModelIdOverride.as_ref()
++            .or_else(|| fixedBinding.as_ref().map(|binding| &binding.modelId));
++        let (modelConfig, modelParameters, selectedService) = match (providerOverride, modelOverride) {
++            (Some(providerId), Some(modelId))
++                if !providerId.trim().is_empty() && !modelId.trim().is_empty() =>
++                self.multi_service_manager.getServiceBundleForModel(providerId.clone(), modelId.clone())?,
++            (None, None) => self.multi_service_manager.getServiceBundleForFunction(options.functionType.clone())?,
++            _ => return Err(AiServiceError::RequestFailed("chat provider and model override must be set together".to_string())),
++        };
+         let introPrompt = characterPromptContext.introPrompt;
+         let aiName = characterPromptContext.aiName;
+         let memoryBindingMode =
+diff --git a/core/crates/provider/services/src/runtime_support.rs b/core/crates/provider/services/src/runtime_support.rs
+--- a/core/crates/provider/services/src/runtime_support.rs
++++ b/core/crates/provider/services/src/runtime_support.rs
+@@ -74,6 +74,9 @@
+         roleCardId: &str,
+         promptFunctionType: PromptFunctionType,
+     ) -> Result<ProviderCharacterPromptContext, String>;
++
++    /// Resolves a role's fixed provider/model pair; legacy unqualified IDs must be unique.
++    fn characterModelBinding(&self, card: &CharacterCard) -> Result<Option<ProviderFunctionModelBinding>, String>;
+ 
+     /// Returns deployed skill package descriptions for provider prompt composition.
+     fn aiVisibleSkillPackages(&self) -> Result<Vec<ProviderPackageInfo>, String>;
+diff --git a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+--- a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
++++ b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+@@ -2047,6 +2047,7 @@
+                 CharacterCardChatModelBindingMode::FOLLOW_GLOBAL.to_string()
+             },
+             chatModelId,
++            chatProviderId: None,
+             ttsConfigId: None,
+             memoryBindingMode: memoryBinding.memoryBindingMode,
+             sharedMemoryId: memoryBinding.sharedMemoryId,
+diff --git a/core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs b/core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs
+--- a/core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs
++++ b/core/crates/runtime/application/src/data/preferences/CharacterCardManager.rs
+@@ -192,6 +192,9 @@
+                     "character_card_{id}_chat_model_id"
+                 )))
+                 .cloned(),
++            chatProviderId: preferences
++                .get(&stringPreferencesKey(&format!("character_card_{id}_chat_provider_id")))
++                .cloned().filter(|value| !value.trim().is_empty()),
+             ttsConfigId: preferences
+                 .get(&stringPreferencesKey(&format!(
+                     "character_card_{id}_tts_config_id"
+@@ -454,6 +457,7 @@
+                     .chatModelId
+                     .clone()
+                     .filter(|value| !value.trim().is_empty()),
++                chatProviderId: card.chatProviderId.clone().filter(|value| !value.trim().is_empty()),
+                 ttsConfigId: card
+                     .ttsConfigId
+                     .clone()
+@@ -616,6 +620,7 @@
+                     .chatModelId
+                     .clone()
+                     .filter(|value| !value.trim().is_empty()),
++                chatProviderId: card.chatProviderId.clone().filter(|value| !value.trim().is_empty()),
+                 ttsConfigId: card
+                     .ttsConfigId
+                     .clone()
+@@ -692,6 +697,7 @@
+                 .chatModelId
+                 .clone()
+                 .filter(|value| !value.trim().is_empty()),
++            chatProviderId: payload.chatProviderId.clone().filter(|value| !value.trim().is_empty()),
+             ttsConfigId: payload
+                 .ttsConfigId
+                 .clone()
+@@ -837,6 +843,7 @@
+             marks: marks.trim().to_string(),
+             chatModelBindingMode: CharacterCardChatModelBindingMode::FOLLOW_GLOBAL.to_string(),
+             chatModelId: None,
++            chatProviderId: None,
+             ttsConfigId: None,
+             memoryBindingMode: CharacterCardMemoryBindingMode::CHARACTER.to_string(),
+             sharedMemoryId: None,
+@@ -1001,6 +1008,11 @@
+             &stringPreferencesKey(&format!("character_card_{id}_chat_model_binding_mode")),
+             card.chatModelBindingMode.clone(),
+         );
++        if let Some(value) = card.chatProviderId.as_ref().filter(|value| !value.trim().is_empty()) {
++            preferences.set(&stringPreferencesKey(&format!("character_card_{id}_chat_provider_id")), value.clone());
++        } else {
++            preferences.remove(&stringPreferencesKey(&format!("character_card_{id}_chat_provider_id")));
++        }
+         if let Some(value) = &card.chatModelId {
+             preferences.set(
+                 &stringPreferencesKey(&format!("character_card_{id}_chat_model_id")),
+@@ -1112,6 +1124,7 @@
+             &stringPreferencesKey(&format!("character_card_{id}_chat_model_binding_mode")),
+             CharacterCardChatModelBindingMode::FOLLOW_GLOBAL.to_string(),
+         );
++        preferences.remove(&stringPreferencesKey(&format!("character_card_{id}_chat_provider_id")));
+         preferences.remove(&stringPreferencesKey(&format!(
+             "character_card_{id}_chat_model_id"
+         )));
+@@ -1161,6 +1174,7 @@
+             "advanced_custom_prompt",
+             "marks",
+             "chat_model_binding_mode",
++            "chat_provider_id",
+             "chat_model_id",
+             "tts_config_id",
+             "memory_profile_binding_mode",
+diff --git a/core/crates/runtime/application/src/services/ProviderRuntimeSupportService.rs b/core/crates/runtime/application/src/services/ProviderRuntimeSupportService.rs
+--- a/core/crates/runtime/application/src/services/ProviderRuntimeSupportService.rs
++++ b/core/crates/runtime/application/src/services/ProviderRuntimeSupportService.rs
+@@ -102,6 +102,24 @@
+             introPrompt,
+             aiName,
+         })
++    }
++
++    fn characterModelBinding(&self, card: &operit_model::CharacterCard::CharacterCard)
++        -> Result<Option<ProviderFunctionModelBinding>, String> {
++        use operit_model::CharacterCard::CharacterCardChatModelBindingMode;
++        if CharacterCardChatModelBindingMode::normalize(Some(&card.chatModelBindingMode))
++            != CharacterCardChatModelBindingMode::FIXED_MODEL { return Ok(None); }
++        let modelId = card.chatModelId.as_ref().filter(|id| !id.trim().is_empty())
++            .ok_or_else(|| format!("角色「{}」的固定模型未就绪，请重新选择供应商和模型", card.name))?;
++        let providerId = card.chatProviderId.as_ref().filter(|id| !id.trim().is_empty());
++        let mut candidates = ModelConfigManager::default().getAllModelSummaries()
++            .map_err(|error| error.to_string())?.into_iter()
++            .filter(|summary| &summary.modelId == modelId && providerId.is_none_or(|id| &summary.providerId == id));
++        let selected = candidates.next().ok_or_else(|| format!("角色「{}」的固定模型不可用：{modelId}，请重新选择", card.name))?;
++        if candidates.next().is_some() {
++            return Err(format!("角色「{}」有多个同名模型 {modelId}，请明确选择供应商", card.name));
++        }
++        Ok(Some(ProviderFunctionModelBinding { providerId: selected.providerId, modelId: selected.modelId }))
+     }
+ 
+     /// Returns skill package descriptions visible to AI prompt composition.
+diff --git a/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs b/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs
+--- a/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs
++++ b/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs
+@@ -630,7 +630,8 @@
+             .getAllModelSummaries()
+             .map_err(|error| error.to_string())?
+             .into_iter()
+-            .filter(|summary| summary.modelId == fixedModelId);
++            .filter(|summary| summary.modelId == fixedModelId && roleCard.chatProviderId.as_ref()
++                .filter(|id| !id.trim().is_empty()).is_none_or(|id| &summary.providerId == id));
+         let fixedModel = candidates
+             .next()
+             .ok_or_else(|| format!("Fixed chat model is unavailable: {fixedModelId}"))?;
+diff --git a/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs b/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs
+--- a/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs
++++ b/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs
+@@ -919,15 +919,28 @@
+                 (providerId.clone(), modelId.clone())
+             }
+             (None, None) => {
+-                let binding = self
+-                    .functionalConfigManager
+-                    .getModelBindingForFunction(FunctionType::CHAT)
+-                    .map_err(|error| {
+-                        operit_providers::chat::llmprovider::AIService::AiServiceError::RequestFailed(
+-                            error.to_string(),
+-                        )
+-                    })?;
+-                (binding.providerId, binding.modelId)
++                use operit_model::CharacterCard::CharacterCardChatModelBindingMode;
++                use operit_providers::chat::llmprovider::AIService::AiServiceError;
++                let card = CharacterCardManager::getInstance().getCharacterCard(&request.roleCardId)
++                    .map_err(|error| AiServiceError::RequestFailed(error.to_string()))?;
++                if CharacterCardChatModelBindingMode::normalize(Some(&card.chatModelBindingMode))
++                    == CharacterCardChatModelBindingMode::FIXED_MODEL {
++                    let model = card.chatModelId.as_ref().filter(|id| !id.trim().is_empty())
++                        .ok_or_else(|| AiServiceError::RequestFailed(format!("角色「{}」的固定模型未就绪，请重新选择", card.name)))?;
++                    let provider = card.chatProviderId.as_ref().filter(|id| !id.trim().is_empty());
++                    let mut candidates = self.modelConfigManager.getAllModelSummaries()
++                        .map_err(|error| AiServiceError::RequestFailed(error.to_string()))?.into_iter()
++                        .filter(|summary| &summary.modelId == model && provider.is_none_or(|id| &summary.providerId == id));
++                    let selected = candidates.next().ok_or_else(|| AiServiceError::RequestFailed(format!("角色「{}」的固定模型不可用，请重新选择", card.name)))?;
++                    if candidates.next().is_some() {
++                        return Err(AiServiceError::RequestFailed(format!("角色「{}」有多个同名模型，请明确选择供应商", card.name)));
++                    }
++                    (selected.providerId, selected.modelId)
++                } else {
++                    let binding = self.functionalConfigManager.getModelBindingForFunction(FunctionType::CHAT)
++                        .map_err(|error| AiServiceError::RequestFailed(error.to_string()))?;
++                    (binding.providerId, binding.modelId)
++                }
+             }
+             _ => {
+                 return Err(

@@ -1,0 +1,40 @@
+{
+  "slug": "chat-send-rejection",
+  "title": "fix(chat): report unaccepted message failures",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-send-rejection",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart",
+    "core/crates/command/core/src/commands/chat.rs",
+    "core/crates/node/runtime/src/CoreNodeRouter.rs",
+    "core/crates/runtime/application/src/services/ChatServiceCore.rs",
+    "core/crates/runtime/application/src/services/ToolRuntimeSupportService.rs",
+    "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
+  ],
+  "source_specs": [
+    "patches/zz_chat_followup.json:record-whether-rejected-send-already-persisted-user-message",
+    "patches/zz_chat_followup.json:classify-pre-accept-send-errors-and-clear-failed-worker-state",
+    "patches/zz_chat_followup.json:regeneration-retains-provider-error-contract",
+    "patches/zz_chat_followup.json:reject-unsaved-input-without-requeueing-already-stored-messages",
+    "patches/zz_chat_followup.json:propagate-send-rejection-through-coordination",
+    "patches/zz_chat_followup.json:group-role-send-stops-immediately-on-rejection",
+    "patches/zz_chat_followup.json:group-role-rejection-does-not-wait-for-nonexistent-turn",
+    "patches/zz_chat_followup.json:background-continuation-uses-published-error-state",
+    "patches/zz_chat_followup.json:report-unsaved-send-rejection-to-flutter-and-tools",
+    "patches/zz_chat_followup.json:resume-propagates-send-result-resume",
+    "patches/zz_chat_followup.json:resume-propagates-send-result-resumeFromRouteContext",
+    "patches/zz_chat_followup.json:rewind-resend-reports-rejected-input",
+    "patches/zz_chat_followup.json:tools-return-actual-message-acceptance",
+    "patches/zz_chat_followup.json:tools-preserve-send-rejection-after-observing-stats",
+    "patches/zz_chat_followup.json:cli-propagates-unaccepted-message-errors",
+    "patches/zz_chat_followup.json:restore-unaccepted-queued-input-and-do-not-drop-empty-hook-replacements",
+    "patches/zz_chat_followup.json:attachment-cleanup-error-is-not-an-unaccepted-message",
+    "patches/zzzz_queue_rejection_pause.json:pause-queue-before-returning-unaccepted-send-error"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

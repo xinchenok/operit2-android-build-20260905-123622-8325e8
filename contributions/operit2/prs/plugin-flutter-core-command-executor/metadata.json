@@ -1,0 +1,24 @@
+{
+  "slug": "plugin-flutter-core-command-executor",
+  "title": "fix(flutter): bind plugin commands to shared core services",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/plugin-flutter-core-command-executor",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
+    "core/crates/proxy/local/src/lib.rs",
+    "core/crates/runtime/application/src/core/application/OperitApplication.rs",
+    "core/crates/tool/services/src/tools/AIToolHandler.rs"
+  ],
+  "source_specs": [
+    "legacy-bind-tool-command-executor",
+    "legacy-share-existing-command-services",
+    "legacy-retain-shared-command-context",
+    "legacy-initialize-shared-command-context",
+    "legacy-bind-existing-application-executor",
+    "legacy-enable-flutter-plugin-core-commands"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

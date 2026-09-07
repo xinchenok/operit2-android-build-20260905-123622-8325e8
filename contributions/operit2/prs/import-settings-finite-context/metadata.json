@@ -1,0 +1,20 @@
+{
+  "slug": "import-settings-finite-context",
+  "title": "fix(model): reject non-finite maximum context lengths",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-settings-finite-context",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 47,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (4)"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

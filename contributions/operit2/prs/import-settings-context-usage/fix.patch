@@ -1,0 +1,14 @@
+diff --git a/apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentInputMenuPopup.dart b/apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentInputMenuPopup.dart
+--- a/apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentInputMenuPopup.dart
++++ b/apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentInputMenuPopup.dart
+@@ -376,7 +376,9 @@
+           providerId: binding.providerId,
+           modelId: binding.modelId,
+         );
+-    return config.context.maxContextLength;
++    return config.context.enableMaxContextMode
++        ? config.context.maxContextLength
++        : config.context.maxContextLength * 0.4;
+   }
+ 
+   /// Subscribes to the runtime-owned token statistic streams.

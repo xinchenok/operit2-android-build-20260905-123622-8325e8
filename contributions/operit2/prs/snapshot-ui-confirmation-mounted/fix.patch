@@ -1,0 +1,12 @@
+diff --git a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+--- a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
++++ b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+@@ -429,7 +429,7 @@
+       preview: preview,
+       byteCount: session.byteLength,
+     );
+-    if (confirmed != true) {
++    if (confirmed != true || !mounted) {
+       await session.discard();
+       return;
+     }

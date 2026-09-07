@@ -1,0 +1,705 @@
+[
+  {
+    "file": "patches/integration_lifecycle.json",
+    "index": 0,
+    "name": "avoid-destroying-in-use-native-bridge-during-process-restart",
+    "status": "prepared",
+    "prs": [
+      "startup-native-bridge-lifetime"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/integration_lifecycle.json",
+    "index": 1,
+    "name": "failed-watch-open-does-not-await-an-unsubscribed-controller",
+    "status": "prepared",
+    "prs": [
+      "startup-failed-watch-open"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 34,
+    "name": "Operit1 snapshot data preservation OnboardingStartupRoute 1",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "原始迁移结果与快照范围告知，合并为一个用户看不到实际迁移结果的问题。"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 35,
+    "name": "Operit1 snapshot data preservation OnboardingStartupRoute 2",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "原始迁移结果与快照范围告知，合并为一个用户看不到实际迁移结果的问题。"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 36,
+    "name": "Operit1 snapshot data preservation DataSettingsPanel 1",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "原始迁移结果与快照范围告知，合并为一个用户看不到实际迁移结果的问题。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 0,
+    "name": "enhanced-disclaimer-import",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 1,
+    "name": "enhanced-disclaimer-before-main-ui",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 2,
+    "name": "enhanced-disclaimer-backward-compatible-config-field",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 3,
+    "name": "enhanced-disclaimer-read-old-and-new-bootstrap",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 4,
+    "name": "enhanced-disclaimer-config-property",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 5,
+    "name": "enhanced-disclaimer-config-copy-argument",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 6,
+    "name": "enhanced-disclaimer-config-copy-value",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 7,
+    "name": "enhanced-disclaimer-persist-config",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 8,
+    "name": "enhanced-disclaimer-save-before-opening",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 9,
+    "name": "enhanced-disclaimer-retain-after-storage-confirmation",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 10,
+    "name": "enhanced-disclaimer-retain-after-storage-migration",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "第三方增强版免责声明及其持久化字段是发行版功能，不属于上游已有功能的缺陷。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 11,
+    "name": "restore-persisted-roots-before-native-runtime-start",
+    "status": "prepared",
+    "prs": [
+      "startup-restore-service-roots"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 12,
+    "name": "restore-selected-identity-on-service-process-recreation",
+    "status": "prepared",
+    "prs": [
+      "startup-restore-service-roots"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 13,
+    "name": "cleared-data-service-waits-for-normal-onboarding",
+    "status": "prepared",
+    "prs": [
+      "startup-restore-service-roots"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 14,
+    "name": "keep-main-thread-lifecycle-events-off-runtime-initialization-lock",
+    "status": "prepared",
+    "prs": [
+      "startup-nonblocking-lifecycle-events"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 15,
+    "name": "publish-bootstrap-roots-without-blocking-main-thread",
+    "status": "prepared",
+    "prs": [
+      "startup-nonblocking-lifecycle-events"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 16,
+    "name": "publish-ready-runtime-and-drain-startup-events-atomically",
+    "status": "prepared",
+    "prs": [
+      "startup-nonblocking-lifecycle-events"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 17,
+    "name": "queue-android-lifecycle-events-without-blocking-cold-start",
+    "status": "prepared",
+    "prs": [
+      "startup-nonblocking-lifecycle-events"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 18,
+    "name": "pairing-observes-runtime-bootstrap-readiness",
+    "status": "prepared",
+    "prs": [
+      "startup-pairing-after-storage"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 19,
+    "name": "fresh-start-pairing-opens-after-storage-is-confirmed",
+    "status": "prepared",
+    "prs": [
+      "startup-pairing-after-storage"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/startup.json",
+    "index": 20,
+    "name": "pairing-readiness-listener-follows-dialog-lifetime",
+    "status": "prepared",
+    "prs": [
+      "startup-pairing-after-storage"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 0,
+    "name": "Import shared migration result and resource picker DataSettingsPanel.dart",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "仅包含共有结果对话框；未导入 LegacyImportResourcesPicker。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 1,
+    "name": "Import shared migration result and resource picker OnboardingStartupRoute.dart",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "仅包含共有结果对话框；未导入 LegacyImportResourcesPicker。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 2,
+    "name": "Choose optional resources before writing snapshot data",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "补充共享资源选择、扩展导入 API、对应上传清理和引导文案属于增强版新增功能，上游无同等既有流程。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 3,
+    "name": "Import snapshot and resources in one identity mapping",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "补充共享资源选择、扩展导入 API、对应上传清理和引导文案属于增强版新增功能，上游无同等既有流程。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 4,
+    "name": "Display all migration notes and counters DataSettingsPanel.dart",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "仅包含共有结果对话框；未导入 LegacyImportResourcesPicker。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 5,
+    "name": "Display all migration notes and counters OnboardingStartupRoute.dart",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "仅包含共有结果对话框；未导入 LegacyImportResourcesPicker。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 6,
+    "name": "Do not misreport accepted import when upload cleanup fails",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-cleanup-errors"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 7,
+    "name": "Keep original snapshot error if cleanup also fails",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-cleanup-errors"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 8,
+    "name": "Release supplemental upload after success cancellation or error",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "补充共享资源选择、扩展导入 API、对应上传清理和引导文案属于增强版新增功能，上游无同等既有流程。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 9,
+    "name": "Remember committed import before navigating out of onboarding",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取已提交状态和导航重试；importOperit1SnapshotWithResources 已改回原始 session.commitOperit1。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 10,
+    "name": "Reset completed snapshot only when selecting a new import",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取已提交状态和导航重试；importOperit1SnapshotWithResources 已改回原始 session.commitOperit1。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 11,
+    "name": "A retry after successful import only retries entering the app",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取已提交状态和导航重试；importOperit1SnapshotWithResources 已改回原始 session.commitOperit1。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 12,
+    "name": "Select optional shared resources in the onboarding import",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "补充共享资源选择、扩展导入 API、对应上传清理和引导文案属于增强版新增功能，上游无同等既有流程。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 13,
+    "name": "Commit supplemental resources alongside the snapshot once",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取已提交状态和导航重试；importOperit1SnapshotWithResources 已改回原始 session.commitOperit1。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 14,
+    "name": "Cleanup cannot turn a completed migration into a failed one",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-cleanup-errors"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 15,
+    "name": "Release optional resource upload after onboarding import",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "补充共享资源选择、扩展导入 API、对应上传清理和引导文案属于增强版新增功能，上游无同等既有流程。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 16,
+    "name": "Report startup failure separately after import has already committed",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取已提交状态和导航重试；importOperit1SnapshotWithResources 已改回原始 session.commitOperit1。"
+  },
+  {
+    "file": "patches/zzzzzzz_import_reporting.json",
+    "index": 17,
+    "name": "Explain the shared-resource import option at the first-run entry",
+    "status": "excluded-feature",
+    "prs": [],
+    "reason": "补充共享资源选择、扩展导入 API、对应上传清理和引导文案属于增强版新增功能，上游无同等既有流程。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 0,
+    "name": "onboarding-import-navigation-state",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 1,
+    "name": "onboarding-import-forward-guard",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 2,
+    "name": "onboarding-import-dispose-ownership",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 3,
+    "name": "onboarding-import-selection-guard",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation",
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。 该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 4,
+    "name": "onboarding-import-commit-and-open-conversation",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation",
+      "startup-onboarding-import-retry",
+      "startup-open-imported-conversation"
+    ],
+    "reason": "该混合规格中的 busy 防重入、unmounted 提交完成保护和活动导入清理在此准备。 该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。 仅提取导入后选择已有聊天，使用方法参数传入结果，不依赖其他补丁的完成缓存。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 5,
+    "name": "onboarding-import-page-completion-state",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 6,
+    "name": "onboarding-import-chrome-guard",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 7,
+    "name": "onboarding-import-nullable-back-button",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 8,
+    "name": "onboarding-import-system-back-wrapper-start",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 9,
+    "name": "onboarding-import-system-back-wrapper-end",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 10,
+    "name": "onboarding-import-explicit-action-label",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation",
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。 该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 11,
+    "name": "onboarding-import-page-completed-parameter",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 12,
+    "name": "onboarding-import-page-completed-field",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 13,
+    "name": "onboarding-import-preserve-committed-selection",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 14,
+    "name": "onboarding-import-preview-is-not-commit",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation",
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。 该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+    "index": 15,
+    "name": "onboarding-import-explicit-instructions",
+    "status": "prepared",
+    "prs": [
+      "startup-onboarding-import-navigation",
+      "startup-onboarding-import-retry"
+    ],
+    "reason": "仅提取预览/提交导航和进行中文件所有权修复，移除完成缓存及补充资源功能依赖。 该混合规格中的已完成状态、禁用选择和导航重试文案在此准备。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 0,
+    "name": "snapshot-upload-cleanup-logger",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-cleanup-errors"
+    ],
+    "reason": "该混合规格的 cleanup logger、创建失败释放文件及清理错误保真在此准备，进度部分另行拆分。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 1,
+    "name": "snapshot-upload-visible-read-progress",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-cleanup-errors",
+      "snapshot-ui-preparation-progress"
+    ],
+    "reason": "该混合规格的 cleanup logger、创建失败释放文件及清理错误保真在此准备，进度部分另行拆分。 准备 UI 与字节进度作为一个可见性问题整体提交；stage 保留原始接口语义，仅增加可选回调。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 2,
+    "name": "onboarding-shared-snapshot-preparation-import",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-preparation-progress"
+    ],
+    "reason": "准备 UI 与字节进度作为一个可见性问题整体提交；stage 保留原始接口语义，仅增加可选回调。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 3,
+    "name": "onboarding-show-file-preparation-before-picker",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-preparation-progress"
+    ],
+    "reason": "准备 UI 与字节进度作为一个可见性问题整体提交；stage 保留原始接口语义，仅增加可选回调。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 4,
+    "name": "settings-shared-snapshot-preparation-import",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-preparation-progress"
+    ],
+    "reason": "准备 UI 与字节进度作为一个可见性问题整体提交；stage 保留原始接口语义，仅增加可选回调。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 5,
+    "name": "settings-show-file-preparation-before-picker",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-preparation-progress"
+    ],
+    "reason": "准备 UI 与字节进度作为一个可见性问题整体提交；stage 保留原始接口语义，仅增加可选回调。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 6,
+    "name": "android-snapshot-background-input-1",
+    "status": "prepared",
+    "prs": [
+      "snapshot-input-background-io"
+    ],
+    "reason": "后台执行器及资源生命周期修复适配原始 ZIP-only 选择器；不包含增强版 JSON 功能。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 7,
+    "name": "android-snapshot-background-input-2",
+    "status": "prepared",
+    "prs": [
+      "snapshot-input-background-io"
+    ],
+    "reason": "后台执行器及资源生命周期修复适配原始 ZIP-only 选择器；不包含增强版 JSON 功能。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 8,
+    "name": "android-snapshot-background-input-3",
+    "status": "prepared",
+    "prs": [
+      "snapshot-input-background-io"
+    ],
+    "reason": "后台执行器及资源生命周期修复适配原始 ZIP-only 选择器；不包含增强版 JSON 功能。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 9,
+    "name": "android-snapshot-background-input-4",
+    "status": "prepared",
+    "prs": [
+      "snapshot-input-background-io"
+    ],
+    "reason": "后台执行器及资源生命周期修复适配原始 ZIP-only 选择器；不包含增强版 JSON 功能。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 10,
+    "name": "android-snapshot-background-input-5",
+    "status": "prepared",
+    "prs": [
+      "snapshot-input-background-io"
+    ],
+    "reason": "后台执行器及资源生命周期修复适配原始 ZIP-only 选择器；不包含增强版 JSON 功能。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 11,
+    "name": "android-snapshot-background-input-6",
+    "status": "prepared",
+    "prs": [
+      "snapshot-input-background-io"
+    ],
+    "reason": "后台执行器及资源生命周期修复适配原始 ZIP-only 选择器；不包含增强版 JSON 功能。"
+  },
+  {
+    "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+    "index": 12,
+    "name": "settings-import-confirmation-lifecycle",
+    "status": "prepared",
+    "prs": [
+      "snapshot-ui-confirmation-mounted"
+    ],
+    "reason": "已按原始 7fec1b2 API 制作独立修复。"
+  }
+]

@@ -1,0 +1,29 @@
+diff --git a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+--- a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
++++ b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+@@ -994,6 +994,7 @@
+     await _viewModel.sendUserMessage(
+       queuedText.trim(),
+       chatIdOverride: queueChatId,
++      attachmentsOverride: const <AttachmentInfo>[],
+     );
+   }
+ 
+diff --git a/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart b/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
+--- a/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
++++ b/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
+@@ -110,12 +110,13 @@
+     String text, {
+     ChatUiMessage? replyToMessage,
+     String? chatIdOverride,
++    List<AttachmentInfo>? attachmentsOverride,
+   }) async {
+     debugPrint(
+       'Chat send requested chatId=${chatIdOverride ?? 'current'} '
+       'chars=${text.length}',
+     );
+-    final attachments = await _chat.attachments();
++    final attachments = attachmentsOverride ?? await _chat.attachments();
+     await _chat.sendUserMessage(
+       promptFunctionType: core_proxy.PromptFunctionType.chat,
+       roleCardIdOverride: null,

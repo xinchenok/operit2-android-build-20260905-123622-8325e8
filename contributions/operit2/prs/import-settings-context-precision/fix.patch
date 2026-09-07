@@ -1,0 +1,24 @@
+diff --git a/apps/cli/src/tui/config/model_editor.rs b/apps/cli/src/tui/config/model_editor.rs
+--- a/apps/cli/src/tui/config/model_editor.rs
++++ b/apps/cli/src/tui/config/model_editor.rs
+@@ -98,7 +98,7 @@
+             direct_image: config.capabilities.directImage,
+             direct_audio: config.capabilities.directAudio,
+             direct_video: config.capabilities.directVideo,
+-            max_context_length: format!("{:.0}", config.context.maxContextLength),
++            max_context_length: config.context.maxContextLength.to_string(),
+             enable_max_context_mode: config.context.enableMaxContextMode,
+             enable_summary: config.summary.enableSummary,
+             summary_token_threshold: format!("{:.0}", config.summary.summaryTokenThreshold),
+diff --git a/apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart b/apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart
+--- a/apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart
++++ b/apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart
+@@ -1986,7 +1986,7 @@
+     _enableSummaryByMessageCount =
+         widget.initialSummary.enableSummaryByMessageCount;
+     _maxContextLengthController = TextEditingController(
+-      text: widget.initialContext.maxContextLength.toStringAsFixed(0),
++      text: widget.initialContext.maxContextLength.toString(),
+     );
+     _summaryThresholdController = TextEditingController(
+       text: widget.initialSummary.summaryTokenThreshold.toString(),

@@ -1,0 +1,1724 @@
+[
+  {
+    "file": "chat-fixes.json",
+    "index": 30,
+    "name": "Keep remaining AI answer variants and their content contiguous after deletion",
+    "prs": [
+      "import-reply-variants"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "chat-fixes.json",
+    "index": 31,
+    "name": "Avoid deleting the surviving variant content after indices have been compacted",
+    "prs": [
+      "import-reply-variants"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "chat-fixes.json",
+    "index": 32,
+    "name": "Never overwrite an existing AI answer when legacy variant indices contain gaps",
+    "prs": [
+      "import-reply-variants"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "chat-fixes.json",
+    "index": 33,
+    "name": "Reload surviving answer content instead of relabelling the deleted answer as base",
+    "prs": [
+      "import-reply-variants"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 0,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotArchive 1",
+    "prs": [
+      "import-all-model-configs"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 1,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotArchive 2",
+    "prs": [
+      "import-default-function-mapping",
+      "import-all-model-configs"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 2,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 1",
+    "prs": [
+      "import-failure-progress"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 3,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 2",
+    "prs": [
+      "import-all-model-configs",
+      "import-persona-identity-collisions",
+      "import-file-workspace-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 4,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 3",
+    "prs": [
+      "import-file-workspace-collisions"
+    ],
+    "exclusions": [
+      "复合规格中的 LegacyVitsNative、LegacySpeechSettings、LegacySherpaNcnn、STT/TTS 多配置与原生模型准备属于增强版独有服务和迁移能力，基线无这些服务；仅对应的现有数据/身份/文件错误被抽取为独立 PR。未搬入本地语音依赖。"
+    ],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 5,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 4",
+    "prs": [
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 6,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 5",
+    "prs": [
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [
+      "复合规格中的 LegacyVitsNative、LegacySpeechSettings、LegacySherpaNcnn、STT/TTS 多配置与原生模型准备属于增强版独有服务和迁移能力，基线无这些服务；仅对应的现有数据/身份/文件错误被抽取为独立 PR。未搬入本地语音依赖。"
+    ],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 7,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 6",
+    "prs": [
+      "import-all-model-configs"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 8,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 7",
+    "prs": [
+      "import-persona-identity-collisions",
+      "import-message-resource-paths"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 9,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 8",
+    "prs": [
+      "import-chat-id-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 10,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 9",
+    "prs": [
+      "import-file-workspace-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 11,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 10",
+    "prs": [
+      "import-optional-memory-databases",
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 12,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 11",
+    "prs": [
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 13,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 12",
+    "prs": [
+      "import-optional-wal"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 14,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 13",
+    "prs": [
+      "import-unknown-provider-preview"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 15,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 14",
+    "prs": [],
+    "exclusions": [
+      "enableClaude1hPromptCache→cache_control ttl 参数依赖增强版 Claude TTL 实现。基线 apply_stable_cache_breakpoints 是空实现；root 的 system cache boundary 修复不增加 TTL，故此参数迁移属于尚未上游支持的功能依赖，不能声称独立修复后生效。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 16,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 15",
+    "prs": [],
+    "exclusions": [
+      "enableClaude1hPromptCache→cache_control ttl 参数依赖增强版 Claude TTL 实现。基线 apply_stable_cache_breakpoints 是空实现；root 的 system cache boundary 修复不增加 TTL，故此参数迁移属于尚未上游支持的功能依赖，不能声称独立修复后生效。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 17,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 16",
+    "prs": [
+      "import-persona-identity-collisions",
+      "import-file-workspace-collisions",
+      "import-message-resource-paths"
+    ],
+    "exclusions": [
+      "复合规格中的 LegacyVitsNative、LegacySpeechSettings、LegacySherpaNcnn、STT/TTS 多配置与原生模型准备属于增强版独有服务和迁移能力，基线无这些服务；仅对应的现有数据/身份/文件错误被抽取为独立 PR。未搬入本地语音依赖。"
+    ],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 18,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 17",
+    "prs": [
+      "import-persona-identity-collisions",
+      "import-file-workspace-collisions",
+      "import-message-resource-paths"
+    ],
+    "exclusions": [
+      "复合规格中的 LegacyVitsNative、LegacySpeechSettings、LegacySherpaNcnn、STT/TTS 多配置与原生模型准备属于增强版独有服务和迁移能力，基线无这些服务；仅对应的现有数据/身份/文件错误被抽取为独立 PR。未搬入本地语音依赖。"
+    ],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 19,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 18",
+    "prs": [
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 20,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 19",
+    "prs": [
+      "import-shared-download-paths",
+      "import-message-resource-paths"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 21,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 20",
+    "prs": [
+      "import-file-workspace-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 22,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 21",
+    "prs": [
+      "import-file-workspace-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 23,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 22",
+    "prs": [
+      "import-current-chat-preference"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 24,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 23",
+    "prs": [
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 25,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 24",
+    "prs": [
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 26,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 25",
+    "prs": [
+      "import-persona-identity-collisions"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 27,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 26",
+    "prs": [],
+    "exclusions": [
+      "复合规格中的 VITS 原生准备和重复语音配置创建策略依赖增强版服务/唯一性规则。基线 createTtsConfig 仍拒绝相同 provider/endpoint/model/voice，直接替换 update 为 create 会失败；已存在云端供应商类型恢复另由 import-tts-provider-types 抽取。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 28,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 27",
+    "prs": [
+      "import-tts-provider-types"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 29,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 28",
+    "prs": [
+      "import-tts-provider-types"
+    ],
+    "exclusions": [
+      "复合规格中的 VITS 原生准备和重复语音配置创建策略依赖增强版服务/唯一性规则。基线 createTtsConfig 仍拒绝相同 provider/endpoint/model/voice，直接替换 update 为 create 会失败；已存在云端供应商类型恢复另由 import-tts-provider-types 抽取。"
+    ],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 30,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 29",
+    "prs": [
+      "import-legacy-empty-tags"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 31,
+    "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 30",
+    "prs": [
+      "import-legacy-empty-tags"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 32,
+    "name": "Operit1 snapshot data preservation Operit1RoomSchemaMigration 1",
+    "prs": [
+      "import-room-schema-11-19"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/operit1_import.json",
+    "index": 33,
+    "name": "Operit1 snapshot data preservation Operit1RoomSchemaMigration 2",
+    "prs": [
+      "import-room-schema-11-19"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/z_import_followup.json",
+    "index": 0,
+    "name": "Full snapshot import tolerates a removed selected model",
+    "prs": [
+      "import-stale-model-selection"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/z_import_followup.json",
+    "index": 1,
+    "name": "Preserve explicit single-model validation while permitting stale full-snapshot selection",
+    "prs": [
+      "import-stale-model-selection"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/z_import_followup.json",
+    "index": 2,
+    "name": "Retain model preview metadata even when the former chat provider is missing",
+    "prs": [
+      "import-stale-model-selection"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/z_import_followup.json",
+    "index": 3,
+    "name": "Report obsolete legacy chat selection and retain the current selection",
+    "prs": [
+      "import-stale-model-selection"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/z_import_followup.json",
+    "index": 4,
+    "name": "An obsolete non-chat function index cannot abort a full data import",
+    "prs": [],
+    "exclusions": [
+      "基线完整导入只写 CHAT，不遍历非 CHAT 功能绑定；该规格修复增强版新增的全功能映射导入。import-all-model-configs 已作为相关功能实现的必要防护纳入。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/z_import_followup.json",
+    "index": 5,
+    "name": "Do not install an empty or nonexistent chat model binding",
+    "prs": [
+      "import-stale-model-selection"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 17,
+    "name": "Carry per-import provider identity map in file plan",
+    "prs": [],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "基线没有 providerIds、importModelConfigsFromParsed 或 CharacterCard.chatProviderId。这是 model-fixed-character-binding 与 import-all-model-configs 联合落地后所需的源→目标 provider ID 适配；spec28 的 None 构造器兼容由 root 角色 PR 承担，不能把全部供应商都绑定到默认 ID。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [],
+    "classification": "dependency"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 18,
+    "name": "Initialize provider identity map",
+    "prs": [],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "基线没有 providerIds、importModelConfigsFromParsed 或 CharacterCard.chatProviderId。这是 model-fixed-character-binding 与 import-all-model-configs 联合落地后所需的源→目标 provider ID 适配；spec28 的 None 构造器兼容由 root 角色 PR 承担，不能把全部供应商都绑定到默认 ID。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [],
+    "classification": "dependency"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 19,
+    "name": "Capture newly imported providers for role bindings",
+    "prs": [],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "基线没有 providerIds、importModelConfigsFromParsed 或 CharacterCard.chatProviderId。这是 model-fixed-character-binding 与 import-all-model-configs 联合落地后所需的源→目标 provider ID 适配；spec28 的 None 构造器兼容由 root 角色 PR 承担，不能把全部供应商都绑定到默认 ID。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [],
+    "classification": "dependency"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 20,
+    "name": "Single model imports do not request a role identity map",
+    "prs": [],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "基线没有 providerIds、importModelConfigsFromParsed 或 CharacterCard.chatProviderId。这是 model-fixed-character-binding 与 import-all-model-configs 联合落地后所需的源→目标 provider ID 适配；spec28 的 None 构造器兼容由 root 角色 PR 承担，不能把全部供应商都绑定到默认 ID。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [],
+    "classification": "dependency"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 21,
+    "name": "Accept per-import mapping destination",
+    "prs": [],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "基线没有 providerIds、importModelConfigsFromParsed 或 CharacterCard.chatProviderId。这是 model-fixed-character-binding 与 import-all-model-configs 联合落地后所需的源→目标 provider ID 适配；spec28 的 None 构造器兼容由 root 角色 PR 承担，不能把全部供应商都绑定到默认 ID。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [],
+    "classification": "dependency"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 22,
+    "name": "Publish actual provider identities only after successful persistence",
+    "prs": [],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "基线没有 providerIds、importModelConfigsFromParsed 或 CharacterCard.chatProviderId。这是 model-fixed-character-binding 与 import-all-model-configs 联合落地后所需的源→目标 provider ID 适配；spec28 的 None 构造器兼容由 root 角色 PR 承担，不能把全部供应商都绑定到默认 ID。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [],
+    "classification": "dependency"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 23,
+    "name": "Return role binding warnings to the completed import report",
+    "prs": [
+      "import-stale-character-models"
+    ],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "规格中涉及 chatProviderId/providerIds 的部分依赖 model-fixed-character-binding 的新字段及 import-all-model-configs 的源→目标供应商 ID；此处已独立修复无需新字段的角色固定模型失效阻断。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 24,
+    "name": "Collect unavailable fixed role binding warnings during structured import",
+    "prs": [
+      "import-stale-character-models"
+    ],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "规格中涉及 chatProviderId/providerIds 的部分依赖 model-fixed-character-binding 的新字段及 import-all-model-configs 的源→目标供应商 ID；此处已独立修复无需新字段的角色固定模型失效阻断。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 25,
+    "name": "Keep imported roles and report unresolved fixed models",
+    "prs": [
+      "import-stale-character-models"
+    ],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "规格中涉及 chatProviderId/providerIds 的部分依赖 model-fixed-character-binding 的新字段及 import-all-model-configs 的源→目标供应商 ID；此处已独立修复无需新字段的角色固定模型失效阻断。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 26,
+    "name": "Finish structured import with precise role migration notes",
+    "prs": [
+      "import-stale-character-models"
+    ],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "规格中涉及 chatProviderId/providerIds 的部分依赖 model-fixed-character-binding 的新字段及 import-all-model-configs 的源→目标供应商 ID；此处已独立修复无需新字段的角色固定模型失效阻断。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 27,
+    "name": "Keep old fixed config identity instead of resolving by globally ambiguous model name",
+    "prs": [
+      "import-stale-character-models"
+    ],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "规格中涉及 chatProviderId/providerIds 的部分依赖 model-fixed-character-binding 的新字段及 import-all-model-configs 的源→目标供应商 ID；此处已独立修复无需新字段的角色固定模型失效阻断。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzz_character_model_binding.json",
+    "index": 28,
+    "name": "Persist both members of imported role binding",
+    "prs": [],
+    "exclusions": [],
+    "dependencies": [
+      {
+        "prs": [
+          "model-fixed-character-binding",
+          "import-all-model-configs"
+        ],
+        "reason": "基线没有 providerIds、importModelConfigsFromParsed 或 CharacterCard.chatProviderId。这是 model-fixed-character-binding 与 import-all-model-configs 联合落地后所需的源→目标 provider ID 适配；spec28 的 None 构造器兼容由 root 角色 PR 承担，不能把全部供应商都绑定到默认 ID。",
+        "artifact": "dependencies/import-character-provider-mapping/fix.patch"
+      }
+    ],
+    "reasons": [],
+    "classification": "dependency"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 0,
+    "name": "portable-memory-document-metadata",
+    "prs": [
+      "import-portable-document-metadata",
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 1,
+    "name": "export-document-memories-and-their-links",
+    "prs": [
+      "import-portable-document-metadata",
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 2,
+    "name": "export-portable-document-fields",
+    "prs": [
+      "import-portable-document-metadata",
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 3,
+    "name": "update-document-fields-when-present-in-portable-import",
+    "prs": [
+      "import-portable-document-metadata",
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 4,
+    "name": "create-memory-with-restored-document-metadata",
+    "prs": [
+      "import-portable-document-metadata",
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 5,
+    "name": "import-memory-property-type",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 6,
+    "name": "objectbox-document-and-property-entity-keys",
+    "prs": [
+      "import-objectbox-tag-relations",
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 7,
+    "name": "report-document-resource-migration-notes",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 8,
+    "name": "collect-document-notes-across-memory-profiles",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 9,
+    "name": "initialize-document-import-notes",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 10,
+    "name": "resolve-document-paths-against-actual-copy-plan",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 11,
+    "name": "pass-document-path-plan-to-objectbox-conversion",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 12,
+    "name": "preserve-profile-in-document-import-notes",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 13,
+    "name": "return-document-import-notes",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 14,
+    "name": "map-only-included-original-document-files",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 15,
+    "name": "read-source-document-node-metadata",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 16,
+    "name": "define-source-document-chunk-record",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 17,
+    "name": "collect-document-records-and-properties",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 18,
+    "name": "parse-document-chunk-and-property-lmdb-records",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 19,
+    "name": "decode-real-objectbox-standalone-memory-tag-relations",
+    "prs": [
+      "import-objectbox-tag-relations",
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 20,
+    "name": "resolve-memory-properties-and-stable-document-chunk-order",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 21,
+    "name": "restore-document-body-with-metadata-instead-of-skipping-node",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 22,
+    "name": "persist-restored-document-content-and-properties",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 23,
+    "name": "portable-source-document-fields",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 24,
+    "name": "return-document-conversion-report",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 25,
+    "name": "parse-optional-document-fields-and-access-time",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 26,
+    "name": "parse-zero-default-document-chunk-index",
+    "prs": [
+      "import-objectbox-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 27,
+    "name": "read-imported-document-chunks-in-memory-tool",
+    "prs": [],
+    "exclusions": [
+      "按 chunk_index/chunk_range 和导入专用 metadata property 的检索分支是增强版在恢复文档后新增的工具能力，基线没有这些元数据。文档数据丢失已由 import-objectbox-documents 修复，现有读取可取得完整正文；此分块 API 扩展不包装为独立基线 bug。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzz_import_documents.json",
+    "index": 28,
+    "name": "select-preserved-document-chunks-by-index-range-or-query",
+    "prs": [],
+    "exclusions": [
+      "按 chunk_index/chunk_range 和导入专用 metadata property 的检索分支是增强版在恢复文档后新增的工具能力，基线没有这些元数据。文档数据丢失已由 import-objectbox-documents 修复，现有读取可取得完整正文；此分块 API 扩展不包装为独立基线 bug。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 0,
+    "name": "profile-schema-default-records",
+    "prs": [
+      "import-profile-schema",
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 1,
+    "name": "profile-schema-read-released-memory-space-metadata",
+    "prs": [
+      "import-profile-schema",
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 2,
+    "name": "profile-schema-include-unbound-memory-spaces",
+    "prs": [
+      "import-profile-schema",
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 3,
+    "name": "profile-schema-read-documents-before-persistent-import",
+    "prs": [
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 4,
+    "name": "profile-schema-report-document-migration",
+    "prs": [
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 5,
+    "name": "profile-schema-import-resolved-documents",
+    "prs": [
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 6,
+    "name": "profile-schema-retain-all-user-document-owners",
+    "prs": [
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 7,
+    "name": "profile-schema-optional-avatar-preferences",
+    "prs": [
+      "import-profile-schema",
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzz_profile_schema.json",
+    "index": 8,
+    "name": "profile-schema-import-owned-and-published-user-markdown",
+    "prs": [
+      "import-user-documents"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 0,
+    "name": "import-resource-matcher-dependency",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 1,
+    "name": "import-resource-matcher-runtime-dependency",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 2,
+    "name": "import-resource-matcher-existing-lock-entry",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 3,
+    "name": "import-resource-matcher-owned-by-plan",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 4,
+    "name": "import-resource-matcher-empty-plan",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 5,
+    "name": "import-resource-matcher-build-after-supplement",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 6,
+    "name": "import-resource-matcher-build-after-snapshot",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 7,
+    "name": "import-resource-rewrite-single-pass",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 8,
+    "name": "import-chat-progress-reserve-resource-phase",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 9,
+    "name": "import-chat-progress-start-resource-phase",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzz_import_resource_progress.json",
+    "index": 10,
+    "name": "import-chat-progress-count-resource-rewrites",
+    "prs": [],
+    "exclusions": [
+      "基线没有 resourcePaths / rewriteMessageContent 资源全文替换阶段。这些 Aho-Corasick 依赖、索引和进度修复仅适用于增强版新增资源迁移能力，不能作为 7fec 独立 bug PR。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 0,
+    "name": "import-resources-only-replace-changed-chat-text",
+    "prs": [],
+    "exclusions": [
+      "基线没有 rewriteMessageContent 或 resourcePathMatcher；无命中免复制属于增强版新增资源替换流程的后续优化。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 1,
+    "name": "import-resource-matcher-no-copy-on-miss",
+    "prs": [],
+    "exclusions": [
+      "基线没有 rewriteMessageContent 或 resourcePathMatcher；无命中免复制属于增强版新增资源替换流程的后续优化。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 2,
+    "name": "import-resource-matcher-empty-result-is-borrowed",
+    "prs": [],
+    "exclusions": [
+      "基线没有 rewriteMessageContent 或 resourcePathMatcher；无命中免复制属于增强版新增资源替换流程的后续优化。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 3,
+    "name": "import-resource-matcher-owned-result-only-on-change",
+    "prs": [],
+    "exclusions": [
+      "基线没有 rewriteMessageContent 或 resourcePathMatcher；无命中免复制属于增强版新增资源替换流程的后续优化。"
+    ],
+    "dependencies": [],
+    "reasons": [],
+    "classification": "excluded"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 4,
+    "name": "import-chat-and-ledger-one-database-staging",
+    "prs": [
+      "import-reuse-staged-database"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 5,
+    "name": "import-chat-return-ledger-counts",
+    "prs": [
+      "import-reuse-staged-database"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 6,
+    "name": "import-chat-write-reserve-ledger-progress",
+    "prs": [
+      "import-reuse-staged-database"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 7,
+    "name": "import-empty-chat-reserve-ledger-progress",
+    "prs": [
+      "import-reuse-staged-database"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 8,
+    "name": "import-chat-reuse-connection-for-ledger",
+    "prs": [
+      "import-reuse-staged-database"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 9,
+    "name": "import-ledger-shared-connection-and-visible-counts",
+    "prs": [
+      "import-reuse-staged-database"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 10,
+    "name": "large-import-chathistorymanager-1",
+    "prs": [
+      "import-chat-body-copies"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 11,
+    "name": "large-import-chathistorymanager-2",
+    "prs": [
+      "import-chat-body-copies",
+      "import-message-part-batch"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  },
+  {
+    "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+    "index": 12,
+    "name": "large-import-messagepartdao-1",
+    "prs": [
+      "import-message-part-batch"
+    ],
+    "exclusions": [],
+    "dependencies": [],
+    "reasons": [
+      "从增强版修复中抽取，独立适配到基线 7fec。"
+    ],
+    "classification": "upstream_fix"
+  }
+]

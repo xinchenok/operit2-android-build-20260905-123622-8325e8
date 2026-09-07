@@ -1,0 +1,62 @@
+[
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 38,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (1)",
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs."
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 39,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (2)",
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs."
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 40,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (3)",
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs."
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 41,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (4)",
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs."
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 42,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (5)",
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs."
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 43,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (6)",
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs."
+  }
+]

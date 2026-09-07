@@ -1,0 +1,388 @@
+diff --git a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+--- a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
++++ b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+@@ -991,10 +991,19 @@
+     if (mounted && _currentChatId == queueChatId) {
+       _inputFocusNode.unfocus();
+     }
+-    await _viewModel.sendUserMessage(
+-      queuedText.trim(),
+-      chatIdOverride: queueChatId,
+-    );
++    try {
++      await _viewModel.sendUserMessage(
++        queuedText.trim(),
++        chatIdOverride: queueChatId,
++      );
++    } catch (_) {
++      // Core rejects only input that has not entered history.
++      if (cancelCurrentConversation) {
++        await _viewModel.clearPendingQueueAutoDequeueSuppression(queueChatId);
++      }
++      await _viewModel.restorePendingQueueMessage(chatId: queueChatId, message: item);
++      rethrow;
++    }
+   }
+ 
+   /// Persists the pending-queue expanded state through the chat runtime.
+diff --git a/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart b/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
+--- a/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
++++ b/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
+@@ -136,7 +136,12 @@
+     );
+     debugPrint('Chat send accepted chatId=${chatIdOverride ?? 'current'}');
+     if (attachments.isNotEmpty) {
+-      await _chat.clearAttachments();
++      try {
++        await _chat.clearAttachments();
++      } catch (error, stackTrace) {
++        // Core already accepted the input; do not put it back in the queue.
++        debugPrint('Failed to clear accepted attachments: $error\n$stackTrace');
++      }
+     }
+   }
+ 
+diff --git a/core/crates/command/core/src/commands/chat.rs b/core/crates/command/core/src/commands/chat.rs
+--- a/core/crates/command/core/src/commands/chat.rs
++++ b/core/crates/command/core/src/commands/chat.rs
+@@ -746,7 +746,7 @@
+         replyToMessage,
+         turnOptions,
+     )
+-    .await;
++    .await?;
+     let currentChatId = core
+         .currentChatIdFlow()
+         .value()
+diff --git a/core/crates/node/runtime/src/CoreNodeRouter.rs b/core/crates/node/runtime/src/CoreNodeRouter.rs
+--- a/core/crates/node/runtime/src/CoreNodeRouter.rs
++++ b/core/crates/node/runtime/src/CoreNodeRouter.rs
+@@ -3792,7 +3792,8 @@
+                     None,
+                     ChatTurnOptions::default(),
+                 )
+-                .await;
++                .await
++                .expect("routed send must be accepted");
+         }
+ 
+         assert_eq!(target.callCount.load(Ordering::SeqCst), 1);
+diff --git a/core/crates/runtime/application/src/services/ChatServiceCore.rs b/core/crates/runtime/application/src/services/ChatServiceCore.rs
+--- a/core/crates/runtime/application/src/services/ChatServiceCore.rs
++++ b/core/crates/runtime/application/src/services/ChatServiceCore.rs
+@@ -445,7 +445,7 @@
+         attachments: Vec<AttachmentInfo>,
+         replyToMessage: Option<ChatMessage>,
+         turnOptions: ChatTurnOptions,
+-    ) {
++    ) -> Result<(), String> {
+         let hookChatId = match chatIdOverride.as_ref() {
+             Some(chatId) => chatId.clone(),
+             None => self
+@@ -479,7 +479,7 @@
+                         if let Some(message) = decision.message {
+                             self.messageProcessingDelegate.showToast(message);
+                         }
+-                        return;
++                        return Ok(());
+                     }
+                     CHAT_INPUT_SUBMIT_ACTION_REPLACE | CHAT_INPUT_SUBMIT_ACTION_ALLOW => {
+                         if let Some(message) = decision.message {
+@@ -504,12 +504,12 @@
+         if self.enhancedAiService.is_some() && self.messageCoordinationDelegate.is_some() {
+             self.markPendingQueueBlocked(&hookChatId);
+         }
+-        if let Some(mut service) = self.newEnhancedAiServiceForChat(&hookChatId) {
++        let result = if let Some(mut service) = self.newEnhancedAiServiceForChat(&hookChatId) {
+             if let Some(delegate) = self.messageCoordinationDelegate.as_mut() {
+                 delegate.chatHistoryDelegate = self.chatHistoryDelegate.clone_for_core();
+                 delegate.messageProcessingDelegate =
+                     self.messageProcessingDelegate.clone_for_core();
+-                delegate
++                let result = delegate
+                     .sendUserMessage(
+                         &mut service,
+                         promptFunctionType,
+@@ -527,12 +527,30 @@
+                 self.chatHistoryDelegate = delegate.chatHistoryDelegate.clone_for_core();
+                 self.messageProcessingDelegate =
+                     delegate.messageProcessingDelegate.clone_for_core();
++                result
++            } else {
++                Err("MessageCoordinationDelegate is not initialized".to_string())
++            }
++        } else {
++            Err("EnhancedAIService is not initialized".to_string())
++        };
++        if result.is_err() {
++            // Input was rejected before it entered history. Do not let the Error
++            // state re-arm the same pending item (or the next one) for auto-send.
++            // Pause before returning over the bridge; the editor can then restore
++            // the item without an intervening ready snapshot taking another item.
++            let mut queueStateByChatId = self.pendingQueueStateFlow().value();
++            if let Some(queueState) = queueStateByChatId.get_mut(&hookChatId) {
++                queueState.wasBlocked = false;
++                queueState.suppressNextAutoDequeue = false;
++                self.pendingQueueStateFlow().set_value(queueStateByChatId);
+             }
+         }
+         AppLogger::i(
+             "ChatServiceCore",
+             &format!("send scheduled chatId={hookChatId}"),
+         );
++        result
+     }
+ 
+     /// Resumes an AI round on the CoreNode that already owns the chat Binding.
+@@ -575,7 +593,7 @@
+         let runtimeChatHistory = self
+             .chatHistoryDelegate
+             .getRuntimeChatHistory(chatId.clone());
+-        delegate
++        let result = delegate
+             .sendMessageInternal(
+                 &mut service,
+                 PromptFunctionType::CHAT,
+@@ -599,7 +617,7 @@
+             .await;
+         self.chatHistoryDelegate = delegate.chatHistoryDelegate.clone_for_core();
+         self.messageProcessingDelegate = delegate.messageProcessingDelegate.clone_for_core();
+-        Ok(())
++        result
+     }
+ 
+     /// Resumes a route continuation using the context transported with the route change.
+@@ -632,7 +650,7 @@
+         self.chatHistoryDelegate.switchChat(chatId.clone(), false);
+         delegate.chatHistoryDelegate = self.chatHistoryDelegate.clone_for_core();
+         delegate.messageProcessingDelegate = self.messageProcessingDelegate.clone_for_core();
+-        delegate
++        let result = delegate
+             .sendMessageInternal(
+                 &mut service,
+                 resumeContext.promptFunctionType,
+@@ -656,7 +674,7 @@
+             .await;
+         self.chatHistoryDelegate = delegate.chatHistoryDelegate.clone_for_core();
+         self.messageProcessingDelegate = delegate.messageProcessingDelegate.clone_for_core();
+-        Ok(())
++        result
+     }
+ 
+     /// Marks the source chat as paused while route synchronization is in progress.
+@@ -1346,8 +1364,8 @@
+             None,
+             ChatTurnOptions::default(),
+         )
+-        .await;
+-        true
++        .await
++        .is_ok()
+     }
+ 
+     /// Regenerates one AI message in place while preserving the surrounding chat history.
+diff --git a/core/crates/runtime/application/src/services/ToolRuntimeSupportService.rs b/core/crates/runtime/application/src/services/ToolRuntimeSupportService.rs
+--- a/core/crates/runtime/application/src/services/ToolRuntimeSupportService.rs
++++ b/core/crates/runtime/application/src/services/ToolRuntimeSupportService.rs
+@@ -450,7 +450,7 @@
+         Box::pin(async move {
+             let mut holder = self.chatRuntimeHolder.lock().await;
+             let slot = runtimeChatSlotToRuntimeSlot(request.slot);
+-            holder
++            let result = holder
+                 .getCore(slot)
+                 .sendUserMessage(
+                     PromptFunctionType::CHAT,
+@@ -466,7 +466,7 @@
+                 )
+                 .await;
+             holder.observeStats();
+-            Ok(())
++            result
+         })
+     }
+ 
+diff --git a/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs b/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs
+--- a/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs
++++ b/core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs
+@@ -311,7 +311,7 @@
+         attachments: Vec<AttachmentInfo>,
+         replyToMessage: Option<ChatMessage>,
+         turnOptions: ChatTurnOptions,
+-    ) {
++    ) -> Result<(), String> {
+         AppLogger::i(
+             "CoreSend",
+             &format!(
+@@ -363,7 +363,7 @@
+                 )
+                 .await
+             {
+-                return;
++                return Ok(());
+             }
+         }
+         self.sendMessageInternal(
+@@ -386,8 +386,9 @@
+             None,
+             turnOptions,
+         )
+-        .await;
++        .await?;
+         AppLogger::i("CoreSend", "dispatch return");
++        Ok(())
+     }
+ 
+     /// Regenerates a single AI message variant using the surrounding conversation state.
+@@ -693,7 +694,7 @@
+         suppressUserMessageInHistory: bool,
+         chatHistoryOverride: Option<Vec<ChatMessage>>,
+         turnOptions: ChatTurnOptions,
+-    ) {
++    ) -> Result<(), String> {
+         self.currentPromptFunctionType = promptFunctionType.clone();
+         self.currentChatProviderIdOverride = chatProviderIdOverride.clone();
+         self.currentChatModelIdOverride = chatModelIdOverride.clone();
+@@ -775,7 +776,7 @@
+                                 message: error.to_string(),
+                             },
+                         );
+-                    return;
++                    return Err(error.to_string());
+                 }
+             },
+         };
+@@ -823,7 +824,8 @@
+             .await;
+         let result = match result {
+             Ok(result) => result,
+-            Err(error) => {
++            Err(failure) => {
++                let error = failure.error;
+                 ChainLogger::error(
+                     SEND_CHAIN,
+                     "send.dispatch.error",
+@@ -836,7 +838,13 @@
+                             message: error.to_string(),
+                         },
+                     );
+-                return;
++                // The input was already stored before the provider failed. Acknowledge
++                // receipt so the editor/queue does not submit the same message again.
++                return if failure.userMessagePersisted {
++                    Ok(())
++                } else {
++                    Err(error.to_string())
++                };
+             }
+         };
+         self.tokenStatisticsDelegate
+@@ -875,6 +883,7 @@
+         if isAutoContinuation {
+             self.removePendingAutoContinuation(chatId);
+         }
++        Ok(())
+     }
+ 
+     #[allow(non_snake_case)]
+@@ -1167,7 +1176,7 @@
+                 } else {
+                     String::new()
+                 };
+-                self.sendMessageInternal(
++                let sendResult = self.sendMessageInternal(
+                     enhancedAiService,
+                     promptFunctionType.clone(),
+                     !isFirstMemberOfFirstRound,
+@@ -1188,6 +1197,9 @@
+                     turnOptions.clone(),
+                 )
+                 .await;
++                if sendResult.is_err() {
++                    return true;
++                }
+                 if !self
+                     .awaitTurnComplete(chatId.clone(), targetTurnCounter, 180_000)
+                     .await
+@@ -1831,7 +1843,7 @@
+                 } else {
+                     self.messageProcessingDelegate
+                         .setSuppressIdleCompletedStateForChat(currentChatId.clone(), false);
+-                    self.sendMessageInternal(
++                    let _ = self.sendMessageInternal(
+                         enhancedAiService,
+                         continuationPromptType,
+                         true,
+diff --git a/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs b/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs
+--- a/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs
++++ b/core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs
+@@ -342,6 +342,13 @@
+     pub nextWindowSize: Option<i64>,
+ }
+ 
++/// Distinguishes rejection before accepting the input from an AI failure afterwards.
++#[derive(Debug)]
++pub struct SendUserMessageProcessingFailure {
++    pub error: operit_providers::chat::llmprovider::AIService::AiServiceError,
++    pub userMessagePersisted: bool,
++}
++
+ /// Request data used to regenerate one AI message variant.
+ pub struct RegenerateAiMessageVariantRequest<'a> {
+     pub enhancedAiService: &'a mut EnhancedAIService,
+@@ -1230,7 +1237,7 @@
+         mut request: SendUserMessageProcessingRequest<'_>,
+     ) -> Result<
+         SendUserMessageProcessingResult,
+-        operit_providers::chat::llmprovider::AIService::AiServiceError,
++        SendUserMessageProcessingFailure,
+     > {
+         let chatId = request.chatId.clone();
+         let originalMessageText = request.messageText.trim().to_string();
+@@ -1292,7 +1299,9 @@
+                             },
+                         );
+                     }
+-                    return Err(error);
++                    return Err(SendUserMessageProcessingFailure {
++                        error, userMessagePersisted: false,
++                    });
+                 }
+             };
+         let shouldAddUserMessageToChat = request.turnOptions.persistTurn
+@@ -1485,7 +1494,9 @@
+                         },
+                     );
+                 }
+-                return Err(error);
++                return Err(SendUserMessageProcessingFailure {
++                    error, userMessagePersisted: userMessageAdded,
++                });
+             }
+         };
+         let sharedResponseStream = completionStream.clone();
+@@ -2031,9 +2042,11 @@
+                 }),
+             )
+             .map_err(|error| {
+-                operit_providers::chat::llmprovider::AIService::AiServiceError::RequestFailed(
+-                    error.to_string(),
+-                )
++                let message = error.to_string();
++                SendUserMessageProcessingFailure {
++                    error: operit_providers::chat::llmprovider::AIService::AiServiceError::RequestFailed(message),
++                    userMessagePersisted: userMessageAdded,
++                }
+             })?;
+         Ok(SendUserMessageProcessingResult {
+             aiMessage,
+@@ -2081,7 +2094,8 @@
+                     ..ChatTurnOptions::default()
+                 },
+             })
+-            .await?;
++            .await
++            .map_err(|failure| failure.error)?;
+         Ok(ChatMessage {
+             timestamp: targetMessageTimestamp,
+             ..result.aiMessage

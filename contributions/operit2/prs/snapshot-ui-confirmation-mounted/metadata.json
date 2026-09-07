@@ -1,0 +1,20 @@
+{
+  "slug": "snapshot-ui-confirmation-mounted",
+  "title": "fix(flutter): stop snapshot import after settings disposal",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/snapshot-ui-confirmation-mounted",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 12,
+      "name": "settings-import-confirmation-lifecycle"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

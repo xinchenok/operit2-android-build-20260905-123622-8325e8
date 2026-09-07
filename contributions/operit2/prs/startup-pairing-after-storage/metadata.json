@@ -1,0 +1,30 @@
+{
+  "slug": "startup-pairing-after-storage",
+  "title": "fix(flutter): open pairing events after storage is configured",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/startup-pairing-after-storage",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/main/OperitApp.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/startup.json",
+      "index": 18,
+      "name": "pairing-observes-runtime-bootstrap-readiness"
+    },
+    {
+      "file": "patches/startup.json",
+      "index": 19,
+      "name": "fresh-start-pairing-opens-after-storage-is-confirmed"
+    },
+    {
+      "file": "patches/startup.json",
+      "index": 20,
+      "name": "pairing-readiness-listener-follows-dialog-lifetime"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

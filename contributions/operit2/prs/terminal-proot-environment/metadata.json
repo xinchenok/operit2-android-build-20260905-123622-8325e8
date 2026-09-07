@@ -1,0 +1,18 @@
+{
+  "slug": "terminal-proot-environment",
+  "title": "fix(android): use the compatible PRoot startup environment",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/terminal-proot-environment",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
+    "hosts/android/src/terminal.rs"
+  ],
+  "source_specs": [
+    "patches/terminal.json:android-terminal-proot-compat-environment",
+    "patches/terminal.json:android-common-proot-compat-environment"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+}

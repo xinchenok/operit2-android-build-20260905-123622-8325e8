@@ -1,0 +1,19 @@
+{
+  "slug": "chat-scroll-follow-intent",
+  "title": "fix(chat): respect cancelled bottom following",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-scroll-follow-intent",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:cancel-stale-bottom-callback",
+    "chat-fixes.json:do-not-reenable-on-upward-release",
+    "chat-fixes.json:only-user-downward-scroll-reenables-follow"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

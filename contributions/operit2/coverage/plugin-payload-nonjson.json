@@ -1,0 +1,34 @@
+[
+  {
+    "file": "builder/plugin_payload.py",
+    "name": "timer_cleanup",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "plugin-agent-timeout-cleanup"
+    ],
+    "reason": "从已有非 JSON 源码修复中抽取；修复 agent_send race 完成后的 timeout 清理。"
+  },
+  {
+    "file": "builder/plugin_payload.py",
+    "name": "error_label",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "plugin-tool-error-label"
+    ],
+    "reason": "从已有非 JSON 源码修复中抽取；有参和无参包装器是同一错误文案问题。"
+  },
+  {
+    "file": "builder/plugin_payload.py",
+    "name": "plugin_sync_cache_missing_outputs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "plugin-sync-missing-outputs"
+    ],
+    "origin": "newly_prepared_after_source_audit",
+    "prior_implementation_found": false,
+    "reason": "没有找到先前已实现的缓存修复：builder 仅在同步后校验产物；upstream/import-stall-source/import-final/validation/profile-schema-source 中的 sync_plugin_packages.py 均与7fec完全相同。此次据基线中可直接确认的顶层 compile-ts 输出缺失路径新准备独立修复。"
+  }
+]

@@ -1,0 +1,41 @@
+diff --git a/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart b/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
+--- a/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
++++ b/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
+@@ -322,7 +322,7 @@
+           widget.onAutoScrollToBottomChanged(false);
+         }
+       } else if (_userScrollSessionActive) {
+-        if (_isAtBottom(notification.metrics) &&
++        if (!_userScrollsTowardHistory && _isAtBottom(notification.metrics) &&
+             !widget.autoScrollToBottomListenable.value) {
+           widget.onAutoScrollToBottomChanged(true);
+         }
+@@ -342,7 +342,10 @@
+       if (_userScrollSessionActive) {
+         _scheduleMessageAnchorCollection();
+       }
+-      if (_isAtBottom(notification.metrics) &&
++      if (_userScrollSessionActive &&
++          notification.dragDetails != null &&
++          (notification.scrollDelta ?? 0) > 0 &&
++          _isAtBottom(notification.metrics) &&
+           !_userScrollsTowardHistory &&
+           !widget.autoScrollToBottomListenable.value) {
+         widget.onAutoScrollToBottomChanged(true);
+diff --git a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+--- a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
++++ b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+@@ -1564,9 +1564,12 @@
+       return;
+     }
+     _bottomScrollScheduled = true;
++    final scheduledChatId = _currentChatId;
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+       _bottomScrollScheduled = false;
+-      if (!mounted || !_scrollController.hasClients) {
++      if (!mounted || !_autoScrollToBottom ||
++          _currentChatId != scheduledChatId || _hasNewerDisplayHistory ||
++          _isLoadingDisplayWindow || !_scrollController.hasClients) {
+         return;
+       }
+       final position = _scrollController.position;

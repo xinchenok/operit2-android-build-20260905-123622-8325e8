@@ -1,0 +1,42 @@
+{
+  "slug": "snapshot-ui-cleanup-errors",
+  "title": "fix(flutter): preserve snapshot outcomes when temporary cleanup fails",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/snapshot-ui-cleanup-errors",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
+    "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzz_import_reporting.json",
+      "index": 6,
+      "name": "Do not misreport accepted import when upload cleanup fails"
+    },
+    {
+      "file": "patches/zzzzzzz_import_reporting.json",
+      "index": 7,
+      "name": "Keep original snapshot error if cleanup also fails"
+    },
+    {
+      "file": "patches/zzzzzzz_import_reporting.json",
+      "index": 14,
+      "name": "Cleanup cannot turn a completed migration into a failed one"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 0,
+      "name": "snapshot-upload-cleanup-logger"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 1,
+      "name": "snapshot-upload-visible-read-progress"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

@@ -1,0 +1,183 @@
+diff --git a/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart b/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart
+--- a/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart
++++ b/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart
+@@ -6,6 +6,7 @@
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter/services.dart';
+ 
++import '../logging/ClientLogger.dart';
+ import '../proxy/generated/CoreProxyClients.g.dart';
+ import '../proxy/generated/CoreProxyModels.g.dart' as core_proxy;
+ 
+@@ -201,17 +202,33 @@
+   }
+ }
+ 
++/// Temporary upload cleanup must not turn an accepted import into a retry.
++Future<void> discardOperit1ImportSession(SnapshotImportSession? session) async {
++  if (session == null) return;
++  try {
++    await session.discard();
++  } catch (error, stackTrace) {
++    ClientLogger.e(
++      'snapshot temporary upload cleanup failed',
++      tag: 'Operit1SnapshotImport',
++      error: error,
++      stackTrace: stackTrace,
++    );
++  }
++}
++
+ /// Uploads bounded platform file chunks through the generated archive reverse stream.
+ class SnapshotImportUploader {
+   const SnapshotImportUploader(this.clients);
+ 
+   final GeneratedCoreProxyClients clients;
+ 
+-  /// Creates a staged archive and uploads exactly the selected file's declared byte length.
++  /// Creates a staged archive and uploads the selected file in bounded chunks.
+   Future<SnapshotImportSession> stage(SnapshotImportFile file) async {
+-    final archiveId = await clients.servicesArchiveTransferManager
+-        .beginArchiveUpload(expectedByteLength: file.byteLength);
++    String? archiveId;
+     try {
++      archiveId = await clients.servicesArchiveTransferManager
++          .beginArchiveUpload(expectedByteLength: file.byteLength);
+       await clients.servicesArchiveTransferManager.writeArchiveUpload(
+         archiveId: archiveId,
+         bytes: file.chunks(),
+@@ -221,17 +238,27 @@
+             archiveId: archiveId,
+             expectedByteLength: file.byteLength,
+           );
+-      return SnapshotImportSession(
+-        clients: clients,
+-        archive: archive,
+-      );
++      return SnapshotImportSession(clients: clients, archive: archive);
+     } catch (error, stackTrace) {
+-      await clients.servicesArchiveTransferManager.discardArchiveUpload(
+-        archiveId: archiveId,
+-      );
++      if (archiveId != null) {
++        try {
++          await clients.servicesArchiveTransferManager.discardArchiveUpload(
++            archiveId: archiveId,
++          );
++        } catch (cleanupError, cleanupTrace) {
++          ClientLogger.e('failed upload cleanup failed', tag: 'Operit1SnapshotImport',
++              error: cleanupError, stackTrace: cleanupTrace);
++        }
++      }
+       Error.throwWithStackTrace(error, stackTrace);
+     } finally {
+-      await file.close();
+-    }
+-  }
+-}
++      // Even beginArchiveUpload failures must release the selected document.
++      try {
++        await file.close();
++      } catch (error, stackTrace) {
++        ClientLogger.e('selected document cleanup failed', tag: 'Operit1SnapshotImport',
++            error: error, stackTrace: stackTrace);
++      }
++    }
++  }
++}
+diff --git a/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart b/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
+--- a/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
++++ b/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
+@@ -355,7 +355,7 @@
+     WidgetsBinding.instance.removeObserver(this);
+     final session = _operit1SnapshotSession;
+     if (session != null) {
+-      unawaited(session.discard());
++      unawaited(discardOperit1ImportSession(session));
+     }
+     _agreementCountdownTimer?.cancel();
+     _operit1ImportProgressSubscription?.cancel();
+@@ -985,7 +985,7 @@
+     });
+     try {
+       if (previousSession != null) {
+-        await previousSession.discard();
++        await discardOperit1ImportSession(previousSession);
+       }
+       final file = await SnapshotImportFile.pick();
+       if (file == null) {
+@@ -1007,7 +1007,7 @@
+         tag: _operit1SnapshotImportLogTag,
+       );
+       if (!mounted) {
+-        await session.discard();
++        await discardOperit1ImportSession(session);
+         return;
+       }
+       setState(() {
+@@ -1024,7 +1024,7 @@
+       );
+       final session = stagedSession;
+       if (session != null) {
+-        await session.discard();
++        await discardOperit1ImportSession(session);
+       }
+       if (!mounted) {
+         return;
+@@ -1065,7 +1065,7 @@
+         'snapshot import completed chats=${result.importedChats} messages=${result.importedMessages} memories=${result.importedMemories} files=${result.importedFiles + result.importedExternalFiles + result.importedWorkspaceFiles}',
+         tag: _operit1SnapshotImportLogTag,
+       );
+-      await session.discard();
++      await discardOperit1ImportSession(session);
+       await widget.onComplete();
+     } catch (error, stackTrace) {
+       ClientLogger.e(
+diff --git a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+--- a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
++++ b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+@@ -402,7 +402,7 @@
+       );
+       final session = stagedSession;
+       if (session != null) {
+-        await session.discard();
++        await discardOperit1ImportSession(session);
+       }
+       if (!mounted) {
+         return;
+@@ -420,7 +420,7 @@
+     }
+     final session = stagedSession;
+     if (!mounted) {
+-      await session.discard();
++      await discardOperit1ImportSession(session);
+       return;
+     }
+     final confirmed = await _Operit1SnapshotImportDialog.show(
+@@ -430,7 +430,7 @@
+       byteCount: session.byteLength,
+     );
+     if (confirmed != true) {
+-      await session.discard();
++      await discardOperit1ImportSession(session);
+       return;
+     }
+     setState(() {
+@@ -448,7 +448,7 @@
+         'settings snapshot import completed chats=${result.importedChats} messages=${result.importedMessages} memories=${result.importedMemories} files=${result.importedFiles + result.importedExternalFiles + result.importedWorkspaceFiles}',
+         tag: _operit1SnapshotImportLogTag,
+       );
+-      await session.discard();
++      await discardOperit1ImportSession(session);
+       if (!mounted) {
+         return;
+       }
+@@ -463,7 +463,7 @@
+         error: error,
+         stackTrace: stackTrace,
+       );
+-      await session.discard();
++      await discardOperit1ImportSession(session);
+       if (!mounted) {
+         return;
+       }

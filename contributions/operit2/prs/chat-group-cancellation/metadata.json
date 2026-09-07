@@ -1,0 +1,33 @@
+{
+  "slug": "chat-group-cancellation",
+  "title": "fix(chat): stop group planning and pending member turns on cancellation",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-group-cancellation",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
+  ],
+  "source_specs": [
+    "share-cancellation-generation-across-chat-runtime-clones",
+    "initialize-chat-cancellation-generations",
+    "retain-cancellation-generations-in-delegate-clones",
+    "expose-cancellation-generation-to-group-orchestration",
+    "cancel-group-planning-before-a-stream-exists",
+    "clear-planning-ui-when-no-member-stream-needs-cancellation",
+    "capture-group-cancellation-generation-before-planning",
+    "cancelled-planner-does-not-start-role-responses",
+    "stopped-group-never-starts-the-next-role",
+    "group-stop-or-failure-ends-pending-role-sequence",
+    "group-completion-wait-observes-stop-and-error-immediately",
+    "avoid-three-minute-wait-after-group-cancellation",
+    "stopped-group-does-not-launch-a-summary",
+    "bind-group-planner-to-the-owning-chat-cancellation",
+    "receive-group-planning-cancellation-owner",
+    "cancel-underlying-group-planning-request-and-stream",
+    "observe-group-planner-stop-without-a-global-request-token"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

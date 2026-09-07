@@ -1,0 +1,52 @@
+{
+  "slug": "snapshot-ui-import-results",
+  "title": "fix(flutter): show migration omissions in snapshot import results",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/snapshot-ui-import-results",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart",
+    "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzz_import_reporting.json",
+      "index": 0,
+      "name": "Import shared migration result and resource picker DataSettingsPanel.dart"
+    },
+    {
+      "file": "patches/zzzzzzz_import_reporting.json",
+      "index": 1,
+      "name": "Import shared migration result and resource picker OnboardingStartupRoute.dart"
+    },
+    {
+      "file": "patches/zzzzzzz_import_reporting.json",
+      "index": 4,
+      "name": "Display all migration notes and counters DataSettingsPanel.dart"
+    },
+    {
+      "file": "patches/zzzzzzz_import_reporting.json",
+      "index": 5,
+      "name": "Display all migration notes and counters OnboardingStartupRoute.dart"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 34,
+      "name": "Operit1 snapshot data preservation OnboardingStartupRoute 1"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 35,
+      "name": "Operit1 snapshot data preservation OnboardingStartupRoute 2"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 36,
+      "name": "Operit1 snapshot data preservation DataSettingsPanel 1"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

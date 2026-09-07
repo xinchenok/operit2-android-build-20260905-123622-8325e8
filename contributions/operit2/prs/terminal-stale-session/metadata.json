@@ -1,0 +1,19 @@
+{
+  "slug": "terminal-stale-session",
+  "title": "fix(android): recreate named terminals after their shell exits",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/terminal-stale-session",
+  "status": "prepared",
+  "paths": [
+    "hosts/android/src/terminal.rs"
+  ],
+  "source_specs": [
+    "patches/terminal.json:android-terminal-drop-do-not-signal-reaped-pid",
+    "patches/terminal.json:android-terminal-check-session-process-before-reuse",
+    "patches/terminal.json:android-terminal-recreate-exited-visible-session",
+    "patches/terminal.json:android-terminal-recreate-exited-hidden-executor"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+}

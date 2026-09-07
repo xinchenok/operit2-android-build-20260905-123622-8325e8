@@ -1,0 +1,45 @@
+{
+  "slug": "snapshot-input-background-io",
+  "title": "fix(android): read snapshot documents off the main thread",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/snapshot-input-background-io",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/android/app/src/main/kotlin/app/operit/SnapshotImportInputChannel.kt"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 6,
+      "name": "android-snapshot-background-input-1"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 7,
+      "name": "android-snapshot-background-input-2"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 8,
+      "name": "android-snapshot-background-input-3"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 9,
+      "name": "android-snapshot-background-input-4"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 10,
+      "name": "android-snapshot-background-input-5"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 11,
+      "name": "android-snapshot-background-input-6"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

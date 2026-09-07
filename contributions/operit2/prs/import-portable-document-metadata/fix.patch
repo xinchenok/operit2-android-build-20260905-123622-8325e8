@@ -1,0 +1,97 @@
+diff --git a/core/crates/foundation/model/src/MemoryExportModel.rs b/core/crates/foundation/model/src/MemoryExportModel.rs
+--- a/core/crates/foundation/model/src/MemoryExportModel.rs
++++ b/core/crates/foundation/model/src/MemoryExportModel.rs
+@@ -15,6 +15,16 @@
+     pub createdAt: i64,
+     pub updatedAt: i64,
+     pub tagNames: Vec<String>,
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub documentPath: Option<String>,
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub isDocumentNode: Option<bool>,
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub chunkIndexFilePath: Option<String>,
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub lastAccessedAt: Option<i64>,
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub properties: Option<Vec<crate::Memory::MemoryProperty>>,
+ }
+ 
+ #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+diff --git a/core/crates/persistence/store/src/repository/MemoryRepository.rs b/core/crates/persistence/store/src/repository/MemoryRepository.rs
+--- a/core/crates/persistence/store/src/repository/MemoryRepository.rs
++++ b/core/crates/persistence/store/src/repository/MemoryRepository.rs
+@@ -643,7 +643,6 @@
+             .all()
+             .map_err(|error| error.to_string())?
+             .into_iter()
+-            .filter(|memory| !memory.isDocumentNode)
+             .collect::<Vec<_>>();
+         let memoryUuids = memories
+             .iter()
+@@ -667,6 +666,11 @@
+                 createdAt: memory.createdAt,
+                 updatedAt: memory.updatedAt,
+                 tagNames: memory.tags.into_iter().map(|tag| tag.name).collect(),
++                documentPath: memory.documentPath,
++                isDocumentNode: Some(memory.isDocumentNode),
++                chunkIndexFilePath: memory.chunkIndexFilePath,
++                lastAccessedAt: Some(memory.lastAccessedAt),
++                properties: Some(memory.properties),
+             })
+             .collect::<Vec<_>>();
+         let mut seenLinks = BTreeSet::new();
+@@ -738,6 +742,17 @@
+                         Self::normalizeFolderPath(serializableMemory.folderPath.as_deref());
+                     existing.updatedAt = nowMillis();
+                     existing.tags = buildTags(serializableMemory.tagNames);
++                    if let Some(isDocumentNode) = serializableMemory.isDocumentNode {
++                        existing.isDocumentNode = isDocumentNode;
++                        existing.documentPath = serializableMemory.documentPath;
++                        existing.chunkIndexFilePath = serializableMemory.chunkIndexFilePath;
++                    }
++                    if let Some(lastAccessedAt) = serializableMemory.lastAccessedAt {
++                        existing.lastAccessedAt = lastAccessedAt;
++                    }
++                    if let Some(properties) = serializableMemory.properties {
++                        existing.properties = properties;
++                    }
+                     let saved = self
+                         .memoryBox
+                         .put(existing)
+@@ -814,15 +829,15 @@
+             source: serializable.source,
+             credibility: serializable.credibility,
+             importance: serializable.importance,
+-            documentPath: None,
+-            isDocumentNode: false,
+-            chunkIndexFilePath: None,
++            documentPath: serializable.documentPath,
++            isDocumentNode: serializable.isDocumentNode.unwrap_or(false),
++            chunkIndexFilePath: serializable.chunkIndexFilePath,
+             folderPath: Self::normalizeFolderPath(serializable.folderPath.as_deref()),
+             createdAt: serializable.createdAt,
+             updatedAt: serializable.updatedAt,
+-            lastAccessedAt: now,
++            lastAccessedAt: serializable.lastAccessedAt.unwrap_or(now),
+             tags: buildTags(serializable.tagNames),
+-            properties: Vec::new(),
++            properties: serializable.properties.unwrap_or_default(),
+         };
+         self.memoryBox
+             .put(memory)
+diff --git a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+--- a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
++++ b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+@@ -3545,6 +3545,11 @@
+             createdAt: memory.createdAt,
+             updatedAt: memory.updatedAt,
+             tagNames: tagNamesByMemoryId.remove(&memory.id).unwrap_or_default(),
++            documentPath: None,
++            isDocumentNode: None,
++            chunkIndexFilePath: None,
++            lastAccessedAt: None,
++            properties: None,
+         });
+     }
+ 

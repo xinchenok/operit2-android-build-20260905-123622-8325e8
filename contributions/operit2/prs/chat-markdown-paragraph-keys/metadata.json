@@ -1,0 +1,18 @@
+{
+  "slug": "chat-markdown-paragraph-keys",
+  "title": "fix(markdown): assign unique paragraph break keys",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-markdown-paragraph-keys",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart",
+    "apps/flutter/app/test/chat_area_streaming_cursor_test.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:unique-markdown-paragraph-break-keys",
+    "chat-fixes.json:retain-trailing-markdown-gap-regression"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

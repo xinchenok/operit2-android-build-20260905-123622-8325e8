@@ -1,0 +1,95 @@
+diff --git a/apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart b/apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart
+new file mode 100644
+--- /dev/null
++++ b/apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart
+@@ -0,0 +1,40 @@
++// ignore_for_file: file_names
++
++import 'package:flutter/material.dart';
++
++import '../../core/proxy/generated/CoreProxyModels.g.dart';
++
++/// Shows the actual migration result, including every nonempty migration note.
++Future<void> showOperit1ImportResultDialog(
++  BuildContext context,
++  Operit1SnapshotImportResult result,
++) async {
++  if (!context.mounted) return;
++  final notes = result.modelConfig.skippedFields
++      .map((note) => note.trim())
++      .where((note) => note.isNotEmpty)
++      .toSet()
++      .toList();
++  final summary = <String>[
++    '聊天：${result.importedChats} 个，消息：${result.importedMessages} 条',
++    '模型：${result.modelConfig.importedModelCount} 个',
++    '记忆：${result.importedMemories} 条，关联：${result.importedMemoryLinks} 条',
++    '工作区：${result.importedWorkspaces} 个',
++    '资源文件：${result.importedFiles + result.importedExternalFiles + result.importedWorkspaceFiles} 个',
++    if (notes.isNotEmpty) '\n迁移说明：\n${notes.join('\n\n')}',
++  ].join('\n');
++  await showDialog<void>(
++    context: context,
++    barrierDismissible: false,
++    builder: (dialogContext) => AlertDialog(
++      title: const Text('导入结果'),
++      content: SingleChildScrollView(child: SelectableText(summary)),
++      actions: <Widget>[
++        FilledButton(
++          onPressed: () => Navigator.of(dialogContext).pop(),
++          child: const Text('完成'),
++        ),
++      ],
++    ),
++  );
++}
+diff --git a/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart b/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
+--- a/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
++++ b/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
+@@ -14,6 +14,7 @@
+ import '../../../core/proxy/generated/CoreProxyModels.g.dart' as core_proxy;
+ import '../../../core/runtime/RuntimeBootstrapManager.dart';
+ import '../../../core/snapshot/SnapshotImportUploader.dart';
++import '../../common/Operit1ImportResultDialog.dart';
+ import '../../common/DeviceSpaceDiscoveryPanel.dart';
+ import '../../common/OperitLogoMark.dart';
+ import '../../common/RuntimeBootstrapScreen.dart';
+@@ -1066,7 +1067,8 @@
+         tag: _operit1SnapshotImportLogTag,
+       );
+       await session.discard();
+-      await widget.onComplete();
++      if (mounted) await showOperit1ImportResultDialog(context, result);
++      if (mounted) await widget.onComplete();
+     } catch (error, stackTrace) {
+       ClientLogger.e(
+         'snapshot import failed',
+@@ -2414,7 +2416,7 @@
+                 icon: Icons.move_to_inbox_rounded,
+                 eyebrow: '导入配置',
+                 title: '从 Operit1 导入',
+-                description: '选择旧版快照，将配置、聊天、角色卡、资源等数据迁移到 Operit2。',
++                description: '请在 Operit1 的聊天备份设置中导出原始快照 ZIP，再选择该文件。仅迁移快照内的数据；旧版未备份的共享文件、工作流和媒体缓存需另行迁移。',
+               ),
+               const SizedBox(height: 22),
+               Align(
+diff --git a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+--- a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
++++ b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+@@ -14,6 +14,7 @@
+ import '../../../../core/proxy/generated/CoreProxyModels.g.dart';
+ import '../../../../core/runtime/RuntimeBootstrapManager.dart';
+ import '../../../../core/snapshot/SnapshotImportUploader.dart';
++import '../../../common/Operit1ImportResultDialog.dart';
+ import '../../../../l10n/generated/app_localizations.dart';
+ import '../../../common/components/M3LoadingIndicator.dart';
+ import '../../../theme/OperitGlassSurface.dart';
+@@ -452,6 +453,8 @@
+       if (!mounted) {
+         return;
+       }
++      await showOperit1ImportResultDialog(context, result);
++      if (!mounted) return;
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text(l10n.settingsDataOperit1SnapshotImported)),
+       );

@@ -1,0 +1,21 @@
+{
+  "slug": "plugin-startup-after-core-node",
+  "title": "fix(flutter): dispatch startup hooks after core node creation",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/plugin-startup-after-core-node",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
+    "core/crates/runtime/application/src/core/application/OperitApplication.rs"
+  ],
+  "source_specs": [
+    "legacy-defer-startup-hook-initialization",
+    "legacy-dispatch-startup-after-host-binding",
+    "legacy-expose-bound-startup-event",
+    "legacy-flutter-initialize-before-startup-hooks",
+    "legacy-flutter-startup-after-core-node"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

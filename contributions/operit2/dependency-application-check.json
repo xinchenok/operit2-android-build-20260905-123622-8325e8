@@ -1,0 +1,11 @@
+{
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "prerequisites": [
+    "model-fixed-character-binding",
+    "import-all-model-configs"
+  ],
+  "artifact": "dependencies/import-character-provider-mapping/fix.patch",
+  "passed": true,
+  "output": "",
+  "validation": "Only isolated index patch application; not compiled or device-tested."
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "plugin-tool-error-label",
+  "title": "fix(plugins): identify the tool that failed in chat wrappers",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/plugin-tool-error-label",
+  "status": "prepared",
+  "paths": [
+    "plugins/packages/buildin/extended_chat.ts"
+  ],
+  "source_specs": [
+    "builder/plugin_payload.py:error_label"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. No builds, sync jobs, tests, or device validation."
+}

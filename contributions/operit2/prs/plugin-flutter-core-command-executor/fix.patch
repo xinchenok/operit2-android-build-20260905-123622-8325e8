@@ -1,0 +1,112 @@
+diff --git a/apps/flutter/native/operit-flutter-bridge/src/lib.rs b/apps/flutter/native/operit-flutter-bridge/src/lib.rs
+--- a/apps/flutter/native/operit-flutter-bridge/src/lib.rs
++++ b/apps/flutter/native/operit-flutter-bridge/src/lib.rs
+@@ -313,6 +313,8 @@
+         install_permission_requester(&mut core);
+         #[cfg(not(target_arch = "wasm32"))]
+         let chatRuntimeHolder = core.localApplicationMut().chatRuntimeHolder.clone();
++        #[cfg(not(target_arch = "wasm32"))]
++        core.bindLocalCoreCommandExecutor()?;
+         let runtimeStorageHost = core.runtimeStorageHost();
+         let localCore = Arc::new(core);
+         #[cfg(not(target_arch = "wasm32"))]
+diff --git a/core/crates/proxy/local/src/lib.rs b/core/crates/proxy/local/src/lib.rs
+--- a/core/crates/proxy/local/src/lib.rs
++++ b/core/crates/proxy/local/src/lib.rs
+@@ -24,6 +24,7 @@
+ #[derive(Clone)]
+ pub struct LocalCoreProxy {
+     application: Arc<Mutex<OperitApplication>>,
++    commandApplication: Option<Arc<OperitApplication>>,
+     chatRuntimeHolder: Arc<tokio::sync::Mutex<ChatRuntimeHolder>>,
+     hostManager: HostManager,
+     toolRuntimeSupport: Arc<dyn ToolRuntimeSupport>,
+@@ -106,6 +107,7 @@
+             hostManager: application.hostManager.clone(),
+             toolRuntimeSupport,
+             application: Arc::new(Mutex::new(application)),
++            commandApplication: None,
+             chatRuntimeHolder,
+             coreStreamPool: Arc::new(CoreStreamPool::new()),
+         }
+@@ -117,6 +119,39 @@
+         Arc::get_mut(&mut self.application)
+             .expect("LocalCoreProxy application must not be shared while mutating setup")
+             .get_mut()
++    }
++
++    /// Runs plugin commands through this application's shared services, outside dispatch locks.
++    #[cfg(not(target_arch = "wasm32"))]
++    pub fn bindLocalCoreCommandExecutor(&mut self) -> Result<(), String> {
++        let mut context = self.localApplicationMut().sharedCommandContext();
++        let commandApplication: Arc<OperitApplication> = Arc::new_cyclic(|weak: &std::sync::Weak<OperitApplication>| {
++            let weak = weak.clone();
++            let executor: operit_host_api::HostManager::CoreCommandExecutor = Arc::new(move |args| {
++                let application = weak.upgrade().ok_or("The local application has stopped")?;
++                let (sender, receiver) = std::sync::mpsc::sync_channel(1);
++                // CLI commands can enter their own async runtime. They must run on a plain
++                // native task, and never hold the application's dispatch mutex over JS hooks.
++                operit_host_api::HostRuntimeTaskSchedulerHost::scheduleHostRuntimeTask(
++                    operit_host_api::HostManager::defaultHostRuntimeTaskSchedulerHost().as_ref(),
++                    "plugin-core-command",
++                    Box::new(move || {
++                        let mut command = application.sharedCommandContext();
++                        let result = operit_command_core::run_core_command(&mut command, &args).map(|output| output.stdout);
++                        let _ = sender.send(result);
++                    }),
++                ).map_err(|error| error.to_string())?;
++                receiver.recv().map_err(|error| error.to_string())?
++            });
++            context.hostManager.coreCommandExecutor = Some(executor);
++            context
++        });
++        let executor = commandApplication.hostManager.coreCommandExecutor.clone().expect("command executor was just bound");
++        commandApplication.toolHandler.bindCoreCommandExecutor(executor.clone());
++        self.hostManager.coreCommandExecutor = Some(executor.clone());
++        self.localApplicationMut().hostManager.coreCommandExecutor = Some(executor);
++        self.commandApplication = Some(commandApplication);
++        Ok(())
+     }
+ 
+     /// Returns the runtime storage capability owned by this local core.
+diff --git a/core/crates/runtime/application/src/core/application/OperitApplication.rs b/core/crates/runtime/application/src/core/application/OperitApplication.rs
+--- a/core/crates/runtime/application/src/core/application/OperitApplication.rs
++++ b/core/crates/runtime/application/src/core/application/OperitApplication.rs
+@@ -169,6 +169,22 @@
+             providerRuntimeContext,
+             initialized: false,
+             hostRuntimeEventRegistration: None,
++        }
++    }
++
++    /// Shares this initialized application's service handles without starting another runtime.
++    /// Commands mutate the shared stores/holders, never a separate application or chat state.
++    pub fn sharedCommandContext(&self) -> Self {
++        Self {
++            appStartupTimeMs: self.appStartupTimeMs,
++            hostManager: self.hostManager.clone(),
++            chatRuntimeHolder: self.chatRuntimeHolder.clone(),
++            toolRuntimeDependencies: self.toolRuntimeDependencies.clone(),
++            toolHandler: self.toolHandler.clone(),
++            toolPkgBridgeRuntime: self.toolPkgBridgeRuntime.clone(),
++            providerRuntimeContext: self.providerRuntimeContext.clone(),
++            initialized: self.initialized,
++            hostRuntimeEventRegistration: self.hostRuntimeEventRegistration.clone(),
+         }
+     }
+ 
+diff --git a/core/crates/tool/services/src/tools/AIToolHandler.rs b/core/crates/tool/services/src/tools/AIToolHandler.rs
+--- a/core/crates/tool/services/src/tools/AIToolHandler.rs
++++ b/core/crates/tool/services/src/tools/AIToolHandler.rs
+@@ -325,6 +325,11 @@
+             .expect("AIToolHandler mutex poisoned")
+             .context
+             .clone()
++    }
++
++    /// Binds the existing application command executor after proxy initialization.
++    pub fn bindCoreCommandExecutor(&self, executor: operit_host_api::HostManager::CoreCommandExecutor) {
++        self.inner.lock().expect("AIToolHandler mutex poisoned").context.coreCommandExecutor = Some(executor);
+     }
+ 
+     /// Returns the dependency set associated with this handler.

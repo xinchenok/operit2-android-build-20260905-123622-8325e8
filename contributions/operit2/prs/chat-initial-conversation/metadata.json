@@ -1,0 +1,22 @@
+{
+  "slug": "chat-initial-conversation",
+  "title": "fix(chat): initialize the first conversation",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-initial-conversation",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:first-null-chat-subscription",
+    "chat-fixes.json:bootstrap-empty-conversation",
+    "chat-fixes.json:initial-draft-and-submit-state",
+    "chat-fixes.json:preserve-draft-during-first-chat-creation",
+    "chat-fixes.json:bootstrap-single-flight",
+    "patches/first_chat_draft.json:preserve-first-draft-across-empty-embedded-chat-surfaces"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

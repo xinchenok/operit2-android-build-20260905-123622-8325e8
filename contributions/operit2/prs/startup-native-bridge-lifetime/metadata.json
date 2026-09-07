@@ -1,0 +1,20 @@
+{
+  "slug": "startup-native-bridge-lifetime",
+  "title": "fix(android): keep native bridge alive until process termination",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/startup-native-bridge-lifetime",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidPlatformChannel.kt"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/integration_lifecycle.json",
+      "index": 0,
+      "name": "avoid-destroying-in-use-native-bridge-during-process-restart"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

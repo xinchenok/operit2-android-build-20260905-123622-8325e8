@@ -1,0 +1,873 @@
+[
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "first-null-chat-subscription",
+    "status": "prepared",
+    "prs": [
+      "chat-initial-conversation"
+    ],
+    "source_index": 0,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "bootstrap-empty-conversation",
+    "status": "prepared",
+    "prs": [
+      "chat-initial-conversation"
+    ],
+    "source_index": 1,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "initial-draft-and-submit-state",
+    "status": "prepared",
+    "prs": [
+      "chat-initial-conversation",
+      "chat-submit-single-flight",
+      "chat-speech-draft-ownership"
+    ],
+    "source_index": 2,
+    "baseline_old_matches": true,
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "preserve-draft-during-first-chat-creation",
+    "status": "prepared",
+    "prs": [
+      "chat-initial-conversation",
+      "chat-reply-ownership"
+    ],
+    "source_index": 3,
+    "baseline_old_matches": true,
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "bootstrap-single-flight",
+    "status": "prepared",
+    "prs": [
+      "chat-initial-conversation"
+    ],
+    "source_index": 4,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "submit-single-flight-and-errors",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-single-flight"
+    ],
+    "source_index": 5,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "do-not-send-draft-changed-during-hook",
+    "status": "prepared",
+    "prs": [
+      "chat-hook-draft-ownership"
+    ],
+    "source_index": 6,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "cancel-stale-bottom-callback",
+    "status": "prepared",
+    "prs": [
+      "chat-scroll-follow-intent"
+    ],
+    "source_index": 7,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "ignore-nested-scroll-metrics",
+    "status": "prepared",
+    "prs": [
+      "chat-nested-scroll-notifications"
+    ],
+    "source_index": 8,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "manual-scroll-cancels-locator",
+    "status": "prepared",
+    "prs": [
+      "chat-nested-scroll-notifications",
+      "chat-cancel-pending-locator"
+    ],
+    "source_index": 9,
+    "baseline_old_matches": true,
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "user-intent-cancels-locator-wheel",
+    "status": "prepared",
+    "prs": [
+      "chat-cancel-pending-locator"
+    ],
+    "source_index": 10,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "do-not-reenable-on-upward-release",
+    "status": "prepared",
+    "prs": [
+      "chat-scroll-follow-intent"
+    ],
+    "source_index": 11,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "only-user-downward-scroll-reenables-follow",
+    "status": "prepared",
+    "prs": [
+      "chat-scroll-follow-intent"
+    ],
+    "source_index": 12,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "navigator-does-not-touch-detached-controller",
+    "status": "prepared",
+    "prs": [
+      "chat-cancel-pending-locator",
+      "chat-detached-scroll-navigator"
+    ],
+    "source_index": 13,
+    "baseline_old_matches": true,
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "bind-reply-before-deferred-send",
+    "status": "prepared",
+    "prs": [
+      "chat-reply-ownership"
+    ],
+    "source_index": 14,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "send-captured-reply",
+    "status": "prepared",
+    "prs": [
+      "chat-reply-ownership"
+    ],
+    "source_index": 15,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "recover-failed-send-draft",
+    "status": "prepared",
+    "prs": [
+      "chat-unsent-draft-recovery"
+    ],
+    "source_index": 16,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "speech-owns-original-editor",
+    "status": "prepared",
+    "prs": [
+      "chat-speech-draft-ownership"
+    ],
+    "source_index": 17,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "speech-does-not-overwrite-new-draft",
+    "status": "prepared",
+    "prs": [
+      "chat-speech-draft-ownership"
+    ],
+    "source_index": 18,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "bind-reply-before-submit-hook",
+    "status": "prepared",
+    "prs": [
+      "chat-hook-draft-ownership"
+    ],
+    "source_index": 19,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "preserve-new-reply-after-send-completes",
+    "status": "prepared",
+    "prs": [
+      "chat-reply-ownership"
+    ],
+    "source_index": 20,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "speech-captures-recording-start-owner",
+    "status": "prepared",
+    "prs": [
+      "chat-speech-draft-ownership"
+    ],
+    "source_index": 21,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "speech-retains-recording-start-owner",
+    "status": "prepared",
+    "prs": [
+      "chat-speech-draft-ownership"
+    ],
+    "source_index": 22,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "unique-markdown-paragraph-break-keys",
+    "status": "prepared",
+    "prs": [
+      "chat-markdown-paragraph-keys"
+    ],
+    "source_index": 23,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "retain-trailing-markdown-gap-regression",
+    "status": "prepared",
+    "prs": [
+      "chat-markdown-paragraph-keys"
+    ],
+    "source_index": 24,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "send-explicit-attachment-snapshot",
+    "status": "prepared",
+    "prs": [
+      "chat-queued-text-attachments",
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 25,
+    "baseline_old_matches": true,
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "respect-explicit-send-attachments",
+    "status": "prepared",
+    "prs": [
+      "chat-queued-text-attachments",
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 26,
+    "baseline_old_matches": true,
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "queued-text-does-not-steal-current-draft-attachments",
+    "status": "prepared",
+    "prs": [
+      "chat-queued-text-attachments"
+    ],
+    "source_index": 27,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "restore-dequeued-message-when-submit-hook-fails",
+    "status": "prepared",
+    "prs": [
+      "chat-queue-hook-restoration"
+    ],
+    "source_index": 28,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "chat-fixes.json",
+    "source_spec": "preserve-visible-reply-after-stream-failure",
+    "status": "prepared",
+    "prs": [
+      "chat-preserve-partial-answer"
+    ],
+    "source_index": 29,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/first_chat_draft.json",
+    "source_spec": "preserve-first-draft-across-empty-embedded-chat-surfaces",
+    "status": "prepared",
+    "prs": [
+      "chat-initial-conversation"
+    ],
+    "source_index": 0,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "group-send-keeps-explicit-conversation-owner",
+    "status": "prepared",
+    "prs": [
+      "chat-group-owner-routing"
+    ],
+    "source_index": 0,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "explicit-chat-route-still-runs-character-group-orchestration",
+    "status": "prepared",
+    "prs": [
+      "chat-group-owner-routing"
+    ],
+    "source_index": 1,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "resolve-group-from-owning-chat-before-global-selection",
+    "status": "prepared",
+    "prs": [
+      "chat-group-owner-routing"
+    ],
+    "source_index": 2,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "capture-submit-attachments-before-async-hook",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 3,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "attachment-edits-during-hook-retain-new-draft",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 4,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "consumed-hook-clears-only-its-own-attachments",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 5,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "pass-captured-submit-attachments-to-layout",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 6,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "layout-send-retains-submit-attachment-snapshot",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 7,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "deferred-send-retains-submit-attachment-snapshot",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 8,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "frame-callback-uses-submitted-attachments",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 9,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "send-never-rereads-another-drafts-attachments",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 10,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "accepted-send-preserves-attachments-added-while-awaiting",
+    "status": "prepared",
+    "prs": [
+      "chat-submit-attachment-ownership"
+    ],
+    "source_index": 11,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "share-cancellation-generation-across-chat-runtime-clones",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 12,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "initialize-chat-cancellation-generations",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 13,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "retain-cancellation-generations-in-delegate-clones",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 14,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "expose-cancellation-generation-to-group-orchestration",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 15,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "cancel-group-planning-before-a-stream-exists",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 16,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "clear-planning-ui-when-no-member-stream-needs-cancellation",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 17,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "capture-group-cancellation-generation-before-planning",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 18,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "cancelled-planner-does-not-start-role-responses",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 19,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "stopped-group-never-starts-the-next-role",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 20,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "group-stop-or-failure-ends-pending-role-sequence",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 21,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "group-completion-wait-observes-stop-and-error-immediately",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 22,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "avoid-three-minute-wait-after-group-cancellation",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 23,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "stopped-group-does-not-launch-a-summary",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 24,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "bind-group-planner-to-the-owning-chat-cancellation",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 25,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "receive-group-planning-cancellation-owner",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 26,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "cancel-underlying-group-planning-request-and-stream",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 27,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "observe-group-planner-stop-without-a-global-request-token",
+    "status": "prepared",
+    "prs": [
+      "chat-group-cancellation"
+    ],
+    "source_index": 28,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/major_experience.json",
+    "source_spec": "release-core-command-lock-after-persisting-group-user-message",
+    "status": "prepared",
+    "prs": [
+      "chat-group-command-lock"
+    ],
+    "source_index": 29,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "record-whether-rejected-send-already-persisted-user-message",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 0,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "classify-pre-accept-send-errors-and-clear-failed-worker-state",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection",
+      "chat-worker-startup-cleanup"
+    ],
+    "source_index": 1,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。",
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "regeneration-retains-provider-error-contract",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 2,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "reject-unsaved-input-without-requeueing-already-stored-messages",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 3,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "propagate-send-rejection-through-coordination",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 4,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "group-role-send-stops-immediately-on-rejection",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 5,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "group-role-rejection-does-not-wait-for-nonexistent-turn",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 6,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "background-continuation-uses-published-error-state",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 7,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "report-unsaved-send-rejection-to-flutter-and-tools",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 8,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "resume-propagates-send-result-resume",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 9,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "resume-propagates-send-result-resumeFromRouteContext",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 10,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "rewind-resend-reports-rejected-input",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 11,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "tools-return-actual-message-acceptance",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 12,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "tools-preserve-send-rejection-after-observing-stats",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 13,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "cli-propagates-unaccepted-message-errors",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 14,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "queue-edit-captures-existing-editor-value",
+    "status": "prepared",
+    "prs": [
+      "chat-queue-edit-draft"
+    ],
+    "source_index": 15,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "queue-edit-never-overwrites-text-entered-while-waiting",
+    "status": "prepared",
+    "prs": [
+      "chat-queue-edit-draft"
+    ],
+    "source_index": 16,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "restore-unaccepted-queued-input-and-do-not-drop-empty-hook-replacements",
+    "status": "prepared",
+    "prs": [
+      "chat-queue-hook-restoration",
+      "chat-send-rejection"
+    ],
+    "source_index": 17,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。",
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "restore-rejected-input-without-discarding-a-newer-draft",
+    "status": "prepared",
+    "prs": [
+      "chat-unsent-draft-recovery"
+    ],
+    "source_index": 18,
+    "baseline_old_matches": true
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "retain-draft-if-screen-closes-before-deferred-send",
+    "status": "prepared",
+    "prs": [
+      "chat-unsent-draft-recovery"
+    ],
+    "source_index": 19,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "recover-rejected-text-even-when-next-draft-is-not-empty",
+    "status": "prepared",
+    "prs": [
+      "chat-unsent-draft-recovery"
+    ],
+    "source_index": 20,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  },
+  {
+    "source_file": "patches/zz_chat_followup.json",
+    "source_spec": "attachment-cleanup-error-is-not-an-unaccepted-message",
+    "status": "prepared",
+    "prs": [
+      "chat-unsent-draft-recovery",
+      "chat-accepted-attachment-cleanup",
+      "chat-send-rejection"
+    ],
+    "source_index": 21,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。",
+    "mapping_note": "该规格包含多个问题的共用字段/边界，或其最小接口改动是多个独立修复的必要配套；按每个 PR 对应的单一缺陷拆分并注明。"
+  },
+  {
+    "source_file": "patches/zzzz_queue_rejection_pause.json",
+    "source_spec": "pause-queue-before-returning-unaccepted-send-error",
+    "status": "prepared",
+    "prs": [
+      "chat-send-rejection"
+    ],
+    "source_index": 0,
+    "baseline_old_matches": false,
+    "adaptation": "后续规格的 old 含其他增强上下文；只将其对应缺陷的必要增量合入上述独立 pristine PR，未把增强特有状态单列为原版缺陷。"
+  }
+]

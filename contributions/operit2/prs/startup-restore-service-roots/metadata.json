@@ -1,0 +1,31 @@
+{
+  "slug": "startup-restore-service-roots",
+  "title": "fix(android): restore storage roots before service runtime startup",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/startup-restore-service-roots",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
+    "apps/flutter/app/android/app/src/main/kotlin/app/operit/OperitCoreService.kt"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/startup.json",
+      "index": 11,
+      "name": "restore-persisted-roots-before-native-runtime-start"
+    },
+    {
+      "file": "patches/startup.json",
+      "index": 12,
+      "name": "restore-selected-identity-on-service-process-recreation"
+    },
+    {
+      "file": "patches/startup.json",
+      "index": 13,
+      "name": "cleared-data-service-waits-for-normal-onboarding"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

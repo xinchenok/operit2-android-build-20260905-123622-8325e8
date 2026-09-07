@@ -1,0 +1,16 @@
+{
+  "slug": "provider-claude-system-cache-boundary",
+  "title": "fix(claude): use one system prompt cache breakpoint",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/provider-claude-system-cache-boundary",
+  "status": "prepared",
+  "paths": [
+    "core/crates/provider/services/src/chat/llmprovider/ClaudeProvider.rs"
+  ],
+  "source_specs": [
+    "single_system_cache_boundary"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

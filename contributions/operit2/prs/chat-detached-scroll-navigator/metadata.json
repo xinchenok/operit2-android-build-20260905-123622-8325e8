@@ -1,0 +1,16 @@
+{
+  "slug": "chat-detached-scroll-navigator",
+  "title": "fix(chat): guard detached scroll controllers",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-detached-scroll-navigator",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:navigator-does-not-touch-detached-controller"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

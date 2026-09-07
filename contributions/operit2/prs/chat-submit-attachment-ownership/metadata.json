@@ -1,0 +1,27 @@
+{
+  "slug": "chat-submit-attachment-ownership",
+  "title": "fix(chat): preserve submitted attachment ownership",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-submit-attachment-ownership",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:send-explicit-attachment-snapshot",
+    "chat-fixes.json:respect-explicit-send-attachments",
+    "patches/major_experience.json:capture-submit-attachments-before-async-hook",
+    "patches/major_experience.json:attachment-edits-during-hook-retain-new-draft",
+    "patches/major_experience.json:consumed-hook-clears-only-its-own-attachments",
+    "patches/major_experience.json:pass-captured-submit-attachments-to-layout",
+    "patches/major_experience.json:layout-send-retains-submit-attachment-snapshot",
+    "patches/major_experience.json:deferred-send-retains-submit-attachment-snapshot",
+    "patches/major_experience.json:frame-callback-uses-submitted-attachments",
+    "patches/major_experience.json:send-never-rereads-another-drafts-attachments",
+    "patches/major_experience.json:accepted-send-preserves-attachments-added-while-awaiting"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

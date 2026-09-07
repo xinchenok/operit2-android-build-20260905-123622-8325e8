@@ -1,0 +1,16 @@
+{
+  "slug": "plugin-lifecycle-replay-lock",
+  "title": "fix(plugins): replay lifecycle hooks outside package manager locks",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/plugin-lifecycle-replay-lock",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgAppLifecycleHookBridge.rs"
+  ],
+  "source_specs": [
+    "legacy-replay-hooks-after-manager-unlocks"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

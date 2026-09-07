@@ -1,0 +1,125 @@
+diff --git a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+--- a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
++++ b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+@@ -428,16 +428,18 @@
+             .selectedModelId
+             .clone()
+             .ok_or_else(|| "Operit1 快照里的聊天模型索引没有对应模型".to_string())?;
+-        let modelConfig =
+-            self.importModelConfigsFromParsed(&parsed, selected.configId.clone(), selectedModelId, true)?;
+-        let fileImportPlan = SnapshotFileImportPlan::new();
++        let mut fileImportPlan = SnapshotFileImportPlan::new();
++        let mut modelConfig = self.importModelConfigsFromParsed(
++            &parsed, selected.configId.clone(), selectedModelId, true,
++            Some(&mut fileImportPlan.providerIds),
++        )?;
+         publishOperit1SnapshotImportProgress(Operit1SnapshotImportProgress::stage(
+             "structured_preferences",
+             "迁移角色和语音",
+             "正在写入角色卡、提示词、角色组和 TTS 配置。",
+             0.36,
+         ));
+-        self.importStructuredPreferences(&parsed, &fileImportPlan)?;
++        modelConfig.skippedFields.extend(self.importStructuredPreferences(&parsed, &fileImportPlan)?);
+         self.importUserMarkdownPreferences(&parsed)?;
+         publishOperit1SnapshotImportProgress(Operit1SnapshotImportProgress::stage(
+             "preferences",
+@@ -495,7 +497,8 @@
+         &self,
+         parsed: &ParsedOperit1Snapshot,
+         fileImportPlan: &SnapshotFileImportPlan,
+-    ) -> Result<(), String> {
++    ) -> Result<Vec<String>, String> {
++        let mut notes = Vec::new();
+         let paths = self.paths.clone();
+         let promptTags = buildOperit2PromptTags(parsed)?;
+         if !promptTags.is_empty()
+@@ -505,6 +508,12 @@
+                 .contains_key(ENTRY_CHARACTER_CARDS)
+         {
+             let cards = buildOperit2CharacterCards(parsed, fileImportPlan)?;
++            for card in &cards {
++                if card.chatModelBindingMode == CharacterCardChatModelBindingMode::FIXED_MODEL
++                    && (card.chatProviderId.is_none() || card.chatModelId.is_none()) {
++                    notes.push(format!("角色「{}」的旧固定模型无法对应；已保留角色和原始配置，请重新选择模型，不会自动改用其他供应商", card.name));
++                }
++            }
+             let backup = serde_json::json!({
+                 "characterCards": cards,
+                 "promptTags": promptTags,
+@@ -532,7 +541,7 @@
+             let manager = TtsConfigManager::new(paths);
+             importOperit1TtsConfig(&manager, config)?;
+         }
+-        Ok(())
++        Ok(notes)
+     }
+ 
+     #[allow(non_snake_case)]
+@@ -587,7 +596,7 @@
+         configId: String,
+         modelId: String,
+     ) -> Result<Operit1ModelConfigImportResult, String> {
+-        self.importModelConfigsFromParsed(parsed, configId, modelId, false)
++        self.importModelConfigsFromParsed(parsed, configId, modelId, false, None)
+     }
+ 
+     /// Imports providers as new profiles and preserves every existing provider and its API keys.
+@@ -597,6 +606,7 @@
+         configId: String,
+         modelId: String,
+         importAll: bool,
++        importedProviderIds: Option<&mut HashMap<String, String>>,
+     ) -> Result<Operit1ModelConfigImportResult, String> {
+         let selectedConfig = parsed.configById(&configId)?;
+         if !splitModelIds(&selectedConfig.modelName).contains(&modelId) {
+@@ -704,6 +714,9 @@
+             )?;
+         }
+         functionalManager.saveFunctionModelBinding(bindings).map_err(|error| error.to_string())?;
++        if let Some(ids) = importedProviderIds {
++            ids.extend(sourceProviders.iter().map(|(source, provider)| (source.clone(), provider.id.clone())));
++        }
+         Ok(Operit1ModelConfigImportResult {
+             providerId: selected.as_ref().map(|provider| provider.id.clone()).unwrap_or_default(),
+             providerTypeId: selected.as_ref().map(|provider| provider.providerTypeId.clone())
+@@ -1693,6 +1706,7 @@
+ struct SnapshotFileImportPlan {
+     importedFilesRoot: String,
+     importedExternalFilesRoot: String,
++    providerIds: HashMap<String, String>,
+ }
+ 
+ #[derive(Clone, Debug, PartialEq, Eq)]
+@@ -1726,6 +1740,7 @@
+         Self {
+             importedFilesRoot: RUNTIME_IMPORTED_OPERIT1_FILES_DIR_PATH.to_string(),
+             importedExternalFilesRoot: RUNTIME_IMPORTED_OPERIT1_EXTERNAL_FILES_DIR_PATH.to_string(),
++            providerIds: HashMap::new(),
+         }
+     }
+ 
+@@ -2054,7 +2069,13 @@
+             preferences,
+             &format!("character_card_{id}_chat_model_binding_mode"),
+         )?;
+-        let chatModelId = resolveOperit1CharacterChatModelId(parsed, preferences, &id)?;
++        let mut chatModelId = resolveOperit1CharacterChatModelId(parsed, preferences, &id)
++            .unwrap_or_else(|error| { AppLogger::w("Operit1SnapshotImport", &error); None });
++        let chatProviderId = if chatModelBindingMode.as_deref() == Some("FIXED_CONFIG") {
++            optionalPreferenceString(preferences, &format!("character_card_{id}_chat_model_config_id"))?
++                .and_then(|source| fileImportPlan.providerIds.get(&source).cloned())
++        } else { None };
++        if chatProviderId.is_none() { chatModelId = None; }
+         let memoryBinding = resolveOperit1CharacterMemoryBinding(parsed, preferences, &id)?;
+         cards.push(CharacterCard {
+             id: id.clone(),
+@@ -2105,7 +2126,7 @@
+                 CharacterCardChatModelBindingMode::FOLLOW_GLOBAL.to_string()
+             },
+             chatModelId,
+-            chatProviderId: None,
++            chatProviderId,
+             ttsConfigId: None,
+             memoryBindingMode: memoryBinding.memoryBindingMode,
+             sharedMemoryId: memoryBinding.sharedMemoryId,

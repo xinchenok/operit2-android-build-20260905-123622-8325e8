@@ -1,0 +1,18 @@
+{
+  "slug": "chat-group-owner-routing",
+  "title": "fix(chat): resolve group orchestration from the target conversation",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-group-owner-routing",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs"
+  ],
+  "source_specs": [
+    "group-send-keeps-explicit-conversation-owner",
+    "explicit-chat-route-still-runs-character-group-orchestration",
+    "resolve-group-from-owning-chat-before-global-selection"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

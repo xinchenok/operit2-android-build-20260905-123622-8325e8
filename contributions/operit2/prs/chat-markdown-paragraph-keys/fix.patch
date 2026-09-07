@@ -1,0 +1,30 @@
+diff --git a/apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart b/apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart
+--- a/apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart
++++ b/apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart
+@@ -344,8 +344,8 @@
+         return;
+       }
+       widgets.add(
+-        const SizedBox(
+-          key: ValueKey<String>('markdown-paragraph-break'),
++        SizedBox(
++          key: ValueKey<String>('markdown-paragraph-break-${widget.nodeKey}-$index'),
+           height: _markdownParagraphBreakHeight,
+         ),
+       );
+diff --git a/apps/flutter/app/test/chat_area_streaming_cursor_test.dart b/apps/flutter/app/test/chat_area_streaming_cursor_test.dart
+--- a/apps/flutter/app/test/chat_area_streaming_cursor_test.dart
++++ b/apps/flutter/app/test/chat_area_streaming_cursor_test.dart
+@@ -248,7 +248,11 @@
+     await tester.pump(const Duration(milliseconds: 250));
+ 
+     expect(
+-      find.byKey(const ValueKey<String>('markdown-paragraph-break')),
++      find.byWidgetPredicate((widget) {
++        final key = widget.key;
++        return key is ValueKey<String> &&
++            key.value.startsWith('markdown-paragraph-break-');
++      }),
+       findsNothing,
+     );
+   });

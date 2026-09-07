@@ -1,0 +1,138 @@
+[
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 0,
+    "package": "file_converter",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 1,
+    "package": "file_converter",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 2,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 3,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 4,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 5,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 6,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 7,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 8,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 9,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 10,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 11,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "legacy-tools/package-patches.json",
+    "index": 12,
+    "package": "operit_editor",
+    "status": "excluded_not_in_target",
+    "reason": "修改新导入的 Operit1 工具包；Operit2 的 7fec 源码不含该旧包文件，不能作为该仓库既有 bug 独立提交。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/apktool/src/packages/apk_reverse.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/deepsearching/src/operit2-host.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/deepsearching/src/planning/plan-mode-manager.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/deepsearching/src/planning/task-executor.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/deepsearching/src/plugin/deep-search-plugin.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/deepsearching/src/prompt-turns.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/message_insert/src/main.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/message_insert/src/shared.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  },
+  {
+    "file": "enhancements/legacy-native/source-overrides/examples/qqbot/src/shared/qqbot_auto_reply.ts",
+    "status": "excluded_not_in_target",
+    "reason": "Operit1 旧包源码覆盖/兼容适配；目标 Operit2 基线没有相应旧包文件。"
+  }
+]

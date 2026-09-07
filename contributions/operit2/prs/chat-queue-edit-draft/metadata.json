@@ -1,0 +1,17 @@
+{
+  "slug": "chat-queue-edit-draft",
+  "title": "fix(chat): preserve edits while loading queued input",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-queue-edit-draft",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
+  ],
+  "source_specs": [
+    "patches/zz_chat_followup.json:queue-edit-captures-existing-editor-value",
+    "patches/zz_chat_followup.json:queue-edit-never-overwrites-text-entered-while-waiting"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

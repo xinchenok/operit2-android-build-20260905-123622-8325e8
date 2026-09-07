@@ -1,0 +1,18 @@
+{
+  "slug": "terminal-execute-complete-scripts",
+  "title": "fix(android): execute multiline terminal commands as one script",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/terminal-execute-complete-scripts",
+  "status": "prepared",
+  "paths": [
+    "hosts/android/src/terminal.rs"
+  ],
+  "source_specs": [
+    "patches/terminal.json:android-terminal-command-script-path-type",
+    "patches/terminal.json:android-terminal-run-whole-script-and-cleanup-every-outcome",
+    "patches/terminal.json:android-terminal-temp-script-preserves-shell-environment"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+}

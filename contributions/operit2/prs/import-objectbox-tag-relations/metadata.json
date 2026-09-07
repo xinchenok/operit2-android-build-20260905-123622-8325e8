@@ -1,0 +1,25 @@
+{
+  "slug": "import-objectbox-tag-relations",
+  "title": "fix(import): decode standalone ObjectBox memory tag relations",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-objectbox-tag-relations",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 6,
+      "name": "objectbox-document-and-property-entity-keys"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 19,
+      "name": "decode-real-objectbox-standalone-memory-tag-relations"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

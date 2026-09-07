@@ -1,0 +1,40 @@
+{
+  "slug": "import-stale-character-models",
+  "title": "fix(import): retain characters with stale fixed model selections",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-stale-character-models",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzz_character_model_binding.json",
+      "index": 23,
+      "name": "Return role binding warnings to the completed import report"
+    },
+    {
+      "file": "patches/zzz_character_model_binding.json",
+      "index": 24,
+      "name": "Collect unavailable fixed role binding warnings during structured import"
+    },
+    {
+      "file": "patches/zzz_character_model_binding.json",
+      "index": 25,
+      "name": "Keep imported roles and report unresolved fixed models"
+    },
+    {
+      "file": "patches/zzz_character_model_binding.json",
+      "index": 26,
+      "name": "Finish structured import with precise role migration notes"
+    },
+    {
+      "file": "patches/zzz_character_model_binding.json",
+      "index": 27,
+      "name": "Keep old fixed config identity instead of resolving by globally ambiguous model name"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

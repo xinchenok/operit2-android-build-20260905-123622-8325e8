@@ -1,0 +1,18 @@
+{
+  "slug": "terminal-named-creation-race",
+  "title": "fix(android): serialize creation of named terminal sessions",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/terminal-named-creation-race",
+  "status": "prepared",
+  "paths": [
+    "hosts/android/src/terminal.rs"
+  ],
+  "source_specs": [
+    "patches/terminal.json:android-terminal-serialize-named-session-creation",
+    "patches/terminal.json:android-terminal-lock-visible-session-creation",
+    "patches/terminal.json:android-terminal-lock-hidden-session-creation"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+}

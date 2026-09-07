@@ -1,0 +1,410 @@
+[
+  {
+    "file": "patches/terminal.json",
+    "index": 0,
+    "name": "android-terminal-proot-compat-environment",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-proot-environment"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 1,
+    "name": "android-common-proot-compat-environment",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-proot-environment"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 2,
+    "name": "android-terminal-drop-do-not-signal-reaped-pid",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cleanup-failed-command-execution",
+      "terminal-reaped-pid",
+      "terminal-retire-unresponsive-timeouts",
+      "terminal-stale-session"
+    ],
+    "reason": "此片段作为原始问题修复或其他独立 PR 的必要安全前提重复包含；各 PR 的中文说明标明主问题与依赖。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 3,
+    "name": "android-terminal-reader-stop-before-fd-reuse",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-descriptor-lifetime"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 4,
+    "name": "android-terminal-writer-retain-fd-ownership",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cancel-outside-global-state-lock",
+      "terminal-descriptor-lifetime",
+      "terminal-input-global-lock"
+    ],
+    "reason": "此片段作为原始问题修复或其他独立 PR 的必要安全前提重复包含；各 PR 的中文说明标明主问题与依赖。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 5,
+    "name": "android-terminal-startup-failure-stop-reader",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-descriptor-lifetime"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 6,
+    "name": "android-terminal-check-session-process-before-reuse",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-stale-session"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 7,
+    "name": "android-terminal-recreate-exited-visible-session",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-stale-session"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 8,
+    "name": "android-terminal-recreate-exited-hidden-executor",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-stale-session"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 9,
+    "name": "android-terminal-prepare-exec-pointers-before-fork",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-fork-child"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 10,
+    "name": "android-terminal-no-child-heap-allocation-before-exec",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-fork-child"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 11,
+    "name": "android-terminal-collect-bind-candidates-before-probing",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cold-start"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 12,
+    "name": "android-terminal-probe-bind-set-once-with-existing-fallback",
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cold-start"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 13,
+    "name": "android-terminal-allow-cold-proot-startup-deadline",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cold-start"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 14,
+    "name": "android-terminal-command-script-path-type",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-execute-complete-scripts"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 15,
+    "name": "android-terminal-serialize-named-session-creation",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-named-creation-race"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 16,
+    "name": "android-terminal-lock-visible-session-creation",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-named-creation-race"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 17,
+    "name": "android-terminal-lock-hidden-session-creation",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-named-creation-race"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 18,
+    "name": "android-terminal-per-session-command-ownership",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-serialize-session-commands"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 19,
+    "name": "android-terminal-initialize-command-ownership",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-serialize-session-commands"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 20,
+    "name": "android-terminal-run-whole-script-and-cleanup-every-outcome",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cancel-outside-global-state-lock",
+      "terminal-cleanup-failed-command-execution",
+      "terminal-execute-complete-scripts",
+      "terminal-retire-unresponsive-timeouts",
+      "terminal-serialize-session-commands"
+    ],
+    "reason": "原片段混合多个命令执行问题，按并发所有权、多行命令、失败清理、无响应超时、取消等待锁范围拆开，未将整段替换塞入单一 PR。",
+    "subscopes": {
+      "terminal-serialize-session-commands": "acquire ownership before clearing, writing, collecting, and cancelling",
+      "terminal-execute-complete-scripts": "whole-script submission and echoed wrapper removal",
+      "terminal-cleanup-failed-command-execution": "clear running state and remove uncertain session after write, collection, or cancellation errors",
+      "terminal-retire-unresponsive-timeouts": "retire session when cancellation returns no prompt or fails",
+      "terminal-cancel-outside-global-state-lock": "move cancellation wait outside state mutex"
+    }
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 21,
+    "name": "android-terminal-temp-script-preserves-shell-environment",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-execute-complete-scripts"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 22,
+    "name": "android-terminal-cancel-without-blocking-all-session-state",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cancel-outside-global-state-lock"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal.json",
+    "index": 23,
+    "name": "android-system-shell-preserve-real-command-exit-status",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-preserve-system-shell-exit-status"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 0,
+    "name": "android-pty-write-release-global-session-lock",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-input-global-lock"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 1,
+    "name": "android-pty-input-release-global-session-lock",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-input-global-lock"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 2,
+    "name": "android-pty-input-use-owned-writer-handle",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-input-global-lock"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 3,
+    "name": "android-pty-retry-partial-writes-without-locking-reader",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cancel-outside-global-state-lock",
+      "terminal-descriptor-lifetime",
+      "terminal-input-global-lock"
+    ],
+    "reason": "此片段作为原始问题修复或其他独立 PR 的必要安全前提重复包含；各 PR 的中文说明标明主问题与依赖。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 4,
+    "name": "android-pty-master-nonblocking-before-reader-start",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cancel-outside-global-state-lock",
+      "terminal-descriptor-lifetime",
+      "terminal-input-global-lock"
+    ],
+    "reason": "此片段作为原始问题修复或其他独立 PR 的必要安全前提重复包含；各 PR 的中文说明标明主问题与依赖。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 5,
+    "name": "android-pty-nonblocking-read-handle-transient-errors",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cancel-outside-global-state-lock",
+      "terminal-descriptor-lifetime",
+      "terminal-input-global-lock"
+    ],
+    "reason": "此片段作为原始问题修复或其他独立 PR 的必要安全前提重复包含；各 PR 的中文说明标明主问题与依赖。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 6,
+    "name": "android-pty-nonblocking-write-handle-backpressure",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-cancel-outside-global-state-lock",
+      "terminal-descriptor-lifetime",
+      "terminal-input-global-lock"
+    ],
+    "reason": "此片段作为原始问题修复或其他独立 PR 的必要安全前提重复包含；各 PR 的中文说明标明主问题与依赖。"
+  },
+  {
+    "file": "patches/terminal_followup.json",
+    "index": 7,
+    "name": "android-pty-bound-full-command-output-to-avoid-app-oom",
+    "path": "hosts/android/src/terminal.rs",
+    "classification": "upstream_fix",
+    "status": "prepared",
+    "prs": [
+      "terminal-command-output-cap"
+    ],
+    "reason": "从现有增强补丁按单个问题抽取或适配到上游固定基线；每个 PR 独立应用检查通过。"
+  }
+]

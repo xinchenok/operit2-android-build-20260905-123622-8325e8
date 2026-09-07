@@ -1,0 +1,20 @@
+{
+  "slug": "import-unknown-provider-preview",
+  "title": "fix(import): preview unsupported legacy providers",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-unknown-provider-preview",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/operit1_import.json",
+      "index": 14,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 13"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

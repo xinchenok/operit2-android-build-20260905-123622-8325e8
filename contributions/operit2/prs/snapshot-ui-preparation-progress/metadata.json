@@ -1,0 +1,43 @@
+{
+  "slug": "snapshot-ui-preparation-progress",
+  "title": "fix(flutter): show snapshot preparation progress before import preview",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/snapshot-ui-preparation-progress",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
+    "apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart",
+    "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
+    "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 1,
+      "name": "snapshot-upload-visible-read-progress"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 2,
+      "name": "onboarding-shared-snapshot-preparation-import"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 3,
+      "name": "onboarding-show-file-preparation-before-picker"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 4,
+      "name": "settings-shared-snapshot-preparation-import"
+    },
+    {
+      "file": "patches/zzzzzzzzzzz_snapshot_preparation.json",
+      "index": 5,
+      "name": "settings-show-file-preparation-before-picker"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

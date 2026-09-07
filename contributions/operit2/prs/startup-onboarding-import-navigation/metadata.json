@@ -1,0 +1,75 @@
+{
+  "slug": "startup-onboarding-import-navigation",
+  "title": "fix(flutter): keep onboarding open while a snapshot import is pending",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/startup-onboarding-import-navigation",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 0,
+      "name": "onboarding-import-navigation-state"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 1,
+      "name": "onboarding-import-forward-guard"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 2,
+      "name": "onboarding-import-dispose-ownership"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 3,
+      "name": "onboarding-import-selection-guard"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 6,
+      "name": "onboarding-import-chrome-guard"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 7,
+      "name": "onboarding-import-nullable-back-button"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 8,
+      "name": "onboarding-import-system-back-wrapper-start"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 9,
+      "name": "onboarding-import-system-back-wrapper-end"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 10,
+      "name": "onboarding-import-explicit-action-label"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 14,
+      "name": "onboarding-import-preview-is-not-commit"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 15,
+      "name": "onboarding-import-explicit-instructions"
+    },
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 4,
+      "name": "onboarding-import-commit-and-open-conversation"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

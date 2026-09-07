@@ -1,0 +1,35 @@
+{
+  "slug": "import-settings-gemini-search",
+  "title": "fix(import): preserve Gemini Google Search settings",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-settings-gemini-search",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 3,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (1)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 4,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (2)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 6,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (4)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 10,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (8)"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

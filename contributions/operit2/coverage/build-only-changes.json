@@ -1,0 +1,22 @@
+[
+  {
+    "area": "Windows 短路径、下载重试、TypeScript PATH、运行库/Web/工具链缓存和预检",
+    "status": "excluded_wrapper_only",
+    "reason": "实际修改位于 xinchenok/operit2-android-cx 的构建驱动/工作流；不是 AAswordman/Operit2 源码补丁。"
+  },
+  {
+    "area": "固定个人签名、ARM64 限定、双通道发布、一键更新器",
+    "status": "excluded_feature",
+    "reason": "个人发行和构建入口配置，不应以作者上游的 bug 修复提交。"
+  },
+  {
+    "area": "dynamic_color 1.9.0 AGP8 兼容补丁",
+    "status": "excluded_other_repository",
+    "reason": "修改下载依赖的 Gradle 脚本，取自该依赖自身上游；不属于 Operit2 的受版本控制源码。"
+  },
+  {
+    "area": "工具包完整字节校验、SHA-256、APK 签名检查",
+    "status": "excluded_wrapper_only",
+    "reason": "增强个人构建的产物验证；旧 APK 内置工具包实际完整，不能编造上游漏包缺陷。"
+  }
+]

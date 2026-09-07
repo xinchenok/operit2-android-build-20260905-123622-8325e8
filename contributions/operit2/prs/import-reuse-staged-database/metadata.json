@@ -1,0 +1,45 @@
+{
+  "slug": "import-reuse-staged-database",
+  "title": "fix(import): reuse the staged chat database for token usage",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-reuse-staged-database",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 4,
+      "name": "import-chat-and-ledger-one-database-staging"
+    },
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 5,
+      "name": "import-chat-return-ledger-counts"
+    },
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 6,
+      "name": "import-chat-write-reserve-ledger-progress"
+    },
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 7,
+      "name": "import-empty-chat-reserve-ledger-progress"
+    },
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 8,
+      "name": "import-chat-reuse-connection-for-ledger"
+    },
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 9,
+      "name": "import-ledger-shared-connection-and-visible-counts"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "chat-worker-startup-cleanup",
+  "title": "fix(chat): clean up failed response workers",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-worker-startup-cleanup",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
+  ],
+  "source_specs": [
+    "patches/zz_chat_followup.json:classify-pre-accept-send-errors-and-clear-failed-worker-state"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

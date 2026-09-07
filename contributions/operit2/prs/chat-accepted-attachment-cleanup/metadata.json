@@ -1,0 +1,16 @@
+{
+  "slug": "chat-accepted-attachment-cleanup",
+  "title": "fix(chat): separate attachment cleanup from send errors",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-accepted-attachment-cleanup",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
+  ],
+  "source_specs": [
+    "patches/zz_chat_followup.json:attachment-cleanup-error-is-not-an-unaccepted-message"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

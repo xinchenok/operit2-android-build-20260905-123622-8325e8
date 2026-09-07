@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-preserve-system-shell-exit-status",
+  "title": "fix(android): preserve system shell command exit status",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/terminal-preserve-system-shell-exit-status",
+  "status": "prepared",
+  "paths": [
+    "hosts/android/src/terminal.rs"
+  ],
+  "source_specs": [
+    "patches/terminal.json:android-system-shell-preserve-real-command-exit-status"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "import-reply-variants",
+  "title": "fix(chat): preserve surviving reply variants after deletion",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-reply-variants",
+  "status": "prepared",
+  "paths": [
+    "core/crates/persistence/store/src/dao/MessageVariantDao.rs",
+    "core/crates/persistence/store/src/repository/ChatHistoryManager.rs",
+    "core/crates/runtime/application/src/services/core/ChatHistoryDelegate.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "chat-fixes.json",
+      "index": 30,
+      "name": "Keep remaining AI answer variants and their content contiguous after deletion"
+    },
+    {
+      "file": "chat-fixes.json",
+      "index": 31,
+      "name": "Avoid deleting the surviving variant content after indices have been compacted"
+    },
+    {
+      "file": "chat-fixes.json",
+      "index": 32,
+      "name": "Never overwrite an existing AI answer when legacy variant indices contain gaps"
+    },
+    {
+      "file": "chat-fixes.json",
+      "index": 33,
+      "name": "Reload surviving answer content instead of relabelling the deleted answer as base"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

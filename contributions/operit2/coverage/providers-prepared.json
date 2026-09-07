@@ -1,0 +1,370 @@
+[
+  {
+    "source_file": "patches/legacy_claude_cache.json",
+    "source_name": "single_system_cache_boundary",
+    "status": "prepared",
+    "prs": [
+      "provider-claude-system-cache-boundary"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-replay-hooks-after-manager-unlocks",
+    "status": "prepared",
+    "prs": [
+      "plugin-lifecycle-replay-lock"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Add optional provider identity to native and Tavern character card schemas (2)",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Add optional provider identity to native and Tavern character card schemas (1)",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Read stored character provider identity",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Preserve provider identity in backup import and Tavern export (2)",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Preserve provider identity in backup import and Tavern export (1)",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Restore provider identity from Tavern payload",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Default character construction has no provider binding",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Persist or remove the actual character provider identity",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Clear provider binding on reset",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Delete stored provider identity with its character",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "CLI-created characters have optional provider binding",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "CLI can preserve and edit the provider/model pair",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Advertise supported provider field in CLI errors",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Resolve character provider and model together during regeneration",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Expose actual role model binding through runtime support",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Resolve fixed role requests without selecting an arbitrary duplicate provider",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Honor fixed character model for ordinary CHAT requests and runtime capabilities",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Editor tracks selected provider alongside model",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Editor loads provider binding",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Save selected provider identity",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Model selector receives the full current binding",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Model selection saves the provider actually clicked",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Display fixed model using provider identity",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Clear both fixed binding members when following global",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Require selector provider argument",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Store selector provider identity",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Forward selected provider through dialog construction",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Retain selector current provider",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Do not mark multiple same-named provider models selected",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Match role display model by both provider and model or unique legacy fallback",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Character duplication retains supplier binding",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "New editor card starts with no provider binding",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/zzz_character_model_binding.json",
+    "source_name": "Use fixed role provider capabilities when preparing image audio and video attachments",
+    "status": "prepared",
+    "prs": [
+      "model-fixed-character-binding"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-bind-tool-command-executor",
+    "status": "prepared",
+    "prs": [
+      "plugin-flutter-core-command-executor"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-share-existing-command-services",
+    "status": "prepared",
+    "prs": [
+      "plugin-flutter-core-command-executor"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-retain-shared-command-context",
+    "status": "prepared",
+    "prs": [
+      "plugin-flutter-core-command-executor"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-initialize-shared-command-context",
+    "status": "prepared",
+    "prs": [
+      "plugin-flutter-core-command-executor"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-bind-existing-application-executor",
+    "status": "prepared",
+    "prs": [
+      "plugin-flutter-core-command-executor"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-enable-flutter-plugin-core-commands",
+    "status": "prepared",
+    "prs": [
+      "plugin-flutter-core-command-executor"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-defer-startup-hook-initialization",
+    "status": "prepared",
+    "prs": [
+      "plugin-startup-after-core-node"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-dispatch-startup-after-host-binding",
+    "status": "prepared",
+    "prs": [
+      "plugin-startup-after-core-node"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-expose-bound-startup-event",
+    "status": "prepared",
+    "prs": [
+      "plugin-startup-after-core-node"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-flutter-initialize-before-startup-hooks",
+    "status": "prepared",
+    "prs": [
+      "plugin-startup-after-core-node"
+    ]
+  },
+  {
+    "source_file": "patches/legacy_native.json",
+    "source_name": "legacy-flutter-startup-after-core-node",
+    "status": "prepared",
+    "prs": [
+      "plugin-startup-after-core-node"
+    ]
+  }
+]

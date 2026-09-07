@@ -1,0 +1,46 @@
+{
+  "slug": "import-settings-ordinary-send-summary",
+  "title": "fix(chat): run automatic summaries after ordinary send turns",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-settings-ordinary-send-summary",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/services/ChatServiceCore.rs",
+    "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 38,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (1)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 39,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (2)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 40,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (3)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 41,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (4)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 42,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (5)"
+    },
+    {
+      "file": "patches/zzzzz_import_settings.json",
+      "index": 43,
+      "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (6)"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

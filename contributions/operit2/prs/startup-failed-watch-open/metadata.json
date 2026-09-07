@@ -1,0 +1,20 @@
+{
+  "slug": "startup-failed-watch-open",
+  "title": "fix(flutter): propagate watch opening failures without deadlocking",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/startup-failed-watch-open",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/core/bridge/MethodChannelCoreProxy.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/integration_lifecycle.json",
+      "index": 1,
+      "name": "failed-watch-open-does-not-await-an-unsubscribed-controller"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

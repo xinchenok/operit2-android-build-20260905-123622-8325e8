@@ -1,0 +1,48 @@
+diff --git a/core/crates/persistence/store/src/dao/MessagePartDao.rs b/core/crates/persistence/store/src/dao/MessagePartDao.rs
+--- a/core/crates/persistence/store/src/dao/MessagePartDao.rs
++++ b/core/crates/persistence/store/src/dao/MessagePartDao.rs
+@@ -106,6 +106,28 @@
+         })
+     }
+ 
++    /// Inserts an imported part batch atomically after its old rows have been cleared.
++    pub fn insertParts(
++        &self,
++        parts: Vec<MessagePartEntity>,
++    ) -> Result<(), SqliteStoreError> {
++        self.store.transaction(|transaction| {
++            for part in parts {
++                transaction.execute(
++                    r#"
++                    INSERT INTO message_parts (
++                        chatId, messageTimestamp, variantIndex, partId, sequence, kind, content,
++                        toolCallId, toolName, attributesJson
++                    )
++                    VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)
++                    "#,
++                    partParams(&part)?,
++                )?;
++            }
++            Ok(())
++        })
++    }
++
+     /// Copies all selected revision parts into a different chat identifier.
+     pub fn copyPartsToChat(
+         &self,
+diff --git a/core/crates/persistence/store/src/repository/ChatHistoryManager.rs b/core/crates/persistence/store/src/repository/ChatHistoryManager.rs
+--- a/core/crates/persistence/store/src/repository/ChatHistoryManager.rs
++++ b/core/crates/persistence/store/src/repository/ChatHistoryManager.rs
+@@ -670,10 +670,8 @@
+             .collect::<Vec<_>>();
+         self.messageDao.insertMessages(messages)?;
+         self.messageVariantDao.insertVariants(variants)?;
+-        for ((timestamp, variantIndex), parts) in groupMessagePartEntities(partEntities) {
+-            self.messagePartDao
+-                .replaceParts(&chatId, timestamp, variantIndex, parts)?;
+-        }
++        // Old parts for this chat were already cleared above.
++        self.messagePartDao.insertParts(partEntities)?;
+         self.recordChatSnapshot(&chatId)?;
+         if createBinding {
+             self.createBinding(&chatId)?;

@@ -1,0 +1,16 @@
+{
+  "slug": "chat-group-command-lock",
+  "title": "fix(chat): release the core command lock during group responses",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-group-command-lock",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs"
+  ],
+  "source_specs": [
+    "release-core-command-lock-after-persisting-group-user-message"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

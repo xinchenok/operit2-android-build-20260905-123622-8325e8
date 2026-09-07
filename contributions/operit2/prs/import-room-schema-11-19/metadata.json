@@ -1,0 +1,25 @@
+{
+  "slug": "import-room-schema-11-19",
+  "title": "fix(import): migrate intermediate Operit1 Room schemas",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-room-schema-11-19",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1RoomSchemaMigration.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/operit1_import.json",
+      "index": 32,
+      "name": "Operit1 snapshot data preservation Operit1RoomSchemaMigration 1"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 33,
+      "name": "Operit1 snapshot data preservation Operit1RoomSchemaMigration 2"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

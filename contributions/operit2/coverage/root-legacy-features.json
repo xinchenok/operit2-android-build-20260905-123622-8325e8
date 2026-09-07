@@ -1,0 +1,1042 @@
+[
+  {
+    "file": "patches/legacy_android_tools.json",
+    "index": 0,
+    "name": "legacy-android-accessibility-service-registration",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增无障碍/Android 工具宿主、工作流监听和 Android 根目录虚拟挂载；7fec 未提供这些旧版兼容接口。"
+  },
+  {
+    "file": "patches/legacy_android_tools.json",
+    "index": 1,
+    "name": "legacy-workflow-restore-android-intent-listeners",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增无障碍/Android 工具宿主、工作流监听和 Android 根目录虚拟挂载；7fec 未提供这些旧版兼容接口。"
+  },
+  {
+    "file": "patches/legacy_android_tools.json",
+    "index": 2,
+    "name": "legacy-files-list-real-android-root-mount",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增无障碍/Android 工具宿主、工作流监听和 Android 根目录虚拟挂载；7fec 未提供这些旧版兼容接口。"
+  },
+  {
+    "file": "patches/legacy_android_tools.json",
+    "index": 3,
+    "name": "legacy-files-resolve-real-android-root-under-current-uid",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增无障碍/Android 工具宿主、工作流监听和 Android 根目录虚拟挂载；7fec 未提供这些旧版兼容接口。"
+  },
+  {
+    "file": "patches/legacy_android_tools.json",
+    "index": 4,
+    "name": "legacy-files-show-android-mount-before-shared-storage-permission",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增无障碍/Android 工具宿主、工作流监听和 Android 根目录虚拟挂载；7fec 未提供这些旧版兼容接口。"
+  },
+  {
+    "file": "patches/legacy_ffmpeg.json",
+    "index": 0,
+    "name": "legacy-ffmpeg-real-arm64-engine-dependency",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 FFmpeg Android 引擎依赖、最低 API 和反射保留规则，属于旧包运行能力移植。"
+  },
+  {
+    "file": "patches/legacy_ffmpeg.json",
+    "index": 1,
+    "name": "legacy-ffmpeg-required-android-api",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 FFmpeg Android 引擎依赖、最低 API 和反射保留规则，属于旧包运行能力移植。"
+  },
+  {
+    "file": "patches/legacy_ffmpeg.json",
+    "index": 2,
+    "name": "legacy-ffmpeg-preserve-javascript-reflection-entrypoints",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 FFmpeg Android 引擎依赖、最低 API 和反射保留规则，属于旧包运行能力移植。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 0,
+    "name": "register_real_sherpa_ncnn_engine",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 1,
+    "name": "declare_verified_ncnn_android_archive",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 2,
+    "name": "enable_ncnn_only_where_native_host_exists",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 3,
+    "name": "expose_original_ncnn_model_in_catalog",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 4,
+    "name": "bind_original_ncnn_model_to_real_engine",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 5,
+    "name": "verify_engine_download_with_identity",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 6,
+    "name": "verify_installed_engine_with_identity",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 7,
+    "name": "pass_real_engine_identity_to_library_checks",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 8,
+    "name": "identify_engine_runtime_library_set",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 9,
+    "name": "verify_both_real_ncnn_native_libraries",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 10,
+    "name": "register_ncnn_settings_preparation_service",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 11,
+    "name": "route_ncnn_to_actual_android_recognizer",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 12,
+    "name": "keep_ncnn_jni_class_and_field_abi",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_sherpa_ncnn.json",
+    "index": 13,
+    "name": "register_verified_original_ncnn_and_exact_engine",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Sherpa NCNN 引擎、模型目录和验证/识别路径；修正也针对新引擎身份。"
+  },
+  {
+    "file": "patches/legacy_deepgram_stt.json",
+    "index": 0,
+    "name": "Declare the real Deepgram raw-audio STT provider",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Deepgram 原始音频 provider、目录与配置验证，不是既有 provider 缺陷修复。"
+  },
+  {
+    "file": "patches/legacy_deepgram_stt.json",
+    "index": 1,
+    "name": "Expose Deepgram with Token authentication and transcript response path",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Deepgram 原始音频 provider、目录与配置验证，不是既有 provider 缺陷修复。"
+  },
+  {
+    "file": "patches/legacy_deepgram_stt.json",
+    "index": 2,
+    "name": "Offer the established Deepgram multilingual model",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Deepgram 原始音频 provider、目录与配置验证，不是既有 provider 缺陷修复。"
+  },
+  {
+    "file": "patches/legacy_deepgram_stt.json",
+    "index": 3,
+    "name": "Route Deepgram requests to the raw audio provider",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Deepgram 原始音频 provider、目录与配置验证，不是既有 provider 缺陷修复。"
+  },
+  {
+    "file": "patches/legacy_deepgram_stt.json",
+    "index": 4,
+    "name": "Register the Deepgram implementation",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Deepgram 原始音频 provider、目录与配置验证，不是既有 provider 缺陷修复。"
+  },
+  {
+    "file": "patches/legacy_deepgram_stt.json",
+    "index": 5,
+    "name": "Validate raw-audio endpoints without requiring a multipart file field",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Deepgram 原始音频 provider、目录与配置验证，不是既有 provider 缺陷修复。"
+  },
+  {
+    "file": "patches/legacy_deepgram_stt.json",
+    "index": 6,
+    "name": "Keep multipart-only fields out of Deepgram settings",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Deepgram 原始音频 provider、目录与配置验证，不是既有 provider 缺陷修复。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 0,
+    "name": "Register enhanced legacy Tools host",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 1,
+    "name": "Dispatch enhanced legacy Tools host",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 2,
+    "name": "Expose legacy planner cancellation registry",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 3,
+    "name": "Link command host to shared planner registry",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 4,
+    "name": "Expose enhanced legacy speech options",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 5,
+    "name": "Apply legacy cleaner in TtsPlaybackService 5",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 6,
+    "name": "Apply legacy cleaner in TtsPlaybackService 6",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 7,
+    "name": "Honor configured legacy system speech pitch",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 8,
+    "name": "Apply legacy cleaner in TtsSynthesisService 8",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 9,
+    "name": "Apply legacy cleaner in TtsSynthesisService 9",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_tools.json",
+    "index": 10,
+    "name": "Allow transient speech profile without saving test overrides",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 Tools 命令宿主、取消注册表、语音清理/音调配置及临时试听入口。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 0,
+    "name": "legacy_vits_import_service",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 1,
+    "name": "register_legacy_vits_using_existing_engine",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 2,
+    "name": "show_imported_vits_in_local_model_settings",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 3,
+    "name": "allow_verifying_and_removing_imported_vits",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 4,
+    "name": "vits_canonical_path_host_contract",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 5,
+    "name": "vits_canonical_path_posix",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 6,
+    "name": "vits_canonical_path_windows",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 7,
+    "name": "vits_canonical_path_linux",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 8,
+    "name": "vits_canonical_path_apple",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 9,
+    "name": "vits_canonical_path_android",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits.json",
+    "index": 10,
+    "name": "vits_canonical_path_ohos",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版 VITS 模型导入、目录及真实路径 host 合同。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 0,
+    "name": "legacy-vits-onnx-runtime-aligned-with-sherpa",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 1,
+    "name": "legacy-vits-reflection-entry-keep",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 2,
+    "name": "legacy-vits-native-provider-id",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 3,
+    "name": "legacy-vits-native-provider-catalog",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 4,
+    "name": "legacy-vits-native-service",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 5,
+    "name": "legacy-vits-native-synthesis-dispatch",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 6,
+    "name": "legacy-native-and-websocket-tts-are-not-http",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_vits_native.json",
+    "index": 7,
+    "name": "legacy-vits-native-config-validation",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 VITS ONNX 引擎及其 provider、反射和验证适配。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 0,
+    "name": "register-legacy-realtime-tts-provider-type",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 1,
+    "name": "publish-real-websocket-tts-catalog-entry",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 2,
+    "name": "publish-legacy-realtime-tts-voices",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 3,
+    "name": "register-realtime-voice-provider",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 4,
+    "name": "create-websocket-provider-with-real-host-transport",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 5,
+    "name": "extend-host-websocket-contract-with-text-frames",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 6,
+    "name": "carry-websocket-text-frames-through-host-command-queue",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 7,
+    "name": "send-real-text-frames-on-native-websockets",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 8,
+    "name": "write-text-opcode-instead-of-binary-json",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 9,
+    "name": "forward-text-frames-on-android",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 10,
+    "name": "forward-text-frames-on-linux",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 11,
+    "name": "forward-text-frames-on-windows",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 12,
+    "name": "forward-text-frames-on-apple",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 13,
+    "name": "forward-text-frames-on-ohos",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 14,
+    "name": "send-real-text-frames-on-browser-websockets",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 15,
+    "name": "validate-realtime-tts-protocol-before-saving-config",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/legacy_websocket_tts.json",
+    "index": 16,
+    "name": "migrate-retired-official-realtime-settings-on-save",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增实时 WebSocket TTS provider 与文本帧 host 合同；相关协议修正针对新增实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 0,
+    "name": "register-enhanced-legacy-workflow-command-module",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 1,
+    "name": "route-enhanced-legacy-workflow-commands",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 2,
+    "name": "register-enhanced-workflow-runtime-service",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 3,
+    "name": "share-host-schedule-reconciliation-with-workflows",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 4,
+    "name": "merge-workflow-timers-with-existing-toolpkg-schedules",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 5,
+    "name": "dispatch-workflow-timers-with-independent-identity",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 6,
+    "name": "restore-persisted-workflows-after-plugin-initialization",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 7,
+    "name": "accept-real-workflow-host-events-before-closed-topic-deserialization",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 8,
+    "name": "forward-standard-host-events-to-legacy-workflow-triggers",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 9,
+    "name": "dispatch-successful-current-stt-to-workflow-speech-triggers",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 10,
+    "name": "dispatch-successful-selected-stt-to-workflow-speech-triggers",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 11,
+    "name": "keep-typed-runtime-events-and-add-separate-legacy-ingress",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/workflow.json",
+    "index": 12,
+    "name": "route-legacy-android-events-to-separate-ingress",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 LegacyWorkflowService/命令/调度和事件路由，7fec 不含该旧版工作流实现。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 0,
+    "name": "supplemental-resource-import-type",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 1,
+    "name": "supplemental-resource-plan",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 2,
+    "name": "supplemental-resource-plan-default",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 3,
+    "name": "supplemental-resource-source-entrypoint",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 4,
+    "name": "supplemental-resource-inner-argument",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 5,
+    "name": "supplemental-resource-plan-before-writes",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 6,
+    "name": "supplemental-resource-copy-before-speech",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 7,
+    "name": "supplemental-public-message-reference",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 8,
+    "name": "supplemental-resource-methods",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 9,
+    "name": "supplemental-resource-copy-progress",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 10,
+    "name": "supplemental-empty-copy-progress",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 11,
+    "name": "supplemental-copy-before-model-progress",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 12,
+    "name": "supplemental-ncnn-pass-resource-plan",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 13,
+    "name": "supplemental-ncnn-profile-plan-argument",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 14,
+    "name": "supplemental-ncnn-restore-real-cached-model",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 15,
+    "name": "supplemental-resource-runtime-method",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 16,
+    "name": "supplemental-resource-module",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 17,
+    "name": "supplemental-resource-picker-argument",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 18,
+    "name": "supplemental-resource-native-json-picker",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 19,
+    "name": "supplemental-resource-web-json-picker",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 20,
+    "name": "supplemental-resource-android-picker-argument",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 21,
+    "name": "supplemental-resource-android-picker-signature",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_resources.json",
+    "index": 22,
+    "name": "supplemental-resource-android-picker-types",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增额外资源 ZIP/JSON 选择及导入路径，包含的进度与 NCNN 修复依赖该增强功能。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 0,
+    "name": "legacy-java-native-dispatch-registration",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 1,
+    "name": "legacy-java-dispatch-engine-binding",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 2,
+    "name": "legacy-java-native-surface",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 3,
+    "name": "legacy-java-real-method-surface",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 4,
+    "name": "legacy-java-instance-suspend-and-release",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 5,
+    "name": "legacy-java-instance-fields-and-methods",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 6,
+    "name": "legacy-java-recursive-array-results",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 7,
+    "name": "legacy-java-dex-loading-api",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 8,
+    "name": "legacy-java-android-host-entry",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 9,
+    "name": "legacy-java-android-bridge-dependency",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 10,
+    "name": "legacy-java-connect-android-jvm",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 11,
+    "name": "legacy-java-reflection-keep",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 12,
+    "name": "legacy-apk-signing-library",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 13,
+    "name": "legacy-background-interval-timers",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增 Java/JNI/DEX 反射宿主、APK 签名依赖或定时器接口；相关修正属于旧包桥接能力移植。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 17,
+    "name": "legacy-cancel-native-planning-with-hook",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "清理新增 legacy_planning_cancellation 注册表；上游不存在此注册表，属于增强功能自身的生命周期修复。"
+  },
+  {
+    "file": "patches/legacy_native.json",
+    "index": 18,
+    "name": "legacy-register-real-screenshot-image",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增供旧包使用的截图注册 JS 方法，7fec 没有该接口。"
+  },
+  {
+    "file": "patches/legacy_claude_cache.json",
+    "index": 1,
+    "name": "restore_claude_explicit_cache_ttl",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版缓存配置、TTL、tool/message 缓存策略；既有 system 多断点请求错误已经独立为 provider-claude-system-cache-boundary。"
+  },
+  {
+    "file": "patches/legacy_claude_cache.json",
+    "index": 2,
+    "name": "keep_claude_cache_parameter_in_its_request_dialect",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "过滤新增 legacy_claude_prompt_cache 参数，7fec 不生成该增强参数。"
+  }
+]

@@ -1,0 +1,152 @@
+{
+  "slug": "import-objectbox-documents",
+  "title": "fix(import): preserve ObjectBox document nodes and content",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-objectbox-documents",
+  "status": "prepared",
+  "paths": [
+    "core/crates/foundation/model/src/MemoryExportModel.rs",
+    "core/crates/persistence/store/src/repository/MemoryRepository.rs",
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 0,
+      "name": "portable-memory-document-metadata"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 1,
+      "name": "export-document-memories-and-their-links"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 2,
+      "name": "export-portable-document-fields"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 3,
+      "name": "update-document-fields-when-present-in-portable-import"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 4,
+      "name": "create-memory-with-restored-document-metadata"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 5,
+      "name": "import-memory-property-type"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 6,
+      "name": "objectbox-document-and-property-entity-keys"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 7,
+      "name": "report-document-resource-migration-notes"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 8,
+      "name": "collect-document-notes-across-memory-profiles"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 9,
+      "name": "initialize-document-import-notes"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 10,
+      "name": "resolve-document-paths-against-actual-copy-plan"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 11,
+      "name": "pass-document-path-plan-to-objectbox-conversion"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 12,
+      "name": "preserve-profile-in-document-import-notes"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 13,
+      "name": "return-document-import-notes"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 14,
+      "name": "map-only-included-original-document-files"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 15,
+      "name": "read-source-document-node-metadata"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 16,
+      "name": "define-source-document-chunk-record"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 17,
+      "name": "collect-document-records-and-properties"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 18,
+      "name": "parse-document-chunk-and-property-lmdb-records"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 19,
+      "name": "decode-real-objectbox-standalone-memory-tag-relations"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 20,
+      "name": "resolve-memory-properties-and-stable-document-chunk-order"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 21,
+      "name": "restore-document-body-with-metadata-instead-of-skipping-node"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 22,
+      "name": "persist-restored-document-content-and-properties"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 23,
+      "name": "portable-source-document-fields"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 24,
+      "name": "return-document-conversion-report"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 25,
+      "name": "parse-optional-document-fields-and-access-time"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 26,
+      "name": "parse-zero-default-document-chunk-index"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

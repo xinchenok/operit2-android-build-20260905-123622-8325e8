@@ -1,0 +1,22 @@
+{
+  "slug": "terminal-descriptor-lifetime",
+  "title": "fix(android): retain PTY descriptor ownership during I/O",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/terminal-descriptor-lifetime",
+  "status": "prepared",
+  "paths": [
+    "hosts/android/src/terminal.rs"
+  ],
+  "source_specs": [
+    "patches/terminal.json:android-terminal-reader-stop-before-fd-reuse",
+    "patches/terminal.json:android-terminal-writer-retain-fd-ownership",
+    "patches/terminal.json:android-terminal-startup-failure-stop-reader",
+    "patches/terminal_followup.json:android-pty-retry-partial-writes-without-locking-reader",
+    "patches/terminal_followup.json:android-pty-master-nonblocking-before-reader-start",
+    "patches/terminal_followup.json:android-pty-nonblocking-read-handle-transient-errors",
+    "patches/terminal_followup.json:android-pty-nonblocking-write-handle-backpressure"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+}

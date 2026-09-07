@@ -1,0 +1,14 @@
+diff --git a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+--- a/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
++++ b/core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs
+@@ -1860,10 +1860,6 @@
+ #[allow(non_snake_case)]
+ fn datastorePreferenceMappings(paths: &RuntimeStorePaths) -> BTreeMap<String, PathBuf> {
+     let mut mappings = BTreeMap::new();
+-    mappings.insert(
+-        "payload/files/datastore/current_chat_id.preferences_pb".to_string(),
+-        paths.current_chat_id_preferences_path(),
+-    );
+     mappings.insert(
+         "payload/files/datastore/tool_permissions.preferences_pb".to_string(),
+         paths.tool_permissions_preferences_path(),

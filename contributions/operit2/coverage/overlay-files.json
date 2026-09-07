@@ -1,0 +1,202 @@
+[
+  {
+    "path": "apps/flutter/app/android/app/src/main/assets/operit-enhanced/FFMPEG-NOTICE.txt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/assets/operit-enhanced/FFMPEG-NOTICE.txt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyAccessibilityService.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyAccessibilityService.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyAndroidTools.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyAndroidTools.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyFfmpegBridge.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyFfmpegBridge.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyJavaHost.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyJavaHost.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacySherpaNcnnInference.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacySherpaNcnnInference.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyVirtualDisplays.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyVirtualDisplays.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyVitsOnnxBridge.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyVitsOnnxBridge.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyWorkflowAndroidBridge.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/app/operit/LegacyWorkflowAndroidBridge.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/com/ai/assistance/operit/core/subpack/KeyStoreHelper.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/com/ai/assistance/operit/core/subpack/KeyStoreHelper.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/kotlin/com/k2fsa/sherpa/ncnn/SherpaNcnn.kt",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/kotlin/com/k2fsa/sherpa/ncnn/SherpaNcnn.kt",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/android/app/src/main/res/xml/legacy_accessibility_service.xml",
+    "source": "enhancements/overlay/apps/flutter/app/android/app/src/main/res/xml/legacy_accessibility_service.xml",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/lib/core/snapshot/LegacyImportResourcesPicker.dart",
+    "source": "enhancements/overlay/apps/flutter/app/lib/core/snapshot/LegacyImportResourcesPicker.dart",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/lib/ui/common/EnhancedDisclaimerGate.dart",
+    "source": "enhancements/overlay/apps/flutter/app/lib/ui/common/EnhancedDisclaimerGate.dart",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart",
+    "source": "enhancements/overlay/apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart",
+    "status": "used_in_upstream_patch",
+    "prs": [
+      "snapshot-ui-import-results"
+    ],
+    "reason": "从增强文件提取了与上游现有行为缺陷有关的必要实现，其余扩展未混入。"
+  },
+  {
+    "path": "apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart",
+    "source": "enhancements/overlay/apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart",
+    "status": "used_in_upstream_patch",
+    "prs": [
+      "snapshot-ui-preparation-progress"
+    ],
+    "reason": "从增强文件提取了与上游现有行为缺陷有关的必要实现，其余扩展未混入。"
+  },
+  {
+    "path": "core/crates/command/core/src/commands/legacy_tools.rs",
+    "source": "enhancements/overlay/core/crates/command/core/src/commands/legacy_tools.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/command/core/src/commands/legacy_workflow.rs",
+    "source": "enhancements/overlay/core/crates/command/core/src/commands/legacy_workflow.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/plugin/sdk/src/legacy_planning_cancellation.rs",
+    "source": "enhancements/overlay/core/crates/plugin/sdk/src/legacy_planning_cancellation.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/provider/services/src/stt/DeepgramSpeechToTextProvider.rs",
+    "source": "enhancements/overlay/core/crates/provider/services/src/stt/DeepgramSpeechToTextProvider.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/provider/services/src/tts/OpenAIRealtimeVoiceProvider.rs",
+    "source": "enhancements/overlay/core/crates/provider/services/src/tts/OpenAIRealtimeVoiceProvider.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/runtime/application/src/services/LegacyImportResources.rs",
+    "source": "enhancements/overlay/core/crates/runtime/application/src/services/LegacyImportResources.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/runtime/application/src/services/LegacySherpaNcnn.rs",
+    "source": "enhancements/overlay/core/crates/runtime/application/src/services/LegacySherpaNcnn.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/runtime/application/src/services/LegacySpeechSettings.rs",
+    "source": "enhancements/overlay/core/crates/runtime/application/src/services/LegacySpeechSettings.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/runtime/application/src/services/LegacyVitsImport.rs",
+    "source": "enhancements/overlay/core/crates/runtime/application/src/services/LegacyVitsImport.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/runtime/application/src/services/LegacyVitsNative.rs",
+    "source": "enhancements/overlay/core/crates/runtime/application/src/services/LegacyVitsNative.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/runtime/application/src/services/LegacyWorkflowService.rs",
+    "source": "enhancements/overlay/core/crates/runtime/application/src/services/LegacyWorkflowService.rs",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  },
+  {
+    "path": "core/crates/runtime/application/src/services/LegacyWorkflowTools.js",
+    "source": "enhancements/overlay/core/crates/runtime/application/src/services/LegacyWorkflowTools.js",
+    "status": "excluded_feature",
+    "prs": [],
+    "reason": "新增旧版兼容宿主、引擎、资源导入或第三方免责声明；7fec 不含这个实现，不作为原有 bug 修复提交。"
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "slug": "import-portable-document-metadata",
+  "title": "fix(memory): preserve document nodes in portable backups",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-portable-document-metadata",
+  "status": "prepared",
+  "paths": [
+    "core/crates/foundation/model/src/MemoryExportModel.rs",
+    "core/crates/persistence/store/src/repository/MemoryRepository.rs",
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 0,
+      "name": "portable-memory-document-metadata"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 1,
+      "name": "export-document-memories-and-their-links"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 2,
+      "name": "export-portable-document-fields"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 3,
+      "name": "update-document-fields-when-present-in-portable-import"
+    },
+    {
+      "file": "patches/zzzzz_import_documents.json",
+      "index": 4,
+      "name": "create-memory-with-restored-document-metadata"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

@@ -1,0 +1,464 @@
+diff --git a/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart b/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart
+--- a/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart
++++ b/apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart
+@@ -207,14 +207,35 @@
+ 
+   final GeneratedCoreProxyClients clients;
+ 
++  /// Reports consumed file bytes; this is preparation, not import progress.
++  Stream<Uint8List> _trackedChunks(
++    SnapshotImportFile file,
++    ValueChanged<int>? onBytesRead,
++  ) async* {
++    var bytesRead = 0;
++    final sinceReport = Stopwatch()..start();
++    onBytesRead?.call(0);
++    await for (final chunk in file.chunks()) {
++      bytesRead += chunk.length;
++      if (sinceReport.elapsedMilliseconds >= 100 || bytesRead == file.byteLength) {
++        onBytesRead?.call(bytesRead);
++        sinceReport.reset();
++      }
++      yield chunk;
++    }
++  }
++
+   /// Creates a staged archive and uploads exactly the selected file's declared byte length.
+-  Future<SnapshotImportSession> stage(SnapshotImportFile file) async {
++  Future<SnapshotImportSession> stage(
++    SnapshotImportFile file, {
++    ValueChanged<int>? onBytesRead,
++  }) async {
+     final archiveId = await clients.servicesArchiveTransferManager
+         .beginArchiveUpload(expectedByteLength: file.byteLength);
+     try {
+       await clients.servicesArchiveTransferManager.writeArchiveUpload(
+         archiveId: archiveId,
+-        bytes: file.chunks(),
++        bytes: _trackedChunks(file, onBytesRead),
+       );
+       final archive = await clients.servicesArchiveTransferManager
+           .completeArchiveUpload(
+diff --git a/apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart b/apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart
+new file mode 100644
+--- /dev/null
++++ b/apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart
+@@ -0,0 +1,226 @@
++// ignore_for_file: file_names
++
++import 'dart:async';
++
++import 'package:flutter/material.dart';
++
++import '../../core/logging/ClientLogger.dart';
++import '../../core/proxy/generated/CoreProxyClients.g.dart';
++import '../../core/proxy/generated/CoreProxyModels.g.dart';
++import '../../core/snapshot/SnapshotImportUploader.dart';
++
++class PreparedOperit1Snapshot {
++  const PreparedOperit1Snapshot({
++    required this.session,
++    required this.preview,
++    required this.fileName,
++  });
++
++  final SnapshotImportSession session;
++  final Operit1SnapshotPreview preview;
++  final String fileName;
++}
++
++/// Both import entry points prepare a snapshot visibly before asking to import.
++Future<PreparedOperit1Snapshot?> prepareOperit1Snapshot(
++  BuildContext context,
++  GeneratedCoreProxyClients clients,
++) {
++  return showDialog<PreparedOperit1Snapshot>(
++    context: context,
++    barrierDismissible: false,
++    builder: (_) => _SnapshotPreparationDialog(clients: clients),
++  );
++}
++
++enum _PreparationPhase { opening, reading, inspecting }
++
++class _SnapshotPreparationDialog extends StatefulWidget {
++  const _SnapshotPreparationDialog({required this.clients});
++  final GeneratedCoreProxyClients clients;
++
++  @override
++  State<_SnapshotPreparationDialog> createState() =>
++      _SnapshotPreparationDialogState();
++}
++
++class _SnapshotPreparationDialogState extends State<_SnapshotPreparationDialog> {
++  final Stopwatch _elapsed = Stopwatch()..start();
++  Timer? _timer;
++  _PreparationPhase _phase = _PreparationPhase.opening;
++  String? _fileName;
++  String? _error;
++  int _bytesRead = 0;
++  int _totalBytes = 0;
++
++  @override
++  void initState() {
++    super.initState();
++    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
++      if (mounted) setState(() {});
++    });
++    // Paint the waiting dialog before handing control to the file provider.
++    WidgetsBinding.instance.addPostFrameCallback((_) {
++      if (mounted) unawaited(_prepare());
++    });
++  }
++
++  @override
++  void dispose() {
++    _timer?.cancel();
++    _elapsed.stop();
++    super.dispose();
++  }
++
++  Future<void> _prepare() async {
++    SnapshotImportSession? session;
++    var handedOff = false;
++    try {
++      final file = await SnapshotImportFile.pick();
++      if (file == null) {
++        if (mounted) Navigator.of(context).pop();
++        return;
++      }
++      if (!mounted) {
++        await file.close();
++        return;
++      }
++      setState(() {
++        _phase = _PreparationPhase.reading;
++        _fileName = file.name;
++        _totalBytes = file.byteLength;
++        _elapsed.reset();
++      });
++      ClientLogger.i(
++        'snapshot selected name=${file.name} bytes=${file.byteLength}',
++        tag: 'Operit1SnapshotImport',
++      );
++      session = await SnapshotImportUploader(widget.clients).stage(
++        file,
++        onBytesRead: (bytes) {
++          if (mounted) setState(() => _bytesRead = bytes);
++        },
++      );
++      if (!mounted) return;
++      setState(() {
++        _phase = _PreparationPhase.inspecting;
++        _elapsed.reset();
++      });
++      ClientLogger.i(
++        'snapshot upload completed bytes=${session.byteLength}; inspection started',
++        tag: 'Operit1SnapshotImport',
++      );
++      final preview = await session.completeOperit1();
++      ClientLogger.i(
++        'snapshot inspection completed format=${preview.formatVersion} '
++        'chats=${preview.chatCount} messages=${preview.messageCount}',
++        tag: 'Operit1SnapshotImport',
++      );
++      if (!mounted) return;
++      Navigator.of(context).pop(PreparedOperit1Snapshot(
++        session: session,
++        preview: preview,
++        fileName: file.name,
++      ));
++      handedOff = true;
++    } catch (error, stackTrace) {
++      ClientLogger.e(
++        'snapshot selection, upload, or inspection failed',
++        tag: 'Operit1SnapshotImport',
++        error: error,
++        stackTrace: stackTrace,
++      );
++      _timer?.cancel();
++      _elapsed.stop();
++      if (mounted) setState(() => _error = '$error');
++    } finally {
++      if (!handedOff) await _discardPreparedSnapshot(session);
++    }
++  }
++
++  String _duration(int seconds) => seconds < 60
++      ? '$seconds 秒'
++      : '${seconds ~/ 60} 分 ${seconds % 60} 秒';
++
++  String _size(int bytes) => bytes < 1024 * 1024
++      ? '${(bytes / 1024).toStringAsFixed(1)} KB'
++      : '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
++
++  @override
++  Widget build(BuildContext context) {
++    final seconds = _elapsed.elapsed.inSeconds;
++    final reading = _phase == _PreparationPhase.reading;
++    final progress = reading && _totalBytes > 0
++        ? (_bytesRead / _totalBytes).clamp(0.0, 1.0).toDouble()
++        : null;
++    final canEstimate = reading && seconds >= 2 &&
++        _bytesRead > 0 && _bytesRead < _totalBytes;
++    final remaining = canEstimate
++        ? ((_totalBytes - _bytesRead) *
++            _elapsed.elapsedMilliseconds / _bytesRead / 1000).ceil()
++        : null;
++    final label = switch (_phase) {
++      _PreparationPhase.opening => '正在选择或打开快照文件',
++      _PreparationPhase.reading => progress == 1.0
++          ? '文件读取完成，正在确认'
++          : '正在准备快照文件',
++      _PreparationPhase.inspecting => '正在检查备份内容',
++    };
++    return PopScope(
++      canPop: _error != null,
++      child: AlertDialog(
++        title: Text(_error == null ? '准备导入' : '快照准备失败'),
++        content: SingleChildScrollView(
++          child: Column(
++            mainAxisSize: MainAxisSize.min,
++            crossAxisAlignment: CrossAxisAlignment.start,
++            children: <Widget>[
++              if (_fileName != null) ...<Widget>[
++                Text(_fileName!, maxLines: 2, overflow: TextOverflow.ellipsis),
++                const SizedBox(height: 12),
++              ],
++              if (_error != null)
++                SelectableText(_error!)
++              else ...<Widget>[
++                Text(label),
++                const SizedBox(height: 12),
++                LinearProgressIndicator(value: progress),
++                const SizedBox(height: 12),
++                if (reading)
++                  Text('已读取 ${_size(_bytesRead)} / ${_size(_totalBytes)}'
++                      '${progress == null ? '' : '（${(progress * 100).floor()}%）'}'),
++                Text('此阶段已等待 ${_duration(seconds)}'),
++                if (remaining != null)
++                  Text('按当前速度，读取预计还需 ${_duration(remaining)}'),
++                const SizedBox(height: 8),
++                Text(_phase == _PreparationPhase.inspecting
++                    ? '文件读取完成。正在检查聊天和资源，完成后显示预览；检查时间取决于备份内容。'
++                    : '选中文件后会自动读取，随后检查备份并显示预览。此时尚未导入数据。'),
++              ],
++            ],
++          ),
++        ),
++        actions: _error == null ? null : <Widget>[
++          TextButton(
++            onPressed: () => Navigator.of(context).pop(),
++            child: const Text('关闭'),
++          ),
++        ],
++      ),
++    );
++  }
++}
++
++Future<void> _discardPreparedSnapshot(SnapshotImportSession? session) async {
++  if (session == null) return;
++  try {
++    await session.discard();
++  } catch (error, stackTrace) {
++    ClientLogger.e(
++      'snapshot preparation cleanup failed',
++      tag: 'Operit1SnapshotImport',
++      error: error,
++      stackTrace: stackTrace,
++    );
++  }
++}
+diff --git a/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart b/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
+--- a/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
++++ b/apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart
+@@ -14,6 +14,7 @@
+ import '../../../core/proxy/generated/CoreProxyModels.g.dart' as core_proxy;
+ import '../../../core/runtime/RuntimeBootstrapManager.dart';
+ import '../../../core/snapshot/SnapshotImportUploader.dart';
++import '../../common/Operit1SnapshotPreparationDialog.dart';
+ import '../../common/DeviceSpaceDiscoveryPanel.dart';
+ import '../../common/OperitLogoMark.dart';
+ import '../../common/RuntimeBootstrapScreen.dart';
+@@ -969,12 +970,8 @@
+   }
+ 
+   Future<void> _pickOperit1Snapshot() async {
++    if (_readingOperit1Snapshot || _importingOperit1Snapshot) return;
+     final previousSession = _operit1SnapshotSession;
+-    SnapshotImportSession? stagedSession;
+-    ClientLogger.i(
+-      'snapshot selection started',
+-      tag: _operit1SnapshotImportLogTag,
+-    );
+     setState(() {
+       _readingOperit1Snapshot = true;
+       _setupError = null;
+@@ -984,60 +981,23 @@
+       _operit1SnapshotFileName = null;
+     });
+     try {
+-      if (previousSession != null) {
+-        await previousSession.discard();
+-      }
+-      final file = await SnapshotImportFile.pick();
+-      if (file == null) {
++      if (previousSession != null) await previousSession.discard();
++      if (!mounted) return;
++      final prepared = await prepareOperit1Snapshot(context, widget.clients);
++      if (prepared == null) return;
++      if (!mounted) {
++        await prepared.session.discard();
+         return;
+       }
+-      ClientLogger.i(
+-        'snapshot selected name=${file.name} bytes=${file.byteLength}',
+-        tag: _operit1SnapshotImportLogTag,
+-      );
+-      final session = await SnapshotImportUploader(widget.clients).stage(file);
+-      stagedSession = session;
+-      ClientLogger.i(
+-        'snapshot upload completed bytes=${session.byteLength}; inspection started',
+-        tag: _operit1SnapshotImportLogTag,
+-      );
+-      final snapshot = await session.completeOperit1();
+-      ClientLogger.i(
+-        'snapshot inspection completed format=${snapshot.formatVersion} configs=${snapshot.modelConfig.configs.length} chats=${snapshot.chatCount} messages=${snapshot.messageCount}',
+-        tag: _operit1SnapshotImportLogTag,
+-      );
+-      if (!mounted) {
+-        await session.discard();
+-        return;
+-      }
+       setState(() {
+-        _operit1Snapshot = snapshot;
+-        _operit1SnapshotSession = session;
+-        _operit1SnapshotFileName = file.name;
++        _operit1Snapshot = prepared.preview;
++        _operit1SnapshotSession = prepared.session;
++        _operit1SnapshotFileName = prepared.fileName;
+       });
+-    } catch (error, stackTrace) {
+-      ClientLogger.e(
+-        'snapshot selection, upload, or inspection failed',
+-        tag: _operit1SnapshotImportLogTag,
+-        error: error,
+-        stackTrace: stackTrace,
+-      );
+-      final session = stagedSession;
+-      if (session != null) {
+-        await session.discard();
+-      }
+-      if (!mounted) {
+-        return;
+-      }
+-      setState(() {
+-        _setupError = '$error';
+-      });
++    } catch (error) {
++      if (mounted) setState(() => _setupError = '$error');
+     } finally {
+-      if (mounted) {
+-        setState(() {
+-          _readingOperit1Snapshot = false;
+-        });
+-      }
++      if (mounted) setState(() => _readingOperit1Snapshot = false);
+     }
+   }
+ 
+diff --git a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+--- a/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
++++ b/apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart
+@@ -14,6 +14,7 @@
+ import '../../../../core/proxy/generated/CoreProxyModels.g.dart';
+ import '../../../../core/runtime/RuntimeBootstrapManager.dart';
+ import '../../../../core/snapshot/SnapshotImportUploader.dart';
++import '../../../common/Operit1SnapshotPreparationDialog.dart';
+ import '../../../../l10n/generated/app_localizations.dart';
+ import '../../../common/components/M3LoadingIndicator.dart';
+ import '../../../theme/OperitGlassSurface.dart';
+@@ -370,63 +371,35 @@
+ 
+   /// Selects, previews, confirms, and imports a complete Operit1 snapshot.
+   Future<void> _importOperit1Snapshot() async {
+-    final l10n = AppLocalizations.of(context)!;
+-    final file = await SnapshotImportFile.pick();
+-    if (file == null) {
+-      return;
+-    }
+-    ClientLogger.i(
+-      'settings snapshot selected name=${file.name} bytes=${file.byteLength}',
+-      tag: _operit1SnapshotImportLogTag,
+-    );
+-    setState(() => _busy = true);
+-    SnapshotImportSession? stagedSession;
+-    late final Operit1SnapshotPreview preview;
++    if (_busy) return;
++    final l10n = AppLocalizations.of(context)!;
++    setState(() {
++      _busy = true;
++      _operit1ImportProgress = null;
++    });
++    PreparedOperit1Snapshot? prepared;
+     try {
+-      stagedSession = await SnapshotImportUploader(widget.clients).stage(file);
+-      ClientLogger.i(
+-        'settings snapshot upload completed bytes=${stagedSession.byteLength}; inspection started',
+-        tag: _operit1SnapshotImportLogTag,
+-      );
+-      preview = await stagedSession.completeOperit1();
+-      ClientLogger.i(
+-        'settings snapshot inspection completed format=${preview.formatVersion} configs=${preview.modelConfig.configs.length} chats=${preview.chatCount} messages=${preview.messageCount}',
+-        tag: _operit1SnapshotImportLogTag,
+-      );
+-    } catch (error, stackTrace) {
+-      ClientLogger.e(
+-        'settings snapshot selection, upload, or inspection failed',
+-        tag: _operit1SnapshotImportLogTag,
+-        error: error,
+-        stackTrace: stackTrace,
+-      );
+-      final session = stagedSession;
+-      if (session != null) {
+-        await session.discard();
+-      }
+-      if (!mounted) {
+-        return;
+-      }
+-      ScaffoldMessenger.of(context).showSnackBar(
+-        SnackBar(
++      prepared = await prepareOperit1Snapshot(context, widget.clients);
++    } catch (error) {
++      if (mounted) {
++        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+           content: Text(l10n.settingsDataOperit1SnapshotImportError('$error')),
+-        ),
+-      );
++        ));
++      }
+       return;
+     } finally {
+-      if (mounted) {
+-        setState(() => _busy = false);
+-      }
+-    }
+-    final session = stagedSession;
++      if (mounted) setState(() => _busy = false);
++    }
++    if (prepared == null) return;
++    final session = prepared.session;
+     if (!mounted) {
+       await session.discard();
+       return;
+     }
+     final confirmed = await _Operit1SnapshotImportDialog.show(
+       context: context,
+-      fileName: file.name,
+-      preview: preview,
++      fileName: prepared.fileName,
++      preview: prepared.preview,
+       byteCount: session.byteLength,
+     );
+     if (confirmed != true) {

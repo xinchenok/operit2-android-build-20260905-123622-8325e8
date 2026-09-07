@@ -1,0 +1,20 @@
+{
+  "slug": "startup-open-imported-conversation",
+  "title": "fix(flutter): open a restored conversation after onboarding import",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/startup-open-imported-conversation",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzz_onboarding_import_completion.json",
+      "index": 4,
+      "name": "onboarding-import-commit-and-open-conversation"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

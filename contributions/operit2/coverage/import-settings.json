@@ -1,0 +1,586 @@
+[
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 0,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelConfigData.rs (1)",
+    "path": "core/crates/foundation/model/src/ModelConfigData.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 contextLength 数据模型、默认值或导入映射；原版仅支持 maxContextLength 与固定 40% 普通模式，是新增兼容能力。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 1,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelConfigData.rs (2)",
+    "path": "core/crates/foundation/model/src/ModelConfigData.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 数据模型、默认值或导入映射；原版不存在该字段，属于新功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 2,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelConfigData.rs (3)",
+    "path": "core/crates/foundation/model/src/ModelConfigData.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 数据模型、默认值或导入映射；原版不存在该字段，属于新功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 3,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (1)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-gemini-search"
+    ],
+    "reason": "原版已有 GeminiGoogleSearch 内置工具及请求序列化；抽取导入映射，保留原版模型结构。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 4,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (2)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 0,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-gemini-search"
+    ],
+    "reason": "仅抽取 enableGoogleSearch 跳过提示修正/反序列化；排除 contextLength、summaryCustomRules 及增强版多供应商导入上下文。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 5,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (3)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 contextLength 数据模型、默认值或导入映射；原版仅支持 maxContextLength 与固定 40% 普通模式，是新增兼容能力。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 6,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (4)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-gemini-search"
+    ],
+    "reason": "仅抽取 enableGoogleSearch 跳过提示修正/反序列化；排除 contextLength、summaryCustomRules 及增强版多供应商导入上下文。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 7,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (5)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 contextLength 数据模型、默认值或导入映射；原版仅支持 maxContextLength 与固定 40% 普通模式，是新增兼容能力。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 8,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (6)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 contextLength 数据模型、默认值或导入映射；原版仅支持 maxContextLength 与固定 40% 普通模式，是新增兼容能力。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 9,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (7)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 数据模型、默认值或导入映射；原版不存在该字段，属于新功能。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 10,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: Operit1SnapshotImportManager.rs (8)",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-gemini-search"
+    ],
+    "reason": "原版已有 GeminiGoogleSearch 内置工具及请求序列化；抽取导入映射，保留原版模型结构。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 11,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelCatalog.rs (1)",
+    "path": "core/crates/foundation/model/src/ModelCatalog.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 12,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelListFetcher.rs (1)",
+    "path": "core/crates/provider/services/src/chat/llmprovider/ModelListFetcher.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 13,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model.rs (1)",
+    "path": "core/crates/command/core/src/commands/model.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 14,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model.rs (2)",
+    "path": "core/crates/command/core/src/commands/model.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 15,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model.rs (3)",
+    "path": "core/crates/command/core/src/commands/model.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 16,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model.rs (4)",
+    "path": "core/crates/command/core/src/commands/model.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 17,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model_editor.rs (1)",
+    "path": "apps/cli/src/tui/config/model_editor.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 18,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model_editor.rs (2)",
+    "path": "apps/cli/src/tui/config/model_editor.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 19,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model_editor.rs (3)",
+    "path": "apps/cli/src/tui/config/model_editor.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-context-precision"
+    ],
+    "reason": "仅抽取原版 maxContextLength 小数精度保留；同一 spec 中新增普通上下文和摘要规则字段不纳入。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 20,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model_editor.rs (4)",
+    "path": "apps/cli/src/tui/config/model_editor.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 21,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model_editor.rs (5)",
+    "path": "apps/cli/src/tui/config/model_editor.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 22,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: model_editor.rs (6)",
+    "path": "apps/cli/src/tui/config/model_editor.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 23,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageCoordinationDelegate.rs (1)",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 24,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageCoordinationDelegate.rs (2)",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 25,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageCoordinationDelegate.rs (3)",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 26,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageCoordinationDelegate.rs (4)",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 27,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageCoordinationDelegate.rs (5)",
+    "path": "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 28,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: app.rs (1)",
+    "path": "apps/cli/src/tui/core/app.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 29,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: app.rs (2)",
+    "path": "apps/cli/src/tui/core/app.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/effectiveContextLength 方法补充构造、保留或使用路径；原版固定 40% 逻辑无需这些字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 30,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ConversationService.rs (1)",
+    "path": "core/crates/provider/services/src/chat/enhance/ConversationService.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 31,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ConversationService.rs (2)",
+    "path": "core/crates/provider/services/src/chat/enhance/ConversationService.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 32,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ConversationService.rs (3)",
+    "path": "core/crates/provider/services/src/chat/enhance/ConversationService.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 33,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: EnhancedAIService.rs (1)",
+    "path": "core/crates/provider/services/src/chat/EnhancedAIService.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 34,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: EnhancedAIService.rs (2)",
+    "path": "core/crates/provider/services/src/chat/EnhancedAIService.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 35,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: AIMessageManager.rs (1)",
+    "path": "core/crates/runtime/application/src/core/chat/AIMessageManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 36,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: AIMessageManager.rs (2)",
+    "path": "core/crates/runtime/application/src/core/chat/AIMessageManager.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 37,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ChatServiceCore.rs (1)",
+    "path": "core/crates/runtime/application/src/services/ChatServiceCore.rs",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "新增 summaryCustomRules 的编辑、显示、角色/模型解析与摘要参数传递链；不是原版已有摘要配置丢失。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 38,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (1)",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs.",
+    "excluded_enhanced_parts": "原版使用既有 activeTurnId 与独立摘要提交锁；不直接移植增强版 cancellationVersionByChatId。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 39,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (2)",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "baseline_old_matches": 0,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs.",
+    "excluded_enhanced_parts": "原版使用既有 activeTurnId 与独立摘要提交锁；不直接移植增强版 cancellationVersionByChatId。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 40,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (3)",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "baseline_old_matches": 0,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs.",
+    "excluded_enhanced_parts": "原版使用既有 activeTurnId 与独立摘要提交锁；不直接移植增强版 cancellationVersionByChatId。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 41,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (4)",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs.",
+    "excluded_enhanced_parts": "仅用于原版普通聊天自动摘要；不新增 contextLength/effectiveContextLength 或 summaryCustomRules 字段及参数。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 42,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (5)",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs.",
+    "excluded_enhanced_parts": "仅用于原版普通聊天自动摘要；不新增 contextLength/effectiveContextLength 或 summaryCustomRules 字段及参数。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 43,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (6)",
+    "path": "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-ordinary-send-summary"
+    ],
+    "reason": "Adapted ordinary-send summary and atomic turn ownership to baseline activeTurnId; retained existing context limit and summary APIs.",
+    "excluded_enhanced_parts": "仅用于原版普通聊天自动摘要；不新增 contextLength/effectiveContextLength 或 summaryCustomRules 字段及参数。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 44,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (1)",
+    "path": "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 45,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (2)",
+    "path": "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-context-precision"
+    ],
+    "reason": "仅抽取原版 maxContextLength 小数精度保留；同一 spec 中新增普通上下文和摘要规则字段不纳入。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 46,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (3)",
+    "path": "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 47,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (4)",
+    "path": "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-finite-context"
+    ],
+    "reason": "仅抽取原版 maxContextLength 的非有限值校验；新增 contextLength 字段校验排除。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 48,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (5)",
+    "path": "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 49,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (6)",
+    "path": "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 50,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (7)",
+    "path": "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 51,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: AgentModelSelectorPopup.dart (1)",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentModelSelectorPopup.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 52,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: AgentModelSelectorPopup.dart (2)",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentModelSelectorPopup.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 53,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: AgentModelSelectorPopup.dart (3)",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentModelSelectorPopup.dart",
+    "baseline_old_matches": 1,
+    "classification": "excluded",
+    "prs": [],
+    "reason": "为新增 contextLength/summaryCustomRules 字段增加 Flutter 状态、控件、保存、释放或 Max 开关保留逻辑；原版没有这些新增字段。"
+  },
+  {
+    "file": "patches/zzzzz_import_settings.json",
+    "index": 54,
+    "name": "Complete Operit1 context, summary rules and Gemini grounding: AgentInputMenuPopup.dart (1)",
+    "path": "apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentInputMenuPopup.dart",
+    "baseline_old_matches": 1,
+    "classification": "upstream_fix",
+    "prs": [
+      "import-settings-context-usage"
+    ],
+    "reason": "适配原版 Max/40% 策略修复统计分母；新增 contextLength 覆盖值排除。"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "slug": "chat-preserve-partial-answer",
+  "title": "fix(chat): retain partial answers after stream failures",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-preserve-partial-answer",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
+  ],
+  "source_specs": [
+    "chat-fixes.json:preserve-visible-reply-after-stream-failure"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

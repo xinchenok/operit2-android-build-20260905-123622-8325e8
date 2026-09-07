@@ -1,0 +1,20 @@
+{
+  "slug": "import-current-chat-preference",
+  "title": "fix(import): preserve the current chat during snapshot migration",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-current-chat-preference",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/operit1_import.json",
+      "index": 23,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 22"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

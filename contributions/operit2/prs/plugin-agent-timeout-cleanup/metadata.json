@@ -1,0 +1,16 @@
+{
+  "slug": "plugin-agent-timeout-cleanup",
+  "title": "fix(plugins): clear the agent timeout after send completion",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/plugin-agent-timeout-cleanup",
+  "status": "prepared",
+  "paths": [
+    "plugins/packages/buildin/extended_chat.ts"
+  ],
+  "source_specs": [
+    "builder/plugin_payload.py:timer_cleanup"
+  ],
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. No builds, sync jobs, tests, or device validation."
+}

@@ -1,0 +1,40 @@
+{
+  "slug": "import-stale-model-selection",
+  "title": "fix(import): continue full snapshots with stale model selections",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-stale-model-selection",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/z_import_followup.json",
+      "index": 0,
+      "name": "Full snapshot import tolerates a removed selected model"
+    },
+    {
+      "file": "patches/z_import_followup.json",
+      "index": 1,
+      "name": "Preserve explicit single-model validation while permitting stale full-snapshot selection"
+    },
+    {
+      "file": "patches/z_import_followup.json",
+      "index": 2,
+      "name": "Retain model preview metadata even when the former chat provider is missing"
+    },
+    {
+      "file": "patches/z_import_followup.json",
+      "index": 3,
+      "name": "Report obsolete legacy chat selection and retain the current selection"
+    },
+    {
+      "file": "patches/z_import_followup.json",
+      "index": 5,
+      "name": "Do not install an empty or nonexistent chat model binding"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

@@ -1,0 +1,25 @@
+{
+  "slug": "import-legacy-empty-tags",
+  "title": "fix(import): normalize self-closing legacy message tags",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-legacy-empty-tags",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/operit1_import.json",
+      "index": 30,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 29"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 31,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 30"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

@@ -1,0 +1,540 @@
+{
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "method": "git apply --cached --check --whitespace=error-all against an isolated index; no builds or device tests",
+  "results": [
+    {
+      "slug": "chat-accepted-attachment-cleanup",
+      "patch_sha256": "854bd517cab77e992f55175daf94de30d8578a8f7a90f948e85b2d6a4afb1a99",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-cancel-pending-locator",
+      "patch_sha256": "b0ce9cd2b51e21e80cba904be79225205644d0235b7739585b9ed09a03dd0697",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-detached-scroll-navigator",
+      "patch_sha256": "0ef0ee75fae213bedf41bdf57cf69a2e2c41836e679a68955a7c2bc170c3aee7",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-group-cancellation",
+      "patch_sha256": "6456393303eb791775963094ee4ec470b81d9b379993d905ecab94251496cf02",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-group-command-lock",
+      "patch_sha256": "299597ea90883ff0c327d9dacdd75d36f1125e6294e7c96ed02344a870942768",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-group-owner-routing",
+      "patch_sha256": "cd4c38a8cfa0c2926db9e69447840a1ebf659ed880015070e0299a0c1668b8b5",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-hook-draft-ownership",
+      "patch_sha256": "08dab0ec18cd11df448a41b4c81ae72fe70488e9291f8a892182c7f46881126f",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-initial-conversation",
+      "patch_sha256": "3fe7254664588e14591663d5ad6b8f0ccf3f678367e5c92eb1fd2f95627b4284",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-markdown-paragraph-keys",
+      "patch_sha256": "2272f8e6315c0acd3db1b300fdf5610cab9d4c1d5c1a5439656d89564e744647",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-nested-scroll-notifications",
+      "patch_sha256": "540f57a970630237b12a22961226efe67185666d5365ef25f5539c2f2bd2fa68",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-preserve-partial-answer",
+      "patch_sha256": "f82dc16e95925cc7c6afd2ea767bfd3f4b94c1251595e199ae3acf858bbb2435",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-queue-edit-draft",
+      "patch_sha256": "c351b188f684e43b87298b1f47a260a04da835d875786e7154ae27e7a038e987",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-queue-hook-restoration",
+      "patch_sha256": "192488306447de91a589b941d21bad9a1417452a6c9eab54f18ed4ede9cb045a",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-queued-text-attachments",
+      "patch_sha256": "40a066b55703d53eb21953ad7aca37dc6333f9732587ee131403732de54e5d90",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-reply-ownership",
+      "patch_sha256": "03e470e1f517693cad47ae7b1525bdacf425e783a5cef704f407417dee80f3ed",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-scroll-follow-intent",
+      "patch_sha256": "44f67d923e319aea4cc3c0db54a4cd58cdfbe157902cf401dc83113a2497bd26",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-send-rejection",
+      "patch_sha256": "6658217ca8bde7623d1559f81ddbfa695d920e51d2ecacbeda4992fb350afc8d",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-speech-draft-ownership",
+      "patch_sha256": "d45474ea2a06287ec25fefd23a868a6dae168cabd8bf331c5b1b534132d5ccec",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-submit-attachment-ownership",
+      "patch_sha256": "12520de86e6d3b666e09ff76b45a46390aabd3a1bb6e1ff3a876d86a6547b14b",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-submit-single-flight",
+      "patch_sha256": "24e10a1a9192daa8e641c756211e57ccb0e471aee9bd14517260834141df758c",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-unsent-draft-recovery",
+      "patch_sha256": "5890e694e48122fb2afbc0bec79757588b7b11903843ca0210bbbae200ca4473",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "chat-worker-startup-cleanup",
+      "patch_sha256": "3017aa71e1900a7b8fe577155ffa6734d83c2f2a9019554aeedb560ee26e071b",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-all-model-configs",
+      "patch_sha256": "398bb9fe42c5edda4e38f5547395cff4a6682807c9de9c1b1b28af903329ebe2",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-chat-body-copies",
+      "patch_sha256": "0214f4d049f16080225e0121c0cba4fdf8f76f5db69e216873b06106dd5fb716",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-chat-id-collisions",
+      "patch_sha256": "1cd017716a502c72e14c306c5756dccc51c3bd1548cc4d350dc0126ea8e6f64b",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-current-chat-preference",
+      "patch_sha256": "e78a94caa990f05ca64f6a1ee3a8407caf604328fdf6de163d24dff3dd0bb1bb",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-default-function-mapping",
+      "patch_sha256": "969d35bd211311c99488856e045d0ee543fd18ba9b10ef626ce4a6d793798255",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-failure-progress",
+      "patch_sha256": "857999b8fc679c6ae03e6ef391082aa3634f4ec364b7ba9a841351a5f4188143",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-file-workspace-collisions",
+      "patch_sha256": "792277a579273444df7787468a65fadf05a1a724a4af8f00c3c37c1250dce530",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-legacy-empty-tags",
+      "patch_sha256": "01967738e69ef9f35e1bd86d710bbf33c2a7e6655781643a3c583cce68cc4e7f",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-message-part-batch",
+      "patch_sha256": "e4f855d5616090b4d7d8224792740772ee41d79c49d2806ebafd819839324a52",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-message-resource-paths",
+      "patch_sha256": "3ee2b4d0a864273d53c31f60ffbdc04476550e06eb4bfcf6a9f9b62910ea71a5",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-objectbox-documents",
+      "patch_sha256": "bd9fc9cafe21862a1fd97b2ef092adfc66b540592341ace9c43cb8eb958c3acc",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-objectbox-tag-relations",
+      "patch_sha256": "b37ebc5c6fb7f7688ae54a51c8cc6f8a3a1c3b2ffb42b69803498181154f66fd",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-optional-memory-databases",
+      "patch_sha256": "8b090a29a0d5019c8f315af2d0e5dde34b73b48fabe9b9809ee19b5c26117934",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-optional-wal",
+      "patch_sha256": "4ce4e10aca8ee90e7be9f47fb3255ed6f42d21f8d8072b8a0260f0b351a58b60",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-persona-identity-collisions",
+      "patch_sha256": "49a49078c47aca33b27824a227f8fcd0beeaa7c2cbcba2bf966698ba8bbe330f",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-portable-document-metadata",
+      "patch_sha256": "2763eb7e0d904d001009151e395be8e57f449235277181280b8ab2bf2869341d",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-profile-schema",
+      "patch_sha256": "d5b4378a23e4189f7acd75f680eacaa0981fc1091be5a42d9f73351babe769bc",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-reply-variants",
+      "patch_sha256": "ccabb25a51694d407011c17cab556f302326cc561b47459d24230f7d7d18bbf2",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-reuse-staged-database",
+      "patch_sha256": "f57f432abe9fc70027fef0b74d5aa9d1ab5682186aa0af76b60ab3e0be3906e6",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-room-schema-11-19",
+      "patch_sha256": "c851d6e4a0020ef5f26f7867ba583661e2d52d354f541f30c7d1b1f403207eb5",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-settings-context-precision",
+      "patch_sha256": "dc4b8ed28339b625834d6b505f19815f0720b31f956014648d72b3babe8b1288",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-settings-context-usage",
+      "patch_sha256": "ca67e8cba0a427feda351d69c3935b06de538ab13d35dd406e17912fa6614808",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-settings-finite-context",
+      "patch_sha256": "0ef4cefd65405ae1f2639d2717d8635ed61d16bc4c15970ecca9c6268ee22ad1",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-settings-gemini-search",
+      "patch_sha256": "5373eb30f0987905c55aef8ff6b9a4f005b5e92773b27550225ba5f8bd0e4599",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-settings-ordinary-send-summary",
+      "patch_sha256": "28bd47a3114c37a4abbbd1e6016893f74c816c5bdca1c8632aad430de541969d",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-shared-download-paths",
+      "patch_sha256": "38fbdc7be873c01bf5d559a23182f8aa0fdcd7b4c4dd5b4aca8c2643134050ca",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-stale-character-models",
+      "patch_sha256": "b1f06ca69404a6d1a1f28306bfa5c78e82c6649a8ce39186b994debf3898e518",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-stale-model-selection",
+      "patch_sha256": "80f8aa86516424bce66e00d7717cb32f828d68e8166880223b1ef4673a0cf779",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-tts-provider-types",
+      "patch_sha256": "522127a986b8b7383e2ff6733ed04a0cd5d7a81b915e505f45d26a1d48a6c565",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-unknown-provider-preview",
+      "patch_sha256": "7c91d69aca4f4ad688e9b8e77cd05f488f81eeb0539de9c45ae2e7256aea440d",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "import-user-documents",
+      "patch_sha256": "b7900767e45f1c675813c5cab5af24416637a06f28b4dca81472c6bdb2a449a2",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "model-fixed-character-binding",
+      "patch_sha256": "ac4d6faaad0d83c97f4ecb1a1d67110774d4f89e003a52f181e2cecb13431561",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "plugin-agent-timeout-cleanup",
+      "patch_sha256": "923f37a1f6efac7011505e351439c47d61c137ef80f2c93d06defa5215f45770",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "plugin-flutter-core-command-executor",
+      "patch_sha256": "2500c422096ab54fb97f62fd85cfb50eb7d2e701c506e00e322b6b8af242aebc",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "plugin-lifecycle-replay-lock",
+      "patch_sha256": "8a490f5e98a7bca18ea40e9dc44c9a024bb40a82d307fd770eb8a41fc3803cbe",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "plugin-startup-after-core-node",
+      "patch_sha256": "2e6e7db08e1d4f816b4a6203acfa8a3fd613e94fb680fed10be953d5720dc535",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "plugin-sync-missing-outputs",
+      "patch_sha256": "00398e0c25dd2226059c7715b10fe9bc824eae9a306fbb126586343e9a3760e7",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "plugin-tool-error-label",
+      "patch_sha256": "e29008cf9f66a833b4858fdf4481fbdf02dc6f7a7ad421b3cbae4cdcb358dcc9",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "provider-claude-system-cache-boundary",
+      "patch_sha256": "218113ea174a5c54a1822f779aa7770af25a45faf7c908c78a9185f19defff3b",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "snapshot-input-background-io",
+      "patch_sha256": "359bad9940024408f64f282d35e107c83bed58acf6978e8c49b99a63d4ac8564",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "snapshot-ui-cleanup-errors",
+      "patch_sha256": "979a476359ed58421031424a97303da093a8e9e01e7753d67924751afde6c45d",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "snapshot-ui-confirmation-mounted",
+      "patch_sha256": "d6b23211e111ef80e1355a91e257ebbadf54d3282346142f540fb0c19414fd98",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "snapshot-ui-import-results",
+      "patch_sha256": "d76c255911940c37a0b7f9f4e44a239f797a65b18e0f21141986f36e7010bb3d",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "snapshot-ui-preparation-progress",
+      "patch_sha256": "f2b05ab8143de77fea1361675aef5cef6ff73733fa7bca340bbcf5d96428c382",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-failed-watch-open",
+      "patch_sha256": "9608d433264ee64e3aab5c528505959ec74bacfe5c2310f1840919f2784c7f25",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-native-bridge-lifetime",
+      "patch_sha256": "04a201726f8b09bff12ca998735460b44cb985fda2e76cc20bafeaedb6faa828",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-nonblocking-lifecycle-events",
+      "patch_sha256": "7cb159ffff8feb4fea40110e5d7dcc7d8fbd9953619726c69e0dacd05e7c0887",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-onboarding-import-navigation",
+      "patch_sha256": "0f3d4d58c70b493c3d57608459aaec093cf4aeae786c269f0cfaf2cdc355ed53",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-onboarding-import-retry",
+      "patch_sha256": "cd53d2e6a8342cf46b500ebcd6f3472c5980b1ae5578bb5207e889eb30050820",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-open-imported-conversation",
+      "patch_sha256": "9f16091b6328af0ec1aa4ae7a948e8e185f6bc862daab15c1578d275c9ca5abf",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-pairing-after-storage",
+      "patch_sha256": "bd84fecff0f710964468ea6e7e3b7fee0c930daaaa08816847c0d563d8b57842",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "startup-restore-service-roots",
+      "patch_sha256": "ae993e2778d9b06c9534cde2b77c2936970e3e5a6e791ab9fc1abbde5ed15e24",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-cancel-outside-global-state-lock",
+      "patch_sha256": "e5884de5083aeed9cf2cfe6513af60735b12f39269763ed24518c6f97bed4209",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-cleanup-failed-command-execution",
+      "patch_sha256": "e19335a73238946bbb9be2897c021d3a3b72c7af40b9d251d63a4ec0442920f2",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-cold-start",
+      "patch_sha256": "b52468444f06a3371fb9850d841c702a7dad7f7b6683ca891c1437e5f7f2cfdb",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-command-output-cap",
+      "patch_sha256": "23687c98e7652225a73e7c1d1d16f46bd81a5f218720bdfb56808a582d0a7033",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-descriptor-lifetime",
+      "patch_sha256": "8ae26a95941e4f6cdb805d9cc0fb834878c179d8355086cbac89284b35140c10",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-execute-complete-scripts",
+      "patch_sha256": "8ddf98d5243e7ce0505dc83cbe761f485c23d5f8236d8913525960eacedc83f6",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-fork-child",
+      "patch_sha256": "6e3789367c7c145d481b922b8f70910e04e1163f5f4a5fc819f1b418a5389fe7",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-input-global-lock",
+      "patch_sha256": "a6af727aeea104d8441cc56fb2761a56f26e47e5e8ad61ea5ee68e313eecb389",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-named-creation-race",
+      "patch_sha256": "c440551822a56937b42d58223c37c16582c2cba3a6aa0f01ba63e205e78f3fad",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-preserve-system-shell-exit-status",
+      "patch_sha256": "901c387abad0b140883fc2c7a55fe71be1c4cbf13db05b56942af4bfda5720e5",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-proot-environment",
+      "patch_sha256": "b4fd3c05dda5277f9431068d716e89f0073425edf2f1398b229343388affeb01",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-reaped-pid",
+      "patch_sha256": "c937a8cf6edbbb198e9f235149644c5e3220771e8ef50e19e5b80fb3df81758c",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-retire-unresponsive-timeouts",
+      "patch_sha256": "260641a4961889e92642a87e2f48c551c32319b7d2ee01e3e8ac90530367a6c0",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-serialize-session-commands",
+      "patch_sha256": "dcc56b79219c0584a402b5fe3a4b7c63e15ade86db6859482b523d7efe776525",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "slug": "terminal-stale-session",
+      "patch_sha256": "acd2cdca193271b7020cfed89222b1d6dea1a0d833c6f6ffb10bad41c70377ae",
+      "passed": true,
+      "output": ""
+    }
+  ]
+}

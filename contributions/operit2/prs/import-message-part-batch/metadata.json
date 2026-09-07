@@ -1,0 +1,26 @@
+{
+  "slug": "import-message-part-batch",
+  "title": "fix(import): batch archived message part inserts",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-message-part-batch",
+  "status": "prepared",
+  "paths": [
+    "core/crates/persistence/store/src/dao/MessagePartDao.rs",
+    "core/crates/persistence/store/src/repository/ChatHistoryManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 11,
+      "name": "large-import-chathistorymanager-2"
+    },
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 12,
+      "name": "large-import-messagepartdao-1"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

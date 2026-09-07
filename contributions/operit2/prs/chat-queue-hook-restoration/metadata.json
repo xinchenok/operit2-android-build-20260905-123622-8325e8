@@ -1,0 +1,17 @@
+{
+  "slug": "chat-queue-hook-restoration",
+  "title": "fix(chat): restore queued input rejected by hooks",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-queue-hook-restoration",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:restore-dequeued-message-when-submit-hook-fails",
+    "patches/zz_chat_followup.json:restore-unaccepted-queued-input-and-do-not-drop-empty-hook-replacements"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

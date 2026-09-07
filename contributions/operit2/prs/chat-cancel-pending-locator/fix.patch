@@ -1,0 +1,26 @@
+diff --git a/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart b/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
+--- a/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
++++ b/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
+@@ -309,8 +309,14 @@
+ 
+   /// Updates navigator anchors for active user scroll sessions only.
+   bool _handleScrollNotification(ScrollNotification notification) {
++    if (notification is ScrollStartNotification && notification.dragDetails != null) {
++      _clearPendingMessageJump();
++      _userScrollSessionActive = true;
++      widget.onAutoScrollToBottomChanged(false);
++    }
+     if (notification is UserScrollNotification) {
+       if (notification.direction != ScrollDirection.idle) {
++        _clearPendingMessageJump();
+         _userScrollSessionActive = true;
+         _userScrollsTowardHistory =
+             notification.direction == ScrollDirection.forward;
+@@ -430,6 +436,7 @@
+   }
+ 
+   Future<void> _scrollToBottomFromNavigator() async {
++    _clearPendingMessageJump();
+     widget.onAutoScrollToBottomChanged(true);
+     if (widget.hasNewerDisplayHistory) {
+       await widget.onShowLatestDisplayWindow();

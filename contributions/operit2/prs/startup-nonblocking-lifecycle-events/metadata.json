@@ -1,0 +1,35 @@
+{
+  "slug": "startup-nonblocking-lifecycle-events",
+  "title": "fix(android): avoid blocking lifecycle callbacks during runtime startup",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/startup-nonblocking-lifecycle-events",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/startup.json",
+      "index": 14,
+      "name": "keep-main-thread-lifecycle-events-off-runtime-initialization-lock"
+    },
+    {
+      "file": "patches/startup.json",
+      "index": 15,
+      "name": "publish-bootstrap-roots-without-blocking-main-thread"
+    },
+    {
+      "file": "patches/startup.json",
+      "index": 16,
+      "name": "publish-ready-runtime-and-drain-startup-events-atomically"
+    },
+    {
+      "file": "patches/startup.json",
+      "index": 17,
+      "name": "queue-android-lifecycle-events-without-blocking-cold-start"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

@@ -1,0 +1,11 @@
+diff --git a/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart b/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
+--- a/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
++++ b/apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart
+@@ -430,6 +430,7 @@
+   }
+ 
+   Future<void> _scrollToBottomFromNavigator() async {
++    if (!mounted || !widget.scrollController.hasClients) return;
+     widget.onAutoScrollToBottomChanged(true);
+     if (widget.hasNewerDisplayHistory) {
+       await widget.onShowLatestDisplayWindow();

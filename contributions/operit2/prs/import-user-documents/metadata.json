@@ -1,0 +1,60 @@
+{
+  "slug": "import-user-documents",
+  "title": "fix(import): restore all owned user profile documents",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-user-documents",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 0,
+      "name": "profile-schema-default-records"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 1,
+      "name": "profile-schema-read-released-memory-space-metadata"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 2,
+      "name": "profile-schema-include-unbound-memory-spaces"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 3,
+      "name": "profile-schema-read-documents-before-persistent-import"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 4,
+      "name": "profile-schema-report-document-migration"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 5,
+      "name": "profile-schema-import-resolved-documents"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 6,
+      "name": "profile-schema-retain-all-user-document-owners"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 7,
+      "name": "profile-schema-optional-avatar-preferences"
+    },
+    {
+      "file": "patches/zzzzzzzz_profile_schema.json",
+      "index": 8,
+      "name": "profile-schema-import-owned-and-published-user-markdown"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

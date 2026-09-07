@@ -1,0 +1,17 @@
+{
+  "slug": "chat-hook-draft-ownership",
+  "title": "fix(chat): preserve drafts changed during submit hooks",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-hook-draft-ownership",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:do-not-send-draft-changed-during-hook",
+    "chat-fixes.json:bind-reply-before-submit-hook"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

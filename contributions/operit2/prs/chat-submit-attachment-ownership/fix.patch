@@ -1,0 +1,125 @@
+diff --git a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+--- a/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
++++ b/apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart
+@@ -1369,7 +1369,8 @@
+   /// Dispatches submit_requested before mutating the visible input field.
+   Future<void> _sendMessageWithHooks() async {
+     final text = _messageController.text.trim();
+-    final hasAttachments = _attachments.isNotEmpty;
++    final inputAttachments = List<AttachmentInfo>.unmodifiable(_attachments);
++    final hasAttachments = inputAttachments.isNotEmpty;
+     if (text.isEmpty && !hasAttachments) {
+       return;
+     }
+@@ -1393,9 +1394,13 @@
+       text: text,
+       selectionStart: inputValue.selection.start,
+       selectionEnd: inputValue.selection.end,
+-      attachmentCount: _attachments.length,
+-    );
+-    if (!mounted || _currentChatId != chatId) {
++      attachmentCount: inputAttachments.length,
++    );
++    if (!mounted || _currentChatId != chatId ||
++        inputAttachments.length != _attachments.length ||
++        !inputAttachments.every((attachment) => _attachments.any(
++          (current) => current.filePath == attachment.filePath,
++        ))) {
+       return;
+     }
+     if (decision != null) {
+@@ -1407,7 +1412,10 @@
+         if (decision.action == 'consume' && decision.clearInput) {
+           _clearMentionSuggestionState();
+           _messageController.clear();
+-          await _viewModel.clearAttachments();
++          for (final attachment in inputAttachments) {
++            await _viewModel.removeAttachment(attachment.filePath);
++          }
++          await _refreshAttachments();
+         }
+         final message = decision.message;
+         if (message != null && message.trim().isNotEmpty) {
+@@ -1430,7 +1438,7 @@
+     _clearMentionSuggestionState();
+     _messageController.clear();
+     _inputFocusNode.unfocus();
+-    _startSendMessageText(submittedText, chatId!);
++    _startSendMessageText(submittedText, chatId!, inputAttachments);
+   }
+ 
+   /// Starts or stops local speech input from the chat action button.
+@@ -1527,7 +1535,11 @@
+   }
+ 
+   /// Starts one send while retaining the chat id that accepted the submit hook.
+-  void _startSendMessageText(String text, String chatId) {
++  void _startSendMessageText(
++    String text,
++    String chatId,
++    List<AttachmentInfo> submittedAttachments,
++  ) {
+     if (_currentChatId != chatId) {
+       return;
+     }
+@@ -1541,7 +1553,7 @@
+       );
+     });
+     _scheduleScrollToBottom();
+-    _sendMessageAfterNextFrame(text, chatId);
++    _sendMessageAfterNextFrame(text, chatId, submittedAttachments);
+   }
+ 
+   /// Schedules one automatic alignment with the latest message for this frame.
+@@ -1578,7 +1590,11 @@
+   }
+ 
+   /// Sends the submitted text after layout has accepted the optimistic UI state.
+-  void _sendMessageAfterNextFrame(String text, String chatId) {
++  void _sendMessageAfterNextFrame(
++    String text,
++    String chatId,
++    List<AttachmentInfo> submittedAttachments,
++  ) {
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+       if (!mounted) {
+         return;
+@@ -1588,6 +1604,7 @@
+             text,
+             replyToMessage: _replyToMessage,
+             chatIdOverride: chatId,
++            attachmentsOverride: submittedAttachments,
+           )
+           .then((_) async {
+             if (!mounted || _currentChatId != chatId) {
+diff --git a/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart b/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
+--- a/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
++++ b/apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart
+@@ -110,12 +110,13 @@
+     String text, {
+     ChatUiMessage? replyToMessage,
+     String? chatIdOverride,
++    List<AttachmentInfo>? attachmentsOverride,
+   }) async {
+     debugPrint(
+       'Chat send requested chatId=${chatIdOverride ?? 'current'} '
+       'chars=${text.length}',
+     );
+-    final attachments = await _chat.attachments();
++    final attachments = attachmentsOverride ?? await _chat.attachments();
+     await _chat.sendUserMessage(
+       promptFunctionType: core_proxy.PromptFunctionType.chat,
+       roleCardIdOverride: null,
+@@ -135,8 +136,10 @@
+       ),
+     );
+     debugPrint('Chat send accepted chatId=${chatIdOverride ?? 'current'}');
+-    if (attachments.isNotEmpty) {
+-      await _chat.clearAttachments();
++    // The runtime call can await a group turn or hook. Keep attachments
++    // added for the next draft while this send was pending.
++    for (final attachment in attachments) {
++      await _chat.removeAttachment(filePath: attachment.filePath);
+     }
+   }
+ 

@@ -1,0 +1,25 @@
+{
+  "slug": "import-chat-body-copies",
+  "title": "fix(import): move archived message bodies during persistence",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-chat-body-copies",
+  "status": "prepared",
+  "paths": [
+    "core/crates/persistence/store/src/repository/ChatHistoryManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 10,
+      "name": "large-import-chathistorymanager-1"
+    },
+    {
+      "file": "patches/zzzzzzzzzzzz_large_snapshot_import.json",
+      "index": 11,
+      "name": "large-import-chathistorymanager-2"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

@@ -1,0 +1,105 @@
+diff --git a/core/crates/persistence/store/src/dao/MessageVariantDao.rs b/core/crates/persistence/store/src/dao/MessageVariantDao.rs
+--- a/core/crates/persistence/store/src/dao/MessageVariantDao.rs
++++ b/core/crates/persistence/store/src/dao/MessageVariantDao.rs
+@@ -188,11 +188,51 @@
+         messageTimestamp: i64,
+         variantIndex: i32,
+     ) -> Result<(), SqliteStoreError> {
+-        self.store.execute(
+-            "DELETE FROM message_variants WHERE chatId = ?1 AND messageTimestamp = ?2 AND variantIndex = ?3",
+-            sqliteParams![chatId, messageTimestamp, variantIndex],
+-        )?;
+-        Ok(())
++        self.store.transaction(|transaction| {
++            let selectedVariantIndex: i32 = transaction
++                .queryOne(
++                    "SELECT selectedVariantIndex FROM messages WHERE chatId = ?1 AND timestamp = ?2",
++                    sqliteParams![chatId, messageTimestamp],
++                )?
++                .map(|row| row.get(0))
++                .transpose()?
++                .unwrap_or(0);
++            transaction.execute(
++                "DELETE FROM message_variants WHERE chatId = ?1 AND messageTimestamp = ?2 AND variantIndex = ?3",
++                sqliteParams![chatId, messageTimestamp, variantIndex],
++            )?;
++            transaction.execute(
++                "DELETE FROM message_parts WHERE chatId = ?1 AND messageTimestamp = ?2 AND variantIndex = ?3",
++                sqliteParams![chatId, messageTimestamp, variantIndex],
++            )?;
++            let remaining = transaction.queryRows(
++                "SELECT variantIndex FROM message_variants WHERE chatId = ?1 AND messageTimestamp = ?2 ORDER BY variantIndex ASC",
++                sqliteParams![chatId, messageTimestamp],
++            )?;
++            let mut nextSelectedVariantIndex = 0;
++            for (index, row) in remaining.into_iter().enumerate() {
++                let oldIndex: i32 = row.get(0)?;
++                let newIndex = index as i32 + 1;
++                if oldIndex == selectedVariantIndex {
++                    nextSelectedVariantIndex = newIndex;
++                }
++                if oldIndex != newIndex {
++                    transaction.execute(
++                        "UPDATE message_variants SET variantIndex = ?4 WHERE chatId = ?1 AND messageTimestamp = ?2 AND variantIndex = ?3",
++                        sqliteParams![chatId, messageTimestamp, oldIndex, newIndex],
++                    )?;
++                    transaction.execute(
++                        "UPDATE message_parts SET variantIndex = ?4 WHERE chatId = ?1 AND messageTimestamp = ?2 AND variantIndex = ?3",
++                        sqliteParams![chatId, messageTimestamp, oldIndex, newIndex],
++                    )?;
++                }
++            }
++            transaction.execute(
++                "UPDATE messages SET selectedVariantIndex = ?3 WHERE chatId = ?1 AND timestamp = ?2",
++                sqliteParams![chatId, messageTimestamp, nextSelectedVariantIndex],
++            )?;
++            Ok(())
++        })
+     }
+ 
+     pub fn deleteVariantsForMessage(
+diff --git a/core/crates/persistence/store/src/repository/ChatHistoryManager.rs b/core/crates/persistence/store/src/repository/ChatHistoryManager.rs
+--- a/core/crates/persistence/store/src/repository/ChatHistoryManager.rs
++++ b/core/crates/persistence/store/src/repository/ChatHistoryManager.rs
+@@ -995,12 +995,6 @@
+         }
+         self.messageVariantDao
+             .deleteVariant(&chatId, messageTimestamp, variantIndex)?;
+-        self.messagePartDao
+-            .deletePartsForMessage(&chatId, messageTimestamp, variantIndex)?;
+-        if baseMessage.selectedVariantIndex == variantIndex {
+-            self.messageDao
+-                .updateSelectedVariantIndex(&chatId, messageTimestamp, 0)?;
+-        }
+         self.touchChatMetadata(&chatId)?;
+         self.recordMessageSnapshot(&chatId, messageTimestamp)?;
+         Ok(())
+@@ -1181,7 +1175,10 @@
+         let nextVariantIndex = self
+             .messageVariantDao
+             .getVariantsForMessage(&chatId, messageTimestamp)?
+-            .len() as i32
++            .into_iter()
++            .map(|variant| variant.variantIndex)
++            .max()
++            .unwrap_or(0)
+             + 1;
+         let parts = message.parts.clone();
+         self.messageVariantDao
+diff --git a/core/crates/runtime/application/src/services/core/ChatHistoryDelegate.rs b/core/crates/runtime/application/src/services/core/ChatHistoryDelegate.rs
+--- a/core/crates/runtime/application/src/services/core/ChatHistoryDelegate.rs
++++ b/core/crates/runtime/application/src/services/core/ChatHistoryDelegate.rs
+@@ -1893,12 +1893,7 @@
+         self.chatHistoryManager
+             .deleteMessageVariant(chatId.clone(), timestamp, variantIndex)
+             .expect("ChatHistoryManager.deleteMessageVariant must remove the requested variant");
+-        self.updateOpenedChatMessage(&chatId, timestamp, |message| {
+-            message.variantCount = (message.variantCount - 1).max(1);
+-            if message.selectedVariantIndex == variantIndex {
+-                message.selectedVariantIndex = 0;
+-            }
+-        });
++        self.reloadCurrentChatDisplayHistory(chatId);
+     }
+ 
+     #[allow(non_snake_case)]

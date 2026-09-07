@@ -1,0 +1,36 @@
+{
+  "slug": "import-all-model-configs",
+  "title": "fix(import): preserve all snapshot provider configurations",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/import-all-model-configs",
+  "status": "prepared",
+  "paths": [
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotArchive.rs",
+    "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
+  ],
+  "source_specs": [
+    {
+      "file": "patches/operit1_import.json",
+      "index": 0,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotArchive 1"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 1,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotArchive 2"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 3,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 2"
+    },
+    {
+      "file": "patches/operit1_import.json",
+      "index": 7,
+      "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 6"
+    }
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}

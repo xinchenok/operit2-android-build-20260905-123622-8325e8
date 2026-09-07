@@ -1,0 +1,19 @@
+{
+  "slug": "chat-queued-text-attachments",
+  "title": "fix(chat): keep draft attachments out of queued sends",
+  "base_repository": "AAswordman/Operit2",
+  "base_branch": "main",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "head_branch": "fix/chat-queued-text-attachments",
+  "status": "prepared",
+  "paths": [
+    "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
+    "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
+  ],
+  "source_specs": [
+    "chat-fixes.json:send-explicit-attachment-snapshot",
+    "chat-fixes.json:respect-explicit-send-attachments",
+    "chat-fixes.json:queued-text-does-not-steal-current-draft-attachments"
+  ],
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+}
