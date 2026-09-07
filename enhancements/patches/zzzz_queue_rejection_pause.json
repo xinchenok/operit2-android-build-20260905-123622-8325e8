@@ -1,0 +1,8 @@
+[
+  {
+    "name": "pause-queue-before-returning-unaccepted-send-error",
+    "path": "core/crates/runtime/application/src/services/ChatServiceCore.rs",
+    "old": "        AppLogger::i(\n            \"ChatServiceCore\",\n            &format!(\"send scheduled chatId={hookChatId}\"),\n        );\n        result\n    }",
+    "new": "        if result.is_err() {\n            // Input was rejected before it entered history. Do not let the Error\n            // state re-arm the same pending item (or the next one) for auto-send.\n            // Pause before returning over the bridge; the editor can then restore\n            // the item without an intervening ready snapshot taking another item.\n            let mut queueStateByChatId = self.pendingQueueStateFlow().value();\n            if let Some(queueState) = queueStateByChatId.get_mut(&hookChatId) {\n                queueState.wasBlocked = false;\n                queueState.suppressNextAutoDequeue = false;\n                self.pendingQueueStateFlow().set_value(queueStateByChatId);\n            }\n        }\n        AppLogger::i(\n            \"ChatServiceCore\",\n            &format!(\"send scheduled chatId={hookChatId}\"),\n        );\n        result\n    }"
+  }
+]
