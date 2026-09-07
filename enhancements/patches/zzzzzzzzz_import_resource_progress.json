@@ -1,0 +1,68 @@
+[
+  {
+    "name": "import-resource-matcher-dependency",
+    "path": "core/Cargo.toml",
+    "old": "[workspace.dependencies]\nasync-trait = \"0.1\"",
+    "new": "[workspace.dependencies]\naho-corasick = \"1.1.4\"\nasync-trait = \"0.1\""
+  },
+  {
+    "name": "import-resource-matcher-runtime-dependency",
+    "path": "core/crates/runtime/application/Cargo.toml",
+    "old": "[dependencies]\nasync-trait.workspace = true",
+    "new": "[dependencies]\naho-corasick.workspace = true\nasync-trait.workspace = true"
+  },
+  {
+    "name": "import-resource-matcher-existing-lock-entry",
+    "path": "core/Cargo.lock",
+    "old": "name = \"operit-runtime\"\nversion = \"2.0.0-preview.6\"\ndependencies = [\n \"aes\",",
+    "new": "name = \"operit-runtime\"\nversion = \"2.0.0-preview.6\"\ndependencies = [\n \"aes\",\n \"aho-corasick\","
+  },
+  {
+    "name": "import-resource-matcher-owned-by-plan",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    resourcePaths: Vec<(String, String)>,\n    supplementalResources:",
+    "new": "    resourcePaths: Vec<(String, String)>,\n    resourcePathMatcher: Option<aho_corasick::AhoCorasick>,\n    supplementalResources:"
+  },
+  {
+    "name": "import-resource-matcher-empty-plan",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "            resourcePaths: Vec::new(),\n            supplementalResources:",
+    "new": "            resourcePaths: Vec::new(),\n            resourcePathMatcher: None,\n            supplementalResources:"
+  },
+  {
+    "name": "import-resource-matcher-build-after-supplement",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        self.resourcePaths.sort_by(|left, right| right.0.len().cmp(&left.0.len()));\n        self.supplementalResources",
+    "new": "        self.resourcePaths.sort_by(|left, right| right.0.len().cmp(&left.0.len()));\n        self.rebuildResourcePathMatcher()?;\n        self.supplementalResources"
+  },
+  {
+    "name": "import-resource-matcher-build-after-snapshot",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "        plan.resourcePaths.sort_by(|left, right| right.0.len().cmp(&left.0.len()));\n        plan.copyPlan",
+    "new": "        plan.resourcePaths.sort_by(|left, right| right.0.len().cmp(&left.0.len()));\n        plan.rebuildResourcePathMatcher()?;\n        plan.copyPlan"
+  },
+  {
+    "name": "import-resource-rewrite-single-pass",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "    fn rewriteMessageContent(&self, content: &str) -> String {\n        if !content.contains(\"/data/\") && !content.contains(\"/Android/data/\")\n            && !content.contains(\"/Download/Operit/\") && !content.contains(\"/cache/\") {\n            return content.to_string();\n        }\n        let mut rewritten = content.to_string();\n        for (source, target) in &self.resourcePaths {\n            let mut output = String::with_capacity(rewritten.len());\n            let mut copied = 0;\n            for (start, _) in rewritten.match_indices(source) {\n                let end = start + source.len();\n                let boundary = rewritten[end..].chars().next();\n                if boundary.is_some_and(|value| !value.is_whitespace() && !matches!(value, '\\'' | '\"' | '<' | '>' | ')' | ']' | '}')) {\n                    continue;\n                }\n                output.push_str(&rewritten[copied..start]);\n                output.push_str(target);\n                copied = end;\n            }\n            output.push_str(&rewritten[copied..]);\n            rewritten = output;\n        }\n        rewritten\n    }\n\n",
+    "new": "    fn rebuildResourcePathMatcher(&mut self) -> Result<(), String> {\n        self.resourcePathMatcher = if self.resourcePaths.is_empty() {\n            None\n        } else {\n            Some(aho_corasick::AhoCorasick::new(\n                self.resourcePaths.iter().map(|(source, _)| source.as_str()),\n            ).map_err(|error| format!(\"无法建立导入资源路径索引：{error}\"))?)\n        };\n        Ok(())\n    }\n\n    fn rewriteMessageContent(&self, content: &str) -> String {\n        let Some(matcher) = &self.resourcePathMatcher else { return content.to_string(); };\n        // Scan the original text once for all archived paths. The former loop\n        // scanned AND copied every message once per resource, even on a miss;\n        // thousands of files made the unreported post-parse phase look stuck.\n        let mut matches = matcher.find_overlapping_iter(content).filter(|found| {\n            content[found.end()..].chars().next().map_or(true, |value| {\n                value.is_whitespace() || matches!(value, '\\'' | '\"' | '<' | '>' | ')' | ']' | '}')\n            })\n        }).collect::<Vec<_>>();\n        if matches.is_empty() { return content.to_string(); }\n        // Keep complete file:// aliases and longer filenames ahead of their\n        // embedded/shorter matches, after applying the actual path boundary.\n        matches.sort_unstable_by(|left, right| left.start().cmp(&right.start())\n            .then_with(|| right.end().cmp(&left.end()))\n            .then_with(|| left.pattern().as_usize().cmp(&right.pattern().as_usize())));\n        let mut output = String::with_capacity(content.len());\n        let mut copied = 0;\n        for found in matches {\n            if found.start() < copied { continue; }\n            output.push_str(&content[copied..found.start()]);\n            output.push_str(&self.resourcePaths[found.pattern().as_usize()].1);\n            copied = found.end();\n        }\n        output.push_str(&content[copied..]);\n        // Inserted destinations are never scanned again as legacy sources.\n        output\n    }\n\n"
+  },
+  {
+    "name": "import-chat-progress-reserve-resource-phase",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                        0.64,\n                        0.71,\n                        parsedMessageCount,",
+    "new": "                        0.64,\n                        0.69,\n                        parsedMessageCount,"
+  },
+  {
+    "name": "import-chat-progress-start-resource-phase",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                &mut onMessageParsed,\n            )?;\n            for chat in &mut archive.chats {",
+    "new": "                &mut onMessageParsed,\n            )?;\n            let totalParts = archive.chats.iter().flat_map(|chat| &chat.messages)\n                .map(|message| message.baseMessage.parts.len()\n                    + message.variants.iter().map(|variant| variant.parts.len()).sum::<usize>())\n                .sum::<usize>();\n            let mut rewrittenParts = 0usize;\n            let mut resourceProgressThrottle = Operit1SnapshotProgressThrottle::new();\n            publishOperit1SnapshotCountedProgress(\n                \"chats\", \"迁移聊天记录\",\n                format!(\"解析完成，正在关联附件和工作区：0/{totalParts} 个消息片段。\"),\n                0.69, 0.71, 0, totalParts,\n            );\n            for chat in &mut archive.chats {"
+  },
+  {
+    "name": "import-chat-progress-count-resource-rewrites",
+    "path": "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs",
+    "old": "                for message in &mut chat.messages {\n                    for part in &mut message.baseMessage.parts {\n                        part.content = fileImportPlan.rewriteMessageContent(&part.content);\n                    }\n                    for variant in &mut message.variants {\n                        for part in &mut variant.parts {\n                            part.content = fileImportPlan.rewriteMessageContent(&part.content);\n                        }\n                    }\n                }",
+    "new": "                for message in &mut chat.messages {\n                    for part in message.baseMessage.parts.iter_mut()\n                        .chain(message.variants.iter_mut().flat_map(|variant| variant.parts.iter_mut())) {\n                        part.content = fileImportPlan.rewriteMessageContent(&part.content);\n                        rewrittenParts += 1;\n                        if resourceProgressThrottle.shouldPublish(rewrittenParts, totalParts) {\n                            publishOperit1SnapshotCountedProgress(\n                                \"chats\", \"迁移聊天记录\",\n                                format!(\"正在关联附件和工作区：{rewrittenParts}/{totalParts} 个消息片段。\"),\n                                0.69, 0.71, rewrittenParts, totalParts,\n                            );\n                        }\n                    }\n                }"
+  }
+]
