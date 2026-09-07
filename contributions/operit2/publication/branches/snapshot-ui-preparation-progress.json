@@ -1,7 +1,7 @@
 {
   "slug": "snapshot-ui-preparation-progress",
   "tree_sha": "a5fd5496137d83e45b8cca91b28c32f48ca5cee3",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "edd50c40d37990ac8005d7fc8e144ae89efcfda7",
   "head_branch": "fix/snapshot-ui-preparation-progress",
   "title": "fix(flutter): show snapshot preparation progress before import preview",
@@ -10,7 +10,8 @@
   "patch_sha256": "f2b05ab8143de77fea1361675aef5cef6ff73733fa7bca340bbcf5d96428c382",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-preparation-progress?expand=1"
+  "pr_number": 16,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/16",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-preparation-progress?expand=1",
+  "workflow_run_id": 34119116134
 }

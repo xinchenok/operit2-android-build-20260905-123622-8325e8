@@ -1,7 +1,7 @@
 {
   "slug": "plugin-tool-error-label",
   "tree_sha": "fa24efe3be5bd43cbcae9bcf57c674abeebfc188",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "2965e643f25ee4ce49d77ed140e23758c4dfaf44",
   "head_branch": "fix/plugin-tool-error-label",
   "title": "fix(plugins): identify the tool that failed in chat wrappers",
@@ -10,7 +10,8 @@
   "patch_sha256": "e29008cf9f66a833b4858fdf4481fbdf02dc6f7a7ad421b3cbae4cdcb358dcc9",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-tool-error-label?expand=1"
+  "pr_number": 77,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/77",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-tool-error-label?expand=1",
+  "workflow_run_id": 34119116134
 }

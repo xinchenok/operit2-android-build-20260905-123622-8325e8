@@ -1,7 +1,7 @@
 {
   "slug": "terminal-preserve-system-shell-exit-status",
   "tree_sha": "372b0646ef7132470d58fcf22bbd1209e41b80ab",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "96ad5bd33780c442d2f2e491674d78602f6a8e9a",
   "head_branch": "fix/terminal-preserve-system-shell-exit-status",
   "title": "fix(android): preserve system shell command exit status",
@@ -10,7 +10,8 @@
   "patch_sha256": "901c387abad0b140883fc2c7a55fe71be1c4cbf13db05b56942af4bfda5720e5",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-preserve-system-shell-exit-status?expand=1"
+  "pr_number": 92,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/92",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-preserve-system-shell-exit-status?expand=1",
+  "workflow_run_id": 34119116134
 }

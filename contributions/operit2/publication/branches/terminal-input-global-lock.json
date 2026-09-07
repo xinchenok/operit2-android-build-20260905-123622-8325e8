@@ -1,7 +1,7 @@
 {
   "slug": "terminal-input-global-lock",
   "tree_sha": "9b53605cb4d372248c9eda949477eb8f4b38fbb8",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "d5cfcd8851b4625c8006e1f118d719b85335ea44",
   "head_branch": "fix/terminal-input-global-lock",
   "title": "fix(android): release terminal state while writing PTY input",
@@ -10,7 +10,8 @@
   "patch_sha256": "a6af727aeea104d8441cc56fb2761a56f26e47e5e8ad61ea5ee68e313eecb389",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-input-global-lock?expand=1"
+  "pr_number": 90,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/90",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-input-global-lock?expand=1",
+  "workflow_run_id": 34119116134
 }

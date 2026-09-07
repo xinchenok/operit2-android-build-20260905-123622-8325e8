@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-default-function-mapping",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "core/crates/runtime/application/src/data/backup/Operit1SnapshotArchive.rs"
   ],
@@ -19,5 +19,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "18c8516edd6f3913590b54a6e4a4ff6420324ac4",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/18",
+  "pr_number": 18
 }

@@ -1,7 +1,7 @@
 {
   "slug": "terminal-cold-start",
   "tree_sha": "61130fbddd47c03c6e2b698420e128c7c9ebfedf",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f806d7e602833e80027936e9369b3f2c13ab4cbf",
   "head_branch": "fix/terminal-cold-start",
   "title": "fix(android): avoid repeated PRoot probes during terminal startup",
@@ -10,7 +10,8 @@
   "patch_sha256": "b52468444f06a3371fb9850d841c702a7dad7f7b6683ca891c1437e5f7f2cfdb",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cold-start?expand=1"
+  "pr_number": 23,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/23",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cold-start?expand=1",
+  "workflow_run_id": 34119116134
 }

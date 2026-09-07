@@ -1,7 +1,7 @@
 {
   "slug": "import-stale-model-selection",
   "tree_sha": "583ed45b805e49115bb03319f53ce7791c55c253",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "4ffade87942f94be8041dd9ecf5fb70f040fde8f",
   "head_branch": "fix/import-stale-model-selection",
   "title": "fix(import): continue full snapshots with stale model selections",
@@ -10,7 +10,8 @@
   "patch_sha256": "80f8aa86516424bce66e00d7717cb32f828d68e8166880223b1ef4673a0cf779",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-model-selection?expand=1"
+  "pr_number": 17,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/17",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-model-selection?expand=1",
+  "workflow_run_id": 34119116134
 }

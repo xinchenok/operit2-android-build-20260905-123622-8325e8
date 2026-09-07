@@ -1,7 +1,7 @@
 {
   "slug": "import-tts-provider-types",
   "tree_sha": "de974f7160f35d7b23734f744148cc475f84cf82",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "bb384f39ccf2ad152e8f501b468fdb290c6367c9",
   "head_branch": "fix/import-tts-provider-types",
   "title": "fix(import): retain supported legacy TTS provider types",
@@ -10,7 +10,8 @@
   "patch_sha256": "522127a986b8b7383e2ff6733ed04a0cd5d7a81b915e505f45d26a1d48a6c565",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-tts-provider-types?expand=1"
+  "pr_number": 68,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/68",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-tts-provider-types?expand=1",
+  "workflow_run_id": 34119116134
 }

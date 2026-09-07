@@ -1,7 +1,7 @@
 {
   "slug": "import-current-chat-preference",
   "tree_sha": "2c88ac3a428204c69a810197f774e1f862aaf5db",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f97117eb8595ac6904971533d0d20e3a2a23dfef",
   "head_branch": "fix/import-current-chat-preference",
   "title": "fix(import): preserve the current chat during snapshot migration",
@@ -10,7 +10,8 @@
   "patch_sha256": "e78a94caa990f05ca64f6a1ee3a8407caf604328fdf6de163d24dff3dd0bb1bb",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-current-chat-preference?expand=1"
+  "pr_number": 47,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/47",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-current-chat-preference?expand=1",
+  "workflow_run_id": 34119116134
 }

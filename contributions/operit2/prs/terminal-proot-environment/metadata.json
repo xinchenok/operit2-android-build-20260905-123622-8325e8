@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/terminal-proot-environment",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
     "hosts/android/src/terminal.rs"
@@ -17,5 +17,6 @@
   "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested.",
   "head_commit_sha": "7859d79a1386041462165811a9eeb5bf47806d00",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/22",
+  "pr_number": 22
 }

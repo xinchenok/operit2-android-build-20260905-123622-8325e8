@@ -1,7 +1,7 @@
 {
   "slug": "import-room-schema-11-19",
   "tree_sha": "d2f3123758f176d696bae76a73c1210d3787cbe6",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "e54a263960e75bdae7755ad2da1b5363ee0aa3c1",
   "head_branch": "fix/import-room-schema-11-19",
   "title": "fix(import): migrate intermediate Operit1 Room schemas",
@@ -10,7 +10,8 @@
   "patch_sha256": "c851d6e4a0020ef5f26f7867ba583661e2d52d354f541f30c7d1b1f403207eb5",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-room-schema-11-19?expand=1"
+  "pr_number": 60,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/60",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-room-schema-11-19?expand=1",
+  "workflow_run_id": 34119116134
 }

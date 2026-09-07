@@ -1,7 +1,7 @@
 {
   "slug": "import-objectbox-tag-relations",
   "tree_sha": "491b9f090425ad3aa4703f4c682eed7dee008b79",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "e62c612989de64141d8e7288aedf2378c8de18c3",
   "head_branch": "fix/import-objectbox-tag-relations",
   "title": "fix(import): decode standalone ObjectBox memory tag relations",
@@ -10,7 +10,8 @@
   "patch_sha256": "b37ebc5c6fb7f7688ae54a51c8cc6f8a3a1c3b2ffb42b69803498181154f66fd",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-tag-relations?expand=1"
+  "pr_number": 53,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/53",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-tag-relations?expand=1",
+  "workflow_run_id": 34119116134
 }

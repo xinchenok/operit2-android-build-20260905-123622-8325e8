@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/plugin-agent-timeout-cleanup",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "plugins/packages/buildin/extended_chat.ts"
   ],
@@ -15,5 +15,6 @@
   "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. No builds, sync jobs, tests, or device validation.",
   "head_commit_sha": "39b1cd90600355611e756caeb9621043d48fdf9a",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/72",
+  "pr_number": 72
 }

@@ -7,3 +7,11 @@
 修复：完整导入收集源→目标供应商 ID，角色固定配置按这张表恢复 provider/model 对；缺失配置保留角色并报告重新选择，不猜测其他供应商。单模型导入不请求身份映射。
 
 这份适配包含角色失效模型的容错，与 `import-stale-character-models` 重叠；若后者已合并，应保留同一逻辑一次。没有修改共享源码，也未运行编译或测试。
+
+## 已提交的前置 PR
+
+- [角色固定模型与供应商绑定 #71](https://github.com/AAswordman/Operit2/pull/71)
+- [完整模型配置导入 #45](https://github.com/AAswordman/Operit2/pull/45)
+- 此适配还需与 [失效固定模型容错 #67](https://github.com/AAswordman/Operit2/pull/67) 去重。
+
+当前前置 PR 尚未合入，因此这份组合适配仍不单独向 main 创建重复包含前置修复的 PR。

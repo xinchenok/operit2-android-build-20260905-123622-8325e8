@@ -1,7 +1,7 @@
 {
   "slug": "chat-submit-single-flight",
   "tree_sha": "1867147c49ffe5773b4b7ff434128404a2a564e9",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "62b6ed5de513baf8b22b90c01433efd3032c4820",
   "head_branch": "fix/chat-submit-single-flight",
   "title": "fix(chat): serialize pending submit hooks",
@@ -10,7 +10,8 @@
   "patch_sha256": "24e10a1a9192daa8e641c756211e57ccb0e471aee9bd14517260834141df758c",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-single-flight?expand=1"
+  "pr_number": 42,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/42",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-single-flight?expand=1",
+  "workflow_run_id": 34119116134
 }

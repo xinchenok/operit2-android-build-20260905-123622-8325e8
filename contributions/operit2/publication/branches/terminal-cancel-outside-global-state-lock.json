@@ -1,7 +1,7 @@
 {
   "slug": "terminal-cancel-outside-global-state-lock",
   "tree_sha": "956484a16559b52e14c6b8ad15f2cedf7553a7ee",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "b12b09c4aff428ae87ca0a77067453ff2560d33a",
   "head_branch": "fix/terminal-cancel-outside-global-state-lock",
   "title": "fix(android): release terminal state lock during command cancellation",
@@ -10,7 +10,8 @@
   "patch_sha256": "e5884de5083aeed9cf2cfe6513af60735b12f39269763ed24518c6f97bed4209",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cancel-outside-global-state-lock?expand=1"
+  "pr_number": 85,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/85",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cancel-outside-global-state-lock?expand=1",
+  "workflow_run_id": 34119116134
 }

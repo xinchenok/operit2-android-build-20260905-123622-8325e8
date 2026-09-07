@@ -1,7 +1,7 @@
 {
   "slug": "import-reuse-staged-database",
   "tree_sha": "cc976a974dacc2b9545a2cd490793a3c0a06b805",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "25e9c8be03a07aa4f1149f2ba5c135800987bac4",
   "head_branch": "fix/import-reuse-staged-database",
   "title": "fix(import): reuse the staged chat database for token usage",
@@ -10,7 +10,8 @@
   "patch_sha256": "f57f432abe9fc70027fef0b74d5aa9d1ab5682186aa0af76b60ab3e0be3906e6",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-reuse-staged-database?expand=1"
+  "pr_number": 20,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/20",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-reuse-staged-database?expand=1",
+  "workflow_run_id": 34119116134
 }

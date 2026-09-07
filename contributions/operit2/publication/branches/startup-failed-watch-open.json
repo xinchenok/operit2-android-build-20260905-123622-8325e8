@@ -1,7 +1,7 @@
 {
   "slug": "startup-failed-watch-open",
   "tree_sha": "69510071a049ff7bafd50195534052e3e723cd5f",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "ef8efe27423193a1477cfd7bf0f1e244d6847482",
   "head_branch": "fix/startup-failed-watch-open",
   "title": "fix(flutter): propagate watch opening failures without deadlocking",
@@ -10,7 +10,8 @@
   "patch_sha256": "9608d433264ee64e3aab5c528505959ec74bacfe5c2310f1840919f2784c7f25",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-failed-watch-open?expand=1"
+  "pr_number": 82,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/82",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-failed-watch-open?expand=1",
+  "workflow_run_id": 34119116134
 }

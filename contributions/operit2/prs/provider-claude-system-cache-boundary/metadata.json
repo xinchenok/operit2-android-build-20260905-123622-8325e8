@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/provider-claude-system-cache-boundary",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "core/crates/provider/services/src/chat/llmprovider/ClaudeProvider.rs"
   ],
@@ -15,5 +15,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "f49c161828472018999d160507d25b25a5840367",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/78",
+  "pr_number": 78
 }

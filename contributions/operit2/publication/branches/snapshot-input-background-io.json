@@ -1,7 +1,7 @@
 {
   "slug": "snapshot-input-background-io",
   "tree_sha": "34df8a04d3b9b5a336e38e0f80f88c3ab971409e",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f074ea683ef44b5f6a84511a2ae77c636fadf408",
   "head_branch": "fix/snapshot-input-background-io",
   "title": "fix(android): read snapshot documents off the main thread",
@@ -10,7 +10,8 @@
   "patch_sha256": "359bad9940024408f64f282d35e107c83bed58acf6978e8c49b99a63d4ac8564",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-input-background-io?expand=1"
+  "pr_number": 15,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/15",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-input-background-io?expand=1",
+  "workflow_run_id": 34119116134
 }

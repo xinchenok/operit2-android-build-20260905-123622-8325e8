@@ -1,7 +1,7 @@
 {
   "slug": "import-message-resource-paths",
   "tree_sha": "a652e1db4339bd81aa1d2973343bb672e191d10b",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "199dab25fc0362c8824ae7b11251215f4eebce0a",
   "head_branch": "fix/import-message-resource-paths",
   "title": "fix(import): restore copied attachment paths in message content",
@@ -10,7 +10,8 @@
   "patch_sha256": "3ee2b4d0a864273d53c31f60ffbdc04476550e06eb4bfcf6a9f9b62910ea71a5",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-resource-paths?expand=1"
+  "pr_number": 51,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/51",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-resource-paths?expand=1",
+  "workflow_run_id": 34119116134
 }

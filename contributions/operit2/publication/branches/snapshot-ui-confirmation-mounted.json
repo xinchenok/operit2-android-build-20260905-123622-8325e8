@@ -1,7 +1,7 @@
 {
   "slug": "snapshot-ui-confirmation-mounted",
   "tree_sha": "12471418b1d9444c7ecb72c48febd88a79da3875",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "6767429ee8badf8fde5c8eaa0608b0f853140871",
   "head_branch": "fix/snapshot-ui-confirmation-mounted",
   "title": "fix(flutter): stop snapshot import after settings disposal",
@@ -10,7 +10,8 @@
   "patch_sha256": "d6b23211e111ef80e1355a91e257ebbadf54d3282346142f540fb0c19414fd98",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-confirmation-mounted?expand=1"
+  "pr_number": 80,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/80",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-confirmation-mounted?expand=1",
+  "workflow_run_id": 34119116134
 }

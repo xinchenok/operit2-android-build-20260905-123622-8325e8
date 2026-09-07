@@ -1,7 +1,7 @@
 {
   "slug": "chat-queue-edit-draft",
   "tree_sha": "04509f4f9ea8054c7c5b3da4aceffc52b10b2195",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "a4ee0c225e95f3cad2a7e058dbce61467db5f61e",
   "head_branch": "fix/chat-queue-edit-draft",
   "title": "fix(chat): preserve edits while loading queued input",
@@ -10,7 +10,8 @@
   "patch_sha256": "c351b188f684e43b87298b1f47a260a04da835d875786e7154ae27e7a038e987",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-edit-draft?expand=1"
+  "pr_number": 35,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/35",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-edit-draft?expand=1",
+  "workflow_run_id": 34119116134
 }

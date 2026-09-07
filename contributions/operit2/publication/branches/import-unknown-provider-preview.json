@@ -1,7 +1,7 @@
 {
   "slug": "import-unknown-provider-preview",
   "tree_sha": "f0fd6e8c17b5438be8b7261882d8e8dc68f29783",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "470c381c6c20ddf2ffa3fbe3d5ad4cad1b2292ad",
   "head_branch": "fix/import-unknown-provider-preview",
   "title": "fix(import): preview unsupported legacy providers",
@@ -10,7 +10,8 @@
   "patch_sha256": "7c91d69aca4f4ad688e9b8e77cd05f488f81eeb0539de9c45ae2e7256aea440d",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-unknown-provider-preview?expand=1"
+  "pr_number": 69,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/69",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-unknown-provider-preview?expand=1",
+  "workflow_run_id": 34119116134
 }

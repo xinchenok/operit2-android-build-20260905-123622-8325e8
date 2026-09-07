@@ -1,7 +1,7 @@
 {
   "slug": "chat-reply-ownership",
   "tree_sha": "aead8221c91402689103aebf4cc4114c222ae2a3",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "86fcd9c6c1e8650e136315e1a288ef6bfc6ef08d",
   "head_branch": "fix/chat-reply-ownership",
   "title": "fix(chat): retain the submitted reply target",
@@ -10,7 +10,8 @@
   "patch_sha256": "03e470e1f517693cad47ae7b1525bdacf425e783a5cef704f407417dee80f3ed",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-reply-ownership?expand=1"
+  "pr_number": 38,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/38",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-reply-ownership?expand=1",
+  "workflow_run_id": 34119116134
 }

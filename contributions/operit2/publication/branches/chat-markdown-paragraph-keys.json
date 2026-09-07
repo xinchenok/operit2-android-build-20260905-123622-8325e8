@@ -1,7 +1,7 @@
 {
   "slug": "chat-markdown-paragraph-keys",
   "tree_sha": "88b9613ece50e16c9e93cb1eeaf04717e8473158",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f4ccdb9fa2f24669d7259342992cc76f001abc6b",
   "head_branch": "fix/chat-markdown-paragraph-keys",
   "title": "fix(markdown): assign unique paragraph break keys",
@@ -10,7 +10,8 @@
   "patch_sha256": "2272f8e6315c0acd3db1b300fdf5610cab9d4c1d5c1a5439656d89564e744647",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-markdown-paragraph-keys?expand=1"
+  "pr_number": 32,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/32",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-markdown-paragraph-keys?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/terminal-reaped-pid",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "hosts/android/src/terminal.rs"
   ],
@@ -15,5 +15,6 @@
   "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested.",
   "head_commit_sha": "2b6a14495cae4b69274fb477b0be7a5c6ffb3975",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/93",
+  "pr_number": 93
 }

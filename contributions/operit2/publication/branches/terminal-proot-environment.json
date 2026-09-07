@@ -1,7 +1,7 @@
 {
   "slug": "terminal-proot-environment",
   "tree_sha": "8a61d472571478dd62f6de64f46c66ce067e077f",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "7859d79a1386041462165811a9eeb5bf47806d00",
   "head_branch": "fix/terminal-proot-environment",
   "title": "fix(android): use the compatible PRoot startup environment",
@@ -10,7 +10,8 @@
   "patch_sha256": "b4fd3c05dda5277f9431068d716e89f0073425edf2f1398b229343388affeb01",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-proot-environment?expand=1"
+  "pr_number": 22,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/22",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-proot-environment?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/plugin-startup-after-core-node",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
     "core/crates/runtime/application/src/core/application/OperitApplication.rs"
@@ -20,5 +20,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "224eb036546609bc366217bb1025bf5a7a254dbe",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/75",
+  "pr_number": 75
 }

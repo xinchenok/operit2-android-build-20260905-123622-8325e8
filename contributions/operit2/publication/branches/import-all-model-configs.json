@@ -1,7 +1,7 @@
 {
   "slug": "import-all-model-configs",
   "tree_sha": "82a6aa7b757a43360ef0c95951470ab58ab53bf4",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "5c5b54a6e15ac6a5e91909dc49caf9c31da9df81",
   "head_branch": "fix/import-all-model-configs",
   "title": "fix(import): preserve all snapshot provider configurations",
@@ -10,7 +10,8 @@
   "patch_sha256": "398bb9fe42c5edda4e38f5547395cff4a6682807c9de9c1b1b28af903329ebe2",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-all-model-configs?expand=1"
+  "pr_number": 45,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/45",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-all-model-configs?expand=1",
+  "workflow_run_id": 34119116134
 }

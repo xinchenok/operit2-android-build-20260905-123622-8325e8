@@ -1,7 +1,7 @@
 {
   "slug": "import-settings-ordinary-send-summary",
   "tree_sha": "9b800f1c645e5788f1018ccdccb9f34a833973ff",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "4fa109582c80c918bf6cfddead7ed726e302a026",
   "head_branch": "fix/import-settings-ordinary-send-summary",
   "title": "fix(chat): run automatic summaries after ordinary send turns",
@@ -10,7 +10,8 @@
   "patch_sha256": "28bd47a3114c37a4abbbd1e6016893f74c816c5bdca1c8632aad430de541969d",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-ordinary-send-summary?expand=1"
+  "pr_number": 65,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/65",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-ordinary-send-summary?expand=1",
+  "workflow_run_id": 34119116134
 }

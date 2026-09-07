@@ -1,7 +1,7 @@
 {
   "slug": "chat-submit-attachment-ownership",
   "tree_sha": "9bbb021a666aa55c7f70758c696362a4d29f05e0",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f04d1c912679db57fa5723532a07be6fc2aa75e1",
   "head_branch": "fix/chat-submit-attachment-ownership",
   "title": "fix(chat): preserve submitted attachment ownership",
@@ -10,7 +10,8 @@
   "patch_sha256": "12520de86e6d3b666e09ff76b45a46390aabd3a1bb6e1ff3a876d86a6547b14b",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-attachment-ownership?expand=1"
+  "pr_number": 41,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/41",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-attachment-ownership?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -8,5 +8,8 @@
   "created_fork_branches": 89,
   "created_upstream_prs": 0,
   "publisher_commit": "5436c1f8be97ceb80e92f54e13d9f403da97fb13",
-  "requires": "User-configured authorized UPSTREAM_PR_TOKEN in xinchenok/Operit2 Actions Secrets; token not created, read, or supplied by the assistant."
+  "requires": "User-configured authorized UPSTREAM_PR_TOKEN in xinchenok/Operit2 Actions Secrets; token not created, read, or supplied by the assistant.",
+  "current_created_upstream_prs": 89,
+  "resolution": "Published through the separately user-authorized GitHub Actions workflow; the original integration permission is unchanged.",
+  "publication_run_id": 34119116134
 }

@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/chat-reply-ownership",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
   ],
@@ -18,5 +18,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "86fcd9c6c1e8650e136315e1a288ef6bfc6ef08d",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/38",
+  "pr_number": 38
 }

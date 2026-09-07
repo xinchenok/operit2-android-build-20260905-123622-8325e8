@@ -1,7 +1,7 @@
 {
   "slug": "terminal-retire-unresponsive-timeouts",
   "tree_sha": "da1b143d5147bc759398d6518e845ffbc187aad4",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "79551969ff950c5a907c45a5f628e827f4be5894",
   "head_branch": "fix/terminal-retire-unresponsive-timeouts",
   "title": "fix(android): retire timed-out sessions when shell recovery fails",
@@ -10,7 +10,8 @@
   "patch_sha256": "260641a4961889e92642a87e2f48c551c32319b7d2ee01e3e8ac90530367a6c0",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-retire-unresponsive-timeouts?expand=1"
+  "pr_number": 94,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/94",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-retire-unresponsive-timeouts?expand=1",
+  "workflow_run_id": 34119116134
 }

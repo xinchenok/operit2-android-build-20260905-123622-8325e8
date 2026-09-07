@@ -1,7 +1,7 @@
 {
   "slug": "chat-group-owner-routing",
   "tree_sha": "3fb4dfb74ce80e901327c15699cf3f25d45fd995",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "4b6b1dc8c993e059dc3aa67a6dfad6a3e0a3654a",
   "head_branch": "fix/chat-group-owner-routing",
   "title": "fix(chat): resolve group orchestration from the target conversation",
@@ -10,7 +10,8 @@
   "patch_sha256": "cd4c38a8cfa0c2926db9e69447840a1ebf659ed880015070e0299a0c1668b8b5",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-owner-routing?expand=1"
+  "pr_number": 30,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/30",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-owner-routing?expand=1",
+  "workflow_run_id": 34119116134
 }

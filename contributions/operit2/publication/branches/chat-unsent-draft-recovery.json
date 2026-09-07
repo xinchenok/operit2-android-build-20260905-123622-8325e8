@@ -1,7 +1,7 @@
 {
   "slug": "chat-unsent-draft-recovery",
   "tree_sha": "50c2767995f85870d679f364d4b899d89e33b8fd",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "a64123b1554b38e78fd38ad8922ee730d60202b8",
   "head_branch": "fix/chat-unsent-draft-recovery",
   "title": "fix(chat): recover text from interrupted sends",
@@ -10,7 +10,8 @@
   "patch_sha256": "5890e694e48122fb2afbc0bec79757588b7b11903843ca0210bbbae200ca4473",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-unsent-draft-recovery?expand=1"
+  "pr_number": 43,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/43",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-unsent-draft-recovery?expand=1",
+  "workflow_run_id": 34119116134
 }

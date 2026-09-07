@@ -1,7 +1,7 @@
 {
   "slug": "import-file-workspace-collisions",
   "tree_sha": "0b7c2d76cb1d9f51b39717f3d4cf29e0b1da4906",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "671d6ccf995aa9d54f2335cc4eea92769f74c7e2",
   "head_branch": "fix/import-file-workspace-collisions",
   "title": "fix(import): isolate imported files and workspace IDs",
@@ -10,7 +10,8 @@
   "patch_sha256": "792277a579273444df7787468a65fadf05a1a724a4af8f00c3c37c1250dce530",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-file-workspace-collisions?expand=1"
+  "pr_number": 49,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/49",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-file-workspace-collisions?expand=1",
+  "workflow_run_id": 34119116134
 }

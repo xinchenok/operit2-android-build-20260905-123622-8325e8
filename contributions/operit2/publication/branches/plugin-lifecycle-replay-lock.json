@@ -1,7 +1,7 @@
 {
   "slug": "plugin-lifecycle-replay-lock",
   "tree_sha": "af144d80e746d0de3473d204d04adc2d0ce368c1",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "9c1160c4e5c021ccfb54a0293de453e84a43ba9e",
   "head_branch": "fix/plugin-lifecycle-replay-lock",
   "title": "fix(plugins): replay lifecycle hooks outside package manager locks",
@@ -10,7 +10,8 @@
   "patch_sha256": "8a490f5e98a7bca18ea40e9dc44c9a024bb40a82d307fd770eb8a41fc3803cbe",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-lifecycle-replay-lock?expand=1"
+  "pr_number": 74,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/74",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-lifecycle-replay-lock?expand=1",
+  "workflow_run_id": 34119116134
 }

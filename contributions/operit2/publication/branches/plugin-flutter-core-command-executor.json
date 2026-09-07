@@ -1,7 +1,7 @@
 {
   "slug": "plugin-flutter-core-command-executor",
   "tree_sha": "b69f1ac20655744e2126acdc2a2c1c3baf07ee24",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "abca9ec3fe9163c5587e5fd01edbc763befd107f",
   "head_branch": "fix/plugin-flutter-core-command-executor",
   "title": "fix(flutter): bind plugin commands to shared core services",
@@ -10,7 +10,8 @@
   "patch_sha256": "2500c422096ab54fb97f62fd85cfb50eb7d2e701c506e00e322b6b8af242aebc",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-flutter-core-command-executor?expand=1"
+  "pr_number": 73,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/73",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-flutter-core-command-executor?expand=1",
+  "workflow_run_id": 34119116134
 }

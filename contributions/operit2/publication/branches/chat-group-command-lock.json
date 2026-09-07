@@ -1,7 +1,7 @@
 {
   "slug": "chat-group-command-lock",
   "tree_sha": "a1712ef08b08759082c1f595be0bb63e7cd478a5",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "e9412375d25bf60333e7a4d73e826a5af044e96a",
   "head_branch": "fix/chat-group-command-lock",
   "title": "fix(chat): release the core command lock during group responses",
@@ -10,7 +10,8 @@
   "patch_sha256": "299597ea90883ff0c327d9dacdd75d36f1125e6294e7c96ed02344a870942768",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-command-lock?expand=1"
+  "pr_number": 29,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/29",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-command-lock?expand=1",
+  "workflow_run_id": 34119116134
 }

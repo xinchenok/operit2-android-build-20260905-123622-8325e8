@@ -1,7 +1,7 @@
 {
   "slug": "chat-queue-hook-restoration",
   "tree_sha": "6193a61652f1370249bbe9ce7c8432e2d98cca5e",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f0f91aed0d62d552d56f92f192d9a0d44b0c3081",
   "head_branch": "fix/chat-queue-hook-restoration",
   "title": "fix(chat): restore queued input rejected by hooks",
@@ -10,7 +10,8 @@
   "patch_sha256": "192488306447de91a589b941d21bad9a1417452a6c9eab54f18ed4ede9cb045a",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-hook-restoration?expand=1"
+  "pr_number": 36,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/36",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-hook-restoration?expand=1",
+  "workflow_run_id": 34119116134
 }

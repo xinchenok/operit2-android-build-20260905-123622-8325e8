@@ -1,7 +1,7 @@
 {
   "slug": "terminal-named-creation-race",
   "tree_sha": "ddd3d20217d5d492ccdbe66ae57bfb96b1caa865",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "112490f4a79e7308f7e64714228676bc769d4dba",
   "head_branch": "fix/terminal-named-creation-race",
   "title": "fix(android): serialize creation of named terminal sessions",
@@ -10,7 +10,8 @@
   "patch_sha256": "c440551822a56937b42d58223c37c16582c2cba3a6aa0f01ba63e205e78f3fad",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-named-creation-race?expand=1"
+  "pr_number": 91,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/91",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-named-creation-race?expand=1",
+  "workflow_run_id": 34119116134
 }

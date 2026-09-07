@@ -1,7 +1,7 @@
 {
   "slug": "snapshot-ui-import-results",
   "tree_sha": "0b5da0d8bc8eafb422ea1923db0cd77e27fc8a2b",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "e8618fa9d449ec23bd1787c04de1be3dbae28231",
   "head_branch": "fix/snapshot-ui-import-results",
   "title": "fix(flutter): show migration omissions in snapshot import results",
@@ -10,7 +10,8 @@
   "patch_sha256": "d76c255911940c37a0b7f9f4e44a239f797a65b18e0f21141986f36e7010bb3d",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-import-results?expand=1"
+  "pr_number": 81,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/81",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-import-results?expand=1",
+  "workflow_run_id": 34119116134
 }

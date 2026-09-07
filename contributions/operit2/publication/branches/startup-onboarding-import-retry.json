@@ -1,7 +1,7 @@
 {
   "slug": "startup-onboarding-import-retry",
   "tree_sha": "9c02674c241af63cbbae51e2d693cf7458410fba",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "7c2b5f5a38417b6f5d6ded9301ffc79757a6ea28",
   "head_branch": "fix/startup-onboarding-import-retry",
   "title": "fix(flutter): retry onboarding completion without importing twice",
@@ -10,7 +10,8 @@
   "patch_sha256": "cd53d2e6a8342cf46b500ebcd6f3472c5980b1ae5578bb5207e889eb30050820",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-retry?expand=1"
+  "pr_number": 13,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/13",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-retry?expand=1",
+  "workflow_run_id": 34119116134
 }

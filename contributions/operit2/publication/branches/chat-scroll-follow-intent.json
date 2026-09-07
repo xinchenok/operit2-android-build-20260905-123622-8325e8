@@ -1,7 +1,7 @@
 {
   "slug": "chat-scroll-follow-intent",
   "tree_sha": "a04ab37b5744d7b5b9447c94c6c1e7ec3dd92365",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "ba49dd960565a4bef20f0d53ca825e30d24b9f2f",
   "head_branch": "fix/chat-scroll-follow-intent",
   "title": "fix(chat): respect cancelled bottom following",
@@ -10,7 +10,8 @@
   "patch_sha256": "44f67d923e319aea4cc3c0db54a4cd58cdfbe157902cf401dc83113a2497bd26",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-scroll-follow-intent?expand=1"
+  "pr_number": 9,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/9",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-scroll-follow-intent?expand=1",
+  "workflow_run_id": 34119116134
 }

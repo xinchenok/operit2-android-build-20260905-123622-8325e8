@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/startup-onboarding-import-navigation",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart"
   ],
@@ -74,5 +74,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "f0e92532dd28e1dfe655aae5e13f4ee2e9ca3164",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/12",
+  "pr_number": 12
 }

@@ -1,7 +1,7 @@
 {
   "slug": "terminal-command-output-cap",
   "tree_sha": "e98f2f43d16b4214c23692aab50326e40c438aa7",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "c6b849c4bb8231473c1ce220a22f4053c75d52c2",
   "head_branch": "fix/terminal-command-output-cap",
   "title": "fix(android): cap collected terminal command output",
@@ -10,7 +10,8 @@
   "patch_sha256": "23687c98e7652225a73e7c1d1d16f46bd81a5f218720bdfb56808a582d0a7033",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-command-output-cap?expand=1"
+  "pr_number": 87,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/87",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-command-output-cap?expand=1",
+  "workflow_run_id": 34119116134
 }

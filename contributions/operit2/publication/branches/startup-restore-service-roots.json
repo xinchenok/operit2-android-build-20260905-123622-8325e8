@@ -1,7 +1,7 @@
 {
   "slug": "startup-restore-service-roots",
   "tree_sha": "c6edb31e48499a8c6c9e9494a004dd864ac00b5e",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "84cac021dec27930816610f1e6bde181d26256a7",
   "head_branch": "fix/startup-restore-service-roots",
   "title": "fix(android): restore storage roots before service runtime startup",
@@ -10,7 +10,8 @@
   "patch_sha256": "ae993e2778d9b06c9534cde2b77c2936970e3e5a6e791ab9fc1abbde5ed15e24",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-restore-service-roots?expand=1"
+  "pr_number": 10,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/10",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-restore-service-roots?expand=1",
+  "workflow_run_id": 34119116134
 }

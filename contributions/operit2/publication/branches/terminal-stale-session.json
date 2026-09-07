@@ -1,7 +1,7 @@
 {
   "slug": "terminal-stale-session",
   "tree_sha": "e698998464893e371c5e5fbd401ed246ae89f0d6",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "064d612a31aab1d1a1541c81c6179920d263e753",
   "head_branch": "fix/terminal-stale-session",
   "title": "fix(android): recreate named terminals after their shell exits",
@@ -10,7 +10,8 @@
   "patch_sha256": "acd2cdca193271b7020cfed89222b1d6dea1a0d833c6f6ffb10bad41c70377ae",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-stale-session?expand=1"
+  "pr_number": 96,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/96",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-stale-session?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-reply-variants",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "core/crates/persistence/store/src/dao/MessageVariantDao.rs",
     "core/crates/persistence/store/src/repository/ChatHistoryManager.rs",
@@ -36,5 +36,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "57ca35b7ad6d6168fe6aba01088feb254a7b2582",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/59",
+  "pr_number": 59
 }

@@ -1,7 +1,7 @@
 {
   "slug": "terminal-execute-complete-scripts",
   "tree_sha": "881c9a433c14a88b4da84cda4aa450d44ddee4b0",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "c8cae1ec0e2ee20e58ddff15461b2ec0ae460d39",
   "head_branch": "fix/terminal-execute-complete-scripts",
   "title": "fix(android): execute multiline terminal commands as one script",
@@ -10,7 +10,8 @@
   "patch_sha256": "8ddf98d5243e7ce0505dc83cbe761f485c23d5f8236d8913525960eacedc83f6",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-execute-complete-scripts?expand=1"
+  "pr_number": 88,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/88",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-execute-complete-scripts?expand=1",
+  "workflow_run_id": 34119116134
 }

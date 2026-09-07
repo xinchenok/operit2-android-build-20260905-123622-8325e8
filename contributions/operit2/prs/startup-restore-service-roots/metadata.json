@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/startup-restore-service-roots",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
     "apps/flutter/app/android/app/src/main/kotlin/app/operit/OperitCoreService.kt"
@@ -30,5 +30,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "84cac021dec27930816610f1e6bde181d26256a7",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/10",
+  "pr_number": 10
 }

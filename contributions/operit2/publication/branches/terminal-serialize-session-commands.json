@@ -1,7 +1,7 @@
 {
   "slug": "terminal-serialize-session-commands",
   "tree_sha": "d57ff2d3e5ad405101625ae2d559336696d54e69",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "9ef9fba1cb92a6cc846a1c906ed6edaf6db7f782",
   "head_branch": "fix/terminal-serialize-session-commands",
   "title": "fix(android): serialize commands within each terminal session",
@@ -10,7 +10,8 @@
   "patch_sha256": "dcc56b79219c0584a402b5fe3a4b7c63e15ade86db6859482b523d7efe776525",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-serialize-session-commands?expand=1"
+  "pr_number": 95,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/95",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-serialize-session-commands?expand=1",
+  "workflow_run_id": 34119116134
 }

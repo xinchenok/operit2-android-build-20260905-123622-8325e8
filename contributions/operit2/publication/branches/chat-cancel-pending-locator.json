@@ -1,7 +1,7 @@
 {
   "slug": "chat-cancel-pending-locator",
   "tree_sha": "234cf39453c533608a496879f67425cb2932b9bc",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "323ccbe5963fc891a5388794ed2bf8a5d63e9723",
   "head_branch": "fix/chat-cancel-pending-locator",
   "title": "fix(chat): cancel stale message locator jumps",
@@ -10,7 +10,8 @@
   "patch_sha256": "b0ce9cd2b51e21e80cba904be79225205644d0235b7739585b9ed09a03dd0697",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-cancel-pending-locator?expand=1"
+  "pr_number": 26,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/26",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-cancel-pending-locator?expand=1",
+  "workflow_run_id": 34119116134
 }

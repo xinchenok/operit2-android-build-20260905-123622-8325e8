@@ -1,7 +1,7 @@
 {
   "slug": "terminal-fork-child",
   "tree_sha": "8268ad2c43ea90912e796ab3245df6563563159e",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "5334d1b2dd51c1bc5bddb8ef83dc011b606dbbf9",
   "head_branch": "fix/terminal-fork-child",
   "title": "fix(android): prepare exec arguments before forking the PTY",
@@ -10,7 +10,8 @@
   "patch_sha256": "6e3789367c7c145d481b922b8f70910e04e1163f5f4a5fc819f1b418a5389fe7",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-fork-child?expand=1"
+  "pr_number": 89,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/89",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-fork-child?expand=1",
+  "workflow_run_id": 34119116134
 }

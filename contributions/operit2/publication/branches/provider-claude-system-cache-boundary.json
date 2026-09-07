@@ -1,7 +1,7 @@
 {
   "slug": "provider-claude-system-cache-boundary",
   "tree_sha": "481af7db47595b8920d3a14db8ac11aa3cc56925",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f49c161828472018999d160507d25b25a5840367",
   "head_branch": "fix/provider-claude-system-cache-boundary",
   "title": "fix(claude): use one system prompt cache breakpoint",
@@ -10,7 +10,8 @@
   "patch_sha256": "218113ea174a5c54a1822f779aa7770af25a45faf7c908c78a9185f19defff3b",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/provider-claude-system-cache-boundary?expand=1"
+  "pr_number": 78,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/78",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/provider-claude-system-cache-boundary?expand=1",
+  "workflow_run_id": 34119116134
 }

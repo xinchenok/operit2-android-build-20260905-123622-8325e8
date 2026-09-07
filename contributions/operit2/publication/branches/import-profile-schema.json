@@ -1,7 +1,7 @@
 {
   "slug": "import-profile-schema",
   "tree_sha": "ae02fe0ce08c11dd3a4c891f5c52e6056297fb2e",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "42af120a847dcf58647953ceef9c13dedc2e4cc3",
   "head_branch": "fix/import-profile-schema",
   "title": "fix(import): read released memory-space profile metadata",
@@ -10,7 +10,8 @@
   "patch_sha256": "d5b4378a23e4189f7acd75f680eacaa0981fc1091be5a42d9f73351babe769bc",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-profile-schema?expand=1"
+  "pr_number": 58,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/58",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-profile-schema?expand=1",
+  "workflow_run_id": 34119116134
 }

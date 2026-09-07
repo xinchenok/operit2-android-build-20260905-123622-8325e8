@@ -1,7 +1,7 @@
 {
   "slug": "import-objectbox-documents",
   "tree_sha": "de2f5c18f39ce17d1312e08eb5277ed13bc7967a",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "7e2f965058c54e81ce91fc8d73f7fc4a7a15f5b1",
   "head_branch": "fix/import-objectbox-documents",
   "title": "fix(import): preserve ObjectBox document nodes and content",
@@ -10,7 +10,8 @@
   "patch_sha256": "bd9fc9cafe21862a1fd97b2ef092adfc66b540592341ace9c43cb8eb958c3acc",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-documents?expand=1"
+  "pr_number": 52,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/52",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-documents?expand=1",
+  "workflow_run_id": 34119116134
 }

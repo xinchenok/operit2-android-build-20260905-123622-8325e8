@@ -1,7 +1,7 @@
 {
   "slug": "startup-nonblocking-lifecycle-events",
   "tree_sha": "b5197784cc5697fd757cf75c5e0c492ff25f7b3e",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "a253e522a5f169e9b4e38879267c1b63f95c782c",
   "head_branch": "fix/startup-nonblocking-lifecycle-events",
   "title": "fix(android): avoid blocking lifecycle callbacks during runtime startup",
@@ -10,7 +10,8 @@
   "patch_sha256": "7cb159ffff8feb4fea40110e5d7dcc7d8fbd9953619726c69e0dacd05e7c0887",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-nonblocking-lifecycle-events?expand=1"
+  "pr_number": 83,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/83",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-nonblocking-lifecycle-events?expand=1",
+  "workflow_run_id": 34119116134
 }

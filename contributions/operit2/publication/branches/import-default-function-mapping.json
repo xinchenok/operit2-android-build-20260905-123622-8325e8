@@ -1,7 +1,7 @@
 {
   "slug": "import-default-function-mapping",
   "tree_sha": "41a1a4ed539cb6ea5f9e7106e0595027d8913607",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "18c8516edd6f3913590b54a6e4a4ff6420324ac4",
   "head_branch": "fix/import-default-function-mapping",
   "title": "fix(import): accept unwritten legacy function mappings",
@@ -10,7 +10,8 @@
   "patch_sha256": "969d35bd211311c99488856e045d0ee543fd18ba9b10ef626ce4a6d793798255",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-default-function-mapping?expand=1"
+  "pr_number": 18,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/18",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-default-function-mapping?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -1,7 +1,7 @@
 {
   "slug": "startup-pairing-after-storage",
   "tree_sha": "71485534c2a6b539c25d16c4f4adb86cf1c20828",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "0a7f45d8e341c7603ef80ba155fe4b9b05464fc4",
   "head_branch": "fix/startup-pairing-after-storage",
   "title": "fix(flutter): open pairing events after storage is configured",
@@ -10,7 +10,8 @@
   "patch_sha256": "bd84fecff0f710964468ea6e7e3b7fee0c930daaaa08816847c0d563d8b57842",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-pairing-after-storage?expand=1"
+  "pr_number": 84,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/84",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-pairing-after-storage?expand=1",
+  "workflow_run_id": 34119116134
 }

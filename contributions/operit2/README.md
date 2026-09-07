@@ -2,13 +2,13 @@
 
 已准备 **89 份独立 PR 材料**，每份包含一个问题的补丁、修复说明和元数据；另有一份需要两项前置修复的角色供应商导入衔接补丁。
 
-**已创建并核对89个修复分支；实际已创建上游 PR：0。** 新 fork `xinchenok/Operit2` 已确认可写。第一次创建上游PR时，GitHub返回 `403 Resource not accessible by integration`；不能把写入分支说成已提交PR。
+**89个独立修复PR已全部提交成功，编号#8–#96，当前均为open Draft。** 每个预定分支恰好对应一个PR，提交号与准备清单一致，目标均为 `AAswordman/Operit2:main`。
 
-- [89个实际分支、提交号和上游比较入口](publication/README.md)
-- [已保存的云端提交入口与一次授权说明](https://github.com/xinchenok/Operit2/tree/contributions/submit-upstream-prs)
-- [实际权限错误记录](publication/permission-block.json)
+- [全部89个PR的实际链接](publication/README.md)
+- [完整发布与核对结果](publication/results.json)
+- [成功的云端提交任务](https://github.com/xinchenok/Operit2/actions/runs/34119116134)
 
-云端入口固定89个分支和完整PR正文，需要用户在GitHub自行配置 `UPSTREAM_PR_TOKEN`。本轮没有生成、读取或保存任何新凭据，也没有触发发布或APK构建。获得新的有效授权后才继续提交；不会重复重试当前被拒绝的连接。
+此前连接创建PR的403由用户另行配置授权后，通过专用GitHub Actions任务完成提交。原连接权限没有改变。本次没有运行APK构建或独立编译/手机实测，没有合并PR。另有一份角色供应商导入衔接补丁仍需前置修改落地后处理。
 
 基线：[7fec1b2](https://github.com/AAswordman/Operit2/commit/7fec1b2f17636c5b392c887fab28552219be807a)。增强修复来源：`18017fc00201df9ed943b1d7245f4b21717556d8`。逐条核对了 **538 个替换片段**、28 个 overlay 文件、旧包源码适配，以及早期工具包/构建修复。片段数量不是 bug 数量。
 

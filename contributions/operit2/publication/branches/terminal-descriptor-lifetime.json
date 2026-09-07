@@ -1,7 +1,7 @@
 {
   "slug": "terminal-descriptor-lifetime",
   "tree_sha": "7d836fc6ddeedd8a5ecf317175ec1ef77f1c42b7",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "a70b7db6a4d9ac234f7ee3eb76b4ee53d177f73a",
   "head_branch": "fix/terminal-descriptor-lifetime",
   "title": "fix(android): retain PTY descriptor ownership during I/O",
@@ -10,7 +10,8 @@
   "patch_sha256": "8ae26a95941e4f6cdb805d9cc0fb834878c179d8355086cbac89284b35140c10",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-descriptor-lifetime?expand=1"
+  "pr_number": 24,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/24",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-descriptor-lifetime?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -1,7 +1,7 @@
 {
   "slug": "import-persona-identity-collisions",
   "tree_sha": "e7e78f7cc7d2e07c6b4ab05011668f2c43264865",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "46fea5cdb371dff65bea26ba8998da50ac61597a",
   "head_branch": "fix/import-persona-identity-collisions",
   "title": "fix(import): preserve existing persona and memory identities",
@@ -10,7 +10,8 @@
   "patch_sha256": "49a49078c47aca33b27824a227f8fcd0beeaa7c2cbcba2bf966698ba8bbe330f",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-persona-identity-collisions?expand=1"
+  "pr_number": 56,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/56",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-persona-identity-collisions?expand=1",
+  "workflow_run_id": 34119116134
 }

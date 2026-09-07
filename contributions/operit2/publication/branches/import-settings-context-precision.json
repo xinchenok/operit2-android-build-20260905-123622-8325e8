@@ -1,7 +1,7 @@
 {
   "slug": "import-settings-context-precision",
   "tree_sha": "5a73d3e4f192d2f457b5a154a6839c009efae858",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "3713358d42057fa4f78945e38ddbeba6afef3b9e",
   "head_branch": "fix/import-settings-context-precision",
   "title": "fix(model): preserve fractional context limits in editors",
@@ -10,7 +10,8 @@
   "patch_sha256": "dc4b8ed28339b625834d6b505f19815f0720b31f956014648d72b3babe8b1288",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-precision?expand=1"
+  "pr_number": 61,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/61",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-precision?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -1,7 +1,7 @@
 {
   "slug": "plugin-agent-timeout-cleanup",
   "tree_sha": "407098b61d503f37073d74619dd7d816ce39bf64",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "39b1cd90600355611e756caeb9621043d48fdf9a",
   "head_branch": "fix/plugin-agent-timeout-cleanup",
   "title": "fix(plugins): clear the agent timeout after send completion",
@@ -10,7 +10,8 @@
   "patch_sha256": "923f37a1f6efac7011505e351439c47d61c137ef80f2c93d06defa5215f45770",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-agent-timeout-cleanup?expand=1"
+  "pr_number": 72,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/72",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-agent-timeout-cleanup?expand=1",
+  "workflow_run_id": 34119116134
 }

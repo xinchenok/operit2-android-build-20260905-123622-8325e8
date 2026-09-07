@@ -3,9 +3,9 @@
   "source_repository": "AAswordman/Operit2",
   "source_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "enhanced_fix_source_sha": "18017fc00201df9ed943b1d7245f4b21717556d8",
-  "status": "branches_created_pending_authorized_pr_publication",
-  "created_upstream_pr_count": 0,
-  "blocker": "Creating the first upstream PR returned HTTP403 Resource not accessible by integration; fork writes succeed. No retry using the same rejected upstream permission.",
+  "status": "submitted_draft_prs",
+  "created_upstream_pr_count": 89,
+  "blocker": null,
   "named_replacement_spec_count": 538,
   "independent_pr_count": 89,
   "prs": [
@@ -16,7 +16,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-accepted-attachment-cleanup",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
       ],
@@ -27,9 +27,10 @@
       "patch_sha256": "854bd517cab77e992f55175daf94de30d8578a8f7a90f948e85b2d6a4afb1a99",
       "patch": "prs/chat-accepted-attachment-cleanup/fix.patch",
       "description": "prs/chat-accepted-attachment-cleanup/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/25",
       "head_commit_sha": "2581dd763c3e7d7f6ad2a90206cd2baf7ac36828",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-accepted-attachment-cleanup?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-accepted-attachment-cleanup?expand=1",
+      "pr_number": 25
     },
     {
       "slug": "chat-cancel-pending-locator",
@@ -38,7 +39,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-cancel-pending-locator",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart"
       ],
@@ -51,9 +52,10 @@
       "patch_sha256": "b0ce9cd2b51e21e80cba904be79225205644d0235b7739585b9ed09a03dd0697",
       "patch": "prs/chat-cancel-pending-locator/fix.patch",
       "description": "prs/chat-cancel-pending-locator/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/26",
       "head_commit_sha": "323ccbe5963fc891a5388794ed2bf8a5d63e9723",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-cancel-pending-locator?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-cancel-pending-locator?expand=1",
+      "pr_number": 26
     },
     {
       "slug": "chat-detached-scroll-navigator",
@@ -62,7 +64,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-detached-scroll-navigator",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart"
       ],
@@ -73,9 +75,10 @@
       "patch_sha256": "0ef0ee75fae213bedf41bdf57cf69a2e2c41836e679a68955a7c2bc170c3aee7",
       "patch": "prs/chat-detached-scroll-navigator/fix.patch",
       "description": "prs/chat-detached-scroll-navigator/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/27",
       "head_commit_sha": "73bf16a9c3ca82b77c000d1340b5c4051d87f094",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-detached-scroll-navigator?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-detached-scroll-navigator?expand=1",
+      "pr_number": 27
     },
     {
       "slug": "chat-group-cancellation",
@@ -84,7 +87,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-group-cancellation",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
         "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
@@ -112,9 +115,10 @@
       "patch_sha256": "6456393303eb791775963094ee4ec470b81d9b379993d905ecab94251496cf02",
       "patch": "prs/chat-group-cancellation/fix.patch",
       "description": "prs/chat-group-cancellation/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/28",
       "head_commit_sha": "56bf3b82ab9bc18f547dab3c76a544ecbe00ac9d",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-cancellation?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-cancellation?expand=1",
+      "pr_number": 28
     },
     {
       "slug": "chat-group-command-lock",
@@ -123,7 +127,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-group-command-lock",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs"
       ],
@@ -134,9 +138,10 @@
       "patch_sha256": "299597ea90883ff0c327d9dacdd75d36f1125e6294e7c96ed02344a870942768",
       "patch": "prs/chat-group-command-lock/fix.patch",
       "description": "prs/chat-group-command-lock/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/29",
       "head_commit_sha": "e9412375d25bf60333e7a4d73e826a5af044e96a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-command-lock?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-command-lock?expand=1",
+      "pr_number": 29
     },
     {
       "slug": "chat-group-owner-routing",
@@ -145,7 +150,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-group-owner-routing",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs"
       ],
@@ -158,9 +163,10 @@
       "patch_sha256": "cd4c38a8cfa0c2926db9e69447840a1ebf659ed880015070e0299a0c1668b8b5",
       "patch": "prs/chat-group-owner-routing/fix.patch",
       "description": "prs/chat-group-owner-routing/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/30",
       "head_commit_sha": "4b6b1dc8c993e059dc3aa67a6dfad6a3e0a3654a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-owner-routing?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-owner-routing?expand=1",
+      "pr_number": 30
     },
     {
       "slug": "chat-hook-draft-ownership",
@@ -169,7 +175,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-hook-draft-ownership",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
       ],
@@ -181,9 +187,10 @@
       "patch_sha256": "08dab0ec18cd11df448a41b4c81ae72fe70488e9291f8a892182c7f46881126f",
       "patch": "prs/chat-hook-draft-ownership/fix.patch",
       "description": "prs/chat-hook-draft-ownership/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/31",
       "head_commit_sha": "91ba42c79227f257a2fae97c33e508d0df551c5c",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-hook-draft-ownership?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-hook-draft-ownership?expand=1",
+      "pr_number": 31
     },
     {
       "slug": "chat-initial-conversation",
@@ -192,7 +199,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-initial-conversation",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
         "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
@@ -209,9 +216,10 @@
       "patch_sha256": "3fe7254664588e14591663d5ad6b8f0ccf3f678367e5c92eb1fd2f95627b4284",
       "patch": "prs/chat-initial-conversation/fix.patch",
       "description": "prs/chat-initial-conversation/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/8",
       "head_commit_sha": "758c1631d7be5b1f8cc4baf65a89686f7049986f",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-initial-conversation?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-initial-conversation?expand=1",
+      "pr_number": 8
     },
     {
       "slug": "chat-markdown-paragraph-keys",
@@ -220,7 +228,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-markdown-paragraph-keys",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart",
         "apps/flutter/app/test/chat_area_streaming_cursor_test.dart"
@@ -233,9 +241,10 @@
       "patch_sha256": "2272f8e6315c0acd3db1b300fdf5610cab9d4c1d5c1a5439656d89564e744647",
       "patch": "prs/chat-markdown-paragraph-keys/fix.patch",
       "description": "prs/chat-markdown-paragraph-keys/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/32",
       "head_commit_sha": "f4ccdb9fa2f24669d7259342992cc76f001abc6b",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-markdown-paragraph-keys?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-markdown-paragraph-keys?expand=1",
+      "pr_number": 32
     },
     {
       "slug": "chat-nested-scroll-notifications",
@@ -244,7 +253,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-nested-scroll-notifications",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart"
       ],
@@ -256,9 +265,10 @@
       "patch_sha256": "540f57a970630237b12a22961226efe67185666d5365ef25f5539c2f2bd2fa68",
       "patch": "prs/chat-nested-scroll-notifications/fix.patch",
       "description": "prs/chat-nested-scroll-notifications/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/33",
       "head_commit_sha": "0abd15c7b80227ce3b9928e95204454fe57064ce",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-nested-scroll-notifications?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-nested-scroll-notifications?expand=1",
+      "pr_number": 33
     },
     {
       "slug": "chat-preserve-partial-answer",
@@ -267,7 +277,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-preserve-partial-answer",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
       ],
@@ -278,9 +288,10 @@
       "patch_sha256": "f82dc16e95925cc7c6afd2ea767bfd3f4b94c1251595e199ae3acf858bbb2435",
       "patch": "prs/chat-preserve-partial-answer/fix.patch",
       "description": "prs/chat-preserve-partial-answer/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/34",
       "head_commit_sha": "c1eaad8df373af68e8e7b12e8288f3f74f8c5bd2",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-preserve-partial-answer?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-preserve-partial-answer?expand=1",
+      "pr_number": 34
     },
     {
       "slug": "chat-queue-edit-draft",
@@ -289,7 +300,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-queue-edit-draft",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
       ],
@@ -301,9 +312,10 @@
       "patch_sha256": "c351b188f684e43b87298b1f47a260a04da835d875786e7154ae27e7a038e987",
       "patch": "prs/chat-queue-edit-draft/fix.patch",
       "description": "prs/chat-queue-edit-draft/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/35",
       "head_commit_sha": "a4ee0c225e95f3cad2a7e058dbce61467db5f61e",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-edit-draft?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-edit-draft?expand=1",
+      "pr_number": 35
     },
     {
       "slug": "chat-queue-hook-restoration",
@@ -312,7 +324,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-queue-hook-restoration",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
       ],
@@ -324,9 +336,10 @@
       "patch_sha256": "192488306447de91a589b941d21bad9a1417452a6c9eab54f18ed4ede9cb045a",
       "patch": "prs/chat-queue-hook-restoration/fix.patch",
       "description": "prs/chat-queue-hook-restoration/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/36",
       "head_commit_sha": "f0f91aed0d62d552d56f92f192d9a0d44b0c3081",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-hook-restoration?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-hook-restoration?expand=1",
+      "pr_number": 36
     },
     {
       "slug": "chat-queued-text-attachments",
@@ -335,7 +348,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-queued-text-attachments",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
         "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
@@ -349,9 +362,10 @@
       "patch_sha256": "40a066b55703d53eb21953ad7aca37dc6333f9732587ee131403732de54e5d90",
       "patch": "prs/chat-queued-text-attachments/fix.patch",
       "description": "prs/chat-queued-text-attachments/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/37",
       "head_commit_sha": "ed344d93fe335468514e024c279d17469ba9ed0b",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queued-text-attachments?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queued-text-attachments?expand=1",
+      "pr_number": 37
     },
     {
       "slug": "chat-reply-ownership",
@@ -360,7 +374,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-reply-ownership",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
       ],
@@ -374,9 +388,10 @@
       "patch_sha256": "03e470e1f517693cad47ae7b1525bdacf425e783a5cef704f407417dee80f3ed",
       "patch": "prs/chat-reply-ownership/fix.patch",
       "description": "prs/chat-reply-ownership/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/38",
       "head_commit_sha": "86fcd9c6c1e8650e136315e1a288ef6bfc6ef08d",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-reply-ownership?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-reply-ownership?expand=1",
+      "pr_number": 38
     },
     {
       "slug": "chat-scroll-follow-intent",
@@ -385,7 +400,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-scroll-follow-intent",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart",
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
@@ -399,9 +414,10 @@
       "patch_sha256": "44f67d923e319aea4cc3c0db54a4cd58cdfbe157902cf401dc83113a2497bd26",
       "patch": "prs/chat-scroll-follow-intent/fix.patch",
       "description": "prs/chat-scroll-follow-intent/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/9",
       "head_commit_sha": "ba49dd960565a4bef20f0d53ca825e30d24b9f2f",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-scroll-follow-intent?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-scroll-follow-intent?expand=1",
+      "pr_number": 9
     },
     {
       "slug": "chat-send-rejection",
@@ -410,7 +426,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-send-rejection",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
         "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart",
@@ -445,9 +461,10 @@
       "patch_sha256": "6658217ca8bde7623d1559f81ddbfa695d920e51d2ecacbeda4992fb350afc8d",
       "patch": "prs/chat-send-rejection/fix.patch",
       "description": "prs/chat-send-rejection/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/39",
       "head_commit_sha": "821ed3d29a14d2389694ff70b7cbcdde13e0461e",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-send-rejection?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-send-rejection?expand=1",
+      "pr_number": 39
     },
     {
       "slug": "chat-speech-draft-ownership",
@@ -456,7 +473,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-speech-draft-ownership",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
       ],
@@ -471,9 +488,10 @@
       "patch_sha256": "d45474ea2a06287ec25fefd23a868a6dae168cabd8bf331c5b1b534132d5ccec",
       "patch": "prs/chat-speech-draft-ownership/fix.patch",
       "description": "prs/chat-speech-draft-ownership/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/40",
       "head_commit_sha": "821dff91877d08952b7e7f00cc65800b8e44f098",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-speech-draft-ownership?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-speech-draft-ownership?expand=1",
+      "pr_number": 40
     },
     {
       "slug": "chat-submit-attachment-ownership",
@@ -482,7 +500,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-submit-attachment-ownership",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
         "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
@@ -504,9 +522,10 @@
       "patch_sha256": "12520de86e6d3b666e09ff76b45a46390aabd3a1bb6e1ff3a876d86a6547b14b",
       "patch": "prs/chat-submit-attachment-ownership/fix.patch",
       "description": "prs/chat-submit-attachment-ownership/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/41",
       "head_commit_sha": "f04d1c912679db57fa5723532a07be6fc2aa75e1",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-attachment-ownership?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-attachment-ownership?expand=1",
+      "pr_number": 41
     },
     {
       "slug": "chat-submit-single-flight",
@@ -515,7 +534,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-submit-single-flight",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
       ],
@@ -527,9 +546,10 @@
       "patch_sha256": "24e10a1a9192daa8e641c756211e57ccb0e471aee9bd14517260834141df758c",
       "patch": "prs/chat-submit-single-flight/fix.patch",
       "description": "prs/chat-submit-single-flight/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/42",
       "head_commit_sha": "62b6ed5de513baf8b22b90c01433efd3032c4820",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-single-flight?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-single-flight?expand=1",
+      "pr_number": 42
     },
     {
       "slug": "chat-unsent-draft-recovery",
@@ -538,7 +558,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-unsent-draft-recovery",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart",
         "apps/flutter/app/lib/ui/features/chat/viewmodel/ChatViewModel.dart"
@@ -554,9 +574,10 @@
       "patch_sha256": "5890e694e48122fb2afbc0bec79757588b7b11903843ca0210bbbae200ca4473",
       "patch": "prs/chat-unsent-draft-recovery/fix.patch",
       "description": "prs/chat-unsent-draft-recovery/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/43",
       "head_commit_sha": "a64123b1554b38e78fd38ad8922ee730d60202b8",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-unsent-draft-recovery?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-unsent-draft-recovery?expand=1",
+      "pr_number": 43
     },
     {
       "slug": "chat-worker-startup-cleanup",
@@ -565,7 +586,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/chat-worker-startup-cleanup",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
       ],
@@ -576,9 +597,10 @@
       "patch_sha256": "3017aa71e1900a7b8fe577155ffa6734d83c2f2a9019554aeedb560ee26e071b",
       "patch": "prs/chat-worker-startup-cleanup/fix.patch",
       "description": "prs/chat-worker-startup-cleanup/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/44",
       "head_commit_sha": "c3dcd8c39708026ceee85024e810b5db61a48d11",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-worker-startup-cleanup?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-worker-startup-cleanup?expand=1",
+      "pr_number": 44
     },
     {
       "slug": "import-all-model-configs",
@@ -587,7 +609,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-all-model-configs",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotArchive.rs",
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
@@ -618,9 +640,10 @@
       "patch_sha256": "398bb9fe42c5edda4e38f5547395cff4a6682807c9de9c1b1b28af903329ebe2",
       "patch": "prs/import-all-model-configs/fix.patch",
       "description": "prs/import-all-model-configs/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/45",
       "head_commit_sha": "5c5b54a6e15ac6a5e91909dc49caf9c31da9df81",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-all-model-configs?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-all-model-configs?expand=1",
+      "pr_number": 45
     },
     {
       "slug": "import-chat-body-copies",
@@ -629,7 +652,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-chat-body-copies",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/persistence/store/src/repository/ChatHistoryManager.rs"
       ],
@@ -649,9 +672,10 @@
       "patch_sha256": "0214f4d049f16080225e0121c0cba4fdf8f76f5db69e216873b06106dd5fb716",
       "patch": "prs/import-chat-body-copies/fix.patch",
       "description": "prs/import-chat-body-copies/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/21",
       "head_commit_sha": "f769f08d0ef3e2e66d9057b424e7d1d6122b2ffe",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-chat-body-copies?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-chat-body-copies?expand=1",
+      "pr_number": 21
     },
     {
       "slug": "import-chat-id-collisions",
@@ -660,7 +684,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-chat-id-collisions",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -675,9 +699,10 @@
       "patch_sha256": "1cd017716a502c72e14c306c5756dccc51c3bd1548cc4d350dc0126ea8e6f64b",
       "patch": "prs/import-chat-id-collisions/fix.patch",
       "description": "prs/import-chat-id-collisions/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/46",
       "head_commit_sha": "1bdef5e7a98b4bc0cafbffcabcaccdbe6223cc9c",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-chat-id-collisions?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-chat-id-collisions?expand=1",
+      "pr_number": 46
     },
     {
       "slug": "import-current-chat-preference",
@@ -686,7 +711,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-current-chat-preference",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -701,9 +726,10 @@
       "patch_sha256": "e78a94caa990f05ca64f6a1ee3a8407caf604328fdf6de163d24dff3dd0bb1bb",
       "patch": "prs/import-current-chat-preference/fix.patch",
       "description": "prs/import-current-chat-preference/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/47",
       "head_commit_sha": "f97117eb8595ac6904971533d0d20e3a2a23dfef",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-current-chat-preference?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-current-chat-preference?expand=1",
+      "pr_number": 47
     },
     {
       "slug": "import-default-function-mapping",
@@ -712,7 +738,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-default-function-mapping",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotArchive.rs"
       ],
@@ -727,9 +753,10 @@
       "patch_sha256": "969d35bd211311c99488856e045d0ee543fd18ba9b10ef626ce4a6d793798255",
       "patch": "prs/import-default-function-mapping/fix.patch",
       "description": "prs/import-default-function-mapping/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/18",
       "head_commit_sha": "18c8516edd6f3913590b54a6e4a4ff6420324ac4",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-default-function-mapping?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-default-function-mapping?expand=1",
+      "pr_number": 18
     },
     {
       "slug": "import-failure-progress",
@@ -738,7 +765,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-failure-progress",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -753,9 +780,10 @@
       "patch_sha256": "857999b8fc679c6ae03e6ef391082aa3634f4ec364b7ba9a841351a5f4188143",
       "patch": "prs/import-failure-progress/fix.patch",
       "description": "prs/import-failure-progress/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/48",
       "head_commit_sha": "a1e0c0b85612fc8b2e9c8570196750d221014877",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-failure-progress?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-failure-progress?expand=1",
+      "pr_number": 48
     },
     {
       "slug": "import-file-workspace-collisions",
@@ -764,7 +792,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-file-workspace-collisions",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -809,9 +837,10 @@
       "patch_sha256": "792277a579273444df7787468a65fadf05a1a724a4af8f00c3c37c1250dce530",
       "patch": "prs/import-file-workspace-collisions/fix.patch",
       "description": "prs/import-file-workspace-collisions/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/49",
       "head_commit_sha": "671d6ccf995aa9d54f2335cc4eea92769f74c7e2",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-file-workspace-collisions?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-file-workspace-collisions?expand=1",
+      "pr_number": 49
     },
     {
       "slug": "import-legacy-empty-tags",
@@ -820,7 +849,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-legacy-empty-tags",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -840,9 +869,10 @@
       "patch_sha256": "01967738e69ef9f35e1bd86d710bbf33c2a7e6655781643a3c583cce68cc4e7f",
       "patch": "prs/import-legacy-empty-tags/fix.patch",
       "description": "prs/import-legacy-empty-tags/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/50",
       "head_commit_sha": "73d659dbac08fa69e6543f5e31e2e4e278ae1f53",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-legacy-empty-tags?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-legacy-empty-tags?expand=1",
+      "pr_number": 50
     },
     {
       "slug": "import-message-part-batch",
@@ -851,7 +881,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-message-part-batch",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/persistence/store/src/dao/MessagePartDao.rs",
         "core/crates/persistence/store/src/repository/ChatHistoryManager.rs"
@@ -872,9 +902,10 @@
       "patch_sha256": "e4f855d5616090b4d7d8224792740772ee41d79c49d2806ebafd819839324a52",
       "patch": "prs/import-message-part-batch/fix.patch",
       "description": "prs/import-message-part-batch/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/19",
       "head_commit_sha": "f4cc617414d15fec22f09a09e8219f40d19ddaa1",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-part-batch?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-part-batch?expand=1",
+      "pr_number": 19
     },
     {
       "slug": "import-message-resource-paths",
@@ -883,7 +914,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-message-resource-paths",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -913,9 +944,10 @@
       "patch_sha256": "3ee2b4d0a864273d53c31f60ffbdc04476550e06eb4bfcf6a9f9b62910ea71a5",
       "patch": "prs/import-message-resource-paths/fix.patch",
       "description": "prs/import-message-resource-paths/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/51",
       "head_commit_sha": "199dab25fc0362c8824ae7b11251215f4eebce0a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-resource-paths?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-resource-paths?expand=1",
+      "pr_number": 51
     },
     {
       "slug": "import-objectbox-documents",
@@ -924,7 +956,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-objectbox-documents",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/foundation/model/src/MemoryExportModel.rs",
         "core/crates/persistence/store/src/repository/MemoryRepository.rs",
@@ -1071,9 +1103,10 @@
       "patch_sha256": "bd9fc9cafe21862a1fd97b2ef092adfc66b540592341ace9c43cb8eb958c3acc",
       "patch": "prs/import-objectbox-documents/fix.patch",
       "description": "prs/import-objectbox-documents/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/52",
       "head_commit_sha": "7e2f965058c54e81ce91fc8d73f7fc4a7a15f5b1",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-documents?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-documents?expand=1",
+      "pr_number": 52
     },
     {
       "slug": "import-objectbox-tag-relations",
@@ -1082,7 +1115,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-objectbox-tag-relations",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1102,9 +1135,10 @@
       "patch_sha256": "b37ebc5c6fb7f7688ae54a51c8cc6f8a3a1c3b2ffb42b69803498181154f66fd",
       "patch": "prs/import-objectbox-tag-relations/fix.patch",
       "description": "prs/import-objectbox-tag-relations/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/53",
       "head_commit_sha": "e62c612989de64141d8e7288aedf2378c8de18c3",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-tag-relations?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-tag-relations?expand=1",
+      "pr_number": 53
     },
     {
       "slug": "import-optional-memory-databases",
@@ -1113,7 +1147,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-optional-memory-databases",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1128,9 +1162,10 @@
       "patch_sha256": "8b090a29a0d5019c8f315af2d0e5dde34b73b48fabe9b9809ee19b5c26117934",
       "patch": "prs/import-optional-memory-databases/fix.patch",
       "description": "prs/import-optional-memory-databases/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/54",
       "head_commit_sha": "2ff21f7fb626098d00db1ceb8ec67390644aef74",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-optional-memory-databases?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-optional-memory-databases?expand=1",
+      "pr_number": 54
     },
     {
       "slug": "import-optional-wal",
@@ -1139,7 +1174,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-optional-wal",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1154,9 +1189,10 @@
       "patch_sha256": "4ce4e10aca8ee90e7be9f47fb3255ed6f42d21f8d8072b8a0260f0b351a58b60",
       "patch": "prs/import-optional-wal/fix.patch",
       "description": "prs/import-optional-wal/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/55",
       "head_commit_sha": "2408a0ed6fd2051fb3cad5dfb10640cdb623b4bb",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-optional-wal?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-optional-wal?expand=1",
+      "pr_number": 55
     },
     {
       "slug": "import-persona-identity-collisions",
@@ -1165,7 +1201,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-persona-identity-collisions",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1235,9 +1271,10 @@
       "patch_sha256": "49a49078c47aca33b27824a227f8fcd0beeaa7c2cbcba2bf966698ba8bbe330f",
       "patch": "prs/import-persona-identity-collisions/fix.patch",
       "description": "prs/import-persona-identity-collisions/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/56",
       "head_commit_sha": "46fea5cdb371dff65bea26ba8998da50ac61597a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-persona-identity-collisions?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-persona-identity-collisions?expand=1",
+      "pr_number": 56
     },
     {
       "slug": "import-portable-document-metadata",
@@ -1246,7 +1283,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-portable-document-metadata",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/foundation/model/src/MemoryExportModel.rs",
         "core/crates/persistence/store/src/repository/MemoryRepository.rs",
@@ -1283,9 +1320,10 @@
       "patch_sha256": "2763eb7e0d904d001009151e395be8e57f449235277181280b8ab2bf2869341d",
       "patch": "prs/import-portable-document-metadata/fix.patch",
       "description": "prs/import-portable-document-metadata/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/57",
       "head_commit_sha": "f785a7cd1f49ca6d33bf2adb8cb54677791ad3a6",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-portable-document-metadata?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-portable-document-metadata?expand=1",
+      "pr_number": 57
     },
     {
       "slug": "import-profile-schema",
@@ -1294,7 +1332,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-profile-schema",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1324,9 +1362,10 @@
       "patch_sha256": "d5b4378a23e4189f7acd75f680eacaa0981fc1091be5a42d9f73351babe769bc",
       "patch": "prs/import-profile-schema/fix.patch",
       "description": "prs/import-profile-schema/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/58",
       "head_commit_sha": "42af120a847dcf58647953ceef9c13dedc2e4cc3",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-profile-schema?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-profile-schema?expand=1",
+      "pr_number": 58
     },
     {
       "slug": "import-reply-variants",
@@ -1335,7 +1374,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-reply-variants",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/persistence/store/src/dao/MessageVariantDao.rs",
         "core/crates/persistence/store/src/repository/ChatHistoryManager.rs",
@@ -1367,9 +1406,10 @@
       "patch_sha256": "ccabb25a51694d407011c17cab556f302326cc561b47459d24230f7d7d18bbf2",
       "patch": "prs/import-reply-variants/fix.patch",
       "description": "prs/import-reply-variants/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/59",
       "head_commit_sha": "57ca35b7ad6d6168fe6aba01088feb254a7b2582",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-reply-variants?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-reply-variants?expand=1",
+      "pr_number": 59
     },
     {
       "slug": "import-reuse-staged-database",
@@ -1378,7 +1418,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-reuse-staged-database",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1418,9 +1458,10 @@
       "patch_sha256": "f57f432abe9fc70027fef0b74d5aa9d1ab5682186aa0af76b60ab3e0be3906e6",
       "patch": "prs/import-reuse-staged-database/fix.patch",
       "description": "prs/import-reuse-staged-database/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/20",
       "head_commit_sha": "25e9c8be03a07aa4f1149f2ba5c135800987bac4",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-reuse-staged-database?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-reuse-staged-database?expand=1",
+      "pr_number": 20
     },
     {
       "slug": "import-room-schema-11-19",
@@ -1429,7 +1470,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-room-schema-11-19",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1RoomSchemaMigration.rs"
       ],
@@ -1449,9 +1490,10 @@
       "patch_sha256": "c851d6e4a0020ef5f26f7867ba583661e2d52d354f541f30c7d1b1f403207eb5",
       "patch": "prs/import-room-schema-11-19/fix.patch",
       "description": "prs/import-room-schema-11-19/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/60",
       "head_commit_sha": "e54a263960e75bdae7755ad2da1b5363ee0aa3c1",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-room-schema-11-19?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-room-schema-11-19?expand=1",
+      "pr_number": 60
     },
     {
       "slug": "import-settings-context-precision",
@@ -1460,7 +1502,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-settings-context-precision",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/cli/src/tui/config/model_editor.rs",
         "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart"
@@ -1481,9 +1523,10 @@
       "patch_sha256": "dc4b8ed28339b625834d6b505f19815f0720b31f956014648d72b3babe8b1288",
       "patch": "prs/import-settings-context-precision/fix.patch",
       "description": "prs/import-settings-context-precision/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/61",
       "head_commit_sha": "3713358d42057fa4f78945e38ddbeba6afef3b9e",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-precision?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-precision?expand=1",
+      "pr_number": 61
     },
     {
       "slug": "import-settings-context-usage",
@@ -1492,7 +1535,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-settings-context-usage",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentInputMenuPopup.dart"
       ],
@@ -1507,9 +1550,10 @@
       "patch_sha256": "ca67e8cba0a427feda351d69c3935b06de538ab13d35dd406e17912fa6614808",
       "patch": "prs/import-settings-context-usage/fix.patch",
       "description": "prs/import-settings-context-usage/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/62",
       "head_commit_sha": "42c73803e2b4639b72200795f1332931fe96b5c4",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-usage?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-usage?expand=1",
+      "pr_number": 62
     },
     {
       "slug": "import-settings-finite-context",
@@ -1518,7 +1562,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-settings-finite-context",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart"
       ],
@@ -1533,9 +1577,10 @@
       "patch_sha256": "0ef4cefd65405ae1f2639d2717d8635ed61d16bc4c15970ecca9c6268ee22ad1",
       "patch": "prs/import-settings-finite-context/fix.patch",
       "description": "prs/import-settings-finite-context/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/63",
       "head_commit_sha": "26aca75b76be1fd5c129553e7e6c59ab4c47e293",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-finite-context?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-finite-context?expand=1",
+      "pr_number": 63
     },
     {
       "slug": "import-settings-gemini-search",
@@ -1544,7 +1589,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-settings-gemini-search",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1574,9 +1619,10 @@
       "patch_sha256": "5373eb30f0987905c55aef8ff6b9a4f005b5e92773b27550225ba5f8bd0e4599",
       "patch": "prs/import-settings-gemini-search/fix.patch",
       "description": "prs/import-settings-gemini-search/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/64",
       "head_commit_sha": "a2941e7d3f920976544ab68ba624c9287b4a6656",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-gemini-search?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-gemini-search?expand=1",
+      "pr_number": 64
     },
     {
       "slug": "import-settings-ordinary-send-summary",
@@ -1585,7 +1631,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-settings-ordinary-send-summary",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/services/ChatServiceCore.rs",
         "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
@@ -1626,9 +1672,10 @@
       "patch_sha256": "28bd47a3114c37a4abbbd1e6016893f74c816c5bdca1c8632aad430de541969d",
       "patch": "prs/import-settings-ordinary-send-summary/fix.patch",
       "description": "prs/import-settings-ordinary-send-summary/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/65",
       "head_commit_sha": "4fa109582c80c918bf6cfddead7ed726e302a026",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-ordinary-send-summary?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-ordinary-send-summary?expand=1",
+      "pr_number": 65
     },
     {
       "slug": "import-shared-download-paths",
@@ -1637,7 +1684,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-shared-download-paths",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1652,9 +1699,10 @@
       "patch_sha256": "38fbdc7be873c01bf5d559a23182f8aa0fdcd7b4c4dd5b4aca8c2643134050ca",
       "patch": "prs/import-shared-download-paths/fix.patch",
       "description": "prs/import-shared-download-paths/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/66",
       "head_commit_sha": "280125af4476123754c52a16d44d450c4a02b19a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-shared-download-paths?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-shared-download-paths?expand=1",
+      "pr_number": 66
     },
     {
       "slug": "import-stale-character-models",
@@ -1663,7 +1711,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-stale-character-models",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1698,9 +1746,10 @@
       "patch_sha256": "b1f06ca69404a6d1a1f28306bfa5c78e82c6649a8ce39186b994debf3898e518",
       "patch": "prs/import-stale-character-models/fix.patch",
       "description": "prs/import-stale-character-models/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/67",
       "head_commit_sha": "b8b228cba3c19bed2c718a128667132afef5ebae",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-character-models?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-character-models?expand=1",
+      "pr_number": 67
     },
     {
       "slug": "import-stale-model-selection",
@@ -1709,7 +1758,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-stale-model-selection",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1744,9 +1793,10 @@
       "patch_sha256": "80f8aa86516424bce66e00d7717cb32f828d68e8166880223b1ef4673a0cf779",
       "patch": "prs/import-stale-model-selection/fix.patch",
       "description": "prs/import-stale-model-selection/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/17",
       "head_commit_sha": "4ffade87942f94be8041dd9ecf5fb70f040fde8f",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-model-selection?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-model-selection?expand=1",
+      "pr_number": 17
     },
     {
       "slug": "import-tts-provider-types",
@@ -1755,7 +1805,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-tts-provider-types",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1775,9 +1825,10 @@
       "patch_sha256": "522127a986b8b7383e2ff6733ed04a0cd5d7a81b915e505f45d26a1d48a6c565",
       "patch": "prs/import-tts-provider-types/fix.patch",
       "description": "prs/import-tts-provider-types/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/68",
       "head_commit_sha": "bb384f39ccf2ad152e8f501b468fdb290c6367c9",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-tts-provider-types?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-tts-provider-types?expand=1",
+      "pr_number": 68
     },
     {
       "slug": "import-unknown-provider-preview",
@@ -1786,7 +1837,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-unknown-provider-preview",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1801,9 +1852,10 @@
       "patch_sha256": "7c91d69aca4f4ad688e9b8e77cd05f488f81eeb0539de9c45ae2e7256aea440d",
       "patch": "prs/import-unknown-provider-preview/fix.patch",
       "description": "prs/import-unknown-provider-preview/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/69",
       "head_commit_sha": "470c381c6c20ddf2ffa3fbe3d5ad4cad1b2292ad",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-unknown-provider-preview?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-unknown-provider-preview?expand=1",
+      "pr_number": 69
     },
     {
       "slug": "import-user-documents",
@@ -1812,7 +1864,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/import-user-documents",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
       ],
@@ -1867,9 +1919,10 @@
       "patch_sha256": "b7900767e45f1c675813c5cab5af24416637a06f28b4dca81472c6bdb2a449a2",
       "patch": "prs/import-user-documents/fix.patch",
       "description": "prs/import-user-documents/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/70",
       "head_commit_sha": "154b968b2146db536c8247d649d09bf97c8ddbd3",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-user-documents?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-user-documents?expand=1",
+      "pr_number": 70
     },
     {
       "slug": "model-fixed-character-binding",
@@ -1878,7 +1931,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/model-fixed-character-binding",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
         "apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart",
@@ -1932,9 +1985,10 @@
       "patch_sha256": "ac4d6faaad0d83c97f4ecb1a1d67110774d4f89e003a52f181e2cecb13431561",
       "patch": "prs/model-fixed-character-binding/fix.patch",
       "description": "prs/model-fixed-character-binding/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/71",
       "head_commit_sha": "32d8d09763868196e2933f94bfefd12b535c70b0",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/model-fixed-character-binding?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/model-fixed-character-binding?expand=1",
+      "pr_number": 71
     },
     {
       "slug": "plugin-agent-timeout-cleanup",
@@ -1943,7 +1997,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/plugin-agent-timeout-cleanup",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "plugins/packages/buildin/extended_chat.ts"
       ],
@@ -1954,9 +2008,10 @@
       "patch_sha256": "923f37a1f6efac7011505e351439c47d61c137ef80f2c93d06defa5215f45770",
       "patch": "prs/plugin-agent-timeout-cleanup/fix.patch",
       "description": "prs/plugin-agent-timeout-cleanup/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/72",
       "head_commit_sha": "39b1cd90600355611e756caeb9621043d48fdf9a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-agent-timeout-cleanup?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-agent-timeout-cleanup?expand=1",
+      "pr_number": 72
     },
     {
       "slug": "plugin-flutter-core-command-executor",
@@ -1965,7 +2020,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/plugin-flutter-core-command-executor",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
         "core/crates/proxy/local/src/lib.rs",
@@ -1984,9 +2039,10 @@
       "patch_sha256": "2500c422096ab54fb97f62fd85cfb50eb7d2e701c506e00e322b6b8af242aebc",
       "patch": "prs/plugin-flutter-core-command-executor/fix.patch",
       "description": "prs/plugin-flutter-core-command-executor/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/73",
       "head_commit_sha": "abca9ec3fe9163c5587e5fd01edbc763befd107f",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-flutter-core-command-executor?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-flutter-core-command-executor?expand=1",
+      "pr_number": 73
     },
     {
       "slug": "plugin-lifecycle-replay-lock",
@@ -1995,7 +2051,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/plugin-lifecycle-replay-lock",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/runtime/application/src/plugins/toolpkg/ToolPkgAppLifecycleHookBridge.rs"
       ],
@@ -2006,9 +2062,10 @@
       "patch_sha256": "8a490f5e98a7bca18ea40e9dc44c9a024bb40a82d307fd770eb8a41fc3803cbe",
       "patch": "prs/plugin-lifecycle-replay-lock/fix.patch",
       "description": "prs/plugin-lifecycle-replay-lock/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/74",
       "head_commit_sha": "9c1160c4e5c021ccfb54a0293de453e84a43ba9e",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-lifecycle-replay-lock?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-lifecycle-replay-lock?expand=1",
+      "pr_number": 74
     },
     {
       "slug": "plugin-startup-after-core-node",
@@ -2017,7 +2074,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/plugin-startup-after-core-node",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
         "core/crates/runtime/application/src/core/application/OperitApplication.rs"
@@ -2033,9 +2090,10 @@
       "patch_sha256": "2e6e7db08e1d4f816b4a6203acfa8a3fd613e94fb680fed10be953d5720dc535",
       "patch": "prs/plugin-startup-after-core-node/fix.patch",
       "description": "prs/plugin-startup-after-core-node/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/75",
       "head_commit_sha": "224eb036546609bc366217bb1025bf5a7a254dbe",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-startup-after-core-node?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-startup-after-core-node?expand=1",
+      "pr_number": 75
     },
     {
       "slug": "plugin-sync-missing-outputs",
@@ -2044,7 +2102,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/plugin-sync-missing-outputs",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "plugins/tools/sync_plugin_packages.py"
       ],
@@ -2055,9 +2113,10 @@
       "patch_sha256": "00398e0c25dd2226059c7715b10fe9bc824eae9a306fbb126586343e9a3760e7",
       "patch": "prs/plugin-sync-missing-outputs/fix.patch",
       "description": "prs/plugin-sync-missing-outputs/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/76",
       "head_commit_sha": "ef273b2bd4facab7548fa9e44646faaf570ffab7",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-sync-missing-outputs?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-sync-missing-outputs?expand=1",
+      "pr_number": 76
     },
     {
       "slug": "plugin-tool-error-label",
@@ -2066,7 +2125,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/plugin-tool-error-label",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "plugins/packages/buildin/extended_chat.ts"
       ],
@@ -2077,9 +2136,10 @@
       "patch_sha256": "e29008cf9f66a833b4858fdf4481fbdf02dc6f7a7ad421b3cbae4cdcb358dcc9",
       "patch": "prs/plugin-tool-error-label/fix.patch",
       "description": "prs/plugin-tool-error-label/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/77",
       "head_commit_sha": "2965e643f25ee4ce49d77ed140e23758c4dfaf44",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-tool-error-label?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-tool-error-label?expand=1",
+      "pr_number": 77
     },
     {
       "slug": "provider-claude-system-cache-boundary",
@@ -2088,7 +2148,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/provider-claude-system-cache-boundary",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "core/crates/provider/services/src/chat/llmprovider/ClaudeProvider.rs"
       ],
@@ -2099,9 +2159,10 @@
       "patch_sha256": "218113ea174a5c54a1822f779aa7770af25a45faf7c908c78a9185f19defff3b",
       "patch": "prs/provider-claude-system-cache-boundary/fix.patch",
       "description": "prs/provider-claude-system-cache-boundary/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/78",
       "head_commit_sha": "f49c161828472018999d160507d25b25a5840367",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/provider-claude-system-cache-boundary?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/provider-claude-system-cache-boundary?expand=1",
+      "pr_number": 78
     },
     {
       "slug": "snapshot-input-background-io",
@@ -2110,7 +2171,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/snapshot-input-background-io",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/android/app/src/main/kotlin/app/operit/SnapshotImportInputChannel.kt"
       ],
@@ -2150,9 +2211,10 @@
       "patch_sha256": "359bad9940024408f64f282d35e107c83bed58acf6978e8c49b99a63d4ac8564",
       "patch": "prs/snapshot-input-background-io/fix.patch",
       "description": "prs/snapshot-input-background-io/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/15",
       "head_commit_sha": "f074ea683ef44b5f6a84511a2ae77c636fadf408",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-input-background-io?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-input-background-io?expand=1",
+      "pr_number": 15
     },
     {
       "slug": "snapshot-ui-cleanup-errors",
@@ -2161,7 +2223,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/snapshot-ui-cleanup-errors",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
         "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
@@ -2198,9 +2260,10 @@
       "patch_sha256": "979a476359ed58421031424a97303da093a8e9e01e7753d67924751afde6c45d",
       "patch": "prs/snapshot-ui-cleanup-errors/fix.patch",
       "description": "prs/snapshot-ui-cleanup-errors/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/79",
       "head_commit_sha": "baca45b9948917ef95afb565b2f3dcd1f044b7f3",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-cleanup-errors?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-cleanup-errors?expand=1",
+      "pr_number": 79
     },
     {
       "slug": "snapshot-ui-confirmation-mounted",
@@ -2209,7 +2272,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/snapshot-ui-confirmation-mounted",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart"
       ],
@@ -2224,9 +2287,10 @@
       "patch_sha256": "d6b23211e111ef80e1355a91e257ebbadf54d3282346142f540fb0c19414fd98",
       "patch": "prs/snapshot-ui-confirmation-mounted/fix.patch",
       "description": "prs/snapshot-ui-confirmation-mounted/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/80",
       "head_commit_sha": "6767429ee8badf8fde5c8eaa0608b0f853140871",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-confirmation-mounted?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-confirmation-mounted?expand=1",
+      "pr_number": 80
     },
     {
       "slug": "snapshot-ui-import-results",
@@ -2235,7 +2299,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/snapshot-ui-import-results",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart",
         "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
@@ -2282,9 +2346,10 @@
       "patch_sha256": "d76c255911940c37a0b7f9f4e44a239f797a65b18e0f21141986f36e7010bb3d",
       "patch": "prs/snapshot-ui-import-results/fix.patch",
       "description": "prs/snapshot-ui-import-results/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/81",
       "head_commit_sha": "e8618fa9d449ec23bd1787c04de1be3dbae28231",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-import-results?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-import-results?expand=1",
+      "pr_number": 81
     },
     {
       "slug": "snapshot-ui-preparation-progress",
@@ -2293,7 +2358,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/snapshot-ui-preparation-progress",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
         "apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart",
@@ -2331,9 +2396,10 @@
       "patch_sha256": "f2b05ab8143de77fea1361675aef5cef6ff73733fa7bca340bbcf5d96428c382",
       "patch": "prs/snapshot-ui-preparation-progress/fix.patch",
       "description": "prs/snapshot-ui-preparation-progress/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/16",
       "head_commit_sha": "edd50c40d37990ac8005d7fc8e144ae89efcfda7",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-preparation-progress?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-preparation-progress?expand=1",
+      "pr_number": 16
     },
     {
       "slug": "startup-failed-watch-open",
@@ -2342,7 +2408,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-failed-watch-open",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/core/bridge/MethodChannelCoreProxy.dart"
       ],
@@ -2357,9 +2423,10 @@
       "patch_sha256": "9608d433264ee64e3aab5c528505959ec74bacfe5c2310f1840919f2784c7f25",
       "patch": "prs/startup-failed-watch-open/fix.patch",
       "description": "prs/startup-failed-watch-open/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/82",
       "head_commit_sha": "ef8efe27423193a1477cfd7bf0f1e244d6847482",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-failed-watch-open?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-failed-watch-open?expand=1",
+      "pr_number": 82
     },
     {
       "slug": "startup-native-bridge-lifetime",
@@ -2368,7 +2435,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-native-bridge-lifetime",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidPlatformChannel.kt"
       ],
@@ -2383,9 +2450,10 @@
       "patch_sha256": "04a201726f8b09bff12ca998735460b44cb985fda2e76cc20bafeaedb6faa828",
       "patch": "prs/startup-native-bridge-lifetime/fix.patch",
       "description": "prs/startup-native-bridge-lifetime/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/11",
       "head_commit_sha": "f28360af878220d4be2dc3e98addd296823f49ac",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-native-bridge-lifetime?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-native-bridge-lifetime?expand=1",
+      "pr_number": 11
     },
     {
       "slug": "startup-nonblocking-lifecycle-events",
@@ -2394,7 +2462,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-nonblocking-lifecycle-events",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt"
       ],
@@ -2424,9 +2492,10 @@
       "patch_sha256": "7cb159ffff8feb4fea40110e5d7dcc7d8fbd9953619726c69e0dacd05e7c0887",
       "patch": "prs/startup-nonblocking-lifecycle-events/fix.patch",
       "description": "prs/startup-nonblocking-lifecycle-events/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/83",
       "head_commit_sha": "a253e522a5f169e9b4e38879267c1b63f95c782c",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-nonblocking-lifecycle-events?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-nonblocking-lifecycle-events?expand=1",
+      "pr_number": 83
     },
     {
       "slug": "startup-onboarding-import-navigation",
@@ -2435,7 +2504,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-onboarding-import-navigation",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart"
       ],
@@ -2505,9 +2574,10 @@
       "patch_sha256": "0f3d4d58c70b493c3d57608459aaec093cf4aeae786c269f0cfaf2cdc355ed53",
       "patch": "prs/startup-onboarding-import-navigation/fix.patch",
       "description": "prs/startup-onboarding-import-navigation/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/12",
       "head_commit_sha": "f0e92532dd28e1dfe655aae5e13f4ee2e9ca3164",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-navigation?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-navigation?expand=1",
+      "pr_number": 12
     },
     {
       "slug": "startup-onboarding-import-retry",
@@ -2516,7 +2586,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-onboarding-import-retry",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart"
       ],
@@ -2596,9 +2666,10 @@
       "patch_sha256": "cd53d2e6a8342cf46b500ebcd6f3472c5980b1ae5578bb5207e889eb30050820",
       "patch": "prs/startup-onboarding-import-retry/fix.patch",
       "description": "prs/startup-onboarding-import-retry/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/13",
       "head_commit_sha": "7c2b5f5a38417b6f5d6ded9301ffc79757a6ea28",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-retry?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-retry?expand=1",
+      "pr_number": 13
     },
     {
       "slug": "startup-open-imported-conversation",
@@ -2607,7 +2678,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-open-imported-conversation",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart"
       ],
@@ -2622,9 +2693,10 @@
       "patch_sha256": "9f16091b6328af0ec1aa4ae7a948e8e185f6bc862daab15c1578d275c9ca5abf",
       "patch": "prs/startup-open-imported-conversation/fix.patch",
       "description": "prs/startup-open-imported-conversation/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/14",
       "head_commit_sha": "57916d19cf92aed59548d2a38167b48fc9542473",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-open-imported-conversation?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-open-imported-conversation?expand=1",
+      "pr_number": 14
     },
     {
       "slug": "startup-pairing-after-storage",
@@ -2633,7 +2705,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-pairing-after-storage",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/lib/ui/main/OperitApp.dart"
       ],
@@ -2658,9 +2730,10 @@
       "patch_sha256": "bd84fecff0f710964468ea6e7e3b7fee0c930daaaa08816847c0d563d8b57842",
       "patch": "prs/startup-pairing-after-storage/fix.patch",
       "description": "prs/startup-pairing-after-storage/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/84",
       "head_commit_sha": "0a7f45d8e341c7603ef80ba155fe4b9b05464fc4",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-pairing-after-storage?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-pairing-after-storage?expand=1",
+      "pr_number": 84
     },
     {
       "slug": "startup-restore-service-roots",
@@ -2669,7 +2742,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/startup-restore-service-roots",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt",
         "apps/flutter/app/android/app/src/main/kotlin/app/operit/OperitCoreService.kt"
@@ -2695,9 +2768,10 @@
       "patch_sha256": "ae993e2778d9b06c9534cde2b77c2936970e3e5a6e791ab9fc1abbde5ed15e24",
       "patch": "prs/startup-restore-service-roots/fix.patch",
       "description": "prs/startup-restore-service-roots/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/10",
       "head_commit_sha": "84cac021dec27930816610f1e6bde181d26256a7",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-restore-service-roots?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-restore-service-roots?expand=1",
+      "pr_number": 10
     },
     {
       "slug": "terminal-cancel-outside-global-state-lock",
@@ -2706,7 +2780,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-cancel-outside-global-state-lock",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2723,9 +2797,10 @@
       "patch_sha256": "e5884de5083aeed9cf2cfe6513af60735b12f39269763ed24518c6f97bed4209",
       "patch": "prs/terminal-cancel-outside-global-state-lock/fix.patch",
       "description": "prs/terminal-cancel-outside-global-state-lock/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/85",
       "head_commit_sha": "b12b09c4aff428ae87ca0a77067453ff2560d33a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cancel-outside-global-state-lock?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cancel-outside-global-state-lock?expand=1",
+      "pr_number": 85
     },
     {
       "slug": "terminal-cleanup-failed-command-execution",
@@ -2734,7 +2809,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-cleanup-failed-command-execution",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2746,9 +2821,10 @@
       "patch_sha256": "e19335a73238946bbb9be2897c021d3a3b72c7af40b9d251d63a4ec0442920f2",
       "patch": "prs/terminal-cleanup-failed-command-execution/fix.patch",
       "description": "prs/terminal-cleanup-failed-command-execution/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/86",
       "head_commit_sha": "de00eeb301d63375671af37a27c53137dc203923",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cleanup-failed-command-execution?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cleanup-failed-command-execution?expand=1",
+      "pr_number": 86
     },
     {
       "slug": "terminal-cold-start",
@@ -2757,7 +2833,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-cold-start",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
         "hosts/android/src/terminal.rs"
@@ -2771,9 +2847,10 @@
       "patch_sha256": "b52468444f06a3371fb9850d841c702a7dad7f7b6683ca891c1437e5f7f2cfdb",
       "patch": "prs/terminal-cold-start/fix.patch",
       "description": "prs/terminal-cold-start/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/23",
       "head_commit_sha": "f806d7e602833e80027936e9369b3f2c13ab4cbf",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cold-start?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cold-start?expand=1",
+      "pr_number": 23
     },
     {
       "slug": "terminal-command-output-cap",
@@ -2782,7 +2859,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-command-output-cap",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2793,9 +2870,10 @@
       "patch_sha256": "23687c98e7652225a73e7c1d1d16f46bd81a5f218720bdfb56808a582d0a7033",
       "patch": "prs/terminal-command-output-cap/fix.patch",
       "description": "prs/terminal-command-output-cap/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/87",
       "head_commit_sha": "c6b849c4bb8231473c1ce220a22f4053c75d52c2",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-command-output-cap?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-command-output-cap?expand=1",
+      "pr_number": 87
     },
     {
       "slug": "terminal-descriptor-lifetime",
@@ -2804,7 +2882,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-descriptor-lifetime",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2821,9 +2899,10 @@
       "patch_sha256": "8ae26a95941e4f6cdb805d9cc0fb834878c179d8355086cbac89284b35140c10",
       "patch": "prs/terminal-descriptor-lifetime/fix.patch",
       "description": "prs/terminal-descriptor-lifetime/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/24",
       "head_commit_sha": "a70b7db6a4d9ac234f7ee3eb76b4ee53d177f73a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-descriptor-lifetime?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-descriptor-lifetime?expand=1",
+      "pr_number": 24
     },
     {
       "slug": "terminal-execute-complete-scripts",
@@ -2832,7 +2911,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-execute-complete-scripts",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2845,9 +2924,10 @@
       "patch_sha256": "8ddf98d5243e7ce0505dc83cbe761f485c23d5f8236d8913525960eacedc83f6",
       "patch": "prs/terminal-execute-complete-scripts/fix.patch",
       "description": "prs/terminal-execute-complete-scripts/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/88",
       "head_commit_sha": "c8cae1ec0e2ee20e58ddff15461b2ec0ae460d39",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-execute-complete-scripts?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-execute-complete-scripts?expand=1",
+      "pr_number": 88
     },
     {
       "slug": "terminal-fork-child",
@@ -2856,7 +2936,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-fork-child",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2868,9 +2948,10 @@
       "patch_sha256": "6e3789367c7c145d481b922b8f70910e04e1163f5f4a5fc819f1b418a5389fe7",
       "patch": "prs/terminal-fork-child/fix.patch",
       "description": "prs/terminal-fork-child/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/89",
       "head_commit_sha": "5334d1b2dd51c1bc5bddb8ef83dc011b606dbbf9",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-fork-child?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-fork-child?expand=1",
+      "pr_number": 89
     },
     {
       "slug": "terminal-input-global-lock",
@@ -2879,7 +2960,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-input-global-lock",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2897,9 +2978,10 @@
       "patch_sha256": "a6af727aeea104d8441cc56fb2761a56f26e47e5e8ad61ea5ee68e313eecb389",
       "patch": "prs/terminal-input-global-lock/fix.patch",
       "description": "prs/terminal-input-global-lock/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/90",
       "head_commit_sha": "d5cfcd8851b4625c8006e1f118d719b85335ea44",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-input-global-lock?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-input-global-lock?expand=1",
+      "pr_number": 90
     },
     {
       "slug": "terminal-named-creation-race",
@@ -2908,7 +2990,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-named-creation-race",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2921,9 +3003,10 @@
       "patch_sha256": "c440551822a56937b42d58223c37c16582c2cba3a6aa0f01ba63e205e78f3fad",
       "patch": "prs/terminal-named-creation-race/fix.patch",
       "description": "prs/terminal-named-creation-race/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/91",
       "head_commit_sha": "112490f4a79e7308f7e64714228676bc769d4dba",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-named-creation-race?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-named-creation-race?expand=1",
+      "pr_number": 91
     },
     {
       "slug": "terminal-preserve-system-shell-exit-status",
@@ -2932,7 +3015,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-preserve-system-shell-exit-status",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2943,9 +3026,10 @@
       "patch_sha256": "901c387abad0b140883fc2c7a55fe71be1c4cbf13db05b56942af4bfda5720e5",
       "patch": "prs/terminal-preserve-system-shell-exit-status/fix.patch",
       "description": "prs/terminal-preserve-system-shell-exit-status/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/92",
       "head_commit_sha": "96ad5bd33780c442d2f2e491674d78602f6a8e9a",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-preserve-system-shell-exit-status?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-preserve-system-shell-exit-status?expand=1",
+      "pr_number": 92
     },
     {
       "slug": "terminal-proot-environment",
@@ -2954,7 +3038,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-proot-environment",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeAssets.kt",
         "hosts/android/src/terminal.rs"
@@ -2967,9 +3051,10 @@
       "patch_sha256": "b4fd3c05dda5277f9431068d716e89f0073425edf2f1398b229343388affeb01",
       "patch": "prs/terminal-proot-environment/fix.patch",
       "description": "prs/terminal-proot-environment/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/22",
       "head_commit_sha": "7859d79a1386041462165811a9eeb5bf47806d00",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-proot-environment?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-proot-environment?expand=1",
+      "pr_number": 22
     },
     {
       "slug": "terminal-reaped-pid",
@@ -2978,7 +3063,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-reaped-pid",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -2989,9 +3074,10 @@
       "patch_sha256": "c937a8cf6edbbb198e9f235149644c5e3220771e8ef50e19e5b80fb3df81758c",
       "patch": "prs/terminal-reaped-pid/fix.patch",
       "description": "prs/terminal-reaped-pid/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/93",
       "head_commit_sha": "2b6a14495cae4b69274fb477b0be7a5c6ffb3975",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-reaped-pid?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-reaped-pid?expand=1",
+      "pr_number": 93
     },
     {
       "slug": "terminal-retire-unresponsive-timeouts",
@@ -3000,7 +3086,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-retire-unresponsive-timeouts",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -3012,9 +3098,10 @@
       "patch_sha256": "260641a4961889e92642a87e2f48c551c32319b7d2ee01e3e8ac90530367a6c0",
       "patch": "prs/terminal-retire-unresponsive-timeouts/fix.patch",
       "description": "prs/terminal-retire-unresponsive-timeouts/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/94",
       "head_commit_sha": "79551969ff950c5a907c45a5f628e827f4be5894",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-retire-unresponsive-timeouts?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-retire-unresponsive-timeouts?expand=1",
+      "pr_number": 94
     },
     {
       "slug": "terminal-serialize-session-commands",
@@ -3023,7 +3110,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-serialize-session-commands",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -3036,9 +3123,10 @@
       "patch_sha256": "dcc56b79219c0584a402b5fe3a4b7c63e15ade86db6859482b523d7efe776525",
       "patch": "prs/terminal-serialize-session-commands/fix.patch",
       "description": "prs/terminal-serialize-session-commands/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/95",
       "head_commit_sha": "9ef9fba1cb92a6cc846a1c906ed6edaf6db7f782",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-serialize-session-commands?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-serialize-session-commands?expand=1",
+      "pr_number": 95
     },
     {
       "slug": "terminal-stale-session",
@@ -3047,7 +3135,7 @@
       "base_branch": "main",
       "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
       "head_branch": "fix/terminal-stale-session",
-      "status": "branch_created_pr_pending",
+      "status": "draft_pr_created",
       "paths": [
         "hosts/android/src/terminal.rs"
       ],
@@ -3061,9 +3149,10 @@
       "patch_sha256": "acd2cdca193271b7020cfed89222b1d6dea1a0d833c6f6ffb10bad41c70377ae",
       "patch": "prs/terminal-stale-session/fix.patch",
       "description": "prs/terminal-stale-session/PR.md",
-      "pr_url": null,
+      "pr_url": "https://github.com/AAswordman/Operit2/pull/96",
       "head_commit_sha": "064d612a31aab1d1a1541c81c6179920d263e753",
-      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-stale-session?expand=1"
+      "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-stale-session?expand=1",
+      "pr_number": 96
     }
   ],
   "spec_coverage": [
@@ -12009,5 +12098,8 @@
   "created_fork_branch_count": 89,
   "fork_repository": "xinchenok/Operit2",
   "publisher_branch": "contributions/submit-upstream-prs",
-  "publisher_commit": "5436c1f8be97ceb80e92f54e13d9f403da97fb13"
+  "publisher_commit": "5436c1f8be97ceb80e92f54e13d9f403da97fb13",
+  "previous_blocker": "Creating the first upstream PR returned HTTP403 Resource not accessible by integration; fork writes succeed. No retry using the same rejected upstream permission.",
+  "publication_run_id": 34119116134,
+  "publication_report": "publication/results.json"
 }

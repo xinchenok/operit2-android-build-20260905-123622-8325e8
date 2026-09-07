@@ -1,7 +1,7 @@
 {
   "slug": "import-shared-download-paths",
   "tree_sha": "1f16742932ce9f2f00c898a4e610ed40ad71f204",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "280125af4476123754c52a16d44d450c4a02b19a",
   "head_branch": "fix/import-shared-download-paths",
   "title": "fix(import): retain unmigrated shared download paths",
@@ -10,7 +10,8 @@
   "patch_sha256": "38fbdc7be873c01bf5d559a23182f8aa0fdcd7b4c4dd5b4aca8c2643134050ca",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-shared-download-paths?expand=1"
+  "pr_number": 66,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/66",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-shared-download-paths?expand=1",
+  "workflow_run_id": 34119116134
 }

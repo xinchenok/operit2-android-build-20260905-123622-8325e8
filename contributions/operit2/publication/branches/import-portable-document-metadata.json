@@ -1,7 +1,7 @@
 {
   "slug": "import-portable-document-metadata",
   "tree_sha": "e5b2e7ab2533aabb856884c09352231427e47e7b",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f785a7cd1f49ca6d33bf2adb8cb54677791ad3a6",
   "head_branch": "fix/import-portable-document-metadata",
   "title": "fix(memory): preserve document nodes in portable backups",
@@ -10,7 +10,8 @@
   "patch_sha256": "2763eb7e0d904d001009151e395be8e57f449235277181280b8ab2bf2869341d",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-portable-document-metadata?expand=1"
+  "pr_number": 57,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/57",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-portable-document-metadata?expand=1",
+  "workflow_run_id": 34119116134
 }

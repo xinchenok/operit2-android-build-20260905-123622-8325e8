@@ -1,7 +1,7 @@
 {
   "slug": "import-legacy-empty-tags",
   "tree_sha": "bad39a471e87c3b97abad011026793862bed306a",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "73d659dbac08fa69e6543f5e31e2e4e278ae1f53",
   "head_branch": "fix/import-legacy-empty-tags",
   "title": "fix(import): normalize self-closing legacy message tags",
@@ -10,7 +10,8 @@
   "patch_sha256": "01967738e69ef9f35e1bd86d710bbf33c2a7e6655781643a3c583cce68cc4e7f",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-legacy-empty-tags?expand=1"
+  "pr_number": 50,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/50",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-legacy-empty-tags?expand=1",
+  "workflow_run_id": 34119116134
 }

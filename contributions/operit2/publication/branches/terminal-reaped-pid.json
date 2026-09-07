@@ -1,7 +1,7 @@
 {
   "slug": "terminal-reaped-pid",
   "tree_sha": "96147b636557fdec05e5e9eb458a839ba07ad888",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "2b6a14495cae4b69274fb477b0be7a5c6ffb3975",
   "head_branch": "fix/terminal-reaped-pid",
   "title": "fix(android): avoid signaling a reaped terminal process",
@@ -10,7 +10,8 @@
   "patch_sha256": "c937a8cf6edbbb198e9f235149644c5e3220771e8ef50e19e5b80fb3df81758c",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-reaped-pid?expand=1"
+  "pr_number": 93,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/93",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-reaped-pid?expand=1",
+  "workflow_run_id": 34119116134
 }

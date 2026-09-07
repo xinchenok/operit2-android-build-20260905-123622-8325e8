@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/chat-group-cancellation",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs",
     "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
@@ -32,5 +32,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "56bf3b82ab9bc18f547dab3c76a544ecbe00ac9d",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/28",
+  "pr_number": 28
 }

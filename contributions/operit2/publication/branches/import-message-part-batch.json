@@ -1,7 +1,7 @@
 {
   "slug": "import-message-part-batch",
   "tree_sha": "85afb3f28367c6314d181230d91e84b856b4bab1",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f4cc617414d15fec22f09a09e8219f40d19ddaa1",
   "head_branch": "fix/import-message-part-batch",
   "title": "fix(import): batch archived message part inserts",
@@ -10,7 +10,8 @@
   "patch_sha256": "e4f855d5616090b4d7d8224792740772ee41d79c49d2806ebafd819839324a52",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-part-batch?expand=1"
+  "pr_number": 19,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/19",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-message-part-batch?expand=1",
+  "workflow_run_id": 34119116134
 }

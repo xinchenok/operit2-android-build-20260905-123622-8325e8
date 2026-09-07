@@ -1,7 +1,7 @@
 {
   "slug": "import-chat-body-copies",
   "tree_sha": "29468426f429690840c0abbc47eb2dfafab78626",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "f769f08d0ef3e2e66d9057b424e7d1d6122b2ffe",
   "head_branch": "fix/import-chat-body-copies",
   "title": "fix(import): move archived message bodies during persistence",
@@ -10,7 +10,8 @@
   "patch_sha256": "0214f4d049f16080225e0121c0cba4fdf8f76f5db69e216873b06106dd5fb716",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-chat-body-copies?expand=1"
+  "pr_number": 21,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/21",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-chat-body-copies?expand=1",
+  "workflow_run_id": 34119116134
 }

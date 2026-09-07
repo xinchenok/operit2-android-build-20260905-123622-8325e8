@@ -1,7 +1,7 @@
 {
   "slug": "chat-speech-draft-ownership",
   "tree_sha": "92b87c84a663ee59295b4a33aac194c25e75d560",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "821dff91877d08952b7e7f00cc65800b8e44f098",
   "head_branch": "fix/chat-speech-draft-ownership",
   "title": "fix(chat): preserve drafts during speech recognition",
@@ -10,7 +10,8 @@
   "patch_sha256": "d45474ea2a06287ec25fefd23a868a6dae168cabd8bf331c5b1b534132d5ccec",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-speech-draft-ownership?expand=1"
+  "pr_number": 40,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/40",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-speech-draft-ownership?expand=1",
+  "workflow_run_id": 34119116134
 }

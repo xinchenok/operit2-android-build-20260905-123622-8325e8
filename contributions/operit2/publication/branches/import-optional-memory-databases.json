@@ -1,7 +1,7 @@
 {
   "slug": "import-optional-memory-databases",
   "tree_sha": "ac163e7ce9c2af014f13ff7d53830f4699956ed3",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "2ff21f7fb626098d00db1ceb8ec67390644aef74",
   "head_branch": "fix/import-optional-memory-databases",
   "title": "fix(import): preserve profiles without an ObjectBox database",
@@ -10,7 +10,8 @@
   "patch_sha256": "8b090a29a0d5019c8f315af2d0e5dde34b73b48fabe9b9809ee19b5c26117934",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-optional-memory-databases?expand=1"
+  "pr_number": 54,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/54",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-optional-memory-databases?expand=1",
+  "workflow_run_id": 34119116134
 }

@@ -1,7 +1,7 @@
 {
   "slug": "import-settings-context-usage",
   "tree_sha": "e4ea8cb3edb94de46490ee0b3f91604b8fb96a04",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "42c73803e2b4639b72200795f1332931fe96b5c4",
   "head_branch": "fix/import-settings-context-usage",
   "title": "fix(chat): use the active context limit in token statistics",
@@ -10,7 +10,8 @@
   "patch_sha256": "ca67e8cba0a427feda351d69c3935b06de538ab13d35dd406e17912fa6614808",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-usage?expand=1"
+  "pr_number": 62,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/62",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-usage?expand=1",
+  "workflow_run_id": 34119116134
 }

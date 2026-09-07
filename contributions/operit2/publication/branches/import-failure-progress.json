@@ -1,7 +1,7 @@
 {
   "slug": "import-failure-progress",
   "tree_sha": "879bfd9fb649d925fcd3682f895c1e00b630b581",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "a1e0c0b85612fc8b2e9c8570196750d221014877",
   "head_branch": "fix/import-failure-progress",
   "title": "fix(import): finish progress state when snapshot import fails",
@@ -10,7 +10,8 @@
   "patch_sha256": "857999b8fc679c6ae03e6ef391082aa3634f4ec364b7ba9a841351a5f4188143",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-failure-progress?expand=1"
+  "pr_number": 48,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/48",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-failure-progress?expand=1",
+  "workflow_run_id": 34119116134
 }

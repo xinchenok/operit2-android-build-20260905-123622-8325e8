@@ -1,7 +1,7 @@
 {
   "slug": "model-fixed-character-binding",
   "tree_sha": "7ace2cce39919a2f794c77fd998acb7c78776625",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "32d8d09763868196e2933f94bfefd12b535c70b0",
   "head_branch": "fix/model-fixed-character-binding",
   "title": "fix(chat): preserve and honor character model bindings",
@@ -10,7 +10,8 @@
   "patch_sha256": "ac4d6faaad0d83c97f4ecb1a1d67110774d4f89e003a52f181e2cecb13431561",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/model-fixed-character-binding?expand=1"
+  "pr_number": 71,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/71",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/model-fixed-character-binding?expand=1",
+  "workflow_run_id": 34119116134
 }

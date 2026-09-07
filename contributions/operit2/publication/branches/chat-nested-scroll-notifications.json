@@ -1,7 +1,7 @@
 {
   "slug": "chat-nested-scroll-notifications",
   "tree_sha": "32d194b8ec3788ec735b6208bdb0c0d18ec36222",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "0abd15c7b80227ce3b9928e95204454fe57064ce",
   "head_branch": "fix/chat-nested-scroll-notifications",
   "title": "fix(chat): ignore nested scroll notifications",
@@ -10,7 +10,8 @@
   "patch_sha256": "540f57a970630237b12a22961226efe67185666d5365ef25f5539c2f2bd2fa68",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-nested-scroll-notifications?expand=1"
+  "pr_number": 33,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/33",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-nested-scroll-notifications?expand=1",
+  "workflow_run_id": 34119116134
 }

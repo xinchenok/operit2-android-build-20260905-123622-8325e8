@@ -1,7 +1,7 @@
 {
   "slug": "chat-group-cancellation",
   "tree_sha": "fa3a71e5423d24e160a5c72dad6a267e1753eb23",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "56bf3b82ab9bc18f547dab3c76a544ecbe00ac9d",
   "head_branch": "fix/chat-group-cancellation",
   "title": "fix(chat): stop group planning and pending member turns on cancellation",
@@ -10,7 +10,8 @@
   "patch_sha256": "6456393303eb791775963094ee4ec470b81d9b379993d905ecab94251496cf02",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-cancellation?expand=1"
+  "pr_number": 28,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/28",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-group-cancellation?expand=1",
+  "workflow_run_id": 34119116134
 }

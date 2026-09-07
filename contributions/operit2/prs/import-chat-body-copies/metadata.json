@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-chat-body-copies",
-  "status": "branch_created_pr_pending",
+  "status": "draft_pr_created",
   "paths": [
     "core/crates/persistence/store/src/repository/ChatHistoryManager.rs"
   ],
@@ -24,5 +24,6 @@
   "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
   "head_commit_sha": "f769f08d0ef3e2e66d9057b424e7d1d6122b2ffe",
   "fork_repository": "xinchenok/Operit2",
-  "pr_url": null
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/21",
+  "pr_number": 21
 }

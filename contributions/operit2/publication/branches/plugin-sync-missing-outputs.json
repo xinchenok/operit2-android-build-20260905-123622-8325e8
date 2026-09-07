@@ -1,7 +1,7 @@
 {
   "slug": "plugin-sync-missing-outputs",
   "tree_sha": "d10509329b166cb85f755514813142c6d936ec4d",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "ef273b2bd4facab7548fa9e44646faaf570ffab7",
   "head_branch": "fix/plugin-sync-missing-outputs",
   "title": "fix(plugins): rebuild cached TypeScript when output files are missing",
@@ -10,7 +10,8 @@
   "patch_sha256": "00398e0c25dd2226059c7715b10fe9bc824eae9a306fbb126586343e9a3760e7",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-sync-missing-outputs?expand=1"
+  "pr_number": 76,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/76",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-sync-missing-outputs?expand=1",
+  "workflow_run_id": 34119116134
 }

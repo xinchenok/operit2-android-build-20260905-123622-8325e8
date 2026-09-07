@@ -1,7 +1,7 @@
 {
   "slug": "chat-worker-startup-cleanup",
   "tree_sha": "b95d0d4a16735eebe45674470b3deb034051208f",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "c3dcd8c39708026ceee85024e810b5db61a48d11",
   "head_branch": "fix/chat-worker-startup-cleanup",
   "title": "fix(chat): clean up failed response workers",
@@ -10,7 +10,8 @@
   "patch_sha256": "3017aa71e1900a7b8fe577155ffa6734d83c2f2a9019554aeedb560ee26e071b",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-worker-startup-cleanup?expand=1"
+  "pr_number": 44,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/44",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-worker-startup-cleanup?expand=1",
+  "workflow_run_id": 34119116134
 }

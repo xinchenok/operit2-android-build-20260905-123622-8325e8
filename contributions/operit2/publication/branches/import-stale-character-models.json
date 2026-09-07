@@ -1,7 +1,7 @@
 {
   "slug": "import-stale-character-models",
   "tree_sha": "d8ed47e7e8e18d33e54523b385f0f9a9ae989740",
-  "status": "branch_created",
+  "status": "draft_pr_created",
   "commit_sha": "b8b228cba3c19bed2c718a128667132afef5ebae",
   "head_branch": "fix/import-stale-character-models",
   "title": "fix(import): retain characters with stale fixed model selections",
@@ -10,7 +10,8 @@
   "patch_sha256": "b1f06ca69404a6d1a1f28306bfa5c78e82c6649a8ce39186b994debf3898e518",
   "fork": "xinchenok/Operit2",
   "upstream": "AAswordman/Operit2",
-  "pr_number": null,
-  "pr_url": null,
-  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-character-models?expand=1"
+  "pr_number": 67,
+  "pr_url": "https://github.com/AAswordman/Operit2/pull/67",
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-character-models?expand=1",
+  "workflow_run_id": 34119116134
 }
