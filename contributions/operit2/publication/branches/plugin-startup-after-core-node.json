@@ -1,0 +1,16 @@
+{
+  "slug": "plugin-startup-after-core-node",
+  "tree_sha": "ced6667f909b26887c9968773dea5a8df81e3e8d",
+  "status": "branch_created",
+  "commit_sha": "224eb036546609bc366217bb1025bf5a7a254dbe",
+  "head_branch": "fix/plugin-startup-after-core-node",
+  "title": "fix(flutter): dispatch startup hooks after core node creation",
+  "body": "## 问题与复现\n\n原生 Flutter 在 Core node 建立之前执行 application-on-create ToolPkg 钩子。依赖已注册节点/host 的启动钩子会在宿主准备完成前运行，首次启动和普通运行时调用表现不一致。\n\n## 原因与修复过程\n\n`onCreate` 同时初始化服务和派发插件启动事件，Flutter 当时尚未完成后续 node 创建。将初始化与派发拆为内部步骤：原 `onCreate` 保留其他宿主行为，原生 Flutter 选择延后派发，在 node 创建成功后再派发同一个原始事件。保持 Wasm 原路径。\n\n## 影响与验证\n\n仅调整原生 Flutter 的启动事件时序；不导入增强版工具、额外命令执行器或工作流。已核对事件派发位置、原始 payload 和宿主分支；未独立编译或手机实测。可用读取当前 node 信息的 application-on-create 钩子对比前后行为。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "2e6e7db08e1d4f816b4a6203acfa8a3fd613e94fb680fed10be953d5720dc535",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-startup-after-core-node?expand=1"
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "startup-onboarding-import-navigation",
+  "tree_sha": "7e721c0cb1d425f761e6aee22fdc4b2b6e8cc163",
+  "status": "branch_created",
+  "commit_sha": "f0e92532dd28e1dfe655aae5e13f4ee2e9ca3164",
+  "head_branch": "fix/startup-onboarding-import-navigation",
+  "title": "fix(flutter): keep onboarding open while a snapshot import is pending",
+  "body": "## 变更说明\n\n**问题：** 引导页已展示快照预览时仍可“跳过”，用户容易以为已导入；读取或提交过程中退出还可能提前删除核心正在使用的暂存文件。\n\n**原因：** 页面导航未纳入读取/导入状态，预览与提交没有明确区分，dispose 与正在执行的核心导入共同拥有上传文件。\n\n**修复：** 读取或导入时禁止前后导航、跳过、重复选择和系统返回；选中快照后禁用跳过并明确标注预览尚未导入。活动导入拥有文件直至核心调用结束，异常释放后的清理由活动操作完成。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n平台：Flutter 全平台。模块：首次引导快照流程。\n\n修改文件：\n\n- `apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart`\n\n无数据库迁移、配置格式或公共 host API 变更。补丁独立基于 `7fec1b2f17636c5b392c887fab28552219be807a`，不要求其他增强版补丁。\n\n## 验证\n\n仅完成源码审阅。实际通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 读取原始代码，并以精确文本匹配生成最小补丁。\n\n源码逐项核对顶部按钮、前后导航、系统返回及 dispose 路径；新增状态仅使用原有读取/提交布尔值，不依赖完成结果缓存或补充资源选择。\n\n本次按提交者要求未运行构建、静态分析、自动化测试或设备测试；以下复现步骤依据调用链整理，尚未进行运行时复现。本 PR 对应单独提交并包含 DCO Signed-off-by。代码注释和以下复现步骤说明行为变化；未新增测试文件。\n\n## 截图或日志\n\n复现步骤：\n\n1. 首次引导选择 Operit1 快照并看到预览。\n2. 点击顶部跳过，原代码直接完成引导而未提交快照。\n3. 或在读取/导入期间点击返回、系统返回或触发页面释放，原 dispose 会立即 discard 暂存文件。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "0f3d4d58c70b493c3d57608459aaec093cf4aeae786c269f0cfaf2cdc355ed53",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-navigation?expand=1"
+}

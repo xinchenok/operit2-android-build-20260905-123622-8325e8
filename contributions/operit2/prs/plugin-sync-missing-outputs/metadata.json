@@ -5,12 +5,15 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/plugin-sync-missing-outputs",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "plugins/tools/sync_plugin_packages.py"
   ],
   "source_specs": [
     "plugins/tools/sync_plugin_packages.py:cached-prebuild-missing-outputs"
   ],
-  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. No builds, sync jobs, tests, or device validation."
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. No builds, sync jobs, tests, or device validation.",
+  "head_commit_sha": "ef273b2bd4facab7548fa9e44646faaf570ffab7",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

@@ -1,0 +1,12 @@
+{
+  "action": "create_pull_request",
+  "repository": "AAswordman/Operit2",
+  "head": "xinchenok:fix/chat-initial-conversation",
+  "status": 403,
+  "error": "Resource not accessible by integration",
+  "fork_write_succeeded": true,
+  "created_fork_branches": 89,
+  "created_upstream_prs": 0,
+  "publisher_commit": "5436c1f8be97ceb80e92f54e13d9f403da97fb13",
+  "requires": "User-configured authorized UPSTREAM_PR_TOKEN in xinchenok/Operit2 Actions Secrets; token not created, read, or supplied by the assistant."
+}

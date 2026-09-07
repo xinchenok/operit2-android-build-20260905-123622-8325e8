@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-stale-session",
+  "tree_sha": "e698998464893e371c5e5fbd401ed246ae89f0d6",
+  "status": "branch_created",
+  "commit_sha": "064d612a31aab1d1a1541c81c6179920d263e753",
+  "head_branch": "fix/terminal-stale-session",
+  "title": "fix(android): recreate named terminals after their shell exits",
+  "body": "## 变更说明\n\n### 问题\n\n可见命名会话或隐藏执行器的 shell 已退出时，再次按同一个名称请求会话仍返回旧 sessionId，后续命令无法在有效 shell 中执行。\n\n### 复现步骤\n\n1. 创建一个命名会话或隐藏执行器并让其 shell 退出。\n2. 不显式调用 close，再次以相同名称或 executorKey 请求会话。\n3. 原实现仅检查 map 内是否有对象，因此仍返回已退出会话。\n\n以上是根据现有控制流整理的复现路径，本次未在 Android 设备上执行。\n\n### 原因\n\n会话映射的存在不代表对应子进程存活；可见和隐藏复用路径都没有轮询退出状态。\n\n### 修复\n\n复用前轮询并缓存进程退出码，只复用仍存活的 PTY；清除失效会话及两个名称映射后按原路径创建新会话。包含必要的 Drop 保护：轮询已回收的 PID 不再被重复发送信号。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Android。\n- 模块：Android terminal host。\n- 行为与兼容性：名称与 executorKey 的 API 不变；失效会话会得到新的 sessionId，可见会话返回 isNewSession=true；新 shell 使用原有初始工作目录。\n- host API 与 Flutter/Rust 边界：无接口、配置或数据库迁移。\n\n## 验证\n\n- 已读取上游 CONTRIBUTING.md 与 PR 模板，并逐处对照固定基线 `7fec1b2f17636c5b392c887fab28552219be807a` 的控制流和已有 API。\n- 补丁生成时用精确、唯一匹配断言检查每处旧代码；每个 PR 独立从该上游基线生成完整文件，没有把其他 PR 当作前置分支。\n- 已将受影响文件从固定基线导出到临时目录，执行 `git apply --check fix.patch`，独立应用检查通过。\n- 本次按要求只做源码检查，未运行 cargo、Gradle、Flutter 构建、测试任务或 Android 设备复现；行为验证仍待维护者执行。\n- 未添加公共接口或操作说明；本 PR 的复现路径记录了需要补做的设备验证，未新增无法在本次环境验证的设备测试。\n\n`terminal-reaped-pid` 中的保护在这里重复包含，确保本 PR 独立应用时清理已回收子进程也是安全的。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 未引入第三方代码、资源或许可证变更。\n- [x] 本补丁不含密钥、令牌、个人数据或本地构建产物。\n- [x] 已在上文说明文档和测试处理方式。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "acd2cdca193271b7020cfed89222b1d6dea1a0d833c6f6ffb10bad41c70377ae",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-stale-session?expand=1"
+}

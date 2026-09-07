@@ -1,0 +1,16 @@
+{
+  "slug": "import-user-documents",
+  "tree_sha": "5cd981ede86114f1fed203bb1ced3df12206eb16",
+  "status": "branch_created",
+  "commit_sha": "154b968b2146db536c8247d649d09bf97c8ddbd3",
+  "head_branch": "fix/import-user-documents",
+  "title": "fix(import): restore all owned user profile documents",
+  "body": "## 变更说明\n\n复现步骤：导入有未绑定角色的 profile，或采用 memory-space-profiles/{id}/user.md 的快照；另检查已完成 schema-v2 迁移但遗留旧根 user.md 的快照。\n\n原因：原入口只遍历角色绑定并从旧 JSON 合成 Markdown；新文档路径、已发布根文档归属及 schema 标记均被忽略。\n\n修复：导入前解析所有拥有者文档；使用源列表和档案顺序确认旧根文档归属，遇到歧义报告而不猜测；尊重 schema-v2 后权威空文件。包含独立运行所需的空间元数据兼容适配。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n跨平台 Rust 导入流程；沿用 RuntimeStorageHost / RuntimeSqliteHost，不改变 Flutter bridge 或 host API。\n\n## 验证\n\n已阅读基线提交 `7fec1b2f17636c5b392c887fab28552219be807a` 的相关调用链，并逐项核对补丁涉及的现有类型和方法。补丁为独立基线变更。\n\n依照本次任务要求，未运行编译、单元测试或设备测试；不声称实际复现或运行通过。以下复现为源码推导的手动验证步骤，提交前仍需按 CONTRIBUTING.md / BUILDING.md 执行相关平台检查。\n\n文档读取和归属判断在持久写入前执行；不承诺整个快照具备事务回滚。未绑定角色的旧 profile 文档也会恢复。需要用旧 JSON、过渡根文档、schema-v2 三类真实快照验证。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md 和 PR 模板。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 补丁未加入第三方代码、资源、密钥、令牌或个人数据。\n- [x] 已说明本次未运行测试的原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "b7900767e45f1c675813c5cab5af24416637a06f28b4dca81472c6bdb2a449a2",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-user-documents?expand=1"
+}

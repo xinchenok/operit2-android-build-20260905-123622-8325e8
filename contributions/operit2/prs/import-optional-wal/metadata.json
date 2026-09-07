@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-optional-wal",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
   ],
@@ -16,5 +16,8 @@
       "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 12"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "2408a0ed6fd2051fb3cad5dfb10640cdb623b4bb",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

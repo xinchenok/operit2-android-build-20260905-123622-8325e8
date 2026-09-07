@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/startup-onboarding-import-retry",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart"
   ],
@@ -81,5 +81,8 @@
       "name": "onboarding-import-explicit-instructions"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "7c2b5f5a38417b6f5d6ded9301ffc79757a6ea28",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

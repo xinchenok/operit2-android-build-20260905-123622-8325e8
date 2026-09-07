@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/startup-native-bridge-lifetime",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidPlatformChannel.kt"
   ],
@@ -16,5 +16,8 @@
       "name": "avoid-destroying-in-use-native-bridge-during-process-restart"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "f28360af878220d4be2dc3e98addd296823f49ac",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

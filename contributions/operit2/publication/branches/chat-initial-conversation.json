@@ -1,0 +1,16 @@
+{
+  "commit_sha": "758c1631d7be5b1f8cc4baf65a89686f7049986f",
+  "head_branch": "fix/chat-initial-conversation",
+  "slug": "chat-initial-conversation",
+  "status": "branch_created_pr_blocked",
+  "tree_sha": "dca2ea54f2d6bedf782c7750906052cec7730924",
+  "title": "fix(chat): initialize the first conversation",
+  "body": "## 变更说明\n\n首次打开空历史聊天时没有创建会话，输入框的首份草稿也无法转移到新会话。\n\n原因：请求 ID 的初始值与首次收到的 null 相等，导致绑定提前返回；绑定逻辑也未启动创建。草稿按 chat ID 缓存，需要从 null 槽位迁移。\n\n修复：允许首次 null 绑定、共享首建 Future，并在首建完成时保留非空草稿。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nFlutter 聊天界面，所有使用该界面的平台；不改变 host API、数据格式或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。first_chat_draft.json 是同一首建修复的后续加固，已并入，未单独声称它是原版新增的一项缺陷。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 使用没有当前会话的配置进入聊天界面。\n2. 在初始化完成前输入文字；同时展示主界面和嵌入聊天界面。\n3. 原实现跳过空 ID 的首次绑定；恢复首建后还需避免空界面覆盖另一界面的草稿。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "3fe7254664588e14591663d5ad6b8f0ccf3f678367e5c92eb1fd2f95627b4284",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-initial-conversation?expand=1"
+}

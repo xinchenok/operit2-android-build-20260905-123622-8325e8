@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-settings-context-precision",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/cli/src/tui/config/model_editor.rs",
     "apps/flutter/app/lib/ui/features/settings/model/ModelSettingsPanel.dart"
@@ -22,5 +22,8 @@
       "name": "Complete Operit1 context, summary rules and Gemini grounding: ModelSettingsPanel.dart (2)"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "3713358d42057fa4f78945e38ddbeba6afef3b9e",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

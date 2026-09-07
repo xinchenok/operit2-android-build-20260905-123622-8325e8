@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-all-model-configs",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/runtime/application/src/data/backup/Operit1SnapshotArchive.rs",
     "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
@@ -32,5 +32,8 @@
       "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 6"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "5c5b54a6e15ac6a5e91909dc49caf9c31da9df81",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

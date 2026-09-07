@@ -1,0 +1,16 @@
+{
+  "slug": "import-all-model-configs",
+  "tree_sha": "82a6aa7b757a43360ef0c95951470ab58ab53bf4",
+  "status": "branch_created",
+  "commit_sha": "5c5b54a6e15ac6a5e91909dc49caf9c31da9df81",
+  "head_branch": "fix/import-all-model-configs",
+  "title": "fix(import): preserve all snapshot provider configurations",
+  "body": "## 变更说明\n\n复现步骤：现有 Operit2 已配置供应商和密钥，导入含多个 Operit1 供应商以及 SUMMARY 等功能映射的快照。旧流程仅导入 CHAT 所指供应商并覆盖默认供应商。\n\n原因：完整快照复用了单个模型导入函数，固定写入默认 provider ID，且没有遍历其余配置和功能映射。\n\n修复：使用现有供应商备份合并 API 为每个导入配置生成独立 ID 和唯一名称，保留现有配置，转换可用的功能映射并保留原始设置副本；失效非 CHAT 下标报告跳过。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n跨平台 Rust 导入流程；沿用 RuntimeStorageHost / RuntimeSqliteHost，不改变 Flutter bridge 或 host API。\n\n## 验证\n\n已阅读基线提交 `7fec1b2f17636c5b392c887fab28552219be807a` 的相关调用链，并逐项核对补丁涉及的现有类型和方法。补丁为独立基线变更。\n\n依照本次任务要求，未运行编译、单元测试或设备测试；不声称实际复现或运行通过。以下复现为源码推导的手动验证步骤，提交前仍需按 CONTRIBUTING.md / BUILDING.md 执行相关平台检查。\n\n失效 CHAT 选择的独立修复在 import-stale-model-selection；本补丁仍要求完整导入的 CHAT 选择有效。未知供应商不会获得可运行的驱动；不引入本地模型或语音依赖。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md 和 PR 模板。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 补丁未加入第三方代码、资源、密钥、令牌或个人数据。\n- [x] 已说明本次未运行测试的原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "398bb9fe42c5edda4e38f5547395cff4a6682807c9de9c1b1b28af903329ebe2",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-all-model-configs?expand=1"
+}

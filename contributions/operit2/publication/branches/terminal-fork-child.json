@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-fork-child",
+  "tree_sha": "8268ad2c43ea90912e796ab3245df6563563159e",
+  "status": "branch_created",
+  "commit_sha": "5334d1b2dd51c1bc5bddb8ef83dc011b606dbbf9",
+  "head_branch": "fix/terminal-fork-child",
+  "title": "fix(android): prepare exec arguments before forking the PTY",
+  "body": "## 变更说明\n\n### 问题\n\n多线程应用创建 PTY 时，fork 后子进程仍分配 argv/envp 向量；若 fork 时其他线程持有分配器锁，子进程可能在 execve 前挂起，最终表现为启动超时。\n\n### 复现步骤\n\n1. 在其他应用线程频繁分配内存时重复创建 Android PTY。\n2. 遇到启动超时后检查子进程是否停在 forkpty 与 execve 之间的 Vec 分配路径。\n\n以上是根据现有控制流整理的复现路径，本次未在 Android 设备上执行。\n\n### 原因\n\nfork 只保留调用线程，其他线程持有的用户态锁可能处于不可恢复状态；当前子进程分支调用 collect 和 push，触发堆分配。\n\n### 修复\n\n在父进程调用 forkpty 前准备以空指针结尾的 argv/envp 指针数组；子进程仅沿用既有 chdir/execve/write/_exit 系统调用路径。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Android。\n- 模块：Android terminal host。\n- 行为与兼容性：执行文件、参数和环境值保持一致，指针引用的 CString 在 fork/exec 期间仍由 command 持有；只调整分配发生的时机。\n- host API 与 Flutter/Rust 边界：无接口、配置或数据库迁移。\n\n## 验证\n\n- 已读取上游 CONTRIBUTING.md 与 PR 模板，并逐处对照固定基线 `7fec1b2f17636c5b392c887fab28552219be807a` 的控制流和已有 API。\n- 补丁生成时用精确、唯一匹配断言检查每处旧代码；每个 PR 独立从该上游基线生成完整文件，没有把其他 PR 当作前置分支。\n- 已将受影响文件从固定基线导出到临时目录，执行 `git apply --check fix.patch`，独立应用检查通过。\n- 本次按要求只做源码检查，未运行 cargo、Gradle、Flutter 构建、测试任务或 Android 设备复现；行为验证仍待维护者执行。\n- 未添加公共接口或操作说明；本 PR 的复现路径记录了需要补做的设备验证，未新增无法在本次环境验证的设备测试。\n\n\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 未引入第三方代码、资源或许可证变更。\n- [x] 本补丁不含密钥、令牌、个人数据或本地构建产物。\n- [x] 已在上文说明文档和测试处理方式。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "6e3789367c7c145d481b922b8f70910e04e1163f5f4a5fc819f1b418a5389fe7",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-fork-child?expand=1"
+}

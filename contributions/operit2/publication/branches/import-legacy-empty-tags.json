@@ -1,0 +1,16 @@
+{
+  "slug": "import-legacy-empty-tags",
+  "tree_sha": "bad39a471e87c3b97abad011026793862bed306a",
+  "status": "branch_created",
+  "commit_sha": "73d659dbac08fa69e6543f5e31e2e4e278ae1f53",
+  "head_branch": "fix/import-legacy-empty-tags",
+  "title": "fix(import): normalize self-closing legacy message tags",
+  "body": "## 变更说明\n\n复现步骤：导入包含 <thinking/> 或带属性的自闭合 tool/status 标签的 Operit1 AI 消息；查看消息是否被拒绝或结构丢失。\n\n原因：Operit1 允许这些自闭合标签，Operit2 现有助手标记解析器要求成对标签；v10 还绕过了公共转换函数。\n\n修复：仅展开已知语义标签，保留属性和其余文本；v10 和新版本消息统一走转换函数。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n跨平台 Rust 导入流程；沿用 RuntimeStorageHost / RuntimeSqliteHost，不改变 Flutter bridge 或 host API。\n\n## 验证\n\n已阅读基线提交 `7fec1b2f17636c5b392c887fab28552219be807a` 的相关调用链，并逐项核对补丁涉及的现有类型和方法。补丁为独立基线变更。\n\n依照本次任务要求，未运行编译、单元测试或设备测试；不声称实际复现或运行通过。以下复现为源码推导的手动验证步骤，提交前仍需按 CONTRIBUTING.md / BUILDING.md 执行相关平台检查。\n\n\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md 和 PR 模板。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 补丁未加入第三方代码、资源、密钥、令牌或个人数据。\n- [x] 已说明本次未运行测试的原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "01967738e69ef9f35e1bd86d710bbf33c2a7e6655781643a3c583cce68cc4e7f",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-legacy-empty-tags?expand=1"
+}

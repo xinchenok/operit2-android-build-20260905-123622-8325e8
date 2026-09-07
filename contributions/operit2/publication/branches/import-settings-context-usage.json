@@ -1,0 +1,16 @@
+{
+  "slug": "import-settings-context-usage",
+  "tree_sha": "e4ea8cb3edb94de46490ee0b3f91604b8fb96a04",
+  "status": "branch_created",
+  "commit_sha": "42c73803e2b4639b72200795f1332931fe96b5c4",
+  "head_branch": "fix/import-settings-context-usage",
+  "title": "fix(chat): use the active context limit in token statistics",
+  "body": "## 变更说明\n\n原版普通上下文模式使用最大上下文的 40%，但 Flutter 输入菜单的上下文统计始终以完整最大值作为分母。这会低估普通模式的使用率，并显示大于实际窗口的上限。\n\n加载模型配置后，根据现有 `enableMaxContextMode` 选择最大值或 40% 的普通模式窗口，供现有 token 上限和百分比计算使用。\n\n本次从增强补丁中只抽取原版现有能力的修复。不加入可配置的普通模式 `contextLength`；不扩展聊天角色的模型选择或统计订阅行为。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Flutter 支持的平台。\n- 模块：聊天输入菜单的上下文窗口与使用率显示；运行时上下文策略不变。\n\n配置格式、数据库结构和 host API 均不变；不需要额外迁移。\n\n## 验证\n\n已通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 阅读以下相关源码，并核对拟议差异：`AgentInputMenuPopup.dart` 的 `_loadMaxContextLength`、token 换算和百分比计算；`MessageCoordinationDelegate.rs` 与 CLI `app.rs` 中原版 40% 策略。\n\n本次任务明确要求仅做源码审查及补丁准备，因此未运行编译、单元测试、Flutter 分析或设备测试。下列复现步骤由源码推导，尚未实际执行；不将其表述为测试通过。最终提交前仍需依照 CONTRIBUTING.md / BUILDING.md 完成相关检查。改动直接修复现有输入、保存或显示行为，未新增功能文档和测试文件。\n\n## 截图或日志\n\n建议手动复现步骤（未执行）：\n\n1. 将当前聊天功能绑定的模型最大上下文设为 100 K，关闭 Max 模式，重新打开输入菜单。\n2. 预期统计上限为 40 K；当前窗口为 20 K 时显示约 50%，不再显示 20%。\n3. 开启 Max 模式后重新打开输入菜单；预期上限为 100 K、相同用量显示约 20%。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明；本补丁没有新增第三方内容。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "ca67e8cba0a427feda351d69c3935b06de538ab13d35dd406e17912fa6614808",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-usage?expand=1"
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "startup-onboarding-import-retry",
+  "tree_sha": "9c02674c241af63cbbae51e2d693cf7458410fba",
+  "status": "branch_created",
+  "commit_sha": "7c2b5f5a38417b6f5d6ded9301ffc79757a6ea28",
+  "head_branch": "fix/startup-onboarding-import-retry",
+  "title": "fix(flutter): retry onboarding completion without importing twice",
+  "body": "## 变更说明\n\n**问题：** 快照已经写入后，清理或完成引导失败会被当作导入失败；再次继续可能重复提交同一快照或使用已删除的上传。\n\n**原因：** UI 没有记录核心已提交这一不可逆边界，将上传、导入与进入应用放在同一重试分支。\n\n**修复：** 核心返回结果后立即保存完成状态并释放页面对 session 的引用。之后的重试只执行完成引导，按钮和预览明确标注数据已保存，并禁止替换已提交快照。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n平台：Flutter 全平台。模块：首次引导导入成功后的重试。\n\n修改文件：\n\n- `apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart`\n\n无数据库迁移、配置格式或公共 host API 变更。补丁独立基于 `7fec1b2f17636c5b392c887fab28552219be807a`，不要求其他增强版补丁。\n\n## 验证\n\n仅完成源码审阅。实际通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 读取原始代码，并以精确文本匹配生成最小补丁。\n\n源码追踪了 commitOperit1 返回之后的每个 await；完成标记写入早于清理和导航。重试分支没有调用任何导入 API，继续使用上游已有 commitOperit1。\n\n本次按提交者要求未运行构建、静态分析、自动化测试或设备测试；以下复现步骤依据调用链整理，尚未进行运行时复现。本 PR 对应单独提交并包含 DCO Signed-off-by。代码注释和以下复现步骤说明行为变化；未新增测试文件。\n\n## 截图或日志\n\n复现步骤：\n\n1. 在首次引导中完成一次快照核心导入。\n2. 使随后的 onComplete（写入引导完成标记）失败。\n3. 原页面只显示失败且仍保存同一 session，再次继续重新执行 commitOperit1。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "cd53d2e6a8342cf46b500ebcd6f3472c5980b1ae5578bb5207e889eb30050820",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-onboarding-import-retry?expand=1"
+}

@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/startup-pairing-after-storage",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/main/OperitApp.dart"
   ],
@@ -26,5 +26,8 @@
       "name": "pairing-readiness-listener-follows-dialog-lifetime"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "0a7f45d8e341c7603ef80ba155fe4b9b05464fc4",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

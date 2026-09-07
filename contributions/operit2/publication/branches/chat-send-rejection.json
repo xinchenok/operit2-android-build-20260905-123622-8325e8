@@ -1,0 +1,16 @@
+{
+  "slug": "chat-send-rejection",
+  "tree_sha": "ed1967ccc8675ca4b4a7f965163f565c9883a0b1",
+  "status": "branch_created",
+  "commit_sha": "821ed3d29a14d2389694ff70b7cbcdde13e0461e",
+  "head_branch": "fix/chat-send-rejection",
+  "title": "fix(chat): report unaccepted message failures",
+  "body": "## 变更说明\n\n消息在进入历史前被拒绝时，Core 仍向调用者报告成功；队列项因此丢失，而把所有 AI 错误都当作未接受又会重复提交已持久化的输入。\n\n原因：处理层、协调层与 Core 的结果没有携带消息是否已保存的信息；发送入口吞掉准备失败，队列回调也缺少恢复；Error 状态可能重新触发下一次出队。\n\n修复：在内部错误中携带 userMessagePersisted，仅向外传播尚未接受的失败；依次更新 Core、恢复/重发、工具和命令入口。队列在 Core 返回失败前暂停自动出队，界面恢复被拒绝的项；接受后的附件清理错误单独记录。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nRust runtime、Core 路由、工具、CLI 与 Flutter 队列；适用于所有使用这些入口的平台。Core sendUserMessage 从 void 改为 Result<(), String>，沿现有路由错误通道传播；Dart 成功结果仍为 void。不改变 host API、存储结构或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。已核对 route-macros 的 render_return_encoding：Result<(), String> 的成功值仍编码为 Null，错误沿 CoreLinkError 传播，因此无需修改 Dart 成功返回类型。额外用 git grep 核对 pristine 中 sendUserMessage/sendMessageInternal 的 Rust 调用点。代理型 CLI 调用本来已传播远端错误；直接 Core 入口和既有路由测试已相应更新。附件清理边界是恢复队列后避免重复输入的必要配套，也有单独最小 PR 可评审。群聊所有者/取消、部分回答保存与 worker 启动清理没有夹入本补丁。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 队列中准备待发送输入，令消息准备阶段失败或运行时服务不可用。\n2. 发送队列项。\n3. 原实现只发布 Error 状态并返回 void，界面/工具/命令行无法知道输入是否已进入历史。\n4. 对照：让 provider 在用户消息已写入历史后失败，此时不应重新入队。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "6658217ca8bde7623d1559f81ddbfa695d920e51d2ecacbeda4992fb350afc8d",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-send-rejection?expand=1"
+}

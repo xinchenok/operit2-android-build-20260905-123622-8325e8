@@ -1,0 +1,16 @@
+{
+  "slug": "snapshot-input-background-io",
+  "tree_sha": "34df8a04d3b9b5a336e38e0f80f88c3ab971409e",
+  "status": "branch_created",
+  "commit_sha": "f074ea683ef44b5f6a84511a2ae77c636fadf408",
+  "head_branch": "fix/snapshot-input-background-io",
+  "title": "fix(android): read snapshot documents off the main thread",
+  "body": "## 变更说明\n\n**问题：** 大型快照或慢速文档提供方会让选文件后的页面停顿，并在分块读取期间反复阻塞 Android 主线程。\n\n**原因：** query/openInputStream/read/close 与 Flutter 通道处理运行在同一主线程。\n\n**修复：** 用一个专属串行执行器拥有输入流和 token 注册表，后台完成元数据查询、打开、读取及关闭，再把结果投递回主线程；通道释放排队关闭流而不等待 I/O。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n平台：Android。模块：快照文档输入通道。保留原有 ZIP MIME 类型与 64 KiB 分块上限。\n\n修改文件：\n\n- `apps/flutter/app/android/app/src/main/kotlin/app/operit/SnapshotImportInputChannel.kt`\n\n无数据库迁移、配置格式或公共 host API 变更。补丁独立基于 `7fec1b2f17636c5b392c887fab28552219be807a`，不要求其他增强版补丁。\n\n## 验证\n\n仅完成源码审阅。实际通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 读取原始代码，并以精确文本匹配生成最小补丁。\n\n源码检查全部 openInputs 访问均归属同一工作线程；clear 不同步等待流关闭，待处理 picker 仅完成一次。手动适配原始 ZIP-only pickSnapshot 签名，没有引入 allowJson。\n\n本次按提交者要求未运行构建、静态分析、自动化测试或设备测试；以下复现步骤依据调用链整理，尚未进行运行时复现。本 PR 对应单独提交并包含 DCO Signed-off-by。代码注释和以下复现步骤说明行为变化；未新增测试文件。\n\n## 截图或日志\n\n复现步骤：\n\n1. 从速度较慢的 DocumentProvider 选择快照 ZIP。\n2. 等待元数据查询、打开及分块读取。\n3. 原 Activity 回调和 MethodChannel 回调在主线程同步执行这些 I/O。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "359bad9940024408f64f282d35e107c83bed58acf6978e8c49b99a63d4ac8564",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-input-background-io?expand=1"
+}

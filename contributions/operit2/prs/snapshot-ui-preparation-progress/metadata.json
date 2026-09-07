@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/snapshot-ui-preparation-progress",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart",
     "apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart",
@@ -39,5 +39,8 @@
       "name": "settings-show-file-preparation-before-picker"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "edd50c40d37990ac8005d7fc8e144ae89efcfda7",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

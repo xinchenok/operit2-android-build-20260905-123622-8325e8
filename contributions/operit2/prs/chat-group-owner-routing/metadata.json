@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/chat-group-owner-routing",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/runtime/application/src/services/core/MessageCoordinationDelegate.rs"
   ],
@@ -14,5 +14,8 @@
     "explicit-chat-route-still-runs-character-group-orchestration",
     "resolve-group-from-owning-chat-before-global-selection"
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "4b6b1dc8c993e059dc3aa67a6dfad6a3e0a3654a",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

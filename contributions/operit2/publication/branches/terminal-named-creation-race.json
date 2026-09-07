@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-named-creation-race",
+  "tree_sha": "ddd3d20217d5d492ccdbe66ae57bfb96b1caa865",
+  "status": "branch_created",
+  "commit_sha": "112490f4a79e7308f7e64714228676bc769d4dba",
+  "head_branch": "fix/terminal-named-creation-race",
+  "title": "fix(android): serialize creation of named terminal sessions",
+  "body": "## 变更说明\n\n### 问题\n\n两个并发请求首次创建同名终端或同一隐藏执行器时，都可能看到映射为空并分别启动 PTY，返回不同会话并覆盖名称映射。\n\n### 复现步骤\n\n1. 从两个线程同时使用同一个 sessionName 创建命名终端；对 executorKey 重复同样场景。\n2. 让两个请求同时通过已有映射检查后再完成 PTY 初始化。\n3. 观察两次创建得到不同 sessionId，映射只保留最后一次写入。\n\n以上是根据现有控制流整理的复现路径，本次未在 Android 设备上执行。\n\n### 原因\n\n现有 state mutex 分别保护查询和插入，中间启动 PTY 时释放锁，因此整个查找/创建/登记过程不是原子操作。\n\n### 修复\n\n在 host 中添加可被克隆实例共享的 sessionCreation mutex，覆盖可见和隐藏两条命名创建流程；继续使用原有 state mutex 保护短暂 map 操作。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Android。\n- 模块：Android terminal host。\n- 行为与兼容性：同名请求会复用先完成的会话；创建阶段在 host 范围内串行，可能延迟同时启动的不同命名会话，但不会把启动等待放进全局状态锁。\n- host API 与 Flutter/Rust 边界：无接口、配置或数据库迁移。\n\n## 验证\n\n- 已读取上游 CONTRIBUTING.md 与 PR 模板，并逐处对照固定基线 `7fec1b2f17636c5b392c887fab28552219be807a` 的控制流和已有 API。\n- 补丁生成时用精确、唯一匹配断言检查每处旧代码；每个 PR 独立从该上游基线生成完整文件，没有把其他 PR 当作前置分支。\n- 已将受影响文件从固定基线导出到临时目录，执行 `git apply --check fix.patch`，独立应用检查通过。\n- 本次按要求只做源码检查，未运行 cargo、Gradle、Flutter 构建、测试任务或 Android 设备复现；行为验证仍待维护者执行。\n- 未添加公共接口或操作说明；本 PR 的复现路径记录了需要补做的设备验证，未新增无法在本次环境验证的设备测试。\n\n\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 未引入第三方代码、资源或许可证变更。\n- [x] 本补丁不含密钥、令牌、个人数据或本地构建产物。\n- [x] 已在上文说明文档和测试处理方式。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "c440551822a56937b42d58223c37c16582c2cba3a6aa0f01ba63e205e78f3fad",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-named-creation-race?expand=1"
+}

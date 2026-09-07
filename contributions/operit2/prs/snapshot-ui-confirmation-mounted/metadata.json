@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/snapshot-ui-confirmation-mounted",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart"
   ],
@@ -16,5 +16,8 @@
       "name": "settings-import-confirmation-lifecycle"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "6767429ee8badf8fde5c8eaa0608b0f853140871",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

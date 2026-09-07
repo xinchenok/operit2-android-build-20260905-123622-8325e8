@@ -5,12 +5,15 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/chat-detached-scroll-navigator",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart"
   ],
   "source_specs": [
     "chat-fixes.json:navigator-does-not-touch-detached-controller"
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "73bf16a9c3ca82b77c000d1340b5c4051d87f094",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

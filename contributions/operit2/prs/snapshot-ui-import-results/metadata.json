@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/snapshot-ui-import-results",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart",
     "apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart",
@@ -48,5 +48,8 @@
       "name": "Operit1 snapshot data preservation DataSettingsPanel 1"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "e8618fa9d449ec23bd1787c04de1be3dbae28231",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

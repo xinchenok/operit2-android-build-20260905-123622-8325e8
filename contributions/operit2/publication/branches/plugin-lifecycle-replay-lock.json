@@ -1,0 +1,16 @@
+{
+  "slug": "plugin-lifecycle-replay-lock",
+  "tree_sha": "af144d80e746d0de3473d204d04adc2d0ce368c1",
+  "status": "branch_created",
+  "commit_sha": "9c1160c4e5c021ccfb54a0293de453e84a43ba9e",
+  "head_branch": "fix/plugin-lifecycle-replay-lock",
+  "title": "fix(plugins): replay lifecycle hooks outside package manager locks",
+  "body": "## 问题与复现\n\n启用一个会重放启动事件的 ToolPkg；若它的生命周期钩子访问包管理或嵌套工具，可能一直等待包管理器锁。刷新钩子的监听回调可在 `enablePackage` 持有管理器锁时同步执行。\n\n## 原因与修复过程\n\n原实现直接在监听回调内运行历史生命周期事件。将已收集的事件和钩子移动到已有 host task scheduler，由回调返回、管理器解锁后执行；保持事件顺序和既有钩子执行入口，调度失败使用现有 ChainLogger 报告。\n\n## 影响与验证\n\n影响 ToolPkg 生命周期重放，不添加旧版工具包或新的调度框架。已核对同步回调/锁关系及补丁基线；未独立编译或手机实测。复现时观察上述包可完成启用且钩子只按原事件列表执行。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "8a490f5e98a7bca18ea40e9dc44c9a024bb40a82d307fd770eb8a41fc3803cbe",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-lifecycle-replay-lock?expand=1"
+}

@@ -18,7 +18,7 @@ Rust runtime、Core 路由、工具、CLI 与 Flutter 队列；适用于所有�
 
 已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。已核对 route-macros 的 render_return_encoding：Result<(), String> 的成功值仍编码为 Null，错误沿 CoreLinkError 传播，因此无需修改 Dart 成功返回类型。额外用 git grep 核对 pristine 中 sendUserMessage/sendMessageInternal 的 Rust 调用点。代理型 CLI 调用本来已传播远端错误；直接 Core 入口和既有路由测试已相应更新。附件清理边界是恢复队列后避免重复输入的必要配套，也有单独最小 PR 可评审。群聊所有者/取消、部分回答保存与 worker 启动清理没有夹入本补丁。
 
-本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。发布前需要按贡献指南完成相应验证。
+本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。
 
 ## 复现步骤
 
@@ -30,7 +30,10 @@ Rust runtime、Core 路由、工具、CLI 与 Flutter 队列；适用于所有�
 ## 提交者确认
 
 - [x] 已阅读 CONTRIBUTING.md。
-- [ ] 发布提交时补齐真实身份的 DCO `Signed-off-by`。
-- [ ] 发布者确认拥有本次提交的必要授权。
+- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。
+- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。
 - [x] 没有引入第三方代码、密钥、令牌或构建产物。
 - [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。
+
+---
+基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。

@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-execute-complete-scripts",
+  "tree_sha": "881c9a433c14a88b4da84cda4aa450d44ddee4b0",
+  "status": "branch_created",
+  "commit_sha": "c8cae1ec0e2ee20e58ddff15461b2ec0ae460d39",
+  "head_branch": "fix/terminal-execute-complete-scripts",
+  "title": "fix(android): execute multiline terminal commands as one script",
+  "body": "## 变更说明\n\n### 问题\n\n多行 command 被逐行粘贴进交互式 PTY 后，前面的语句即可产生完成提示符。后续语句运行较久或等待输入时，host 可能把中间提示符当作整段命令完成，提前返回并遗漏后续输出。\n\n### 原因\n\n原实现把 `normalizedCommand` 与回车直接写入 PTY，交互式 shell 可在换行分隔的语句之间输出完成标记；收集器无法区分这些标记是否属于整个 command。\n\n### 修复\n\n把 command 写入带 UUID 的临时脚本，仅向 PTY 提交一条 `. '路径'`。bash 使用 rootfs 中的 `/tmp` 路径，system shell 使用现有 runtime tmp 路径；路径单引号转义后引用。通过 source 保留原 shell 中的工作目录、变量等状态，输出去回显逻辑匹配实际发送的包装命令；RAII 在函数返回时删除临时文件。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Android。\n- 模块：`hosts/android/src/terminal.rs`。\n- 行为：多行命令按单个脚本执行并返回完整完成结果，单行命令同样经过脚本。脚本保存在现有 Android runtime/rootfs 临时目录，不引入新 API 或依赖。使用脚本级 `return` 等语法时遵循 shell 的 source 语义。\n- 兼容性：复用现有 Android host API；不修改 Rust runtime 与 Flutter 的接口边界，无配置、数据库或数据迁移。\n\n## 验证\n\n- 基线：`AAswordman/Operit2` 的 `7fec1b2f17636c5b392c887fab28552219be807a`，每个补丁独立基于该提交生成。\n- 已执行：`git apply --check --whitespace=error-all <本 PR 的 fix.patch>`，在仅含原始基线文件的临时目录检查，结果通过。\n- 已完成源码审阅：核对脚本的 host 路径与 shell 可见路径、现有 runtime 环境变量、单引号引用、UUID 命名和 Drop 清理；核对返回 command 仍为用户输入，去回显参数则为实际发送的 source 命令。\n- 按本次工作范围，仅做源码检查；未运行编译、单元测试、Flutter/Rust 构建或 Android 设备验证。下列步骤是待执行的设备复现步骤，并非已验证的运行结果。\n- 未新增测试或修改用户文档：此 PR 仅调整 host 内部实现；设备运行结果需在具备 Android PTY 环境后补充。\n\n## 截图或日志\n\n### 复现步骤（待设备验证）\n\n1. 在 Android bash session 执行包含实际换行的 command：\n   ```sh\n   printf 'first\\n'\n   sleep 1\n   printf 'last\\n'\n   ```\n2. 检查返回是否发生在 `sleep` 结束之前，以及输出是否缺少 `last`。\n3. 再执行多行 `cd /tmp` 和 `export OPERIT_SCRIPT_CHECK=ready`，随后用另一条命令检查目录与变量仍在同一 shell 中保留。\n4. 对 android-system/shell 的显式 session 重复多行命令，并检查结束后临时脚本已清理。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。（未改动第三方文件。）\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "8ddf98d5243e7ce0505dc83cbe761f485c23d5f8236d8913525960eacedc83f6",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-execute-complete-scripts?expand=1"
+}

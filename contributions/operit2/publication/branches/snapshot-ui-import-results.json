@@ -1,0 +1,16 @@
+{
+  "slug": "snapshot-ui-import-results",
+  "tree_sha": "0b5da0d8bc8eafb422ea1923db0cd77e27fc8a2b",
+  "status": "branch_created",
+  "commit_sha": "e8618fa9d449ec23bd1787c04de1be3dbae28231",
+  "head_branch": "fix/snapshot-ui-import-results",
+  "title": "fix(flutter): show migration omissions in snapshot import results",
+  "body": "## 变更说明\n\n**问题：** 核心已返回跳过字段和实际迁移计数，但 UI 仅提示成功并进入应用，用户无法得知哪些内容需要手工处理。\n\n**原因：** 两个导入入口都只使用返回值写日志，没有向用户呈现已有的迁移结果。\n\n**修复：** 两个入口共用结果对话框，展示上游已提供的计数和全部非空迁移说明；引导文字说明需选原始快照以及快照外数据的边界。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n平台：Flutter 全平台。模块：Operit1 快照结果展示与引导说明。\n\n修改文件：\n\n- `apps/flutter/app/lib/ui/common/Operit1ImportResultDialog.dart`\n- `apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart`\n- `apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart`\n\n无数据库迁移、配置格式或公共 host API 变更。补丁独立基于 `7fec1b2f17636c5b392c887fab28552219be807a`，不要求其他增强版补丁。\n\n## 验证\n\n仅完成源码审阅。实际通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 读取原始代码，并以精确文本匹配生成最小补丁。\n\n源码核对 Operit1SnapshotImportManager.rs 中原始结果的计数及 skippedFields 字段。去掉增强版资源选择器、扩展导入 API 和复制按钮，不对迁移说明按标点过滤。\n\n本次按提交者要求未运行构建、静态分析、自动化测试或设备测试；以下复现步骤依据调用链整理，尚未进行运行时复现。本 PR 对应单独提交并包含 DCO Signed-off-by。代码注释和以下复现步骤说明行为变化；未新增测试文件。\n\n## 截图或日志\n\n复现步骤：\n\n1. 导入一个核心会记录 modelConfig.skippedFields 的 Operit1 快照。\n2. 等待导入成功。\n3. 原引导直接完成，设置页只显示通用成功提示，迁移说明未展示。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "d76c255911940c37a0b7f9f4e44a239f797a65b18e0f21141986f36e7010bb3d",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-import-results?expand=1"
+}

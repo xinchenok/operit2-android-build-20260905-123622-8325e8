@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/terminal-input-global-lock",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "hosts/android/src/terminal.rs"
   ],
@@ -19,5 +19,8 @@
     "patches/terminal_followup.json:android-pty-nonblocking-read-handle-transient-errors",
     "patches/terminal_followup.json:android-pty-nonblocking-write-handle-backpressure"
   ],
-  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested.",
+  "head_commit_sha": "d5cfcd8851b4625c8006e1f118d719b85335ea44",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

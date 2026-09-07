@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-optional-memory-databases",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
   ],
@@ -16,5 +16,8 @@
       "name": "Operit1 snapshot data preservation Operit1SnapshotImportManager 10"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "2ff21f7fb626098d00db1ceb8ec67390644aef74",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

@@ -1,0 +1,16 @@
+{
+  "slug": "import-stale-model-selection",
+  "tree_sha": "583ed45b805e49115bb03319f53ce7791c55c253",
+  "status": "branch_created",
+  "commit_sha": "4ffade87942f94be8041dd9ecf5fb70f040fde8f",
+  "head_branch": "fix/import-stale-model-selection",
+  "title": "fix(import): continue full snapshots with stale model selections",
+  "body": "## 变更说明\n\n复现步骤：Operit1 删除原聊天供应商，或缩短模型列表但保留旧下标后导出；尝试完整数据导入。\n\n原因：完整导入先要求原 CHAT 配置和模型下标有效，一项失效即可阻止聊天、记忆和文件迁移。\n\n修复：仅在完整导入入口把失效选择记为跳过项，保留当前绑定并继续其余数据；明确选择单一模型的导入 API 仍保留原校验。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n跨平台 Rust 导入流程；沿用 RuntimeStorageHost / RuntimeSqliteHost，不改变 Flutter bridge 或 host API。\n\n## 验证\n\n已阅读基线提交 `7fec1b2f17636c5b392c887fab28552219be807a` 的相关调用链，并逐项核对补丁涉及的现有类型和方法。补丁为独立基线变更。\n\n依照本次任务要求，未运行编译、单元测试或设备测试；不声称实际复现或运行通过。以下复现为源码推导的手动验证步骤，提交前仍需按 CONTRIBUTING.md / BUILDING.md 执行相关平台检查。\n\n本补丁维持基线仅导入已选择供应商的范围；完整供应商集合迁移由独立 PR 处理。非 CHAT 功能下标容错在基线无对应导入路径。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md 和 PR 模板。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 补丁未加入第三方代码、资源、密钥、令牌或个人数据。\n- [x] 已说明本次未运行测试的原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "80f8aa86516424bce66e00d7717cb32f828d68e8166880223b1ef4673a0cf779",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-stale-model-selection?expand=1"
+}

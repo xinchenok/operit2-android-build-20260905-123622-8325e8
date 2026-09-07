@@ -1,0 +1,16 @@
+{
+  "slug": "chat-cancel-pending-locator",
+  "tree_sha": "234cf39453c533608a496879f67425cb2932b9bc",
+  "status": "branch_created",
+  "commit_sha": "323ccbe5963fc891a5388794ed2bf8a5d63e9723",
+  "head_branch": "fix/chat-cancel-pending-locator",
+  "title": "fix(chat): cancel stale message locator jumps",
+  "body": "## 变更说明\n\n消息定位等待窗口或布局完成时，用户已经手动滚动或点击到底部，旧定位仍会将列表拉回旧消息。\n\n原因：用户导航操作没有清除 _pendingJumpToMessageTimestamp 及相关待执行定位状态。\n\n修复：拖动、滚轮和到底部操作开始时取消待处理的消息定位。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nFlutter 聊天界面，所有使用该界面的平台；不改变 host API、数据格式或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 定位当前窗口之外的一条消息。\n2. 在定位完成前拖动列表、使用滚轮或点击到底部。\n3. 原实现仍保留待处理的定位请求。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "b0ce9cd2b51e21e80cba904be79225205644d0235b7739585b9ed09a03dd0697",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-cancel-pending-locator?expand=1"
+}

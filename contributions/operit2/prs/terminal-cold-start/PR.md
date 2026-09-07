@@ -48,8 +48,11 @@ login_ubuntu 对整个 bind 列表逐个启动 Linux probe，启动成本随可�
 ## 提交者确认
 
 - [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。
-- [ ] 我的每个提交都包含 `Signed-off-by`，并符合 DCO 1.1（由实际提交者提交时确认）。
-- [ ] 我拥有本次提交内容的版权或必要授权（由实际提交者确认）。
+- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。
+- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。
 - [x] 未引入第三方代码、资源或许可证变更。
 - [x] 本补丁不含密钥、令牌、个人数据或本地构建产物。
 - [x] 已在上文说明文档和测试处理方式。
+
+---
+基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。

@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-stale-model-selection",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
   ],
@@ -36,5 +36,8 @@
       "name": "Do not install an empty or nonexistent chat model binding"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "4ffade87942f94be8041dd9ecf5fb70f040fde8f",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

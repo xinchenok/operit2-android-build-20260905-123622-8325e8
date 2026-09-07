@@ -1,0 +1,16 @@
+{
+  "slug": "chat-queue-hook-restoration",
+  "tree_sha": "6193a61652f1370249bbe9ce7c8432e2d98cca5e",
+  "status": "branch_created",
+  "commit_sha": "f0f91aed0d62d552d56f92f192d9a0d44b0c3081",
+  "head_branch": "fix/chat-queue-hook-restoration",
+  "title": "fix(chat): restore queued input rejected by hooks",
+  "body": "## 变更说明\n\n队列项取出后，如果提交钩子抛错或把文本替换为空，原消息既未发送也不会回到队列。\n\n原因：出队发生在钩子执行之前，仅 block 分支会恢复，异常和空替换分支没有补偿。\n\n修复：在钩子异常和空替换时恢复原队列项，并清理手动发送的自动出队抑制标记。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nFlutter 聊天界面，所有使用该界面的平台；不改变 host API、数据格式或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。zz_chat_followup 对运行时拒绝后的恢复部分另由发送拒绝 PR 覆盖；本 PR 仅修复运行时发送开始之前的队列丢失。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 将文字加入队列。\n2. 使用抛错或返回空替换文本的提交钩子，再发送该队列项。\n3. 原实现已移除队列项但在发起消息前结束。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "192488306447de91a589b941d21bad9a1417452a6c9eab54f18ed4ede9cb045a",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-queue-hook-restoration?expand=1"
+}

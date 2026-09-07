@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-stale-character-models",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/runtime/application/src/data/backup/Operit1SnapshotImportManager.rs"
   ],
@@ -36,5 +36,8 @@
       "name": "Keep old fixed config identity instead of resolving by globally ambiguous model name"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "b8b228cba3c19bed2c718a128667132afef5ebae",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

@@ -5,12 +5,15 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/terminal-command-output-cap",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "hosts/android/src/terminal.rs"
   ],
   "source_specs": [
     "patches/terminal_followup.json:android-pty-bound-full-command-output-to-avoid-app-oom"
   ],
-  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested.",
+  "head_commit_sha": "c6b849c4bb8231473c1ce220a22f4053c75d52c2",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

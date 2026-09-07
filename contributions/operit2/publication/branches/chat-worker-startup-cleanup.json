@@ -1,0 +1,16 @@
+{
+  "slug": "chat-worker-startup-cleanup",
+  "tree_sha": "b95d0d4a16735eebe45674470b3deb034051208f",
+  "status": "branch_created",
+  "commit_sha": "c3dcd8c39708026ceee85024e810b5db61a48d11",
+  "head_branch": "fix/chat-worker-startup-cleanup",
+  "title": "fix(chat): clean up failed response workers",
+  "body": "## 变更说明\n\n响应 worker 无法被调度时，已经建立的响应流和 workspace tool hook 没有关闭，活动 turn 的运行状态也未清理。\n\n原因：成功 worker 的回调负责收尾，但调度失败时 worker 根本不会运行，错误转换闭包未补偿。\n\n修复：在调度失败分支关闭流、移除并关闭工具 hook、清理对应 turn，并发布 Error；保留原有错误类型和调用契约。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nRust runtime 响应 worker 与 workspace 工具 hook，所有核心平台；不改变 API 或持久化格式。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。已核对这些资源在调度前创建且原始值仍留在作用域；正常回调使用的是 clone，因此失败分支可以进行收尾。未添加或执行新的测试。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 发起带 workspace 的对话，使响应流和 tool hook 已创建。\n2. 令 worker 调度返回错误。\n3. 原实现只把错误转换成 AiServiceError，留下该 turn 的资源和运行状态。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "3017aa71e1900a7b8fe577155ffa6734d83c2f2a9019554aeedb560ee26e071b",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-worker-startup-cleanup?expand=1"
+}

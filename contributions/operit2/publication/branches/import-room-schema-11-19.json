@@ -1,0 +1,16 @@
+{
+  "slug": "import-room-schema-11-19",
+  "tree_sha": "d2f3123758f176d696bae76a73c1210d3787cbe6",
+  "status": "branch_created",
+  "commit_sha": "e54a263960e75bdae7755ad2da1b5363ee0aa3c1",
+  "head_branch": "fix/import-room-schema-11-19",
+  "title": "fix(import): migrate intermediate Operit1 Room schemas",
+  "body": "## 变更说明\n\n复现步骤：选择数据库 user_version 为 11–19 的 Operit1 快照。旧代码仅接受 10、20、21，预览或导入被拒绝。\n\n原因：已有 v20 聊天转换桥，但缺少中间版本到 v20 的迁移入口。\n\n修复：在临时导入数据库执行相应 11→20 增量迁移，再使用已有 v20 转换桥。源 ZIP 和 Operit2 目标 schema 均不修改。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n跨平台 Rust 导入流程；沿用 RuntimeStorageHost / RuntimeSqliteHost，不改变 Flutter bridge 或 host API。\n\n## 验证\n\n已阅读基线提交 `7fec1b2f17636c5b392c887fab28552219be807a` 的相关调用链，并逐项核对补丁涉及的现有类型和方法。补丁为独立基线变更。\n\n依照本次任务要求，未运行编译、单元测试或设备测试；不声称实际复现或运行通过。以下复现为源码推导的手动验证步骤，提交前仍需按 CONTRIBUTING.md / BUILDING.md 执行相关平台检查。\n\n迁移 SQL 的版本顺序已与增强版修复对照；尚未使用各历史版本数据库逐版验证，必须补做兼容性检查。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md 和 PR 模板。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 补丁未加入第三方代码、资源、密钥、令牌或个人数据。\n- [x] 已说明本次未运行测试的原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "c851d6e4a0020ef5f26f7867ba583661e2d52d354f541f30c7d1b1f403207eb5",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-room-schema-11-19?expand=1"
+}

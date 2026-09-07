@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/chat-submit-single-flight",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/features/chat/screens/AIChatScreen.dart"
   ],
@@ -13,5 +13,8 @@
     "chat-fixes.json:initial-draft-and-submit-state",
     "chat-fixes.json:submit-single-flight-and-errors"
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "62b6ed5de513baf8b22b90c01433efd3032c4820",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

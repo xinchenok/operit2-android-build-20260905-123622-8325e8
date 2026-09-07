@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/terminal-fork-child",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "hosts/android/src/terminal.rs"
   ],
@@ -13,5 +13,8 @@
     "patches/terminal.json:android-terminal-prepare-exec-pointers-before-fork",
     "patches/terminal.json:android-terminal-no-child-heap-allocation-before-exec"
   ],
-  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested."
+  "validation": "Source review and independent git apply --check --whitespace=error-all against pristine upstream 7fec passed. Not compiled or device-tested.",
+  "head_commit_sha": "5334d1b2dd51c1bc5bddb8ef83dc011b606dbbf9",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

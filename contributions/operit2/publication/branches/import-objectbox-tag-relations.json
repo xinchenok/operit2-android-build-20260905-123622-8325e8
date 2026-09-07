@@ -1,0 +1,16 @@
+{
+  "slug": "import-objectbox-tag-relations",
+  "tree_sha": "491b9f090425ad3aa4703f4c682eed7dee008b79",
+  "status": "branch_created",
+  "commit_sha": "e62c612989de64141d8e7288aedf2378c8de18c3",
+  "head_branch": "fix/import-objectbox-tag-relations",
+  "title": "fix(import): decode standalone ObjectBox memory tag relations",
+  "body": "## 变更说明\n\n复现步骤：导入带标签的 Operit1 ObjectBox 记忆；记忆和标签实体存在，但导入后的标签集合为空。\n\n原因：关系键使用错误的前缀和 16 字节布局，真实 standalone 关系键为 12 字节，实体 ID 位于后两个四字节字段。\n\n修复：修正关系键前缀、长度及 memory/tag ID 偏移，继续使用既有实体存在性验证。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n跨平台 Rust 导入流程；沿用 RuntimeStorageHost / RuntimeSqliteHost，不改变 Flutter bridge 或 host API。\n\n## 验证\n\n已阅读基线提交 `7fec1b2f17636c5b392c887fab28552219be807a` 的相关调用链，并逐项核对补丁涉及的现有类型和方法。补丁为独立基线变更。\n\n依照本次任务要求，未运行编译、单元测试或设备测试；不声称实际复现或运行通过。以下复现为源码推导的手动验证步骤，提交前仍需按 CONTRIBUTING.md / BUILDING.md 执行相关平台检查。\n\n键布局依据增强版经过修复的 LMDB 解码逻辑核对；尚未使用实际 ObjectBox 文件复测。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md 和 PR 模板。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 补丁未加入第三方代码、资源、密钥、令牌或个人数据。\n- [x] 已说明本次未运行测试的原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "b37ebc5c6fb7f7688ae54a51c8cc6f8a3a1c3b2ffb42b69803498181154f66fd",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-objectbox-tag-relations?expand=1"
+}

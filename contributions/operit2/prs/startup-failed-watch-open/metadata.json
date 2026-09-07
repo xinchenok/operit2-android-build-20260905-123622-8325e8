@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/startup-failed-watch-open",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/core/bridge/MethodChannelCoreProxy.dart"
   ],
@@ -16,5 +16,8 @@
       "name": "failed-watch-open-does-not-await-an-unsubscribed-controller"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "ef8efe27423193a1477cfd7bf0f1e244d6847482",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

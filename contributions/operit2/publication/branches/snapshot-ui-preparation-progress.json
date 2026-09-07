@@ -1,0 +1,16 @@
+{
+  "slug": "snapshot-ui-preparation-progress",
+  "tree_sha": "a5fd5496137d83e45b8cca91b28c32f48ca5cee3",
+  "status": "branch_created",
+  "commit_sha": "edd50c40d37990ac8005d7fc8e144ae89efcfda7",
+  "head_branch": "fix/snapshot-ui-preparation-progress",
+  "title": "fix(flutter): show snapshot preparation progress before import preview",
+  "body": "## 变更说明\n\n**问题：** 选择大型快照后，文件打开、上传及检查阶段缺少清晰反馈，用户容易把仍在工作的准备流程当作卡死并重复操作。\n\n**原因：** 准备过程散落在两个入口，上传器没有字节进度回调；导入进度流只覆盖提交阶段，不能解释此前的等待。\n\n**修复：** 在打开文件选择器前先绘制共用准备对话框，分别展示打开、按字节读取、内容检查阶段，读取阶段节流更新进度，返回预览后才进入既有确认/提交流程。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n平台：Flutter 全平台。模块：引导和设置中的快照准备 UI、Dart 上传器可选进度回调。现有调用不传回调时保持兼容。\n\n修改文件：\n\n- `apps/flutter/app/lib/core/snapshot/SnapshotImportUploader.dart`\n- `apps/flutter/app/lib/ui/common/Operit1SnapshotPreparationDialog.dart`\n- `apps/flutter/app/lib/ui/features/onboarding/OnboardingStartupRoute.dart`\n- `apps/flutter/app/lib/ui/features/settings/data/DataSettingsPanel.dart`\n\n无数据库迁移、配置格式或公共 host API 变更。补丁独立基于 `7fec1b2f17636c5b392c887fab28552219be807a`，不要求其他增强版补丁。\n\n## 验证\n\n仅完成源码审阅。实际通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 读取原始代码，并以精确文本匹配生成最小补丁。\n\n源码检查首帧后打开 picker、100ms 节流字节回调、检查阶段不伪造百分比、Timer.dispose，以及关闭/失败时上传所有权。对话框仅调用原始 SnapshotImportFile.pick、stage、completeOperit1；无资源选择器或扩展导入 API。未运行视觉或设备验证。\n\n本次按提交者要求未运行构建、静态分析、自动化测试或设备测试；以下复现步骤依据调用链整理，尚未进行运行时复现。本 PR 对应单独提交并包含 DCO Signed-off-by。代码注释和以下复现步骤说明行为变化；未新增测试文件。\n\n## 截图或日志\n\n复现步骤：\n\n1. 从引导或设置入口选择一个较大的 Operit1 ZIP 快照。\n2. 在文档打开、分块传输和内容检查较慢时观察界面。\n3. 原设置页在 picker 返回前没有 busy 状态，两个入口都没有区分文件读取与核心检查的进度。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "f2b05ab8143de77fea1361675aef5cef6ff73733fa7bca340bbcf5d96428c382",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/snapshot-ui-preparation-progress?expand=1"
+}

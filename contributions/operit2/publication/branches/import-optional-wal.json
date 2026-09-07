@@ -1,0 +1,16 @@
+{
+  "slug": "import-optional-wal",
+  "tree_sha": "834dd0be2aa707cb308887434803068bc64d4d97",
+  "status": "branch_created",
+  "commit_sha": "2408a0ed6fd2051fb3cad5dfb10640cdb623b4bb",
+  "head_branch": "fix/import-optional-wal",
+  "title": "fix(import): accept snapshots without SQLite sidecars",
+  "body": "## 变更说明\n\n复现步骤：导出已完成 checkpoint 的 Operit1 数据库，快照仅含 app_database；进入快照预览或导入。旧代码在读取不存在的 WAL/SHM 时失败。\n\n原因：临时数据库流程把 WAL 和 SHM 都当成必需的快照项，并可能遗留前一次失败的侧文件。\n\n修复：只复制存在的 WAL，让 SQLite 重建 SHM；操作前清理旧暂存文件，结束后清理三项且保留原始操作错误。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n跨平台 Rust 导入流程；沿用 RuntimeStorageHost / RuntimeSqliteHost，不改变 Flutter bridge 或 host API。\n\n## 验证\n\n已阅读基线提交 `7fec1b2f17636c5b392c887fab28552219be807a` 的相关调用链，并逐项核对补丁涉及的现有类型和方法。补丁为独立基线变更。\n\n依照本次任务要求，未运行编译、单元测试或设备测试；不声称实际复现或运行通过。以下复现为源码推导的手动验证步骤，提交前仍需按 CONTRIBUTING.md / BUILDING.md 执行相关平台检查。\n\n\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md 和 PR 模板。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 补丁未加入第三方代码、资源、密钥、令牌或个人数据。\n- [x] 已说明本次未运行测试的原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "4ce4e10aca8ee90e7be9f47fb3255ed6f42d21f8d8072b8a0260f0b351a58b60",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-optional-wal?expand=1"
+}

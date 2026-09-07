@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-settings-context-usage",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/features/chat/components/style/input/agent/AgentInputMenuPopup.dart"
   ],
@@ -16,5 +16,8 @@
       "name": "Complete Operit1 context, summary rules and Gemini grounding: AgentInputMenuPopup.dart (1)"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "42c73803e2b4639b72200795f1332931fe96b5c4",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

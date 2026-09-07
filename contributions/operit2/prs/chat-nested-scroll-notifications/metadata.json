@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/chat-nested-scroll-notifications",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/features/chat/components/ChatArea.dart"
   ],
@@ -13,5 +13,8 @@
     "chat-fixes.json:ignore-nested-scroll-metrics",
     "chat-fixes.json:manual-scroll-cancels-locator"
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "0abd15c7b80227ce3b9928e95204454fe57064ce",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

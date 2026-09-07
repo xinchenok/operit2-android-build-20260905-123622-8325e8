@@ -2,9 +2,13 @@
 
 已准备 **89 份独立 PR 材料**，每份包含一个问题的补丁、修复说明和元数据；另有一份需要两项前置修复的角色供应商导入衔接补丁。
 
-**实际已创建上游 PR：0。** 当前 GitHub 连接没有创建 fork 的操作，账号可访问仓库中也没有 Operit2 的 fork；上游仓库没有写权限。这些文件是已保存的提交材料，不代表 PR 已发布。
+**已创建并核对89个修复分支；实际已创建上游 PR：0。** 新 fork `xinchenok/Operit2` 已确认可写。第一次创建上游PR时，GitHub返回 `403 Resource not accessible by integration`；不能把写入分支说成已提交PR。
 
-下一步：[在 xinchenok 账号创建 Operit2 fork](https://github.com/AAswordman/Operit2/fork)，并让当前 GitHub 连接可访问该 fork。随后每份独立修复建立自己的分支和提交，向 `AAswordman/Operit2:main` 创建 Draft PR；不自动合并、不请求审阅者。
+- [89个实际分支、提交号和上游比较入口](publication/README.md)
+- [已保存的云端提交入口与一次授权说明](https://github.com/xinchenok/Operit2/tree/contributions/submit-upstream-prs)
+- [实际权限错误记录](publication/permission-block.json)
+
+云端入口固定89个分支和完整PR正文，需要用户在GitHub自行配置 `UPSTREAM_PR_TOKEN`。本轮没有生成、读取或保存任何新凭据，也没有触发发布或APK构建。获得新的有效授权后才继续提交；不会重复重试当前被拒绝的连接。
 
 基线：[7fec1b2](https://github.com/AAswordman/Operit2/commit/7fec1b2f17636c5b392c887fab28552219be807a)。增强修复来源：`18017fc00201df9ed943b1d7245f4b21717556d8`。逐条核对了 **538 个替换片段**、28 个 overlay 文件、旧包源码适配，以及早期工具包/构建修复。片段数量不是 bug 数量。
 
@@ -12,7 +16,7 @@
 
 全部独立补丁通过隔离 Git index 的应用检查；每份说明列明源码判断依据、复现步骤、修改流程和影响范围。没有重新开启 APK 构建，也没有独立编译或手机实测，不能称为全部功能验证通过。
 
-各 PR 独立基于同一上游提交，必要公共前提可能出现重叠，合入时需要协调相同代码；它们不是可按编号无冲突连续应用的补丁系列。提交前每条 commit 需遵循上游 DCO，使用已核对的身份：`Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。
+各 PR 独立基于同一上游提交，必要公共前提可能出现重叠，合入时需要协调相同代码；它们不是可按编号无冲突连续应用的补丁系列。89条修复 commit 已按上游 DCO 包含已核对的身份：`Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。
 
 新增旧版引擎、Java/Android 兼容宿主、第三方免责声明和个人构建发布配置已单独列为扩展；不把上游不存在的新增功能说成上游既有 bug。之前提到的插件同步缓存修复实际尚未落地，本次已据基线补成 `plugin-sync-missing-outputs`，覆盖记录明确注明这是新准备的修复。
 

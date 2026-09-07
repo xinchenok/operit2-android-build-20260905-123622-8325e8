@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-serialize-session-commands",
+  "tree_sha": "d57ff2d3e5ad405101625ae2d559336696d54e69",
+  "status": "branch_created",
+  "commit_sha": "9ef9fba1cb92a6cc846a1c906ed6edaf6db7f782",
+  "head_branch": "fix/terminal-serialize-session-commands",
+  "title": "fix(android): serialize commands within each terminal session",
+  "body": "## 变更说明\n\n### 问题\n\n同一可见 session 或已存在的 hidden executor 被并发调用时，后一个命令会清空前一个命令的输出缓冲；两个调用还会同时消费同一完成标记，导致输出串线、结果错配或超时。\n\n### 原因\n\n全局状态锁只保护获取 session 与复制缓冲句柄的短区间，未覆盖一次命令从清空缓冲、写入 PTY 到收集完成标记的完整所有权。`commandRunning` 是展示状态，不能阻止另一个调用进入。\n\n### 修复\n\n每个 `AndroidPtySession` 增加独立 `Arc<Mutex<()>>`，在访问命令缓冲之前获取，并持有到返回（包括现有超时取消路径）。锁等待发生在全局状态锁之外；获取执行锁后重新查找 session，关闭后的排队请求仍返回现有不存在错误。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Android。\n- 模块：`hosts/android/src/terminal.rs`。\n- 行为：同一 session 的命令按互斥获取顺序串行执行；不同 session 保持独立。等待执行锁的时间不计入原有命令执行超时。交互输入 API 保持可用。\n- 兼容性：复用现有 Android host API；不修改 Rust runtime 与 Flutter 的接口边界，无配置、数据库或数据迁移。\n\n## 验证\n\n- 基线：`AAswordman/Operit2` 的 `7fec1b2f17636c5b392c887fab28552219be807a`，每个补丁独立基于该提交生成。\n- 已执行：`git apply --check --whitespace=error-all <本 PR 的 fix.patch>`，在仅含原始基线文件的临时目录检查，结果通过。\n- 已完成源码审阅：确认新字段在唯一 session 构造点初始化；执行 guard 生命周期覆盖现有完整命令执行；获取执行锁时未持有全局状态锁，且随后再次验证 session 存在。\n- 按本次工作范围，仅做源码检查；未运行编译、单元测试、Flutter/Rust 构建或 Android 设备验证。下列步骤是待执行的设备复现步骤，并非已验证的运行结果。\n- 未新增测试或修改用户文档：此 PR 仅调整 host 内部实现；设备运行结果需在具备 Android PTY 环境后补充。\n\n## 截图或日志\n\n### 复现步骤（待设备验证）\n\n1. 创建一个终端 session，等待启动完成。\n2. 两个线程同时对同一 session 调用 `executeInSession`，分别运行 `sleep 1; printf first` 和 `printf second`。\n3. 观察两个返回值是否各自包含对应命令输出；同时在另一个 session 执行 `printf other`，确认不等待前一个 session 的执行互斥锁。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。（未改动第三方文件。）\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "dcc56b79219c0584a402b5fe3a4b7c63e15ade86db6859482b523d7efe776525",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-serialize-session-commands?expand=1"
+}

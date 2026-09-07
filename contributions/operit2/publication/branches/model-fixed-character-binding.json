@@ -1,0 +1,16 @@
+{
+  "slug": "model-fixed-character-binding",
+  "tree_sha": "7ace2cce39919a2f794c77fd998acb7c78776625",
+  "status": "branch_created",
+  "commit_sha": "32d8d09763868196e2933f94bfefd12b535c70b0",
+  "head_branch": "fix/model-fixed-character-binding",
+  "title": "fix(chat): preserve and honor character model bindings",
+  "body": "## 问题与复现\n\n角色设为固定聊天模型后，普通发送和附件能力判断仍可能采用全局聊天模型；重新生成又走不同的解析路径。两家供应商提供相同模型 ID 时，角色仅保存 model ID 也无法保留用户实际选择的供应商。\n\n复现：建立供应商 A/B，各添加同名模型；将角色固定到 A 的模型，将全局聊天绑定改到 B，分别发送普通文本、附件并重新生成，检查实际选中的供应商。\n\n## 原因与修复过程\n\n角色持久化与导入/导出只保存模型名，普通请求没有使用角色固定绑定。增加可选 `chatProviderId`，在角色编辑、复制、CLI 编辑及备份中保留供应商/模型组合；通过现有 runtime support 解析这组身份。普通 CHAT 请求、重新生成和附件能力采用同一选择；显式请求覆盖及非 CHAT 功能保持原逻辑。\n\n旧卡片没有新字段时继续允许唯一模型匹配；多个供应商存在同名模型时提示重新选择，避免任意路由。Operit1 原有导入路径仍使用空 provider 的兼容回退，没有引入增强版的额外导入体系。\n\n## 影响与验证\n\n影响角色模型数据、Rust provider/runtime、Flutter 角色编辑和 CLI。新字段可选，既有序列化数据可读取；不涉及数据库表迁移。已核对构造点、调用路径与补丁基线；未独立运行 Flutter/Rust 编译或手机测试。代理代码需沿用现有构建步骤重新生成。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "ac4d6faaad0d83c97f4ecb1a1d67110774d4f89e003a52f181e2cecb13431561",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/model-fixed-character-binding?expand=1"
+}

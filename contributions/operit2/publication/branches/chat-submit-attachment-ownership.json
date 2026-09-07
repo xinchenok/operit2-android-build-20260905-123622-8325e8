@@ -1,0 +1,16 @@
+{
+  "slug": "chat-submit-attachment-ownership",
+  "tree_sha": "9bbb021a666aa55c7f70758c696362a4d29f05e0",
+  "status": "branch_created",
+  "commit_sha": "f04d1c912679db57fa5723532a07be6fc2aa75e1",
+  "head_branch": "fix/chat-submit-attachment-ownership",
+  "title": "fix(chat): preserve submitted attachment ownership",
+  "body": "## 变更说明\n\n提交钩子与发送请求等待期间，后加入的附件可能被旧消息发送或在旧发送完成时被全部清空。\n\n原因：附件没有与提交动作建立不可变快照，清理操作也没有限制到已经提交的附件。\n\n修复：捕获并传递附件快照；钩子返回后校验归属；消费和成功清理只移除该次提交的附件。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nFlutter 聊天界面，所有使用该界面的平台；不改变 host API、数据格式或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 给草稿 A 添加附件并发送，令钩子或请求延迟。\n2. 等待时修改附件，或为草稿 B 添加附件。\n3. 原实现发送时重读附件并在完成后 clearAttachments。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "12520de86e6d3b666e09ff76b45a46390aabd3a1bb6e1ff3a876d86a6547b14b",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-attachment-ownership?expand=1"
+}

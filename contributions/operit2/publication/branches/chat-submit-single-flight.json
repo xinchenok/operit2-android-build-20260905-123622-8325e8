@@ -1,0 +1,16 @@
+{
+  "slug": "chat-submit-single-flight",
+  "tree_sha": "1867147c49ffe5773b4b7ff434128404a2a564e9",
+  "status": "branch_created",
+  "commit_sha": "62b6ed5de513baf8b22b90c01433efd3032c4820",
+  "head_branch": "fix/chat-submit-single-flight",
+  "title": "fix(chat): serialize pending submit hooks",
+  "body": "## 变更说明\n\n提交钩子尚未返回时连续点击发送，可并行启动同一份输入的提交过程；钩子错误没有统一处理。\n\n原因：发送入口以 unawaited 启动 Future，缺少正在提交状态。\n\n修复：为提交钩子阶段增加单次执行锁，捕获错误并在 finally 中释放。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nFlutter 聊天界面，所有使用该界面的平台；不改变 host API、数据格式或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 配置一个需要等待的输入提交钩子。\n2. 连续点击发送。\n3. 原实现并行执行多次提交，可能重复发送或清空输入。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "24e10a1a9192daa8e641c756211e57ccb0e471aee9bd14517260834141df758c",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-submit-single-flight?expand=1"
+}

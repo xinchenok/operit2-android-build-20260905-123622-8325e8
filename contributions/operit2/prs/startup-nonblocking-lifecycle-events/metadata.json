@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/startup-nonblocking-lifecycle-events",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidRuntimeHost.kt"
   ],
@@ -31,5 +31,8 @@
       "name": "queue-android-lifecycle-events-without-blocking-cold-start"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "a253e522a5f169e9b4e38879267c1b63f95c782c",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

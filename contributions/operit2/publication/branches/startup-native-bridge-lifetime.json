@@ -1,0 +1,16 @@
+{
+  "slug": "startup-native-bridge-lifetime",
+  "tree_sha": "124ec77d96239e9da9ecbe450b140fb9c43e3aea",
+  "status": "branch_created",
+  "commit_sha": "f28360af878220d4be2dc3e98addd296823f49ac",
+  "head_branch": "fix/startup-native-bridge-lifetime",
+  "title": "fix(android): keep native bridge alive until process termination",
+  "body": "## 变更说明\n\n**问题：** 退出或重启应用时销毁 native Runtime，可与尚未结束的 JNI 调用竞争导致进程崩溃。\n\n**原因：** Executor.shutdownNow 不保证正在执行的 JNI 调用结束；terminateApplication 先 destroy 再退出。\n\n**修复：** 该分支必定终止进程，因此先停止服务并完成既有退出流程，让进程退出统一回收 native bridge。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n平台：Android。模块：应用终止与重启。\n\n修改文件：\n\n- `apps/flutter/app/android/app/src/main/kotlin/app/operit/AndroidPlatformChannel.kt`\n\n无数据库迁移、配置格式或公共 host API 变更。补丁独立基于 `7fec1b2f17636c5b392c887fab28552219be807a`，不要求其他增强版补丁。\n\n## 验证\n\n仅完成源码审阅。实际通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 读取原始代码，并以精确文本匹配生成最小补丁。\n\n源码核对 terminateApplication 后续的进程终止路径以及 AndroidRuntimeHost.destroy 的 shutdownNow/原生指针释放顺序。此补丁不改变常规请求执行。\n\n本次按提交者要求未运行构建、静态分析、自动化测试或设备测试；以下复现步骤依据调用链整理，尚未进行运行时复现。本 PR 对应单独提交并包含 DCO Signed-off-by。代码注释和以下复现步骤说明行为变化；未新增测试文件。\n\n## 截图或日志\n\n复现步骤：\n\n1. 保持运行中的 native 请求。\n2. 触发应用终止或重启。\n3. 原代码 shutdownNow 后立即释放仍可能被调用使用的 bridge。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "04a201726f8b09bff12ca998735460b44cb985fda2e76cc20bafeaedb6faa828",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/startup-native-bridge-lifetime?expand=1"
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-cold-start",
+  "tree_sha": "61130fbddd47c03c6e2b698420e128c7c9ebfedf",
+  "status": "branch_created",
+  "commit_sha": "f806d7e602833e80027936e9369b3f2c13ab4cbf",
+  "head_branch": "fix/terminal-cold-start",
+  "title": "fix(android): avoid repeated PRoot probes during terminal startup",
+  "body": "## 变更说明\n\n### 问题\n\n首次启动 Linux 终端时，逐目录启动 PRoot 探测可能累计超过 10 秒 prompt 截止时间，导致可用运行时被当作启动失败。\n\n### 复现步骤\n\n1. 在首次解包或缓存较冷的 Android 运行时中打开 bash。\n2. 检查每个可访问 bind 目录触发的独立 PRoot probe。\n3. 探测总耗时超过 10 秒时，PTY 等待先结束并关闭尚在初始化的进程。\n\n以上是根据现有控制流整理的复现路径，本次未在 Android 设备上执行。\n\n### 原因\n\nlogin_ubuntu 对整个 bind 列表逐个启动 Linux probe，启动成本随可访问目录数累积；Rust 端只提供 10 秒初始 prompt 等待。\n\n### 修复\n\n先收集通过既有可访问性检查的 bind，一次探测完整集合；只有集合探测失败才回退原有逐目录排除流程。同时把首次 prompt 等待调整为 30 秒，容纳冷启动及兼容回退。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Android。\n- 模块：Android terminal host 与 AndroidRuntimeAssets 生成的 PRoot 启动脚本。\n- 行为与兼容性：保持既有 bind 可访问性判断和逐目录兼容降级；正常情况下减少 probe 次数，启动失败的最大等待时间由 10 秒调整为 30 秒。\n- host API 与 Flutter/Rust 边界：无接口、配置或数据库迁移。\n\n## 验证\n\n- 已读取上游 CONTRIBUTING.md 与 PR 模板，并逐处对照固定基线 `7fec1b2f17636c5b392c887fab28552219be807a` 的控制流和已有 API。\n- 补丁生成时用精确、唯一匹配断言检查每处旧代码；每个 PR 独立从该上游基线生成完整文件，没有把其他 PR 当作前置分支。\n- 已将受影响文件从固定基线导出到临时目录，执行 `git apply --check fix.patch`，独立应用检查通过。\n- 本次按要求只做源码检查，未运行 cargo、Gradle、Flutter 构建、测试任务或 Android 设备复现；行为验证仍待维护者执行。\n- 未添加公共接口或操作说明；本 PR 的复现路径记录了需要补做的设备验证，未新增无法在本次环境验证的设备测试。\n\n\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 未引入第三方代码、资源或许可证变更。\n- [x] 本补丁不含密钥、令牌、个人数据或本地构建产物。\n- [x] 已在上文说明文档和测试处理方式。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "b52468444f06a3371fb9850d841c702a7dad7f7b6683ca891c1437e5f7f2cfdb",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cold-start?expand=1"
+}

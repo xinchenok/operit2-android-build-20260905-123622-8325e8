@@ -1,0 +1,16 @@
+{
+  "slug": "chat-reply-ownership",
+  "tree_sha": "aead8221c91402689103aebf4cc4114c222ae2a3",
+  "status": "branch_created",
+  "commit_sha": "86fcd9c6c1e8650e136315e1a288ef6bfc6ef08d",
+  "head_branch": "fix/chat-reply-ownership",
+  "title": "fix(chat): retain the submitted reply target",
+  "body": "## 变更说明\n\n延迟到下一帧发送时会读取后来选择的引用；旧发送完成后又会清除新引用，切换会话也可能携带旧引用。\n\n原因：发送和成功回调使用可变 _replyToMessage，没有固定到发起该次发送的输入。\n\n修复：排队发送时捕获引用，成功后仅清除仍相同的引用，并在会话切换时清除旧引用。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nFlutter 聊天界面，所有使用该界面的平台；不改变 host API、数据格式或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 选择引用并发送。\n2. 在发送回调或请求完成前选择另一条引用，或者切换会话。\n3. 原实现使用/清除共享的当前引用。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "03e470e1f517693cad47ae7b1525bdacf425e783a5cef704f407417dee80f3ed",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-reply-ownership?expand=1"
+}

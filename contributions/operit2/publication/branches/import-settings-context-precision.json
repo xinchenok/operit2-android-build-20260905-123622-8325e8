@@ -1,0 +1,16 @@
+{
+  "slug": "import-settings-context-precision",
+  "tree_sha": "5a73d3e4f192d2f457b5a154a6839c009efae858",
+  "status": "branch_created",
+  "commit_sha": "3713358d42057fa4f78945e38ddbeba6afef3b9e",
+  "head_branch": "fix/import-settings-context-precision",
+  "title": "fix(model): preserve fractional context limits in editors",
+  "body": "## 变更说明\n\n原版最大上下文长度使用浮点数，CLI/TUI 与 Flutter 设置编辑器却在初始化输入框时将其格式化为整数。打开一个 `maxContextLength=32.5` 的模型，修改无关开关并保存，也会把原值改写为整数。\n\n两个编辑器都使用保留原数值的字符串表示初始化最大上下文输入，避免用户未编辑该字段时发生有损保存。保存时继续使用现有浮点解析。\n\n本次从增强补丁中只抽取原版现有能力的修复。不新增普通模式上下文字段、自定义摘要规则、编辑器控件或设置项。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：CLI/TUI 支持的平台与 Flutter 支持的平台。\n- 模块：模型设置编辑器；仅修改现有最大上下文字段的初始文本。\n\n配置格式、数据库结构和 host API 均不变；不需要额外迁移。\n\n## 验证\n\n已通过 `git show 7fec1b2f17636c5b392c887fab28552219be807a:<path>` 阅读以下相关源码，并核对拟议差异：`model_editor.rs` 的 `new` 初始化与 `into_config_changes` 浮点解析；`ModelSettingsPanel.dart` 的控制器初始化与 `_save`。\n\n本次任务明确要求仅做源码审查及补丁准备，因此未运行编译、单元测试、Flutter 分析或设备测试。下列复现步骤由源码推导，尚未实际执行；不将其表述为测试通过。最终提交前仍需依照 CONTRIBUTING.md / BUILDING.md 完成相关检查。改动直接修复现有输入、保存或显示行为，未新增功能文档和测试文件。\n\n## 截图或日志\n\n建议手动复现步骤（未执行）：\n\n1. 使用现有配置接口保存 `maxContextLength=32.5`。\n2. 分别在 TUI 和 Flutter 打开模型设置，仅修改其他开关并保存。\n3. 重新读取模型配置；预期最大上下文仍为 32.5，整数配置也能正常打开和保存。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明；本补丁没有新增第三方内容。\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "dc4b8ed28339b625834d6b505f19815f0720b31f956014648d72b3babe8b1288",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/import-settings-context-precision?expand=1"
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "plugin-agent-timeout-cleanup",
+  "tree_sha": "407098b61d503f37073d74619dd7d816ce39bf64",
+  "status": "branch_created",
+  "commit_sha": "39b1cd90600355611e756caeb9621043d48fdf9a",
+  "head_branch": "fix/plugin-agent-timeout-cleanup",
+  "title": "fix(plugins): clear the agent timeout after send completion",
+  "body": "## 变更说明\n\n### 问题\n\nagent_send 已获得回复或因发送错误结束后，本次调用创建的 timeout 定时器仍保留到原始截止时间；多次快速结束的调用会累积尚未触发的定时器与 Promise 回调。\n\n### 原因\n\nPromise.race 只决定返回哪个结果，不会取消另一个 Promise 的 setTimeout；原实现没有保留定时器句柄，也没有在成功或拒绝后清理。\n\n### 修复\n\n保存现有 setTimeout 返回的句柄，并在 race 的 finally 中清除；成功、发送拒绝和超时都走同一资源释放路径。保留现有发送、超时结果及错误传播。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：所有运行 extended_chat 内置插件的平台；仅改变 agent_send 的计时器资源生命周期。\n- 模块：`plugins/packages/buildin/extended_chat.ts`。\n- 兼容性：复用现有插件 API 和构建工具；无配置格式、数据库、host API 或 Flutter/Rust 边界变化。\n\n## 验证\n\n- 已读取 CONTRIBUTING.md 与 PR 模板；补丁独立基于 `7fec1b2f17636c5b392c887fab28552219be807a`。\n- 在仅含原始基线文件的临时目录执行 `git apply --check --whitespace=error-all fix.patch`，独立应用检查通过。\n- 源码检查：对照 builder/plugin_payload.py 中现有 timer_cleanup 修复；确认句柄类型沿用现有 setTimeout 声明，finally 保留 Promise.race 的完成值和拒绝原因。\n- 按本次工作范围未运行构建、插件同步、自动化测试或设备验证。下方步骤供审阅者执行，未作为实测结果报告。\n- 未新增测试或改动公共操作文档：此改动只修正既有内部路径；复现和待验证行为记录在本 PR 中。\n\n## 截图或日志\n\n### 复现步骤（待验证）\n\n1. 调用 agent_send，设置较长 timeout，让发送在短时间内成功或失败。\n2. 在可观察计时器的插件调试环境检查该调用遗留的 timeout；原实现会一直保留到截止时间。\n3. 连续重复调用，确认修复后每次结束即清理该定时器；另验证真正超时仍返回原有 timeout 结果。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 未引入第三方代码、资源或许可证变更。\n- [x] 本补丁不含密钥、令牌、个人数据或本地构建产物。\n- [x] 已在上文说明文档和测试处理方式。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "923f37a1f6efac7011505e351439c47d61c137ef80f2c93d06defa5215f45770",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/plugin-agent-timeout-cleanup?expand=1"
+}

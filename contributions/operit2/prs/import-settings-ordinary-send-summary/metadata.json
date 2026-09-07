@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-settings-ordinary-send-summary",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/runtime/application/src/services/ChatServiceCore.rs",
     "core/crates/runtime/application/src/services/core/MessageProcessingDelegate.rs"
@@ -42,5 +42,8 @@
       "name": "Complete Operit1 context, summary rules and Gemini grounding: MessageProcessingDelegate.rs (6)"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "4fa109582c80c918bf6cfddead7ed726e302a026",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

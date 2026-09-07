@@ -1,0 +1,16 @@
+{
+  "slug": "terminal-cancel-outside-global-state-lock",
+  "tree_sha": "956484a16559b52e14c6b8ad15f2cedf7553a7ee",
+  "status": "branch_created",
+  "commit_sha": "b12b09c4aff428ae87ca0a77067453ff2560d33a",
+  "head_branch": "fix/terminal-cancel-outside-global-state-lock",
+  "title": "fix(android): release terminal state lock during command cancellation",
+  "body": "## 变更说明\n\n### 问题\n\n一个会话进入超时取消等待时，会占有整个 Android 终端状态互斥锁，最长覆盖现有 3 秒恢复窗口；其他会话的读取、输入、列表与关闭操作也因此停顿。\n\n### 原因\n\n原调用方在 `self.lockState()` 的 guard 内，把可变 session 交给取消函数。该函数等待输出条件变量直至恢复提示符或取消截止时间，导致整个状态锁随等待持续持有。\n\n### 修复\n\n取消函数改为只接收现有 writer 与 commandOutput 的共享句柄。调用方在获取结果后、重新锁定状态之前执行 Ctrl-C 和等待，最后仅持状态锁更新目录及运行标志。\n\n取消写入移出 state 锁后，close 可以与写入并发；因此附带已有写端 fd 所有权修复作为必要前提。单次 syscall 持有 fd 锁并检查关闭标记，master 使用 nonblocking，短写/瞬时错误在释放锁后重试，连续 5 秒无进展时返回错误。这些配套代码亦包含于 `terminal-descriptor-lifetime`，在这里重复以保证本 PR 可独立应用；没有加入旧 reader 生命周期修复。\n\n## 改动类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 重构或性能改进\n- [ ] 文档或构建工具\n- [ ] 第三方依赖或许可证更新\n\n## 影响范围\n\n- 平台：Android。\n- 模块：`hosts/android/src/terminal.rs`。\n- 行为：不同会话和终端管理操作不再被某个会话的取消恢复等待整体阻塞。仍使用既有 Ctrl-C 行为和 3 秒取消窗口；session 在等待期间已被关闭时，状态更新延续原有不存在即跳过的处理。\n- 兼容性：复用现有 Android host API；不修改 Rust runtime 与 Flutter 的接口边界，无配置、数据库或数据迁移。\n\n## 验证\n\n- 基线：`AAswordman/Operit2` 的 `7fec1b2f17636c5b392c887fab28552219be807a`，每个补丁独立基于该提交生成。\n- 已执行：`git apply --check --whitespace=error-all <本 PR 的 fix.patch>`，在仅含原始基线文件的临时目录检查，结果通过。\n- 已完成源码审阅：确认取消函数只读写传入的共享句柄、不访问 session 字段；所有调用点已使用新私有函数签名；输出句柄保留至取消结束，状态锁作用域只覆盖最终元数据更新。\n- 按本次工作范围，仅做源码检查；未运行编译、单元测试、Flutter/Rust 构建或 Android 设备验证。下列步骤是待执行的设备复现步骤，并非已验证的运行结果。\n- 未新增测试或修改用户文档：此 PR 仅调整 host 内部实现；设备运行结果需在具备 Android PTY 环境后补充。\n\n## 截图或日志\n\n### 复现步骤（待设备验证）\n\n1. 创建 A、B 两个 Android 终端 session。\n2. 让 A 执行会超时且无法立即响应 Ctrl-C 的命令。\n3. 在 A 的取消等待期间，持续对 B 调用 `readPtySession`、`writePtySession` 或 `listSessions`。\n4. 观察这些无关操作是否被 A 的恢复窗口阻塞；修复后取消等待本身不再持有全局状态锁。\n\n## 提交者确认\n\n- [x] 我已阅读 [CONTRIBUTING.md](https://github.com/AAswordman/Operit2/blob/main/CONTRIBUTING.md)。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 我已保留第三方代码、资源及其许可证和版权声明。（未改动第三方文件。）\n- [x] 我没有提交密钥、令牌、个人数据或本地构建产物。\n- [x] 我已更新受影响的文档和测试，或在上文说明了原因。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "e5884de5083aeed9cf2cfe6513af60735b12f39269763ed24518c6f97bed4209",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/terminal-cancel-outside-global-state-lock?expand=1"
+}

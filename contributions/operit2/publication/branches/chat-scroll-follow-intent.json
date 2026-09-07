@@ -1,0 +1,16 @@
+{
+  "slug": "chat-scroll-follow-intent",
+  "tree_sha": "a04ab37b5744d7b5b9447c94c6c1e7ec3dd92365",
+  "status": "branch_created",
+  "commit_sha": "ba49dd960565a4bef20f0d53ca825e30d24b9f2f",
+  "head_branch": "fix/chat-scroll-follow-intent",
+  "title": "fix(chat): respect cancelled bottom following",
+  "body": "## 变更说明\n\n用户向历史滚动后，帧回调或非用户滚动事件会恢复自动跟随并把视图拉到底部。\n\n原因：排队回调没有重查跟随状态和会话；滚动结束与程序滚动也能无条件恢复跟随。\n\n修复：回调执行前重查归属和窗口状态；仅用户朝底部移动时重新启用跟随。\n\n## 改动类型\n\n- [x] Bug 修复\n\n## 影响范围\n\nFlutter 聊天界面，所有使用该界面的平台；不改变 host API、数据格式或迁移要求。\n\n## 验证\n\n已读取 `7fec1b2f17636c5b392c887fab28552219be807a` 对应源码，核对相关调用、变量作用域和异步边界；生成补丁时对每个替换点执行唯一匹配断言。\n\n本次仅进行源码核对，未运行 Flutter/Rust 编译、静态分析、单元测试或设备验证。没有将未执行的检查记为通过。转为正式审阅前仍需按贡献指南完成相应运行验证。\n\n## 复现步骤\n\n1. 在流式生成时向上滚动，或在自动到底部回调排队后切换会话。\n2. 等待下一帧及滚动结束。\n3. 原实现可能继续跳到底部。\n\n## 提交者确认\n\n- [x] 已阅读 CONTRIBUTING.md。\n- [x] 本提交包含 `Signed-off-by: xinchenok <95321008+xinchenok@users.noreply.github.com>`。\n- [x] 本次提交按账号所有者的明确授权执行，沿用项目许可证与现有版权声明。\n- [x] 没有引入第三方代码、密钥、令牌或构建产物。\n- [x] 修改聚焦一个缺陷；验证范围和未运行的检查已明确说明。\n\n---\n基线：`7fec1b2f17636c5b392c887fab28552219be807a`。此修复独立提交；已做源码核对和独立补丁应用检查，尚未独立编译或手机实测，因此以 Draft PR 提交。\n",
+  "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
+  "patch_sha256": "44f67d923e319aea4cc3c0db54a4cd58cdfbe157902cf401dc83113a2497bd26",
+  "fork": "xinchenok/Operit2",
+  "upstream": "AAswordman/Operit2",
+  "pr_number": null,
+  "pr_url": null,
+  "compare_url": "https://github.com/AAswordman/Operit2/compare/main...xinchenok:Operit2:fix/chat-scroll-follow-intent?expand=1"
+}

@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/plugin-flutter-core-command-executor",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/native/operit-flutter-bridge/src/lib.rs",
     "core/crates/proxy/local/src/lib.rs",
@@ -20,5 +20,8 @@
     "legacy-bind-existing-application-executor",
     "legacy-enable-flutter-plugin-core-commands"
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "abca9ec3fe9163c5587e5fd01edbc763befd107f",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

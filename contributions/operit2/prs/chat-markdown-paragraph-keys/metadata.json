@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/chat-markdown-paragraph-keys",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/common/markdown/CanvasMarkdownNodeRenderer.dart",
     "apps/flutter/app/test/chat_area_streaming_cursor_test.dart"
@@ -14,5 +14,8 @@
     "chat-fixes.json:unique-markdown-paragraph-break-keys",
     "chat-fixes.json:retain-trailing-markdown-gap-regression"
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "f4ccdb9fa2f24669d7259342992cc76f001abc6b",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

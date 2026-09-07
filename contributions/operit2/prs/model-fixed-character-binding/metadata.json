@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/model-fixed-character-binding",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "apps/flutter/app/lib/ui/features/settings/characters/CharacterCardEditorDialog.dart",
     "apps/flutter/app/lib/ui/features/settings/characters/CharacterGroupDialogs.dart",
@@ -55,5 +55,8 @@
     "New editor card starts with no provider binding",
     "Use fixed role provider capabilities when preparing image audio and video attachments"
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "32d8d09763868196e2933f94bfefd12b535c70b0",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }

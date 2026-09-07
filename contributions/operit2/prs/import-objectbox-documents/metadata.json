@@ -5,7 +5,7 @@
   "base_branch": "main",
   "base_sha": "7fec1b2f17636c5b392c887fab28552219be807a",
   "head_branch": "fix/import-objectbox-documents",
-  "status": "prepared",
+  "status": "branch_created_pr_pending",
   "paths": [
     "core/crates/foundation/model/src/MemoryExportModel.rs",
     "core/crates/persistence/store/src/repository/MemoryRepository.rs",
@@ -148,5 +148,8 @@
       "name": "parse-zero-default-document-chunk-index"
     }
   ],
-  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested."
+  "validation": "Source review; independent patch application checked by coordinator. Not independently compiled or device-tested.",
+  "head_commit_sha": "7e2f965058c54e81ce91fc8d73f7fc4a7a15f5b1",
+  "fork_repository": "xinchenok/Operit2",
+  "pr_url": null
 }
